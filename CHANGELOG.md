@@ -21,6 +21,8 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 - `docs/research/` — pesquisa citada + diário de aprendizado.
 - Templates/boas práticas: PR template com a DoD, comando `/dod`, gate de CHANGELOG na CI.
 - **PDF do handbook** (livro A4, capa + 12 capítulos) — `docs/handbook/maestro-handbook.pdf`.
+- **PDF compêndio de governança** (visão geral: Princípios + Modelo operacional + Handbook +
+  ADRs, 51 páginas) — `docs/handbook/maestro-compendio-governanca.pdf`.
 
 ### Follow-up
 - Rebaixar referências "Constituição / Princípio IV/V/VII" nos docs migrados para
