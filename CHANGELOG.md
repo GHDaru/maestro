@@ -20,8 +20,9 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 - `docs/adr/` — ADRs 0004–0006 (preservados) + 0007 (separação) + índice.
 - `docs/research/` — pesquisa citada + diário de aprendizado.
 - Templates/boas práticas: PR template com a DoD, comando `/dod`, gate de CHANGELOG na CI.
+- **PDF do handbook** (livro A4, capa + 12 capítulos) — `docs/handbook/maestro-handbook.pdf`.
 
 ### Follow-up
 - Rebaixar referências "Constituição / Princípio IV/V/VII" nos docs migrados para
   `principios-maestro.md` (mapa de linhagem no fim daquele doc).
-- Gerar o PDF do handbook; remover as cópias redundantes em `ghdaru` após validação.
+- Remover as cópias redundantes da metodologia em `ghdaru` após validação desta migração.

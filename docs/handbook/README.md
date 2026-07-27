@@ -46,3 +46,9 @@
 
 > **Nota**: o número do capítulo (ordem de leitura) ≠ o rótulo do elemento `[x]`
 > (nossa linguagem compartilhada na jornada). A tabela mapeia os dois.
+
+## Formatos
+
+- 📄 **PDF completo** (livro A4, capa + 12 capítulos): [`maestro-handbook.pdf`](maestro-handbook.pdf)
+- 🎼 Apresentação **executiva** (HTML): [`apresentacao-executiva-maestro.html`](apresentacao-executiva-maestro.html)
+- 📐 Caderno **técnico** (HTML): [`apresentacao-tecnica-maestro.html`](apresentacao-tecnica-maestro.html)
