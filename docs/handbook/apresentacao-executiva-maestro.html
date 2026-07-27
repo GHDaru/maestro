@@ -1,0 +1,352 @@
+<title>Maestro — Metodologia humano + IA</title>
+<style>
+  :root {
+    --bg: #eceef4; --bg-2: #ffffff; --panel: #f6f7fb;
+    --text: #141728; --muted: #565d74; --faint: #8a90a4;
+    --accent: #9c6f22; --accent-2: #b98a34;
+    --line: rgba(20,23,40,0.12); --staff: rgba(20,23,40,0.14);
+    --before: #7a8096; --before-bg: rgba(122,128,150,0.10); --after-bg: rgba(156,111,34,0.10);
+    --shadow: 0 1px 0 rgba(20,23,40,.04), 0 22px 50px -30px rgba(20,23,40,.5);
+    --font-display: Georgia, 'Times New Roman', serif;
+    --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: ui-monospace, 'SF Mono', 'Menlo', 'Cascadia Code', Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1023; --bg-2: #141833; --panel: #171b36;
+      --text: #edeef5; --muted: #a3aabf; --faint: #767d95;
+      --accent: #e6c375; --accent-2: #d6b25f;
+      --line: rgba(230,195,117,0.16); --staff: rgba(230,195,117,0.20);
+      --before: #838aa0; --before-bg: rgba(131,138,160,0.12); --after-bg: rgba(230,195,117,0.12);
+      --shadow: 0 1px 0 rgba(255,255,255,.03), 0 30px 60px -30px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0d1023; --bg-2: #141833; --panel: #171b36;
+    --text: #edeef5; --muted: #a3aabf; --faint: #767d95;
+    --accent: #e6c375; --accent-2: #d6b25f;
+    --line: rgba(230,195,117,0.16); --staff: rgba(230,195,117,0.20);
+    --before: #838aa0; --before-bg: rgba(131,138,160,0.12); --after-bg: rgba(230,195,117,0.12);
+    --shadow: 0 1px 0 rgba(255,255,255,.03), 0 30px 60px -30px rgba(0,0,0,.7);
+  }
+  :root[data-theme="light"] {
+    --bg: #eceef4; --bg-2: #ffffff; --panel: #f6f7fb;
+    --text: #141728; --muted: #565d74; --faint: #8a90a4;
+    --accent: #9c6f22; --accent-2: #b98a34;
+    --line: rgba(20,23,40,0.12); --staff: rgba(20,23,40,0.14);
+    --before: #7a8096; --before-bg: rgba(122,128,150,0.10); --after-bg: rgba(156,111,34,0.10);
+    --shadow: 0 1px 0 rgba(20,23,40,.04), 0 22px 50px -30px rgba(20,23,40,.5);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+
+  .deck { height: 100%; overflow-y: scroll; scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+  .slide { min-height: 100%; scroll-snap-align: start; display: flex; flex-direction: column;
+    justify-content: center; padding: clamp(28px, 6vw, 92px); position: relative; border-bottom: 1px solid var(--line); }
+  .wrap { width: min(1080px, 100%); margin: 0 auto; }
+
+  .eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .24em; text-transform: uppercase;
+    color: var(--accent); font-weight: 600; display: inline-flex; align-items: center; gap: 12px; margin: 0 0 20px; }
+  .eyebrow::before { content: ""; width: 26px; height: 1px; background: var(--accent); opacity: .8; }
+  .staff { height: 9px; width: 120px; margin: 24px 0 0;
+    background: repeating-linear-gradient(var(--staff) 0 1px, transparent 1px 4px); opacity: .8; }
+
+  h1.title { font-family: var(--font-display); font-weight: 700; font-size: clamp(58px, 12vw, 150px);
+    line-height: .92; letter-spacing: -.02em; margin: 0; text-wrap: balance; }
+  h2 { font-family: var(--font-display); font-weight: 700; font-size: clamp(30px, 5.2vw, 60px);
+    line-height: 1.04; letter-spacing: -.015em; margin: 0 0 18px; text-wrap: balance; max-width: 20ch; }
+  .lead { font-size: clamp(18px, 2.3vw, 25px); line-height: 1.5; color: var(--muted); max-width: 46ch; margin: 0; }
+  .lead strong { color: var(--text); font-weight: 600; }
+  p { margin: 0; }
+  .kicker { font-family: var(--font-display); font-style: italic; color: var(--accent); font-size: clamp(19px, 2.4vw, 28px); }
+
+  .cover .sub { font-size: clamp(20px, 3vw, 34px); color: var(--text); margin: 24px 0 0; font-weight: 500; letter-spacing: -.01em; }
+  .cover .score { font-family: var(--font-display); font-style: italic; color: var(--muted); font-size: clamp(16px, 2vw, 22px); margin: 14px 0 0; }
+  .cover .foot { margin-top: 38px; font-family: var(--font-mono); font-size: 12.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
+
+  /* chips */
+  .chips { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 22px; }
+  .chip { font-size: 13.5px; border: 1px solid var(--line); border-radius: 999px; padding: 6px 13px; background: var(--bg-2); color: var(--text); }
+  .chip b { color: var(--accent); font-weight: 600; }
+
+  /* two-col problem */
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 6px; }
+  .panelbox { border: 1px solid var(--line); border-radius: 14px; padding: 24px; background: var(--bg-2); box-shadow: var(--shadow); }
+  .panelbox.dim { background: var(--before-bg); }
+  .panelbox h3 { margin: 0 0 10px; font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .18em; text-transform: uppercase; color: var(--before); }
+  .panelbox.dim h3 { color: var(--before); }
+  .panelbox p { font-size: 15.5px; line-height: 1.5; color: var(--muted); }
+  .punch { margin-top: 20px; font-family: var(--font-display); font-size: clamp(21px, 3vw, 32px); letter-spacing: -.01em; text-wrap: balance; }
+  .punch em { color: var(--accent); font-style: italic; }
+
+  /* method map */
+  .map { display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
+  .layer { display: grid; grid-template-columns: 128px 1fr; gap: 16px; align-items: center;
+    border-left: 2px solid var(--accent); padding: 9px 0 9px 16px; }
+  .layer .lname { font-family: var(--font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+  .layer .chips { margin-top: 0; }
+
+  /* before/after */
+  .ba { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 8px; }
+  .col { border: 1px solid var(--line); border-radius: 14px; padding: 24px; background: var(--bg-2); box-shadow: var(--shadow); }
+  .col.before { background: var(--before-bg); }
+  .col.after { background: var(--after-bg); border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); }
+  .col h3 { margin: 0 0 14px; font-family: var(--font-mono); font-size: 12px; letter-spacing: .2em; text-transform: uppercase; }
+  .col.before h3 { color: var(--before); }
+  .col.after h3 { color: var(--accent); }
+  .row { display: grid; grid-template-columns: 84px 1fr; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); align-items: baseline; }
+  .row:first-of-type { border-top: 0; }
+  .row .k { font-family: var(--font-mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); }
+  .row .v { font-size: 15px; line-height: 1.4; color: var(--text); }
+  .col.before .row .v { color: var(--muted); }
+  .note { margin-top: 16px; font-family: var(--font-mono); font-size: 11.5px; color: var(--faint); }
+
+  /* pillars */
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 6px; }
+  .card { border: 1px solid var(--line); border-radius: 13px; padding: 20px; background: var(--bg-2); box-shadow: var(--shadow); }
+  .card .n { font-family: var(--font-mono); font-size: 12px; color: var(--accent); letter-spacing: .1em; }
+  .card h4 { font-family: var(--font-display); font-size: 20px; margin: 8px 0 7px; line-height: 1.1; letter-spacing: -.01em; }
+  .card p { font-size: 14px; line-height: 1.48; color: var(--muted); }
+
+  ul.clean { list-style: none; padding: 0; margin: 4px 0 0; display: flex; flex-direction: column; gap: 13px; max-width: 48ch; }
+  ul.clean li { position: relative; padding-left: 26px; font-size: clamp(16px, 1.9vw, 19px); line-height: 1.5; color: var(--text); }
+  ul.clean li::before { content: ""; position: absolute; left: 0; top: .62em; width: 12px; height: 1px; background: var(--accent); }
+  ul.clean li b { font-weight: 600; } ul.clean li span { color: var(--muted); }
+
+  .twowide { display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(24px, 5vw, 60px); align-items: center; }
+  .metric { font-family: var(--font-display); }
+  .metric .a { color: var(--before); font-size: clamp(19px, 2.6vw, 26px); display: block; }
+  .metric .arw { color: var(--accent); font-size: clamp(20px, 2.6vw, 28px); display: block; margin: 6px 0; }
+  .metric .b { color: var(--text); font-size: clamp(23px, 3.4vw, 38px); font-weight: 700; display: block; }
+  .metric small { font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
+
+  .big-quote { font-family: var(--font-display); font-size: clamp(28px, 5vw, 54px); line-height: 1.08; letter-spacing: -.015em; text-wrap: balance; margin: 0; }
+  .big-quote em { color: var(--accent); font-style: italic; }
+
+  .rail { position: fixed; right: 22px; top: 50%; transform: translateY(-50%); z-index: 40; display: flex; flex-direction: column; gap: 11px; }
+  .rail button { all: unset; width: 9px; height: 9px; border-radius: 50%; cursor: pointer; background: var(--line); transition: transform .25s, background .25s; }
+  .rail button:hover { background: var(--accent-2); }
+  .rail button[aria-current="true"] { background: var(--accent); transform: scale(1.5); }
+  .rail button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .hud { position: fixed; left: 22px; bottom: 20px; z-index: 40; font-family: var(--font-mono); font-size: 12px; letter-spacing: .12em; color: var(--faint); }
+  .hud b { color: var(--accent); }
+  .themebtn { position: fixed; right: 20px; top: 18px; z-index: 40; all: unset; cursor: pointer; font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); border: 1px solid var(--line); padding: 7px 11px; border-radius: 8px; }
+  .themebtn:hover { color: var(--accent); border-color: var(--accent); }
+  .themebtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .slide .wrap > * { opacity: 0; transform: translateY(16px); transition: opacity .7s ease, transform .7s ease; }
+  .slide.in .wrap > * { opacity: 1; transform: none; }
+  .slide.in .wrap > *:nth-child(2) { transition-delay: .06s; }
+  .slide.in .wrap > *:nth-child(3) { transition-delay: .12s; }
+  .slide.in .wrap > *:nth-child(4) { transition-delay: .18s; }
+
+  @media (max-width: 780px) { .two, .ba, .grid, .twowide, .layer { grid-template-columns: 1fr; } .rail { display: none; } .layer { border-left: 0; padding-left: 0; } }
+  @media (prefers-reduced-motion: reduce) { .deck { scroll-behavior: auto; } .slide .wrap > * { transition: opacity .4s ease; transform: none; } }
+</style>
+
+<button class="themebtn" id="themebtn" aria-label="Alternar tema">Tema</button>
+<nav class="rail" id="rail" aria-label="Navegação de slides"></nav>
+<div class="hud"><b id="cur">01</b> / <span id="tot">10</span></div>
+
+<main class="deck" id="deck">
+
+  <section class="slide cover" data-label="Abertura">
+    <div class="wrap">
+      <div class="eyebrow">Metodologia de engenharia · Humano + IA</div>
+      <h1 class="title">Maestro</h1>
+      <p class="sub">Um humano rege. Muitos agentes executam.</p>
+      <p class="score">A spec é a partitura · os gates, o compasso.</p>
+      <p class="foot">Plataforma GHDaru Tecnologia · nome de trabalho (rebrandável)</p>
+    </div>
+  </section>
+
+  <section class="slide" data-label="O que é">
+    <div class="wrap">
+      <div class="eyebrow">O que é</div>
+      <h2>Um método para construir software com 1 humano regendo N agentes de IA</h2>
+      <p class="lead">Não é "a IA escreve código". É <strong>orquestração governada</strong>: a especificação é a fonte de verdade, os agentes executam em paralelo, e o humano decide, aprova e verifica.</p>
+      <div class="chips">
+        <span class="chip"><b>Spec-driven</b> — a spec é a verdade</span>
+        <span class="chip"><b>1 ↔ N</b> — humano rege agentes</span>
+        <span class="chip"><b>Gates</b> — verificáveis e por risco</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-label="A dor">
+    <div class="wrap">
+      <div class="eyebrow">Por que surgiu · a dor</div>
+      <h2>Dois extremos que falham</h2>
+      <div class="two">
+        <div class="panelbox dim">
+          <h3>Sem IA</h3>
+          <p>Dúzias de pessoas para ler o legado, reconstruir a intenção perdida e gerar artefatos. Lento, caro, e o conhecimento evapora com quem sai.</p>
+        </div>
+        <div class="panelbox dim">
+          <h3>IA sem método</h3>
+          <p>Código que compila e erra a intenção. Agentes sem contrapeso. Artefatos que apodrecem. Velocidade sem governança vira risco.</p>
+        </div>
+      </div>
+      <p class="punch">Maestro é o <em>método que faltava</em> entre os dois.</p>
+    </div>
+  </section>
+
+  <section class="slide" data-label="Mapa da metodologia">
+    <div class="wrap">
+      <div class="eyebrow">A metodologia em um mapa</div>
+      <h2>O que o Maestro contém</h2>
+      <div class="map">
+        <div class="layer"><span class="lname">Fundamento</span><div class="chips"><span class="chip">Princípio central</span><span class="chip">Evidência (DORA)</span></div></div>
+        <div class="layer"><span class="lname">Mecânica</span><div class="chips"><span class="chip">Spec-driven</span><span class="chip">Fluxo agentic</span><span class="chip">Orquestração</span></div></div>
+        <div class="layer"><span class="lname">Estrutura</span><div class="chips"><span class="chip">Papéis · RACI</span><span class="chip">Cadência (Shape Up)</span></div></div>
+        <div class="layer"><span class="lname">Qualidade</span><div class="chips"><span class="chip">Artefatos</span><span class="chip">DoD verificável</span><span class="chip">Gates de risco</span><span class="chip">Rastreabilidade</span></div></div>
+        <div class="layer"><span class="lname">Governança</span><div class="chips"><span class="chip">Constituição</span><span class="chip">ADRs</span><span class="chip">YAGNI</span></div></div>
+      </div>
+      <p class="note">12 elementos · 5 camadas · um sistema — não uma lista de práticas soltas.</p>
+    </div>
+  </section>
+
+  <section class="slide" data-label="Fundamentação teórica">
+    <div class="wrap">
+      <div class="eyebrow">Fundamentação teórica</div>
+      <h2>Não inventamos — sintetizamos o que já é evidência</h2>
+      <div class="chips" style="margin-top:16px">
+        <span class="chip"><b>Spec-Driven Development</b> · GitHub Spec Kit</span>
+        <span class="chip"><b>Agentic patterns</b> · Anthropic</span>
+        <span class="chip"><b>DORA / Accelerate</b> · desempenho de entrega</span>
+        <span class="chip"><b>Shape Up</b> · Basecamp</span>
+        <span class="chip"><b>DDD + Hexagonal</b></span>
+        <span class="chip"><b>ADR / docs-as-code</b></span>
+      </div>
+      <p class="lead" style="margin-top:24px">Cada escolha tem fonte citada e um veredito para o nosso contexto — em <span style="font-family:var(--font-mono);font-size:.9em">docs/research/</span> e no handbook de 12 capítulos.</p>
+    </div>
+  </section>
+
+  <section class="slide" data-label="Os pilares">
+    <div class="wrap">
+      <div class="eyebrow">Como funciona · seis pilares</div>
+      <h2>O que rege a orquestra</h2>
+      <div class="grid">
+        <div class="card"><div class="n">01</div><h4>Spec como partitura</h4><p>A especificação é a fonte de verdade; o agente gera dela. Não apodrece porque é o input, não a descrição.</p></div>
+        <div class="card"><div class="n">02</div><h4>1 rege N</h4><p>Papéis como modos; RACI com um Accountable humano fixo. Decide ≠ executa ≠ verifica.</p></div>
+        <div class="card"><div class="n">03</div><h4>Gates por risco</h4><p>Reversibilidade rebaixa o risco. O humano decide só o irreversível ou de alto impacto.</p></div>
+        <div class="card"><div class="n">04</div><h4>DoD verificável</h4><p>Qualidade que a máquina confere. "Verde ≠ certo" — o julgamento fica com o humano.</p></div>
+        <div class="card"><div class="n">05</div><h4>Cadência enxuta</h4><p>Apetite, ciclo, retro. Sem daily nem backlog: cerimônia só quando entrega função.</p></div>
+        <div class="card"><div class="n">06</div><h4>Loop de aprendizado</h4><p>Cada erro recorrente vira regra versionada. O processo aprende e não repete a correção.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-label="Antes × Depois">
+    <div class="wrap">
+      <div class="eyebrow">O que muda · Antes × Depois da IA</div>
+      <h2>A mesma entrega, outra física</h2>
+      <div class="ba">
+        <div class="col before">
+          <h3>Antes da IA</h3>
+          <div class="row"><span class="k">Capacidade</span><span class="v">Dúzias de pessoas, paralelo caro</span></div>
+          <div class="row"><span class="k">Verdade</span><span class="v">O código e a memória de quem o escreveu</span></div>
+          <div class="row"><span class="k">Artefatos</span><span class="v">Escritos uma vez, apodrecem</span></div>
+          <div class="row"><span class="k">Cadência</span><span class="v">Meses, sequencial</span></div>
+          <div class="row"><span class="k">Verificação</span><span class="v">Manual, gargalo humano</span></div>
+        </div>
+        <div class="col after">
+          <h3>Depois · Maestro</h3>
+          <div class="row"><span class="k">Capacidade</span><span class="v">1 humano regendo N agentes</span></div>
+          <div class="row"><span class="k">Verdade</span><span class="v">A spec — viva, consumida, versionada</span></div>
+          <div class="row"><span class="k">Artefatos</span><span class="v">Vivos: consumidos, com forcing function</span></div>
+          <div class="row"><span class="k">Cadência</span><span class="v">Semanas, paralelo por fronteira</span></div>
+          <div class="row"><span class="k">Verificação</span><span class="v">Gates verificáveis; humano só no risco</span></div>
+        </div>
+      </div>
+      <p class="note">Comparação direcional — a mecânica (paralelização, economia de contexto, gates) sustenta o ganho.</p>
+    </div>
+  </section>
+
+  <section class="slide" data-label="ROI em legado">
+    <div class="wrap">
+      <div class="eyebrow">Onde o ROI é maior</div>
+      <h2>Legado é o território natural</h2>
+      <div class="twowide">
+        <ul class="clean">
+          <li><b>Economia de contexto:</b> <span>a spec vira a memória que sobrevive ao reset do agente.</span></li>
+          <li><b>Paralelização por fronteira:</b> <span>bounded contexts deixam N agentes lerem o legado sem colidir.</span></li>
+          <li><b>Rastreabilidade:</b> <span>spec ↔ PR ↔ teste ↔ journey — a memória durável que o legado nunca teve.</span></li>
+        </ul>
+        <p class="metric">
+          <span class="a">Dúzias de pessoas × meses <small>&nbsp;· Antes</small></span>
+          <span class="arw">↓</span>
+          <span class="b">1 humano + agentes × semanas <small>&nbsp;· Depois</small></span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-label="Prova viva">
+    <div class="wrap">
+      <div class="eyebrow">Prova viva</div>
+      <h2>Esta metodologia foi construída por ela mesma</h2>
+      <ul class="clean">
+        <li><span>Em <b>uma sessão humano + IA</b>: 12 capítulos de fundamentos, um modelo operacional versionado, ADRs e gates de CI.</span></li>
+        <li><span>Pelo próprio loop: <b>crítica → refino → decisão registrada → versão</b>.</span></li>
+        <li><span>O handbook que embasa este deck <b>é o artefato</b> — vivo e rastreável.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide cover" data-label="Próximo movimento">
+    <div class="wrap">
+      <div class="eyebrow">Próximo movimento</div>
+      <p class="big-quote">O sistema está montado.<br>Falta reger a <em>primeira feature</em>.</p>
+      <p class="sub" style="margin-top:24px">Maestro — humano + IA, do artefato ao ROI.</p>
+      <p class="foot">Plataforma GHDaru Tecnologia · handbook em <span style="font-family:var(--font-mono)">docs/handbook/</span></p>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  (function () {
+    var deck = document.getElementById('deck');
+    var slides = Array.prototype.slice.call(deck.querySelectorAll('.slide'));
+    var rail = document.getElementById('rail');
+    var cur = document.getElementById('cur');
+    document.getElementById('tot').textContent = String(slides.length).padStart(2, '0');
+    slides.forEach(function (s, i) {
+      var b = document.createElement('button');
+      b.setAttribute('aria-label', 'Ir para ' + (s.dataset.label || ('slide ' + (i + 1))));
+      b.addEventListener('click', function () { s.scrollIntoView({ behavior: 'smooth' }); });
+      rail.appendChild(b);
+    });
+    var dots = Array.prototype.slice.call(rail.children);
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          var i = slides.indexOf(e.target);
+          cur.textContent = String(i + 1).padStart(2, '0');
+          dots.forEach(function (d, di) { d.setAttribute('aria-current', di === i ? 'true' : 'false'); });
+        }
+      });
+    }, { root: deck, threshold: 0.55 });
+    slides.forEach(function (s) { io.observe(s); });
+    function idx() { var st = deck.scrollTop, best = 0, bd = Infinity;
+      slides.forEach(function (s, i) { var d = Math.abs(s.offsetTop - st); if (d < bd) { bd = d; best = i; } }); return best; }
+    window.addEventListener('keydown', function (e) {
+      if (['ArrowDown', 'ArrowRight', 'PageDown', ' '].indexOf(e.key) > -1) { e.preventDefault(); slides[Math.min(idx() + 1, slides.length - 1)].scrollIntoView({ behavior: 'smooth' }); }
+      else if (['ArrowUp', 'ArrowLeft', 'PageUp'].indexOf(e.key) > -1) { e.preventDefault(); slides[Math.max(idx() - 1, 0)].scrollIntoView({ behavior: 'smooth' }); }
+      else if (e.key === 'Home') { e.preventDefault(); slides[0].scrollIntoView({ behavior: 'smooth' }); }
+      else if (e.key === 'End') { e.preventDefault(); slides[slides.length - 1].scrollIntoView({ behavior: 'smooth' }); }
+    });
+    document.getElementById('themebtn').addEventListener('click', function () {
+      var root = document.documentElement;
+      var isDark = (root.getAttribute('data-theme') === 'dark') ||
+        (!root.getAttribute('data-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      root.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    });
+  })();
+</script>

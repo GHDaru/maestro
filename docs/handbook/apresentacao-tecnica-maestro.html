@@ -1,0 +1,413 @@
+<title>Maestro — Caderno Técnico</title>
+<style>
+  :root {
+    --bg: #eceef4; --bg-2: #ffffff; --panel: #f4f5f9;
+    --text: #141728; --muted: #565d74; --faint: #8a90a4;
+    --accent: #9c6f22; --accent-2: #b98a34;
+    --line: rgba(20,23,40,0.12); --staff: rgba(20,23,40,0.14);
+    --code-bg: #f5f3ec; --code-fg: #4a3a12;
+    --shadow: 0 1px 0 rgba(20,23,40,.04), 0 20px 46px -30px rgba(20,23,40,.5);
+    --font-display: Georgia, 'Times New Roman', serif;
+    --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: ui-monospace, 'SF Mono', 'Menlo', 'Cascadia Code', Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0d1023; --bg-2: #141833; --panel: #12162e;
+      --text: #edeef5; --muted: #a3aabf; --faint: #767d95;
+      --accent: #e6c375; --accent-2: #d6b25f;
+      --line: rgba(230,195,117,0.16); --staff: rgba(230,195,117,0.20);
+      --code-bg: #0a0d1e; --code-fg: #e6c375;
+      --shadow: 0 1px 0 rgba(255,255,255,.03), 0 28px 56px -30px rgba(0,0,0,.7); }
+  }
+  :root[data-theme="dark"] { --bg: #0d1023; --bg-2: #141833; --panel: #12162e;
+    --text: #edeef5; --muted: #a3aabf; --faint: #767d95; --accent: #e6c375; --accent-2: #d6b25f;
+    --line: rgba(230,195,117,0.16); --staff: rgba(230,195,117,0.20); --code-bg: #0a0d1e; --code-fg: #e6c375;
+    --shadow: 0 1px 0 rgba(255,255,255,.03), 0 28px 56px -30px rgba(0,0,0,.7); }
+  :root[data-theme="light"] { --bg: #eceef4; --bg-2: #ffffff; --panel: #f4f5f9;
+    --text: #141728; --muted: #565d74; --faint: #8a90a4; --accent: #9c6f22; --accent-2: #b98a34;
+    --line: rgba(20,23,40,0.12); --staff: rgba(20,23,40,0.14); --code-bg: #f5f3ec; --code-fg: #4a3a12;
+    --shadow: 0 1px 0 rgba(20,23,40,.04), 0 20px 46px -30px rgba(20,23,40,.5); }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  .deck { height: 100%; overflow-y: scroll; scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+  .slide { min-height: 100%; scroll-snap-align: start; display: flex; flex-direction: column; justify-content: center;
+    padding: clamp(24px, 5vw, 76px); border-bottom: 1px solid var(--line); }
+  .wrap { width: min(1120px, 100%); margin: 0 auto; }
+
+  .eyebrow { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--accent); font-weight: 600; display: inline-flex; align-items: center; gap: 12px; margin: 0 0 16px; }
+  .eyebrow::before { content: ""; width: 24px; height: 1px; background: var(--accent); opacity: .8; }
+  .staff { height: 9px; width: 110px; margin: 22px 0 0; background: repeating-linear-gradient(var(--staff) 0 1px, transparent 1px 4px); opacity: .8; }
+
+  h1.title { font-family: var(--font-display); font-weight: 700; font-size: clamp(52px, 11vw, 132px); line-height: .92;
+    letter-spacing: -.02em; margin: 0; text-wrap: balance; }
+  h2 { font-family: var(--font-display); font-weight: 700; font-size: clamp(26px, 4vw, 46px); line-height: 1.05;
+    letter-spacing: -.015em; margin: 0 0 20px; text-wrap: balance; }
+  .cover .sub { font-size: clamp(19px, 2.6vw, 30px); color: var(--text); margin: 22px 0 0; font-weight: 500; }
+  .cover .score { font-family: var(--font-display); font-style: italic; color: var(--muted); font-size: clamp(15px, 1.9vw, 21px); margin: 12px 0 0; }
+  .cover .foot { margin-top: 34px; font-family: var(--font-mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
+  p { margin: 0; }
+  .lead { font-size: clamp(17px, 2.1vw, 22px); line-height: 1.5; color: var(--muted); max-width: 48ch; }
+  .lead strong { color: var(--text); font-weight: 600; }
+
+  /* technical two-column: bullets + spec card */
+  .tech { display: grid; grid-template-columns: 1.02fr .98fr; gap: clamp(20px, 4vw, 48px); align-items: start; margin-top: 4px; }
+  dl.def { margin: 0; display: flex; flex-direction: column; gap: 15px; }
+  dl.def dt { font-family: var(--font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin-bottom: 3px; }
+  dl.def dd { margin: 0; font-size: clamp(15px, 1.7vw, 17.5px); line-height: 1.48; color: var(--text); }
+  dl.def dd b { font-weight: 600; } dl.def dd span { color: var(--muted); }
+
+  .speccard { background: var(--code-bg); border: 1px solid var(--line); border-radius: 12px; padding: 20px 20px 18px;
+    box-shadow: var(--shadow); font-family: var(--font-mono); }
+  .speccard .lbl { font-size: 10.5px; letter-spacing: .18em; text-transform: uppercase; color: var(--faint); margin-bottom: 12px; }
+  .speccard pre { margin: 0; white-space: pre-wrap; font-size: 13px; line-height: 1.7; color: var(--code-fg); }
+  .speccard .k { color: var(--accent); }
+  .speccard .c { color: var(--faint); }
+
+  /* orientation slide (4 docs / flow) */
+  .cols3 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 6px; }
+  .doc { border: 1px solid var(--line); border-radius: 12px; padding: 18px; background: var(--bg-2); box-shadow: var(--shadow); }
+  .doc h4 { font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin: 0 0 8px; }
+  .doc p { font-size: 13.5px; line-height: 1.45; color: var(--muted); }
+  .flow { margin-top: 26px; font-family: var(--font-mono); font-size: clamp(12px, 1.5vw, 15px); color: var(--muted);
+    line-height: 1.8; letter-spacing: .01em; }
+  .flow b { color: var(--accent); }
+
+  .rail { position: fixed; right: 20px; top: 50%; transform: translateY(-50%); z-index: 40; display: flex; flex-direction: column; gap: 9px; }
+  .rail button { all: unset; width: 8px; height: 8px; border-radius: 50%; cursor: pointer; background: var(--line); transition: transform .25s, background .25s; }
+  .rail button:hover { background: var(--accent-2); }
+  .rail button[aria-current="true"] { background: var(--accent); transform: scale(1.55); }
+  .rail button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .hud { position: fixed; left: 20px; bottom: 18px; z-index: 40; font-family: var(--font-mono); font-size: 12px; letter-spacing: .12em; color: var(--faint); }
+  .hud b { color: var(--accent); }
+  .themebtn { position: fixed; right: 18px; top: 16px; z-index: 40; all: unset; cursor: pointer; font-family: var(--font-mono);
+    font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); border: 1px solid var(--line); padding: 6px 10px; border-radius: 8px; }
+  .themebtn:hover { color: var(--accent); border-color: var(--accent); }
+  .themebtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .slide .wrap > * { opacity: 0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease; }
+  .slide.in .wrap > * { opacity: 1; transform: none; }
+  .slide.in .wrap > *:nth-child(2) { transition-delay: .05s; }
+  .slide.in .wrap > *:nth-child(3) { transition-delay: .1s; }
+
+  @media (max-width: 820px) { .tech, .cols3 { grid-template-columns: 1fr; } .rail { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .deck { scroll-behavior: auto; } .slide .wrap > * { transition: opacity .35s ease; transform: none; } }
+</style>
+
+<button class="themebtn" id="themebtn" aria-label="Alternar tema">Tema</button>
+<nav class="rail" id="rail" aria-label="Navegação"></nav>
+<div class="hud"><b id="cur">01</b> / <span id="tot">15</span></div>
+
+<main class="deck" id="deck">
+
+  <section class="slide cover" data-label="Capa">
+    <div class="wrap">
+      <div class="eyebrow">Caderno técnico · deep-dive por capítulo</div>
+      <h1 class="title">Maestro</h1>
+      <p class="sub">A metodologia por dentro — 12 elementos, 5 camadas.</p>
+      <p class="score">Para engenheiros e arquitetos. O executivo vê o "porquê"; aqui está o "como".</p>
+      <p class="foot">Plataforma GHDaru Tecnologia · companion do handbook (docs/handbook)</p>
+    </div>
+  </section>
+
+  <section class="slide" data-label="Como ler">
+    <div class="wrap">
+      <div class="eyebrow">Arquitetura da documentação</div>
+      <h2>Quatro camadas de documento, um sistema</h2>
+      <div class="cols3">
+        <div class="doc"><h4>Constituição</h4><p>Princípios inegociáveis. Núcleo firme, versionado (spec-kit).</p></div>
+        <div class="doc"><h4>Modelo operacional</h4><p>A regra vigente: papéis, cerimônias, artefatos, raias, gates.</p></div>
+        <div class="doc"><h4>Handbook</h4><p>Fundamentos por elemento: teoria + frameworks + recomendação.</p></div>
+        <div class="doc"><h4>Diário + Pesquisa</h4><p>Como aprendemos + a síntese citada que embasa tudo.</p></div>
+      </div>
+      <p class="flow">Fluxo de uma feature: <b>spec</b> → <b>plan</b> (Constitution Check) → <b>tasks</b> → <b>implement</b> (agentes) → <b>DoD</b> (CI) → <b>revisão fresca</b> → <b>gate humano</b> → merge</p>
+    </div>
+  </section>
+
+  <section class="slide" data-label="Cap 01">
+    <div class="wrap">
+      <div class="eyebrow">Cap 01 · [1] · Fundamento</div>
+      <h2>Princípio operacional central</h2>
+      <div class="tech">
+        <dl class="def">
+          <div><dt>Princípio</dt><dd>IA explora/propõe/escreve; humano especifica/decide/aprova; testes + revisão independente validam.</dd></div>
+          <div><dt>Mecânica</dt><dd>Accountability ≠ capacidade. O gate humano é <b>ex-ante</b>; o registro é ex-post. Para ação irreversível, a alavanca é a <b>reversibilidade engenheirada</b>.</dd></div>
+          <div><dt>Conexão</dt><dd>Base de <b>[9]</b> (gates), <b>[3]</b> (rewind), <b>[10]</b> (recuperação).</dd></div>
+        </dl>
+        <div class="speccard"><div class="lbl">Política + reversibilidade</div><pre><span class="c"># decisão por classe, não por instância</span>
+policy: <span class="k">allow</span> | <span class="k">deny</span> | <span class="k">ask</span>
+
+<span class="c"># torna o irreversível reversível</span>
+backup · dry-run · staging · soft-delete</pre></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-label="Cap 02">
+    <div class="wrap">
+      <div class="eyebrow">Cap 02 · [10] · Fundamento (evidência)</div>
+      <h2>DORA / SPACE</h2>
+      <div class="tech">
+        <dl class="def">
+          <div><dt>Princípio</dt><dd>Velocidade e estabilidade <b>não são trade-off</b> — os mesmos times são rápidos e estáveis.</dd></div>
+          <div><dt>Mecânica</dt><dd>As 4 métricas são <b>outcomes</b> de capacidades. Alavanca única: <b>lote pequeno</b> — move as quatro juntas.</dd></div>
+          <div><dt>Na prática</dt><dd>Bússola qualitativa (lead time, change fail rate). Instrumentar painel = YAGNI agora.</dd></div>
+        </dl>
+        <div class="speccard"><div class="lbl">As quatro chaves</div><pre><span class="k">throughput</span>
+  · deploy frequency
+  · lead time (commit→prod)
+<span class="k">estabilidade</span>
+  · change fail rate
+  · time to restore
+<span class="c"># capacidades: CI · trunk-based · testes · revisão</span></pre></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-label="Cap 03">
+    <div class="wrap">
+      <div class="eyebrow">Cap 03 · [2] · Mecânica</div>
+      <h2>Spec-Driven Development</h2>
+      <div class="tech">
+        <dl class="def">
+          <div><dt>Princípio</dt><dd>A spec é a fonte de verdade porque virou o <b>input que gera</b> o código — não a descrição dele.</dd></div>
+          <div><dt>Mecânica</dt><dd>Valor da spec = <b>ambiguidade × raio × irreversibilidade</b>. Daí as raias. Bug não é spec, é <b>teste que reproduz</b>.</dd></div>
+          <div><dt>Na prática</dt><dd>Uma ferramenta SDD (Spec Kit); OpenSpec descartado, ideia do delta virou a raia leve.</dd></div>
+        </dl>
+        <div class="speccard"><div class="lbl">Fluxo + raias</div><pre><span class="k">specify</span> → clarify → <span class="k">plan</span> → tasks → <span class="k">implement</span>
+
+raia <span class="k">leve</span>   bug/typo   → PR é o artefato
+raia <span class="k">plena</span>  feature    → specs/NNN
+raia <span class="k">infra</span>  migração   → + gates reversib.</pre></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-label="Cap 04">
+    <div class="wrap">
+      <div class="eyebrow">Cap 04 · [3] · Mecânica</div>
+      <h2>Fluxo agentic e economia de contexto</h2>
+      <div class="tech">
+        <dl class="def">
+          <div><dt>Princípio</dt><dd>A janela de contexto é <b>finita e degrada ao encher</b>. O inimigo é o acúmulo, não a falta.</dd></div>
+          <div><dt>Mecânica</dt><dd>As 4 peças são <b>economia de contexto</b>: o plan comprime, subagentes descarregam, /clear despeja ruído, revisor fresco não contamina.</dd></div>
+          <div><dt>Conexão</dt><dd>Preserve o load-bearing (a <b>spec</b>); descarte o ruído. Mesma espinha de [2].</dd></div>
+        </dl>
+        <div class="speccard"><div class="lbl">O loop</div><pre>explore → plan → code → commit
+
+subagente   <span class="c"># lê em janela separada</span>
+/clear      <span class="c"># reset entre tarefas</span>
+reviewer    <span class="c"># contexto fresco, só o diff</span></pre></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-label="Cap 05">
+    <div class="wrap">
+      <div class="eyebrow">Cap 05 · [4] · Mecânica</div>
+      <h2>Orquestração de agentes</h2>
+      <div class="tech">
+        <dl class="def">
+          <div><dt>Princípio</dt><dd><b>Map-reduce cognitivo</b>: o reduce (reconciliar as fatias) é do orquestrador, que tem o contexto global.</dd></div>
+          <div><dt>Mecânica</dt><dd>O <b>corte</b> é mais traiçoeiro que o reduce — vai nas costuras (<b>bounded contexts</b>). Espectro workflow↔agent.</dd></div>
+          <div><dt>Na prática</dt><dd><b>Menor autonomia que resolve</b>: workflow por default; agent só quando o corte não é predefinível.</dd></div>
+        </dl>
+        <div class="speccard"><div class="lbl">6 padrões (Anthropic)</div><pre>chaining · routing · parallelization
+orchestrator-workers · evaluator-optimizer
+autonomous
+
+<span class="c"># no modelo:</span> raias=routing · fluxo=chaining
+<span class="c">#</span> revisor=evaluator · orquestrador=humano</pre></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-label="Cap 06">
+    <div class="wrap">
+      <div class="eyebrow">Cap 06 · [5] · Estrutura</div>
+      <h2>Papéis e RACI</h2>
+      <div class="tech">
+        <dl class="def">
+          <div><dt>Princípio</dt><dd>Papéis como <b>modos de trabalho</b>. Preserva-se o contrapeso: decide ≠ executa ≠ verifica.</dd></div>
+          <div><dt>Mecânica</dt><dd>Delega-se <b>R/C/I; nunca o A</b> (accountability não delega). C sempre <b>independente</b> (contexto fresco).</dd></div>
+          <div><dt>Na prática</dt><dd>O humano é Accountable <b>pela política, gates e critérios — não por cada item</b>. É o que faz escalar.</dd></div>
+        </dl>
+        <div class="speccard"><div class="lbl">Delegabilidade RACI</div><pre>R  executa    → agente
+C  verifica   → agente (fresco)
+I  informado  → trace / logs
+A  accountable→ <span class="k">humano</span>  <span class="c"># nunca delega</span></pre></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-label="Cap 07">
+    <div class="wrap">
+      <div class="eyebrow">Cap 07 · [6] · Estrutura</div>
+      <h2>Cerimônias e cadência</h2>
+      <div class="tech">
+        <dl class="def">
+          <div><dt>Princípio</dt><dd>Cerimônia é a <b>função</b> que entrega, não a reunião. Corta-se pela função (daily/planning somem).</dd></div>
+          <div><dt>Mecânica</dt><dd>Shape Up + Kanban: apetite (tempo fixo, escopo variável) + cooldown. <b>Retro amplificada</b>: erro → regra versionada.</dd></div>
+          <div><dt>Na prática</dt><dd>WIP limitado pela <b>atenção humana</b>. Paralelize <b>dentro</b> da feature; escale baratear os gates.</dd></div>
+        </dl>
+        <div class="speccard"><div class="lbl">Cadência</div><pre>shaping/spec   <span class="c"># o "planning" real</span>
+ciclo (apetite)
+checkpoint
+cooldown
+retro          <span class="c"># → CLAUDE.md / ADR</span>
+
+<span class="c">✗ daily   ✗ sprint planning   ✗ backlog</span></pre></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-label="Cap 08">
+    <div class="wrap">
+      <div class="eyebrow">Cap 08 · [7] · Qualidade</div>
+      <h2>Entregáveis e artefatos</h2>
+      <div class="tech">
+        <dl class="def">
+          <div><dt>Princípio</dt><dd>Artefato custa duas vezes (escrever + manter). Vive se é <b>input consumido com forcing function</b> — ou imutável (ADR).</dd></div>
+          <div><dt>Mecânica</dt><dd>"Dar contexto" não distingue; o que distingue é o <b>consumidor</b> e o que <b>quebra</b> se ele envelhece.</dd></div>
+          <div><dt>Na prática</dt><dd>Não duplicar função já servida: PRD → spec; design doc → plan + ADR. Journey = vivo por gate (P. VII).</dd></div>
+        </dl>
+        <div class="speccard"><div class="lbl">Consumidor → forcing function</div><pre>spec    → agente gera   → código errado
+teste   → CI            → vermelho
+ADR     → imutável      → não apodrece
+journey → gate de PR    → capturas+heurística
+
+PRD / design doc avulsos → <span class="k">YAGNI</span></pre></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-label="Cap 09">
+    <div class="wrap">
+      <div class="eyebrow">Cap 09 · [8] · Qualidade</div>
+      <h2>Definition of Ready / Done</h2>
+      <div class="tech">
+        <dl class="def">
+          <div><dt>Princípio</dt><dd>Um critério de "done" precisa ser <b>verificável autonomamente</b> (pass/fail que o agente gera e o hook confere).</dd></div>
+          <div><dt>Mecânica</dt><dd>O trabalho é <b>converter julgamento em check</b> (harness design). DoR = spec executável sem adivinhar.</dd></div>
+          <div><dt>Limite</dt><dd><b>Verde ≠ certo</b>: não garante coerência global (ótimo local) nem "a coisa certa" — isso fica com o humano.</dd></div>
+        </dl>
+        <div class="speccard"><div class="lbl">Converter julgamento → check</div><pre>"código limpo"  → lint + fitness fns
+"boa UX"        → tokens + heurística
+"seguro"        → secret scan + injeção
+
+<span class="c"># fechável por Stop-hook / /goal / /dod</span></pre></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-label="Cap 10">
+    <div class="wrap">
+      <div class="eyebrow">Cap 10 · [9] · Qualidade</div>
+      <h2>Gates humanos e classes de risco</h2>
+      <div class="tech">
+        <dl class="def">
+          <div><dt>Princípio</dt><dd>Gate <b>uniforme</b> falha sempre: pesado → funil; leve → o irreversível escapa.</dd></div>
+          <div><dt>Mecânica</dt><dd>Gate <b>proporcional</b> a <b>irreversibilidade × impacto</b>. Automatiza baixo, escala alto, bloqueia lote/admin.</dd></div>
+          <div><dt>Conexão</dt><dd>Mesmo eixo das raias [2]. <b>Reversibilidade rebaixa a classe</b> → menos gates pesados.</dd></div>
+        </dl>
+        <div class="speccard"><div class="lbl">Taxonomia de risco</div><pre>leitura            → automático
+criação reversível → merge
+alteração          → aprovação c/ resumo
+irreversível       → dupla aprovação
+lote / admin       → <span class="k">bloqueado</span></pre></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-label="Cap 11">
+    <div class="wrap">
+      <div class="eyebrow">Cap 11 · [11] · Qualidade</div>
+      <h2>Rastreabilidade</h2>
+      <div class="tech">
+        <dl class="def">
+          <div><dt>Princípio</dt><dd>Dá <b>o quê + o porquê</b> sem re-derivar. Em solo+IA, os artefatos ligados <b>são a memória</b> que sobrevive ao reset.</dd></div>
+          <div><dt>Mecânica</dt><dd>Dois sentidos: <b>para frente</b> (cobertura de intenção) e <b>para trás</b> (sintoma→causa = recuperação).</dd></div>
+          <div><dt>Na prática</dt><dd><b>Emerge</b> de artefatos se referenciarem; a DoD [8] força o elo. Sem matriz/ferramenta.</dd></div>
+        </dl>
+        <div class="speccard"><div class="lbl">O elo</div><pre>spec <span class="k">NNN</span> ↔ PR ↔ testes ↔ journey
+
+→  spec construída e verificada?
+←  bug → código → spec → decisão
+   <span class="c"># item obrigatório da DoD</span></pre></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-label="Cap 12">
+    <div class="wrap">
+      <div class="eyebrow">Cap 12 · [12] · Governança</div>
+      <h2>Governança leve</h2>
+      <div class="tech">
+        <dl class="def">
+          <div><dt>Princípio</dt><dd>Sistema de regras cresce → <b>bloat/ossificação</b>. Força contrária: YAGNI + poda + flexibilidade.</dd></div>
+          <div><dt>Mecânica</dt><dd><b>Núcleo firme</b> (constituição) + <b>periferia evoluível</b> (modelo/handbook) + ADR imutável + retro→regra.</dd></div>
+          <div><dt>Enforcement</dt><dd>Hard gates na máquina (CI) + gates de julgamento no humano (PR template + <code>/dod</code>). Não depende de disciplina.</dd></div>
+        </dl>
+        <div class="speccard"><div class="lbl">Aplicação (§12 do modelo)</div><pre>mecânico  → CI hard gate (testes, fitness,
+            changelog) — bloqueia merge
+julgamento→ PR template + aprovação humana
+agente    → comando <span class="k">/dod</span> (self-check)</pre></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide cover" data-label="Fecho">
+    <div class="wrap">
+      <div class="eyebrow">Referência</div>
+      <h2>Do princípio ao merge, um sistema costurado</h2>
+      <p class="lead">Fios recorrentes: <strong>reversibilidade</strong> · o eixo <strong>ambiguidade×raio×irreversibilidade</strong> · <strong>economia de contexto</strong> · o humano <strong>Accountable pela política</strong> · <strong>gates verificáveis</strong> · o <strong>loop de aprendizado</strong> · <strong>YAGNI</strong>.</p>
+      <p class="foot">Detalhe completo: docs/handbook (capítulos 01–12) · docs/governance/modelo-operacional.md</p>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  (function () {
+    var deck = document.getElementById('deck');
+    var slides = Array.prototype.slice.call(deck.querySelectorAll('.slide'));
+    var rail = document.getElementById('rail');
+    var cur = document.getElementById('cur');
+    document.getElementById('tot').textContent = String(slides.length).padStart(2, '0');
+    slides.forEach(function (s, i) {
+      var b = document.createElement('button');
+      b.setAttribute('aria-label', 'Ir para ' + (s.dataset.label || ('slide ' + (i + 1))));
+      b.addEventListener('click', function () { s.scrollIntoView({ behavior: 'smooth' }); });
+      rail.appendChild(b);
+    });
+    var dots = Array.prototype.slice.call(rail.children);
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          var i = slides.indexOf(e.target);
+          cur.textContent = String(i + 1).padStart(2, '0');
+          dots.forEach(function (d, di) { d.setAttribute('aria-current', di === i ? 'true' : 'false'); });
+        }
+      });
+    }, { root: deck, threshold: 0.5 });
+    slides.forEach(function (s) { io.observe(s); });
+    function idx() { var st = deck.scrollTop, best = 0, bd = Infinity;
+      slides.forEach(function (s, i) { var d = Math.abs(s.offsetTop - st); if (d < bd) { bd = d; best = i; } }); return best; }
+    window.addEventListener('keydown', function (e) {
+      if (['ArrowDown', 'ArrowRight', 'PageDown', ' '].indexOf(e.key) > -1) { e.preventDefault(); slides[Math.min(idx() + 1, slides.length - 1)].scrollIntoView({ behavior: 'smooth' }); }
+      else if (['ArrowUp', 'ArrowLeft', 'PageUp'].indexOf(e.key) > -1) { e.preventDefault(); slides[Math.max(idx() - 1, 0)].scrollIntoView({ behavior: 'smooth' }); }
+      else if (e.key === 'Home') { e.preventDefault(); slides[0].scrollIntoView({ behavior: 'smooth' }); }
+      else if (e.key === 'End') { e.preventDefault(); slides[slides.length - 1].scrollIntoView({ behavior: 'smooth' }); }
+    });
+    document.getElementById('themebtn').addEventListener('click', function () {
+      var root = document.documentElement;
+      var isDark = (root.getAttribute('data-theme') === 'dark') ||
+        (!root.getAttribute('data-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      root.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    });
+  })();
+</script>

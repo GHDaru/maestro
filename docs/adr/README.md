@@ -1,0 +1,19 @@
+# ADRs — Maestro
+
+Architecture/Methodology Decision Records: decisões **imutáveis** (podem ser superadas
+por um ADR posterior, nunca editadas no mérito). Formato: contexto → decisão →
+consequências → fontes.
+
+| ADR | Título | Status |
+|---|---|---|
+| 0004 | [Modelo operacional (papéis, cerimônias, artefatos)](0004-modelo-operacional.md) | Aceito |
+| 0005 | [Raias de trabalho e specs de infra](0005-raias-de-trabalho-e-specs-de-infra.md) | Aceito |
+| 0006 | [Enforcement da DoD e forcing function do CHANGELOG](0006-enforcement-dod-changelog.md) | Aceito |
+| 0007 | [Separação do Maestro em repositório próprio](0007-separacao-repo-maestro.md) | Aceito |
+
+## Nota de numeração
+
+A sequência começa em **0004** porque os ADRs 0001–0003 do repositório de origem
+(`ghdaru`) eram específicos daquela plataforma (curadoria de skills, hospedagem,
+integração) e **não** pertencem à metodologia — não foram migrados. Os números 0004–0006
+foram **preservados** para não quebrar as referências cruzadas no modelo e no handbook.
