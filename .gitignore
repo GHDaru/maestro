@@ -1,0 +1,9 @@
+# dependências do motor de publicação
+publicar/node_modules/
+
+# site gerado (build produz; CI publica). A capa index.html é mantida à mão.
+site/assets/
+site/sumario.html
+site/*.html
+!site/index.html
+site/.nojekyll
