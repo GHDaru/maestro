@@ -1,0 +1,219 @@
+<title>Maestro — a metodologia humano + IA</title>
+<style>
+  :root{
+    --bg:#eceef4;--bg2:#fff;--panel:#f6f7fb;--text:#141728;--muted:#565d74;--faint:#8a90a4;
+    --accent:#9c6f22;--accent2:#b98a34;--line:rgba(20,23,40,.12);--staff:rgba(20,23,40,.14);
+    --ok:#2f7d5b;--warn:#9c6f22;
+    --fd:Georgia,'Times New Roman',serif;--fb:system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --fm:ui-monospace,'SF Mono','Menlo','Cascadia Code',Consolas,monospace;
+  }
+  @media (prefers-color-scheme:dark){:root{
+    --bg:#0d1023;--bg2:#141833;--panel:#12162e;--text:#edeef5;--muted:#a3aabf;--faint:#767d95;
+    --accent:#e6c375;--accent2:#d6b25f;--line:rgba(230,195,117,.16);--staff:rgba(230,195,117,.2);--ok:#66c39a;
+  }}
+  :root[data-theme="dark"]{--bg:#0d1023;--bg2:#141833;--panel:#12162e;--text:#edeef5;--muted:#a3aabf;--faint:#767d95;--accent:#e6c375;--accent2:#d6b25f;--line:rgba(230,195,117,.16);--staff:rgba(230,195,117,.2);--ok:#66c39a;}
+  :root[data-theme="light"]{--bg:#eceef4;--bg2:#fff;--panel:#f6f7fb;--text:#141728;--muted:#565d74;--faint:#8a90a4;--accent:#9c6f22;--accent2:#b98a34;--line:rgba(20,23,40,.12);--staff:rgba(20,23,40,.14);--ok:#2f7d5b;}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--bg);color:var(--text);font-family:var(--fb);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .layout{display:grid;grid-template-columns:240px 1fr;gap:0;max-width:1180px;margin:0 auto}
+  /* sidebar */
+  .side{position:sticky;top:0;height:100vh;overflow-y:auto;padding:26px 18px;border-right:1px solid var(--line)}
+  .marca{font-family:var(--fd);font-weight:700;font-size:24px;letter-spacing:-.01em;text-decoration:none;color:var(--text)}
+  .marca small{display:block;font-family:var(--fm);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:400;margin-top:4px}
+  .toc{margin-top:24px;display:flex;flex-direction:column;gap:2px}
+  .toc a{font-size:13.5px;color:var(--muted);text-decoration:none;padding:5px 8px;border-radius:6px;border-left:2px solid transparent}
+  .toc a:hover{color:var(--text);background:var(--panel)}
+  .toc a.on{color:var(--accent);border-left-color:var(--accent);background:var(--panel)}
+  .toc .grp{font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin:16px 0 4px 8px}
+  /* content */
+  .main{padding:0 clamp(20px,4vw,64px) 120px;min-width:0}
+  section{padding:56px 0 8px;border-bottom:1px solid var(--line);scroll-margin-top:20px}
+  section:last-child{border-bottom:0}
+  .eyebrow{font-family:var(--fm);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);font-weight:600;display:inline-flex;align-items:center;gap:10px;margin:0 0 14px}
+  .eyebrow::before{content:"";width:22px;height:1px;background:var(--accent)}
+  h1{font-family:var(--fd);font-weight:700;font-size:clamp(46px,8vw,92px);line-height:.95;letter-spacing:-.02em;margin:0}
+  h2{font-family:var(--fd);font-weight:700;font-size:clamp(26px,4vw,40px);line-height:1.08;letter-spacing:-.015em;margin:0 0 14px;text-wrap:balance;max-width:22ch}
+  h3{font-family:var(--fd);font-size:20px;margin:22px 0 6px}
+  p{margin:0 0 12px;max-width:64ch}p strong{font-weight:600}
+  .lead{font-size:clamp(18px,2.2vw,22px);color:var(--muted)}
+  a.ln{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--line)}
+  .staff{height:9px;width:110px;margin:18px 0 0;background:repeating-linear-gradient(var(--staff) 0 1px,transparent 1px 4px)}
+  code{font-family:var(--fm);font-size:.88em;background:var(--panel);padding:1px 5px;border-radius:4px;color:var(--accent)}
+  /* hero */
+  .hero{min-height:82vh;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--line)}
+  .hero .sub{font-size:clamp(20px,3vw,30px);font-weight:500;margin:22px 0 0}
+  .hero .score{font-family:var(--fd);font-style:italic;color:var(--muted);font-size:clamp(15px,1.9vw,20px);margin:12px 0 0}
+  /* two extremes */
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:8px 0 6px}
+  .box{border:1px solid var(--line);border-radius:14px;padding:22px;background:var(--bg2)}
+  .box h4{margin:0 0 8px;font-family:var(--fm);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+  .box p{color:var(--muted);font-size:15px;margin:0}
+  .punch{font-family:var(--fd);font-size:clamp(22px,3.2vw,32px);margin:18px 0 0}.punch em{color:var(--accent);font-style:italic}
+  /* layers */
+  .layer{display:grid;grid-template-columns:120px 1fr;gap:16px;align-items:baseline;border-left:2px solid var(--accent);padding:9px 0 9px 16px;margin:8px 0}
+  .layer .l{font-family:var(--fm);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+  .layer .d{color:var(--muted);font-size:15px}
+  /* elements */
+  .el{padding:16px 0;border-top:1px solid var(--line);display:grid;grid-template-columns:44px 1fr;gap:14px}
+  .el:first-of-type{border-top:0}
+  .el .n{font-family:var(--fm);color:var(--accent);font-size:13px;font-weight:600}
+  .el h3{margin:0 0 3px;font-size:18px}
+  .el p{margin:0;color:var(--muted);font-size:14.5px}
+  /* callouts (didática harness) */
+  .callout{border-left:3px solid var(--accent);background:var(--panel);border-radius:0 10px 10px 0;padding:16px 20px;margin:20px 0}
+  .callout .k{font-family:var(--fm);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:8px}
+  .callout ul{margin:0;padding-left:18px}.callout li{margin:5px 0;font-size:15px}
+  .callout.verif{border-color:var(--ok)}.callout.verif .k{color:var(--ok)}
+  /* reading map */
+  .map{display:flex;flex-direction:column;gap:2px;margin-top:8px}
+  .map a{display:flex;gap:12px;align-items:baseline;text-decoration:none;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:12px 16px;background:var(--bg2)}
+  .map a:hover{border-color:var(--accent)}
+  .map .num{font-family:var(--fm);color:var(--accent);font-size:12px;font-weight:600}
+  .map .dt{color:var(--muted);font-size:14px}
+  .foot{padding:40px 0 0;color:var(--faint);font-family:var(--fm);font-size:12px}
+  .themebtn{position:fixed;right:16px;top:14px;z-index:20;all:unset;cursor:pointer;font-family:var(--fm);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);border:1px solid var(--line);padding:6px 10px;border-radius:8px;background:var(--bg)}
+  .themebtn:hover{color:var(--accent);border-color:var(--accent)}
+  @media(max-width:820px){.layout{grid-template-columns:1fr}.side{display:none}.two,.layer{grid-template-columns:1fr}}
+</style>
+
+<button class="themebtn" id="tt" aria-label="Alternar tema">◐ tema</button>
+<div class="layout">
+  <aside class="side">
+    <a class="marca" href="#topo">Maestro<small>Humano + IA</small></a>
+    <nav class="toc" id="toc">
+      <div class="grp">A história</div>
+      <a href="#dor">A dor</a>
+      <a href="#jornada">A jornada</a>
+      <a href="#sistema">O sistema</a>
+      <div class="grp">A metodologia</div>
+      <a href="#elementos">Os 12 elementos</a>
+      <a href="#roubar">O que roubar</a>
+      <div class="grp">Praticar</div>
+      <a href="#mapa">Por onde começar</a>
+      <a href="#verif">Verificação</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <section class="hero" id="topo">
+      <div class="eyebrow">Metodologia de engenharia · Humano + IA</div>
+      <h1>Maestro</h1>
+      <p class="sub">Um humano rege. Muitos agentes executam.</p>
+      <p class="score">A spec é a partitura · os gates, o compasso · o ROI, a plateia.</p>
+      <div class="staff"></div>
+    </section>
+
+    <section id="dor">
+      <div class="eyebrow">A dor · por que existe</div>
+      <h2>Dois jeitos de construir software falham</h2>
+      <div class="two">
+        <div class="box"><h4>Sem IA</h4><p>Dúzias de pessoas só para <em>entender</em> um sistema legado: ler código, reconstruir a intenção perdida, gerar documentação. Lento, caro, e o conhecimento evapora com quem sai.</p></div>
+        <div class="box"><h4>IA sem método</h4><p>O agente escreve código que compila e <em>erra a intenção</em>; artefatos apodrecem; agentes sem contrapeso. Velocidade sem governança vira risco.</p></div>
+      </div>
+      <p class="punch">Falta o <em>método no meio</em>.</p>
+    </section>
+
+    <section id="jornada">
+      <div class="eyebrow">A jornada · a virada</div>
+      <h2>Se o agente escreve o código, o que muda?</h2>
+      <p class="lead">Quando a máquina executa, o valor deixa de estar em <strong>digitar</strong> e passa a estar em duas coisas humanas: deixar a <strong>intenção</strong> clara e <strong>verificar</strong> o resultado.</p>
+      <p>Disso vem o nome. Numa orquestra, o maestro não toca — ele <strong>rege</strong>. A partitura (a <em>spec</em>) diz o que tocar; o compasso (os <em>gates</em>) marca o ritmo; os músicos (os agentes) executam. <strong>Um humano rege, muitos agentes executam.</strong></p>
+    </section>
+
+    <section id="sistema">
+      <div class="eyebrow">O sistema</div>
+      <h2>12 elementos, 5 camadas</h2>
+      <div class="layer"><span class="l">Fundamento</span><span class="d">o <em>porquê</em> — princípio central + evidência (DORA)</span></div>
+      <div class="layer"><span class="l">Mecânica</span><span class="d">como o trabalho flui — spec-driven, fluxo agentic, orquestração</span></div>
+      <div class="layer"><span class="l">Estrutura</span><span class="d">quem e quando — papéis (RACI), cadência (Shape Up)</span></div>
+      <div class="layer"><span class="l">Qualidade</span><span class="d">o que se produz e como se prova — artefatos, DoD/DoR, gates de risco, rastreabilidade</span></div>
+      <div class="layer"><span class="l">Governança</span><span class="d">como tudo evolui — constituição, ADRs, YAGNI</span></div>
+
+      <div class="callout">
+        <div class="k">As 3 ideias que costuram tudo</div>
+        <ul>
+          <li><strong>A spec é a fonte de verdade.</strong> Não o código (que o agente refaz), não o prompt.</li>
+          <li><strong>O humano responde pela política, não por cada item.</strong> Define os trilhos; os agentes correm dentro deles. É o que faz escalar.</li>
+          <li><strong>Reversibilidade compra velocidade.</strong> O que torna seguro delegar não é aprovar tudo — é tornar as ações reversíveis. Erra-se barato, e isso deixa correr rápido.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="elementos">
+      <div class="eyebrow">A metodologia · por dentro</div>
+      <h2>Os 12 elementos, em uma linha cada</h2>
+      <div class="el"><span class="n">1</span><div><h3>Princípio central</h3><p>IA escreve · humano decide/aprova · verificação independente valida. O que torna o irreversível seguro de delegar é a reversibilidade engenheirada.</p></div></div>
+      <div class="el"><span class="n">10</span><div><h3>Evidência (DORA)</h3><p>Velocidade e estabilidade não são trade-off. Alavanca: lote pequeno + reversibilidade.</p></div></div>
+      <div class="el"><span class="n">2</span><div><h3>Spec-Driven</h3><p>A spec é a fonte de verdade porque virou o input que gera o código — não a descrição.</p></div></div>
+      <div class="el"><span class="n">3</span><div><h3>Fluxo agentic e economia de contexto</h3><p>explore→plan→code→commit + subagentes + revisor fresco = economia de contexto. A spec é o contexto integrador.</p></div></div>
+      <div class="el"><span class="n">4</span><div><h3>Orquestração</h3><p>Map-reduce cognitivo: corte nas costuras (bounded contexts); menor autonomia que resolve.</p></div></div>
+      <div class="el"><span class="n">5</span><div><h3>Papéis e RACI</h3><p>Delega-se R/C/I; nunca o A. O humano é Accountable pela política, não por cada item.</p></div></div>
+      <div class="el"><span class="n">6</span><div><h3>Cerimônias e cadência</h3><p>Cerimônia = função, não reunião. WIP limitado pela atenção humana. Shape Up + Kanban.</p></div></div>
+      <div class="el"><span class="n">7</span><div><h3>Entregáveis e artefatos</h3><p>Artefato vive se é input consumido com forcing function (ou imutável, como o ADR).</p></div></div>
+      <div class="el"><span class="n">8</span><div><h3>Definition of Ready / Done</h3><p>"Done" precisa ser verificável autonomamente. Verde ≠ certo — o global fica com o humano.</p></div></div>
+      <div class="el"><span class="n">9</span><div><h3>Gates e classes de risco</h3><p>Gate proporcional a irreversibilidade × impacto. Reversibilidade rebaixa a classe.</p></div></div>
+      <div class="el"><span class="n">11</span><div><h3>Rastreabilidade</h3><p>spec ↔ PR ↔ teste ↔ journey = a memória durável que sobrevive ao reset do agente.</p></div></div>
+      <div class="el"><span class="n">12</span><div><h3>Governança leve</h3><p>Aprende sem inchar: núcleo firme + periferia evoluível + YAGNI.</p></div></div>
+    </section>
+
+    <section id="roubar">
+      <div class="eyebrow">Leitura executiva</div>
+      <h2>O que roubar</h2>
+      <div class="callout">
+        <div class="k">Ideias exportáveis para qualquer time humano + IA</div>
+        <ul>
+          <li>Trate a <strong>spec como código-fonte</strong>: se a intenção não está nela, não existe.</li>
+          <li>Meça o gate humano por <strong>reversibilidade × impacto</strong> — e engenheire reversibilidade para precisar de menos gates.</li>
+          <li>Seja Accountable pela <strong>política</strong>, não pelo item: é como um humano orquestra N agentes sem virar gargalo.</li>
+          <li>Todo "pronto" é um <strong>check que a máquina roda</strong>; o humano guarda só o "é a coisa certa".</li>
+          <li>Toda retro vira <strong>regra versionada</strong>: o processo aprende e não repete a correção.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="mapa">
+      <div class="eyebrow">Praticar · por onde começar</div>
+      <h2>O mapa de leitura</h2>
+      <p class="lead">Este site conta a história. A fonte de verdade são os documentos no repositório — cada um linkado abaixo.</p>
+      <div class="map">
+        <a class="ln" href="https://github.com/GHDaru/maestro/blob/main/docs/comece-por-aqui.md"><span class="num">01</span><span>Comece por aqui <span class="dt">· a história em 5 min</span></span></a>
+        <a class="ln" href="https://github.com/GHDaru/maestro/blob/main/docs/governance/principios-maestro.md"><span class="num">02</span><span>Princípios <span class="dt">· os inegociáveis (constituição)</span></span></a>
+        <a class="ln" href="https://github.com/GHDaru/maestro/blob/main/docs/governance/modelo-operacional.md"><span class="num">03</span><span>Modelo operacional <span class="dt">· a regra do dia a dia</span></span></a>
+        <a class="ln" href="https://github.com/GHDaru/maestro/blob/main/docs/handbook/README.md"><span class="num">04</span><span>Handbook <span class="dt">· o porquê de cada regra (12 capítulos)</span></span></a>
+        <a class="ln" href="https://github.com/GHDaru/maestro/blob/main/docs/roadmap.md"><span class="num">05</span><span>Roadmap <span class="dt">· o que construímos e em que ordem</span></span></a>
+        <a class="ln" href="https://github.com/GHDaru/maestro/blob/main/docs/governance/glossario.md"><span class="num">·</span><span>Glossário <span class="dt">· todas as siglas</span></span></a>
+      </div>
+    </section>
+
+    <section id="verif">
+      <div class="eyebrow">Verificação</div>
+      <h2>Entendeu o Maestro?</h2>
+      <div class="callout verif">
+        <div class="k">Três perguntas</div>
+        <ul>
+          <li>Por que a <strong>spec</strong>, e não o código, é a fonte de verdade quando o agente escreve?</li>
+          <li>O que torna seguro <strong>delegar</strong> uma ação irreversível?</li>
+          <li>Como um humano orquestra N agentes <strong>sem virar gargalo</strong>?</li>
+        </ul>
+      </div>
+      <p class="foot">Maestro · Plataforma GHDaru Tecnologia · fonte no <a class="ln" href="https://github.com/GHDaru/maestro">GitHub</a> · página de storytelling (a verdade vive nos docs)</p>
+    </section>
+  </main>
+</div>
+
+<script>
+  (function(){
+    var tt=document.getElementById('tt');
+    tt.addEventListener('click',function(){
+      var r=document.documentElement;
+      var dark=(r.getAttribute('data-theme')==='dark')||(!r.getAttribute('data-theme')&&matchMedia('(prefers-color-scheme:dark)').matches);
+      r.setAttribute('data-theme',dark?'light':'dark');
+    });
+    var links=[].slice.call(document.querySelectorAll('.toc a'));
+    var secs=links.map(function(a){return document.querySelector(a.getAttribute('href'));});
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){if(e.isIntersecting){var i=secs.indexOf(e.target);links.forEach(function(l){l.classList.remove('on')});if(links[i])links[i].classList.add('on');}});
+    },{rootMargin:'-40% 0px -55% 0px'});
+    secs.forEach(function(s){if(s)io.observe(s)});
+  })();
+</script>
