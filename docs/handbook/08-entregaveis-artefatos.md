@@ -23,7 +23,7 @@ O que distingue é **mecânico**:
   visível (`[2]`).
 - O **teste** vive porque a **CI** o consome: velho → vermelho.
 - O **ADR** vive por **imutabilidade**: nunca precisa de update.
-- O **journey** é **vivo por gate**: a Constituição (Princípio VII) regenera as capturas
+- O **journey** é **vivo por gate**: `principios-maestro.md` (Princípio VI — artefatos vivos) prevê regenerar as capturas
   do build real e revisa a heurística **no mesmo PR** — sem esse gate, apodrece. É o caso
   canônico de *living documentation / docs-as-code*: doc desconectado do fluxo não tem
   forcing function.
@@ -55,7 +55,7 @@ ADR**. Sem consumidor próprio, apodrecem → cerimônia de papel (YAGNI).
 
 - **Manter** apenas artefatos com consumidor + forcing function (ou imutáveis).
 - **Não criar** artefato cuja função já é servida por um vivo (PRD→spec; design doc→plan+ADR).
-- **Journey exige o gate** do Princípio VII para não apodrecer (não é "doc solto").
+- **Journey exige o gate** do Princípio VI (artefatos vivos) para não apodrecer (não é "doc solto").
 - Formalizar o **changelog** com forcing function no PR de release (pendência do modelo).
 
 ## 5. Conexões
@@ -77,4 +77,4 @@ servida** (PRD/design doc avulsos = YAGNI). Fundamenta o catálogo do `modelo-op
 - M. Nygard — *Documenting Architecture Decisions* (ADR): https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions
 - Simon Brown — *C4 model*: https://c4model.com/
 - L. Mezzalira — *Documenting software architecture* (docs-as-code / living documentation): https://lucamezzalira.medium.com/how-to-document-software-architecture-techniques-and-best-practices-2556b1915850
-- `docs/governance/modelo-operacional.md` §6; Constituição (Princípio VII, jornadas vivas).
+- `docs/governance/modelo-operacional.md` §6; `principios-maestro.md` (Princípio VI — artefatos vivos).

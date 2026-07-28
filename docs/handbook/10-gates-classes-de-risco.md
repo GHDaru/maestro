@@ -72,4 +72,4 @@ ou catástrofe; logo **gate proporcional**. Fundamenta o mapa de gates do
 - Anthropic — *Building effective agents* (revisão humana para alto risco): https://www.anthropic.com/engineering/building-effective-agents
 - OWASP — *LLM01 Prompt Injection* (dados também são hostis; política fora do LLM): https://genai.owasp.org/llmrisk/llm01-prompt-injection/
 - Open Policy Agent: https://www.openpolicyagent.org/docs
-- Constituição (Princípio IV, classes de risco); `docs/governance/modelo-operacional.md` §8.
+- `principios-maestro.md` (Princípio III, classes de risco); `docs/governance/modelo-operacional.md` §8.

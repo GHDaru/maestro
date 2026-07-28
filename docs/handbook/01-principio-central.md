@@ -73,4 +73,4 @@ alimentou os gates de reversibilidade formalizados no `[2]`/§7. Diário: `[1]` 
 - E. Horvitz — *Principles of Mixed-Initiative UI*: https://www.microsoft.com/en-us/research/publication/principles-mixed-initiative-user-interfaces/
 - M. Nygard — *Documenting Architecture Decisions*: https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions
 - OWASP — *LLM01 Prompt Injection*: https://genai.owasp.org/llmrisk/llm01-prompt-injection/
-- Constituição da Plataforma (Princípio IV).
+- `principios-maestro.md` (Princípio III — reversibilidade e gates).

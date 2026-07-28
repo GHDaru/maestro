@@ -10,6 +10,16 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Camada didática (spec 001)**: guia narrativo [`docs/comece-por-aqui.md`](docs/comece-por-aqui.md)
+  (dor → jornada → sistema) + [`docs/governance/glossario.md`](docs/governance/glossario.md)
+  (dicionário de todas as siglas); links no `README.md` e banners nos docs de governança.
+  Compêndio PDF regenerado com Introdução + Apêndice Glossário (57 páginas).
+
+### Changed
+- **Rebasing (FR4)**: referências a "Constituição / Princípio IV/V/VII" nos docs migrados
+  passam a apontar para `docs/governance/principios-maestro.md` (via mapa de linhagem).
+
+### Anterior
 - **Fundação do repositório Maestro** (ADR 0007): metodologia extraída de `ghdaru`/
   `flowbuilder` para repositório próprio.
 - `docs/governance/principios-maestro.md` — constituição própria da metodologia (v1.0.0).

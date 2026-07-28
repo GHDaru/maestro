@@ -10,6 +10,7 @@
 > · **Decisões**: `docs/adr/0004-modelo-operacional.md`,
 > `docs/adr/0005-raias-de-trabalho-e-specs-de-infra.md`,
 > `docs/adr/0006-enforcement-dod-changelog.md`
+> · Novo por aqui? [Comece por aqui](../comece-por-aqui.md). Siglas: [glossário](glossario.md).
 
 ## 1. Propósito e escopo
 
@@ -32,7 +33,7 @@ Derivado da pesquisa (síntese e Princípios I, V, VII da Constituição):
 Três regras operacionais decorrem dele:
 
 1. **A spec é a fonte de verdade, não o código nem o prompt.** Todo trabalho nasce de
-   uma especificação (Princípio I). O humano *dirige e refina*; o agente escreve.
+   uma especificação (`principios-maestro.md`, Princípio I). O humano *dirige e refina*; o agente escreve.
 2. **Quem executa não é quem verifica.** A verificação final passa por um **agente
    revisor em contexto fresco** (e/ou humano), nunca pelo mesmo agente que produziu o
    código. É o contrapeso que substitui o "segundo par de olhos" de um time.
@@ -98,7 +99,7 @@ C = consultado, I = informado):
 
 > **O humano é Accountable fixo em toda linha de risco.** Nenhum agente decide sozinho
 > nada que caia nas classes de risco de alteração/exclusão/externa/irreversível
-> (Constituição, Princípio IV) — ver §8.
+> (`principios-maestro.md`, Princípio III) — ver §8.
 
 ## 5. Cerimônias e cadência
 
@@ -187,7 +188,7 @@ dados) exige — materializando a "reversibilidade engenheirada":
 
 ## 8. Mapa de gates humanos inegociáveis
 
-Reaproveita a **taxonomia de classes de risco** da Constituição (Princípio IV). O
+Reaproveita a **taxonomia de classes de risco** de `principios-maestro.md` (Princípio III — classes de risco). O
 agente age sozinho em risco baixo; o humano **DEVE** aprovar a partir de "alteração".
 
 | Classe de risco | Exemplo | Agente pode sozinho? | Gate humano |

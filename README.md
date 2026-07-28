@@ -11,10 +11,15 @@ pessoas — mais rápido e com artefatos que não apodrecem — sobretudo em **s
 Este repositório é o **lar da metodologia**, evoluído de forma independente (origem:
 prática consolidada em `ghdaru` e `flowbuilder`; ver `docs/adr/0007`).
 
+> **Novo por aqui?** Leia primeiro o **[Comece por aqui](docs/comece-por-aqui.md)** (a
+> história em 5 minutos). Dúvida em alguma sigla? → **[Glossário](docs/governance/glossario.md)**.
+
 ## Estrutura
 
 | Camada | Onde | Papel |
 |---|---|---|
+| **Comece por aqui** | [`docs/comece-por-aqui.md`](docs/comece-por-aqui.md) | porta de entrada narrativa (dor → jornada → sistema) |
+| **Glossário** | [`docs/governance/glossario.md`](docs/governance/glossario.md) | dicionário de todas as siglas |
 | **Princípios** | [`docs/governance/principios-maestro.md`](docs/governance/principios-maestro.md) | inegociáveis da metodologia (constituição do Maestro) |
 | **Modelo operacional** | [`docs/governance/modelo-operacional.md`](docs/governance/modelo-operacional.md) | a regra vigente: papéis, cerimônias, artefatos, raias, gates |
 | **Handbook** | [`docs/handbook/`](docs/handbook/README.md) | fundamentos por elemento — 12 capítulos (teoria + frameworks + recomendação) |

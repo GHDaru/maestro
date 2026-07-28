@@ -5,6 +5,8 @@
 > trabalho.** Emendas via ADR + bump de versão.
 >
 > **Versão**: 1.0.0 · **Ratificada**: 2026-07-22
+>
+> Novo no Maestro? Leia o [Comece por aqui](../comece-por-aqui.md). Siglas: [glossário](glossario.md).
 
 Maestro é a metodologia de **1 humano regendo N agentes de IA**: a especificação é a fonte
 de verdade, os agentes executam, o humano decide/aprova/verifica. Estes são os princípios
