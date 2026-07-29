@@ -25,10 +25,18 @@ O padrão de mensagens entre eles está em [`comunicacao.md`](./comunicacao.md).
 **Invariante de segurança:** nenhum agente read-only (Guardião, Review, Security) tem
 `Write`/`Edit` — julgar não é consertar (menor superfície de risco por agente, Princípio III).
 
-## Toolkit (construir o próprio Maestro) — próxima fase
+## Toolkit (construir o próprio Maestro) — executáveis (spec 004)
 
-Ainda só perfil em `perfis.md`; viram executáveis no ciclo seguinte (spec 004):
-Agent-Designer · Skill-Author · Curador/Pesquisa · Didática/Editor.
+Os meta-agentes que evoluem o próprio método, com governança:
+
+| Papel | Subagente | Tools |
+|---|---|---|
+| Agent-Designer (meta) | [`agent-designer`](../../.claude/agents/agent-designer.md) | Read, Write, Edit, Grep |
+| Skill-Author | [`skill-author`](../../.claude/agents/skill-author.md) | Read, Write, WebFetch |
+| Curador / Pesquisa | [`curador-pesquisa`](../../.claude/agents/curador-pesquisa.md) | Read, Write, WebSearch, WebFetch |
+| Didática / Editor | [`didatica-editor`](../../.claude/agents/didatica-editor.md) | Read, Write, Edit, Grep |
+
+**V0 completa: 12 de 12 agentes executáveis** (8 núcleo + 4 toolkit).
 
 ## Humanos (indelegáveis) — não são subagentes
 

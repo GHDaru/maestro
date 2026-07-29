@@ -87,6 +87,9 @@
 
 ## 🛠️ Agentes de toolkit (construir o próprio Maestro)
 
+> Executáveis desde a spec 004: `agent-designer`, `skill-author`, `curador-pesquisa`,
+> `didatica-editor` em `.claude/agents/`. V0 completa (12/12). Índice: `README.md`.
+
 ### Agent-Designer (meta)
 - **Escopo**: desenha e mantém os perfis de agente (`.claude/agents/*` + este doc).
 - **Produz**: perfis. **Consome**: roadmap, modelo, retros. **Tools**: Read, Write, Grep.
