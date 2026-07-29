@@ -1,0 +1,45 @@
+---
+name: dod-verificavel
+description: Transforma critérios de aceite vagos em fitness functions executáveis (grep/ls/teste) que uma máquina consegue verificar sem julgamento humano. Use quando estiver escrevendo os critérios de aceite (DoD) de uma spec.md ou plan.md, ou quando um critério estiver subjetivo ("funciona bem", "está claro") e precisar virar um check objetivo. Complementa o comando /dod, que roda os checks — esta skill ajuda a escrevê-los.
+---
+
+# DoD verificável (design-time)
+
+O Princípio IV exige DoD **verificável autonomamente**: um agente confirma sem opinar. Esta
+skill transforma critério vago em check executável — o que foi feito à mão, igual, em vários
+ciclos.
+
+> **Divisão de trabalho:** esta skill é *design-time* (escrever os checks, ao redigir
+> spec/plan). O comando **`/dod`** é *run-time* (executar os checks antes de dar por pronto).
+> Uma escreve, o outro roda — não se sobrepõem.
+
+## Quando disparar
+
+Escrevendo critérios de aceite em `spec.md`/`plan.md`; um critério está subjetivo e precisa
+virar objetivo.
+
+## Passo a passo
+
+1. Pegue cada critério e pergunte: **"que comando prova isto com saída vazia/não-vazia ou
+   exit code?"** Se não dá pra responder, o critério ainda está vago — reescreva.
+2. Prefira, nesta ordem: **teste automatizado** > `grep`/`ls`/contagem > inspeção manual
+   (último recurso, marque como gate humano).
+3. Escreva o **par (comando, esperado)** — ex.: `esperado vazio`, `= 12`, `exit 0`.
+4. Cubra **caso feliz e caso de falha** por caso de uso (regra do `qa`).
+5. Um invariante de segurança/arquitetura vira **check negativo** (algo que NÃO pode existir):
+   `grep -l <proibido> ...` deve dar **vazio**.
+
+## Anti-padrões (reescreva)
+
+- ❌ "a documentação está clara" → ✅ `grep -L "^description:" skills/*/SKILL.md` vazio (existe)
+  + revisão didática (gate humano explícito para o "clara").
+- ❌ "os agentes read-only são seguros" → ✅ `grep -lE "tools:.*(Write|Edit)" review security ...`
+  **vazio** (check negativo).
+- ❌ "cobertura boa" (meta numérica gameável) → ✅ 1 teste feliz + 1 de falha por caso de uso.
+
+## Exemplo (do plan 004)
+
+> `ls .claude/agents/*.md | wc -l` = 12 · `grep -L "^name:" ...` vazio · `grep -l "WebSearch"
+> curador-pesquisa.md` não-vazio.
+
+**Consumido por:** `spec-agent`/`plan-arquiteto` (escrevem), `qa` (roda), comando `/dod`.
