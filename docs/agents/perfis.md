@@ -1,7 +1,11 @@
 # Perfis de agentes — 1ª versão (para avaliação)
 
-> Rascunho da Fase 1 (spec 003). Cada perfil aqui vira, quando aprovado, um
-> `.claude/agents/<nome>.md` (subagente com `tools`/`model`). Formato de cada perfil:
+> **Fonte humana dos papéis.** Os 8 agentes-núcleo já têm forma **executável** em
+> `.claude/agents/*.md` (spec 003). Índice do vínculo perfil ↔ subagente:
+> [`README.md`](./README.md). Mudou o papel aqui? Atualize o subagente no mesmo PR.
+>
+> Cada perfil aqui vira um `.claude/agents/<nome>.md` (subagente com `tools`/`model`).
+> Formato de cada perfil:
 > **escopo** (o que faz / não faz) · **responsabilidade** · **produz** · **consome** ·
 > **acesso (tools)** · **orçamento de contexto** · **handoff** (próximo).
 >
