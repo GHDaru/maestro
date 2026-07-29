@@ -10,6 +10,10 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Site V0 (storytelling + pipeline)**: capa narrativa `site/index.html` + motor
+  `publicar/` (Markdown→site multipágina, sidebar, tema, callouts, gate de link quebrado)
+  + roadmap de agentes (`docs/agents/perfis.md`, `comunicacao.md`) + deploy no GitHub Pages
+  (`.github/workflows/pages.yml`).
 - **Camada didática (spec 001)**: guia narrativo [`docs/comece-por-aqui.md`](docs/comece-por-aqui.md)
   (dor → jornada → sistema) + [`docs/governance/glossario.md`](docs/governance/glossario.md)
   (dicionário de todas as siglas); links no `README.md` e banners nos docs de governança.
