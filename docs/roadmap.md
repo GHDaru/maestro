@@ -96,14 +96,17 @@ skills/  workflows/  scripts/   ➕ o toolkit (a construir)
 
 Cada fase = **um ciclo** (uma spec, um gate). Ordem por dependência:
 
-| Fase | Entrega | Spec |
-|---|---|---|
-| **F0 — Fundação** | roadmap (este) + ADR de curadoria de fontes + `promote-main.sh` (retro) | 002 |
-| **F1 — Agentes** | perfis de agentes (`.claude/agents/*` + `docs/agents/`) a partir do orientacoes-por-especialista | 003 |
-| **F2 — Skills** | 1ª leva de skills no padrão agentskills.io (ex.: `preparar-pr`, `revisar-arquitetura`, `avaliar-doc`) | 004 |
-| **F3 — Workflows/Scripts** | workflows de orquestração + scripts (incl. `promote-main`) | 005 |
-| **F4 — Vendorizar spec-kit** | trazer seletivo do fork + alinhar templates | 006 |
-| **(contínuo) — Didática** | reescrita incremental dos 12 capítulos (híbrido do ciclo 001) | por capítulo |
+| Fase | Entrega | Spec | Status |
+|---|---|---|---|
+| **F0 — Fundação** | roadmap (este) + ADR de curadoria de fontes | 002 | ✅ |
+| **F1 — Agentes** | 12 subagentes executáveis (`.claude/agents/*` + `docs/agents/`): 8 núcleo + 4 toolkit | 003+004 | ✅ |
+| **F2 — Skills** | leva V0 de skills agentskills.io: `constitution-check`, `dod-verificavel`, `combater-amontoado` | 005 | ✅ |
+| **F3 — Scripts** | scripts do ritual (incl. `promote-main.sh` e scaffold de ciclo) — dor de retro | 006 | 🔜 |
+| **F4 — Vendorizar spec-kit** | trazer seletivo do fork + alinhar templates | 007 | ⏳ |
+| **(contínuo) — Didática** | reescrita incremental dos 12 capítulos (híbrido do ciclo 001) | por capítulo | ⏳ |
+
+> Nota de numeração: os agentes ocuparam **duas** specs (003 núcleo, 004 toolkit), então as
+> specs seguintes deslocam +1 em relação ao plano original. Fase é conceito; spec é sequência.
 
 ## 8. Como avaliamos (a régua)
 
