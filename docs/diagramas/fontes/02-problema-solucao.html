@@ -1,0 +1,175 @@
+<title>MAESTRO — problema → solução</title>
+<style>
+  :root {
+    --ground: #0E0B1A; --ground-2: #17122B;
+    --ink: #EDEAF6; --muted: #A79FC4; --faint: #6F6791;
+    --accent: #9B84FF; --accent-deep: #7C5CFC; --exec: #34D77B;
+    --warn: #E0A44B;
+    --hairline: rgba(255,255,255,0.11); --hairline-strong: rgba(255,255,255,0.18);
+    --problem-ground: rgba(255,255,255,0.015);
+    --solution-glow: radial-gradient(90% 85% at 80% 6%, rgba(124,92,252,0.24), transparent 62%);
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --ground: #F5F2FF; --ground-2: #FFFFFF;
+      --ink: #1A1330; --muted: #574F73; --faint: #8E86A8;
+      --accent: #6D48F0; --accent-deep: #5B34E6; --exec: #16A34A;
+      --warn: #B87514;
+      --hairline: rgba(26,19,48,0.12); --hairline-strong: rgba(26,19,48,0.20);
+      --problem-ground: rgba(26,19,48,0.015);
+      --solution-glow: radial-gradient(90% 85% at 80% 6%, rgba(124,92,252,0.14), transparent 62%);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #0E0B1A; --ground-2: #17122B; --ink: #EDEAF6; --muted: #A79FC4;
+    --faint: #6F6791; --accent: #9B84FF; --accent-deep: #7C5CFC; --exec: #34D77B;
+    --warn: #E0A44B; --hairline: rgba(255,255,255,0.11); --hairline-strong: rgba(255,255,255,0.18);
+    --problem-ground: rgba(255,255,255,0.015);
+    --solution-glow: radial-gradient(90% 85% at 80% 6%, rgba(124,92,252,0.24), transparent 62%);
+  }
+  :root[data-theme="light"] {
+    --ground: #F5F2FF; --ground-2: #FFFFFF; --ink: #1A1330; --muted: #574F73;
+    --faint: #8E86A8; --accent: #6D48F0; --accent-deep: #5B34E6; --exec: #16A34A;
+    --warn: #B87514; --hairline: rgba(26,19,48,0.12); --hairline-strong: rgba(26,19,48,0.20);
+    --problem-ground: rgba(26,19,48,0.015);
+    --solution-glow: radial-gradient(90% 85% at 80% 6%, rgba(124,92,252,0.14), transparent 62%);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0; background: var(--ground); color: var(--ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    display: grid; place-items: center; padding: 3vmin;
+  }
+  .serif { font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif; }
+
+  .slide {
+    position: relative; width: min(96vw, calc(94vh * 16 / 9)); aspect-ratio: 16 / 9;
+    container-type: size;
+    background: linear-gradient(168deg, var(--ground-2), var(--ground) 74%);
+    border: 1px solid var(--hairline); border-radius: 1.4cqw; overflow: hidden;
+    box-shadow: 0 4cqw 9cqw rgba(0,0,0,0.45); isolation: isolate;
+  }
+  .slide::before {
+    content: ""; position: absolute; inset: 0 0 auto 0; height: 0.4cqh;
+    background: linear-gradient(90deg, var(--warn) 0%, var(--warn) 42%, var(--accent-deep) 58%, var(--exec) 100%);
+    opacity: 0.9;
+  }
+
+  .pad { position: relative; z-index: 1; height: 100%; padding: 5.4cqw 5.8cqw; display: flex; flex-direction: column; gap: 3.6cqw; }
+
+  .eyebrow { display: flex; align-items: center; gap: 1.6cqw; flex: 0 0 auto; }
+  .eyebrow .mark { font-size: 1.95cqw; letter-spacing: 0.42em; text-transform: uppercase; font-weight: 700; }
+  .eyebrow .rule { width: 4.4cqw; height: 1px; background: var(--hairline-strong); }
+  .eyebrow .kicker { font-size: 1.28cqw; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+
+  .stage { flex: 1 1 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 0; min-height: 0; }
+
+  .col { display: flex; flex-direction: column; min-height: 0; }
+  .problem { padding-right: 4.6cqw; background: var(--problem-ground); }
+  .solution { padding-left: 4.6cqw; border-left: 1px solid var(--hairline); position: relative; }
+  .solution::before { content: ""; position: absolute; inset: 0; background: var(--solution-glow); pointer-events: none; z-index: -1; }
+
+  .tag { display: inline-flex; align-items: center; gap: 0.9cqw; font-size: 1.16cqw; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 700; }
+  .tag .swatch { width: 1.1cqw; height: 1.1cqw; border-radius: 50%; }
+  .tag.p { color: var(--warn); }
+  .tag.p .swatch { background: var(--warn); }
+  .tag.s { color: var(--accent); }
+  .tag.s .swatch { background: var(--accent); box-shadow: 0 0 0 0.35cqw rgba(124,92,252,0.22); }
+
+  .p-head { margin: 2.2cqw 0 0; font-size: 3.35cqw; line-height: 1.08; font-weight: 600; letter-spacing: -0.01em; text-wrap: balance; color: var(--ink); max-width: 16ch; }
+  .p-head em { font-style: italic; color: var(--warn); }
+
+  .fails { margin-top: auto; display: flex; flex-direction: column; gap: 2cqw; padding-top: 2.6cqw; }
+  .fail { display: grid; grid-template-columns: auto 1fr; gap: 1.5cqw; align-items: start; }
+  .fail .glyph { font-size: 1.7cqw; line-height: 1.3; color: var(--warn); opacity: 0.85; }
+  .fail h4 { margin: 0 0 0.4cqw; font-size: 1.62cqw; font-weight: 600; color: var(--ink); letter-spacing: 0.005em; }
+  .fail p { margin: 0; font-size: 1.36cqw; line-height: 1.4; color: var(--muted); }
+
+  .s-mark { display: flex; align-items: baseline; gap: 1.6cqw; margin-top: 2cqw; }
+  .s-mark .word { font-size: 4.6cqw; line-height: 1; font-weight: 600; letter-spacing: -0.015em; color: var(--ink); }
+  .s-mark .sub { font-size: 1.44cqw; font-style: italic; color: var(--exec); }
+
+  .thesis { margin: 2.1cqw 0 0; font-size: 2.55cqw; line-height: 1.12; font-weight: 600; letter-spacing: -0.01em; text-wrap: balance; }
+  .thesis .a { color: var(--accent); }
+  .thesis .e { color: var(--exec); font-style: italic; }
+
+  .resolution { margin: 1.7cqw 0 0; font-size: 1.4cqw; line-height: 1.46; color: var(--muted); max-width: 44ch; }
+  .resolution b { color: var(--ink); font-weight: 600; }
+
+  .levers { margin-top: auto; display: flex; flex-wrap: wrap; gap: 0.9cqw; padding-top: 2.4cqw; }
+  .lever { font-size: 1.16cqw; font-weight: 600; color: var(--ink); padding: 0.7cqw 1.3cqw; border: 1px solid var(--hairline-strong); border-radius: 5cqw; background: rgba(124,92,252,0.06); }
+  .lever span { color: var(--accent); }
+
+  /* transition node on the seam */
+  .seam-node {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 3;
+    width: 4.6cqw; height: 4.6cqw; border-radius: 50%;
+    background: var(--ground-2); border: 1px solid var(--hairline-strong);
+    display: grid; place-items: center; color: var(--exec); font-size: 2cqw; font-weight: 700;
+    box-shadow: 0 0 0 0.7cqw var(--ground);
+  }
+
+  @media (max-width: 680px) {
+    body { padding: 0; }
+    .slide { width: 100vw; height: 100vh; aspect-ratio: auto; border-radius: 0; border: none; }
+    .stage { grid-template-columns: 1fr; grid-auto-rows: 1fr; }
+    .problem { padding: 0 0 3cqw; }
+    .solution { padding: 3cqw 0 0; border-left: none; border-top: 1px solid var(--hairline); }
+    .seam-node { display: none; }
+  }
+</style>
+
+<div class="slide">
+  <div class="pad">
+    <div class="eyebrow">
+      <span class="mark serif">Maestro</span>
+      <span class="rule"></span>
+      <span class="kicker">Método de engenharia de software com IA</span>
+    </div>
+
+    <div class="stage">
+      <div class="col problem">
+        <span class="tag p"><span class="swatch"></span>O problema</span>
+        <h2 class="p-head serif">Velocidade sem governança <em>vira risco</em>.</h2>
+        <div class="fails">
+          <div class="fail">
+            <span class="glyph">▲</span>
+            <div>
+              <h4>Sem IA</h4>
+              <p>Entender um sistema legado consome dúzias de pessoas. Lento, caro, e o conhecimento evapora com quem sai.</p>
+            </div>
+          </div>
+          <div class="fail">
+            <span class="glyph">▲</span>
+            <div>
+              <h4>Com IA, sem método</h4>
+              <p>O agente compila e <b style="color:var(--ink)">erra a intenção</b>. Artefatos apodrecem; agentes trabalham sem contrapeso.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col solution">
+        <span class="tag s"><span class="swatch"></span>A solução — o método no meio</span>
+        <div class="s-mark">
+          <span class="word serif">Maestro</span>
+          <span class="sub serif">rege, não digita</span>
+        </div>
+        <p class="thesis serif">Um <span class="a">humano rege</span>, muitos <span class="e">agentes executam</span>.</p>
+        <p class="resolution">
+          A intenção vive na <b>especificação</b>, o humano define os <b>trilhos</b> do que pode ser
+          delegado, e cada ação é <b>reversível</b> — velocidade da máquina com decisões auditáveis.
+        </p>
+        <div class="levers">
+          <span class="lever"><span>›</span> Spec = fonte de verdade</span>
+          <span class="lever"><span>›</span> Humano = política, não item a item</span>
+          <span class="lever"><span>›</span> Reversibilidade compra velocidade</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="seam-node" aria-hidden="true">→</div>
+</div>

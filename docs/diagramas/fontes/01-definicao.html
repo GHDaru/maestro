@@ -1,0 +1,205 @@
+<title>MAESTRO — slide executivo</title>
+<style>
+  :root {
+    --ground: #0E0B1A;
+    --ground-2: #17122B;
+    --panel: rgba(255,255,255,0.03);
+    --ink: #EDEAF6;
+    --muted: #A79FC4;
+    --faint: #6F6791;
+    --accent: #9B84FF;
+    --accent-deep: #7C5CFC;
+    --exec: #34D77B;
+    --hairline: rgba(255,255,255,0.11);
+    --hairline-strong: rgba(255,255,255,0.18);
+    --stage-glow: radial-gradient(120% 90% at 78% -10%, rgba(124,92,252,0.28), transparent 60%);
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --ground: #F5F2FF;
+      --ground-2: #FFFFFF;
+      --panel: rgba(24,16,48,0.02);
+      --ink: #1A1330;
+      --muted: #574F73;
+      --faint: #8E86A8;
+      --accent: #6D48F0;
+      --accent-deep: #5B34E6;
+      --exec: #16A34A;
+      --hairline: rgba(26,19,48,0.12);
+      --hairline-strong: rgba(26,19,48,0.20);
+      --stage-glow: radial-gradient(120% 90% at 78% -10%, rgba(124,92,252,0.16), transparent 60%);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #0E0B1A; --ground-2: #17122B; --panel: rgba(255,255,255,0.03);
+    --ink: #EDEAF6; --muted: #A79FC4; --faint: #6F6791; --accent: #9B84FF;
+    --accent-deep: #7C5CFC; --exec: #34D77B; --hairline: rgba(255,255,255,0.11);
+    --hairline-strong: rgba(255,255,255,0.18);
+    --stage-glow: radial-gradient(120% 90% at 78% -10%, rgba(124,92,252,0.28), transparent 60%);
+  }
+  :root[data-theme="light"] {
+    --ground: #F5F2FF; --ground-2: #FFFFFF; --panel: rgba(24,16,48,0.02);
+    --ink: #1A1330; --muted: #574F73; --faint: #8E86A8; --accent: #6D48F0;
+    --accent-deep: #5B34E6; --exec: #16A34A; --hairline: rgba(26,19,48,0.12);
+    --hairline-strong: rgba(26,19,48,0.20);
+    --stage-glow: radial-gradient(120% 90% at 78% -10%, rgba(124,92,252,0.16), transparent 60%);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background:
+      radial-gradient(80% 120% at 12% 118%, rgba(52,215,123,0.06), transparent 55%),
+      var(--ground);
+    color: var(--ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    display: grid;
+    place-items: center;
+    padding: 3vmin;
+  }
+  .serif {
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  }
+
+  .slide {
+    position: relative;
+    width: min(96vw, calc(94vh * 16 / 9));
+    aspect-ratio: 16 / 9;
+    container-type: size;
+    background:
+      var(--stage-glow),
+      linear-gradient(168deg, var(--ground-2), var(--ground) 72%);
+    border: 1px solid var(--hairline);
+    border-radius: 1.4cqw;
+    overflow: hidden;
+    box-shadow: 0 4cqw 9cqw rgba(0,0,0,0.45), inset 0 0 0 1px rgba(255,255,255,0.02);
+    isolation: isolate;
+  }
+  .slide::before {
+    /* thin baton accent along the top edge */
+    content: "";
+    position: absolute; inset: 0 0 auto 0; height: 0.4cqh;
+    background: linear-gradient(90deg, var(--accent-deep), var(--accent) 45%, var(--exec));
+    opacity: 0.9;
+  }
+
+  .gesture { position: absolute; top: 0; right: 0; width: 46cqw; height: 46cqw; opacity: 0.5; pointer-events: none; z-index: 0; }
+  .gesture g { stroke: var(--accent); }
+  .gesture .dot { fill: var(--exec); }
+
+  .pad { position: relative; z-index: 1; height: 100%; padding: 4.8cqw 6.4cqw 4.4cqw; display: flex; flex-direction: column; }
+
+  .eyebrow { display: flex; align-items: center; gap: 1.6cqw; }
+  .eyebrow .mark {
+    font-family: var(--serif, serif);
+    font-size: 2.05cqw; letter-spacing: 0.42em; text-transform: uppercase;
+    font-weight: 700; color: var(--ink);
+  }
+  .eyebrow .rule { flex: 0 0 auto; width: 5cqw; height: 1px; background: var(--hairline-strong); }
+  .eyebrow .kicker {
+    font-size: 1.32cqw; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted); font-weight: 600;
+  }
+
+  .thesis {
+    margin: 2.6cqw 0 0;
+    font-size: 5.75cqw; line-height: 1.04; font-weight: 600;
+    letter-spacing: -0.012em; text-wrap: balance; max-width: 28ch;
+  }
+  .thesis .rege { color: var(--accent); }
+  .thesis .exec { color: var(--exec); font-style: italic; }
+
+  .definition {
+    margin: 2.2cqw 0 0; max-width: 64ch;
+    font-size: 1.78cqw; line-height: 1.46; color: var(--muted);
+  }
+  .definition b { color: var(--ink); font-weight: 600; }
+
+  .mapping {
+    margin: 1.8cqw 0 0; font-size: 1.56cqw; line-height: 1.38;
+    color: var(--faint); font-style: italic; max-width: 78ch;
+  }
+  .mapping .term { color: var(--accent); font-style: normal; font-weight: 600; }
+
+  .pillars {
+    margin-top: auto; padding-top: 2.6cqw;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 3.2cqw;
+    border-top: 1px solid var(--hairline);
+  }
+  .pillar { display: flex; flex-direction: column; gap: 0.9cqw; }
+  .pillar .idx {
+    font-size: 1.24cqw; letter-spacing: 0.16em; color: var(--accent);
+    font-weight: 700; font-variant-numeric: tabular-nums;
+  }
+  .pillar h3 {
+    margin: 0; font-size: 2.05cqw; line-height: 1.12; font-weight: 600;
+    letter-spacing: -0.01em; color: var(--ink);
+  }
+  .pillar p { margin: 0; font-size: 1.34cqw; line-height: 1.4; color: var(--muted); }
+
+  @media (max-width: 640px) {
+    body { padding: 0; }
+    .slide { width: 100vw; height: 100vh; aspect-ratio: auto; border-radius: 0; border: none; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .draw { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 1.6s ease forwards; }
+    .draw.d2 { animation-delay: 0.18s; }
+    .draw.d3 { animation-delay: 0.36s; }
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+  }
+</style>
+
+<div class="slide">
+  <svg class="gesture" viewBox="0 0 100 100" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+    <g stroke-width="0.5" stroke-linecap="round" pathLength="1">
+      <path class="draw"    d="M97 6 C 70 20, 55 38, 62 52 C 68 64, 90 60, 96 44" opacity="0.9"/>
+      <path class="draw d2" d="M99 20 C 66 34, 48 52, 58 66 C 66 78, 92 74, 99 56" opacity="0.55"/>
+      <path class="draw d3" d="M99 36 C 62 50, 44 66, 55 80" opacity="0.3"/>
+    </g>
+    <circle class="dot" cx="62" cy="52" r="1.1"/>
+  </svg>
+
+  <div class="pad">
+    <div class="eyebrow">
+      <span class="mark serif">Maestro</span>
+      <span class="rule"></span>
+      <span class="kicker">Método de engenharia de software com IA</span>
+    </div>
+
+    <h1 class="thesis serif">
+      Um <span class="rege">humano rege</span>.<br>
+      Muitos <span class="exec">agentes executam</span>.
+    </h1>
+
+    <p class="definition">
+      O método que coloca <b>governança entre a velocidade da IA e o risco</b>. A intenção vive
+      na especificação, o humano define os trilhos do que pode ser delegado, e cada ação é
+      reversível — velocidade da máquina com <b>decisões auditáveis</b>.
+    </p>
+
+    <p class="mapping serif">
+      Como numa orquestra: a <span class="term">partitura</span> (a spec) diz o que tocar · o
+      <span class="term">compasso</span> (os gates) marca o ritmo · os
+      <span class="term">músicos</span> (os agentes) executam.
+    </p>
+
+    <div class="pillars">
+      <div class="pillar">
+        <span class="idx">01</span>
+        <h3 class="serif">A spec é a fonte de verdade</h3>
+        <p>Não o código, que o agente refaz, nem o prompt. A intenção vive na especificação.</p>
+      </div>
+      <div class="pillar">
+        <span class="idx">02</span>
+        <h3 class="serif">O humano responde pela política</h3>
+        <p>Define o que um agente faz sozinho e o que precisa de aprovação. Escala sem virar gargalo.</p>
+      </div>
+      <div class="pillar">
+        <span class="idx">03</span>
+        <h3 class="serif">Reversibilidade compra velocidade</h3>
+        <p>Backup, dry-run e rollback tornam o erro barato. Errar barato é o que deixa correr rápido.</p>
+      </div>
+    </div>
+  </div>
+</div>

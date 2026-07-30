@@ -1,0 +1,239 @@
+<title>MAESTRO — SIPOC</title>
+<style>
+  :root {
+    --ground: #0E0B1A; --ground-2: #17122B; --card: #1B1533; --card-2: #221A3E;
+    --ink: #EDEAF6; --muted: #A79FC4; --faint: #6F6791;
+    --agent: #9B84FF; --agent-deep: #7C5CFC; --agent-soft: rgba(124,92,252,0.13);
+    --human: #E7B24C; --human-soft: rgba(231,178,76,0.14);
+    --verified: #34D77B; --verified-soft: rgba(52,215,123,0.14);
+    --hairline: rgba(255,255,255,0.10); --hairline-strong: rgba(255,255,255,0.18);
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --ground: #F4F1FF; --ground-2: #FFFFFF; --card: #FFFFFF; --card-2: #F7F4FF;
+      --ink: #1A1330; --muted: #574F73; --faint: #8E86A8;
+      --agent: #6D48F0; --agent-deep: #5B34E6; --agent-soft: rgba(109,72,240,0.08);
+      --human: #B9821B; --human-soft: rgba(185,130,27,0.12);
+      --verified: #15A34A; --verified-soft: rgba(21,163,74,0.12);
+      --hairline: rgba(26,19,48,0.12); --hairline-strong: rgba(26,19,48,0.22);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #0E0B1A; --ground-2: #17122B; --card: #1B1533; --card-2: #221A3E;
+    --ink: #EDEAF6; --muted: #A79FC4; --faint: #6F6791; --agent: #9B84FF; --agent-deep: #7C5CFC;
+    --agent-soft: rgba(124,92,252,0.13); --human: #E7B24C; --human-soft: rgba(231,178,76,0.14);
+    --verified: #34D77B; --verified-soft: rgba(52,215,123,0.14);
+    --hairline: rgba(255,255,255,0.10); --hairline-strong: rgba(255,255,255,0.18);
+  }
+  :root[data-theme="light"] {
+    --ground: #F4F1FF; --ground-2: #FFFFFF; --card: #FFFFFF; --card-2: #F7F4FF;
+    --ink: #1A1330; --muted: #574F73; --faint: #8E86A8; --agent: #6D48F0; --agent-deep: #5B34E6;
+    --agent-soft: rgba(109,72,240,0.08); --human: #B9821B; --human-soft: rgba(185,130,27,0.12);
+    --verified: #15A34A; --verified-soft: rgba(21,163,74,0.12);
+    --hairline: rgba(26,19,48,0.12); --hairline-strong: rgba(26,19,48,0.22);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--ground); color: var(--ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5; padding: clamp(18px, 3.5vw, 52px);
+  }
+  .serif { font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif; }
+  .wrap { max-width: 1280px; margin: 0 auto; }
+
+  header { border-bottom: 1px solid var(--hairline); padding-bottom: 20px; margin-bottom: 26px; }
+  .brand { display: flex; align-items: baseline; gap: 15px; flex-wrap: wrap; }
+  .brand .mark { font-size: clamp(24px, 3.6vw, 38px); font-weight: 700; }
+  .brand .tag { font-size: clamp(12px, 1.5vw, 14px); letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+  .lede { margin: 11px 0 0; font-size: clamp(14px, 1.7vw, 17px); color: var(--muted); max-width: 78ch; }
+  .lede b { color: var(--ink); font-weight: 600; }
+
+  /* SIPOC columns */
+  .sipoc { display: grid; grid-template-columns: 0.92fr 1fr 1.55fr 1fr 0.92fr; gap: 12px; align-items: stretch; }
+  @media (max-width: 1000px) { .sipoc { grid-template-columns: 1fr 1fr; } .col.process { grid-column: 1 / -1; } }
+  @media (max-width: 560px) { .sipoc { grid-template-columns: 1fr; } }
+
+  .col { background: var(--card); border: 1px solid var(--hairline); border-radius: 13px; padding: 15px 15px 16px; display: flex; flex-direction: column; }
+  .col.process { background: linear-gradient(170deg, var(--card-2), var(--ground-2)); border-color: rgba(124,92,252,0.35); }
+
+  .col h2 { margin: 0; display: flex; align-items: baseline; gap: 9px; }
+  .col h2 .letter { font-size: 26px; font-weight: 700; font-family: "Iowan Old Style", Georgia, serif; color: var(--agent); line-height: 1; }
+  .col h2 .name { font-size: 13px; font-weight: 700; letter-spacing: 0.04em; }
+  .col .pt { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); margin: 3px 0 12px; }
+  .col.process h2 .letter { color: var(--agent-deep); font-size: 30px; }
+
+  ul.items { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  ul.items li { font-size: 13px; color: var(--muted); padding-left: 15px; position: relative; line-height: 1.38; }
+  ul.items li::before { content: ""; position: absolute; left: 0; top: 7px; width: 6px; height: 6px; border-radius: 50%; background: var(--agent); opacity: 0.7; }
+  ul.items li b { color: var(--ink); font-weight: 600; }
+  code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 11.5px; color: var(--agent); background: var(--agent-soft); padding: 1px 5px; border-radius: 5px; }
+
+  /* process steps */
+  .steps { display: flex; flex-direction: column; gap: 7px; }
+  .step { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start; background: rgba(255,255,255,0.02); border: 1px solid var(--hairline); border-radius: 9px; padding: 8px 10px; }
+  .step .n { width: 21px; height: 21px; border-radius: 50%; background: var(--agent-soft); border: 1px solid rgba(124,92,252,0.4); color: var(--agent); font-size: 12px; font-weight: 700; display: grid; place-items: center; font-variant-numeric: tabular-nums; }
+  .step .b { font-size: 13px; }
+  .step .b strong { font-weight: 600; color: var(--ink); }
+  .step .b em { font-style: normal; color: var(--faint); font-size: 11.5px; }
+  .gate-row { display: flex; align-items: center; gap: 8px; padding: 2px 0 2px 6px; font-size: 11.5px; color: var(--human); font-weight: 600; }
+  .gate-row .dia { width: 10px; height: 10px; background: var(--human); transform: rotate(45deg); border-radius: 2px; flex: 0 0 auto; }
+
+  .out li::before { background: var(--verified); }
+  .cust li::before { background: var(--human); }
+
+  /* reference bands */
+  .bands { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 22px; }
+  @media (max-width: 800px) { .bands { grid-template-columns: 1fr; } }
+  .band { border: 1px solid var(--hairline); border-radius: 13px; padding: 15px 18px; background: var(--card); }
+  .band.gates { border-color: rgba(231,178,76,0.35); background: var(--human-soft); }
+  .band h3 { margin: 0 0 11px; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; }
+  .band.gates h3 { color: var(--human); }
+  .band.docs h3 { color: var(--muted); }
+  .glist { display: flex; flex-direction: column; gap: 8px; }
+  .grow { display: flex; align-items: baseline; gap: 9px; font-size: 13px; color: var(--muted); }
+  .grow .k { font-weight: 600; color: var(--ink); min-width: 0; }
+  .grow .mark { flex: 0 0 auto; width: 9px; height: 9px; background: var(--human); transform: rotate(45deg); border-radius: 2px; position: relative; top: 4px; }
+  .grow.mech .mark { background: var(--verified); border-radius: 50%; transform: none; }
+  .doctags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .doctags span { font-size: 11.5px; font-family: ui-monospace, Menlo, monospace; color: var(--agent); background: var(--agent-soft); border: 1px solid var(--hairline); padding: 3px 8px; border-radius: 6px; }
+  .doctags span.you { color: var(--human); background: var(--human-soft); border-color: rgba(231,178,76,0.35); }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--hairline); }
+  .legend .i { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--muted); }
+  .legend .s { width: 12px; height: 12px; flex: 0 0 auto; }
+  .legend .s.a { border-radius: 50%; background: var(--agent); }
+  .legend .s.h { background: var(--human); transform: rotate(45deg); border-radius: 2px; }
+  .legend .s.v { border-radius: 50%; background: var(--verified); }
+  .legend b { color: var(--ink); font-weight: 600; }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <span class="mark serif">Maestro</span>
+      <span class="tag">SIPOC — o ciclo de entrega como processo</span>
+    </div>
+    <p class="lede">
+      <b>Fornecedores → Entradas → Processo → Saídas → Clientes.</b> O processo central é o
+      ciclo spec-driven; os losangos <span style="color:var(--human)">◆</span> marcam os
+      <b>gates humanos indelegáveis</b>, os círculos verdes as verificações mecânicas.
+    </p>
+  </header>
+
+  <div class="sipoc">
+    <!-- S -->
+    <div class="col">
+      <h2><span class="letter">S</span><span class="name">Suppliers</span></h2>
+      <div class="pt">Fornecedores</div>
+      <ul class="items">
+        <li><b>Steward</b> / negócio — intenção, prioridade, apetite</li>
+        <li><b>Usuários</b> e jornadas — necessidade e feedback</li>
+        <li><b>Governança</b> — Constituição, princípios, ADRs</li>
+        <li><b>Curador/Pesquisa</b> — evidência e boas práticas</li>
+        <li><b>Base de código</b> e sistema existente</li>
+        <li>Catálogo de <b>agentes, skills, templates</b></li>
+      </ul>
+    </div>
+
+    <!-- I -->
+    <div class="col">
+      <h2><span class="letter">I</span><span class="name">Inputs</span></h2>
+      <div class="pt">Entradas</div>
+      <ul class="items">
+        <li><b>Brief / intenção</b> + apetite do ciclo</li>
+        <li>Critérios de negócio / jornada a servir</li>
+        <li>Princípios <b>I–VII</b> (Constitution Check)</li>
+        <li>Linguagem ubíqua / contexto de domínio</li>
+        <li>Specs vizinhas, ADRs e padrões anteriores</li>
+        <li>Classe de risco da mudança (define a <b>raia</b>)</li>
+      </ul>
+    </div>
+
+    <!-- P -->
+    <div class="col process">
+      <h2><span class="letter">P</span><span class="name">Process</span></h2>
+      <div class="pt">Processo — o ciclo</div>
+      <div class="steps">
+        <div class="step"><span class="n">1</span><div class="b"><strong>Especificar</strong> <em>spec-agent → <code>spec.md</code></em></div></div>
+        <div class="gate-row"><span class="dia"></span> Gate DoR — humano aprova a spec</div>
+        <div class="step"><span class="n">2</span><div class="b"><strong>Planejar</strong> <em>plan-arquiteto → <code>plan.md</code> + Constitution Check</em></div></div>
+        <div class="gate-row"><span class="dia"></span> Gate — humano aprova o plan</div>
+        <div class="step"><span class="n">3</span><div class="b"><strong>Fatiar</strong> <em>→ <code>tasks.md</code> por fronteira</em></div></div>
+        <div class="step"><span class="n">4</span><div class="b"><strong>Implementar</strong> <em>dev → código + testes (diffs pequenos)</em></div></div>
+        <div class="step"><span class="n">5</span><div class="b"><strong>Verificar</strong> <em>review (fresco) · security · qa</em></div></div>
+        <div class="gate-row"><span class="dia"></span> Gate DoD — checks verificáveis verdes</div>
+        <div class="step"><span class="n">6</span><div class="b"><strong>Promover</strong> <em>gate de merge (humano) → main</em></div></div>
+        <div class="step"><span class="n">7</span><div class="b"><strong>Retro</strong> <em>erro recorrente → regra versionada</em></div></div>
+      </div>
+    </div>
+
+    <!-- O -->
+    <div class="col">
+      <h2><span class="letter" style="color:var(--verified)">O</span><span class="name">Outputs</span></h2>
+      <div class="pt">Saídas</div>
+      <ul class="items out">
+        <li><b>Código + testes</b> em <code>main</code></li>
+        <li>Artefatos vivos: spec/plan/tasks/<b>qa-report</b></li>
+        <li><b>ADR</b>, journey, <b>CHANGELOG</b> (mesmo PR)</li>
+        <li><b>PR mergeado</b> + evidência (testes, prints)</li>
+        <li>Rastreabilidade <b>spec ↔ PR ↔ teste ↔ journey</b></li>
+        <li><b>Regra nova</b> (retro → CLAUDE.md/constituição)</li>
+      </ul>
+    </div>
+
+    <!-- C -->
+    <div class="col">
+      <h2><span class="letter" style="color:var(--human)">C</span><span class="name">Customers</span></h2>
+      <div class="pt">Clientes</div>
+      <ul class="items cust">
+        <li><b>Usuário final</b> — a jornada servida</li>
+        <li><b>Steward</b> — decide a próxima aposta</li>
+        <li><b>Próximos ciclos</b> e agentes — consomem os artefatos</li>
+        <li><b>Operação</b> — runbook, rollback</li>
+        <li><b>O próprio método</b> — retro alimenta a governança</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- reference bands: gates + documents -->
+  <div class="bands">
+    <div class="band gates">
+      <h3>Gates (portões)</h3>
+      <div class="glist">
+        <div class="grow"><span class="mark"></span><span><b class="k">Aprovar a spec</b> — DoR, raia plena</span></div>
+        <div class="grow"><span class="mark"></span><span><b class="k">Aprovar o plan</b> — Constitution Check</span></div>
+        <div class="grow"><span class="mark"></span><span><b class="k">Gate de merge</b> — decisão de promover</span></div>
+        <div class="grow"><span class="mark"></span><span><b class="k">Autorizar deploy/migração</b> — infra, dupla aprovação</span></div>
+        <div class="grow mech"><span class="mark"></span><span><b class="k">Hard gates de CI</b> — testes + fitness + build, CHANGELOG, secret scanning</span></div>
+        <div class="grow mech"><span class="mark"></span><span><b class="k">Reversibilidade (infra)</b> — backup, dry-run/staging, rollback</span></div>
+      </div>
+    </div>
+
+    <div class="band docs">
+      <h3>Documentos (artefatos)</h3>
+      <div class="doctags">
+        <span class="you">brief/intenção</span>
+        <span>spec.md</span>
+        <span>plan.md</span>
+        <span>Constitution Check</span>
+        <span>ux-design.md</span>
+        <span>tasks.md</span>
+        <span>código + testes</span>
+        <span>qa-report.md</span>
+        <span>ADR</span>
+        <span>journey</span>
+        <span>runbook</span>
+        <span>CHANGELOG</span>
+        <span class="you">DoR / DoD</span>
+        <span>PR</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span class="i"><span class="s a"></span> <b>Agente de IA</b> executa</span>
+    <span class="i"><span class="s h"></span> <b>Humano</b> — gate indelegável</span>
+    <span class="i"><span class="s v"></span> <b>Verificado</b> / mecânico (CI)</span>
+  </div>
+</div>
