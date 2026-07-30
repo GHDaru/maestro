@@ -10,6 +10,7 @@ consequências → fontes.
 | 0005 | [Raias de trabalho e specs de infra](0005-raias-de-trabalho-e-specs-de-infra.md) | Aceito |
 | 0006 | [Enforcement da DoD e forcing function do CHANGELOG](0006-enforcement-dod-changelog.md) | Aceito |
 | 0007 | [Separação do Maestro em repositório próprio](0007-separacao-repo-maestro.md) | Aceito |
+| 0008 | [Avaliação do ecossistema SDD (Superpowers, BMAD, Kiro…)](0008-avaliacao-ecossistema-sdd.md) | Proposta |
 
 ## Nota de numeração
 

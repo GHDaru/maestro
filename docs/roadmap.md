@@ -92,6 +92,12 @@ skills/  workflows/  scripts/   ➕ o toolkit (a construir)
 > Regra (YAGNI): trazemos **conceito/contrato adaptado**, não cópia em bloco. Cada item
 > entra por uma spec, não ad-hoc.
 
+**Ecossistema avaliado** (resposta canônica a "isso foi avaliado?"): Spec Kit ✅ adotado ·
+OpenSpec ❌ (ADR 0005) · Superpowers/BMAD/Kiro/Taskmaster/Agent OS/GSD/Tessl → ficha
+[`research/avaliacao-ecossistema-sdd.md`](research/avaliacao-ecossistema-sdd.md) + decisão
+[`adr/0008`](adr/0008-avaliacao-ecossistema-sdd.md) (ciclo 007). Ideias absorvidas: **EARS**
+(critério de aceite) e **worktree/rigor mandatório** (Superpowers), com destino nomeado.
+
 ## 7. As fases (o plano de trabalho)
 
 Cada fase = **um ciclo** (uma spec, um gate). Ordem por dependência:
