@@ -47,6 +47,12 @@
 > **Nota**: o número do capítulo (ordem de leitura) ≠ o rótulo do elemento `[x]`
 > (nossa linguagem compartilhada na jornada). A tabela mapeia os dois.
 
+## Apêndices — estudos de campo
+
+| Apêndice | Título | Resumo |
+|---|---|---|
+| A | [Estudo do repositório `maestro-02`](apendice-a-maestro-02.md) | Toolkit homônimo (fork de sharpdeveye/maestro): o que contribui — memória persistente consultável, auditoria com custo, retro executável, waves, context-slicing medido, catálogo de anti-padrões. Estudo de 2026-07-31. |
+
 ## Formatos
 
 - 📄 **PDF completo** (livro A4, capa + 12 capítulos): [`maestro-handbook.pdf`](maestro-handbook.pdf)
