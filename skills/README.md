@@ -14,6 +14,7 @@ contexto certo, padronizando a execução sem depender da memória do humano.
 | [`constitution-check`](./constitution-check/SKILL.md) | Tabela Princípios I–VII no `plan.md` | Refeita à mão em 003/004 | `plan-arquiteto`, `guardiao-processo` |
 | [`dod-verificavel`](./dod-verificavel/SKILL.md) | Critério de aceite → fitness function (grep/ls/teste) | Checks reescritos iguais a cada ciclo | `spec-agent`, `qa`, comando `/dod` |
 | [`combater-amontoado`](./combater-amontoado/SKILL.md) | Revisão didática (anti-"amontoado") | Feedback do Steward sobre docs densos | `didatica-editor`, `tech-writer` |
+| [`anti-padroes`](./anti-padroes/SKILL.md) | Catálogo do que NÃO fazer (contexto, orquestração, qualidade, processo) | Retros 001–008 + estudo maestro-02 (spec 008) | todos os agentes; `review`, `guardiao-processo` |
 
 ## Skills vs. comandos vs. agentes
 

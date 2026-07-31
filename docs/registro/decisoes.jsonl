@@ -1,0 +1,6 @@
+{"id":"adr-0004","data":"2026-07-22","titulo":"Modelo operacional (papéis, cerimônias, artefatos)","status":"aceita","registro":"docs/adr/0004-modelo-operacional.md"}
+{"id":"adr-0005","data":"2026-07-22","titulo":"Raias de trabalho (leve/plena/infra); OpenSpec descartado, ferramenta SDD única","status":"aceita","registro":"docs/adr/0005-raias-de-trabalho-e-specs-de-infra.md"}
+{"id":"adr-0006","data":"2026-07-22","titulo":"Enforcement da DoD e forcing function do CHANGELOG","status":"aceita","registro":"docs/adr/0006-enforcement-dod-changelog.md"}
+{"id":"adr-0007","data":"2026-07-28","titulo":"Separação do Maestro em repositório próprio","status":"aceita","registro":"docs/adr/0007-separacao-repo-maestro.md"}
+{"id":"adr-0008","data":"2026-07-31","titulo":"Ecossistema SDD: Spec Kit único; absorver EARS e práticas do Superpowers; observar com gatilho","status":"aceita","registro":"docs/adr/0008-avaliacao-ecossistema-sdd.md","ciclo":"007"}
+{"id":"gate-008-absorcoes","data":"2026-07-31","titulo":"Steward aprova incorporar todas as absorções do estudo maestro-02","status":"aceita","registro":"docs/handbook/apendice-a-maestro-02.md","ciclo":"008"}

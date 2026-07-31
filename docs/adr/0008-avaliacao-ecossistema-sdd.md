@@ -1,6 +1,7 @@
 # ADR 0008 — Avaliação do ecossistema SDD: manter Spec Kit único, absorver EARS e práticas do Superpowers
 
-- **Status**: Proposta (aguardando aprovação do Steward) · **Data**: 2026-07-30
+- **Status**: Aceito (aprovado pelo Steward em 2026-07-31 — "pode incorporar todas as
+  sugestões"; absorções materializadas na spec 008) · **Data**: 2026-07-30
 - **Ciclo**: spec 007 · **Pesquisa**: `docs/research/avaliacao-ecossistema-sdd.md`
 
 ## Contexto

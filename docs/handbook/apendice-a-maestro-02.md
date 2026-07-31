@@ -102,7 +102,10 @@ resultado diferente; não entregue sem avaliação). Nós registramos o que não
 | Catálogo de anti-padrões | 🔄 absorver | skill `anti-padroes` alimentada por retros |
 | Adoção integral do toolkit | ❌ descartar | conflito com ferramenta única (ADR 0005/0008) |
 
-> Este apêndice é um **estudo**, não uma decisão: as absorções acima entram no funil como
-> candidatas (specs futuras), seguindo a regra de que nada entra ad-hoc. Registro da
-> avaliação de ecossistema: [ADR 0008](../adr/0008-avaliacao-ecossistema-sdd.md) e
+> **Status: incorporado.** O Steward aprovou todas as absorções em 2026-07-31; elas foram
+> materializadas na **spec 008**: registro consultável (`docs/registro/` +
+> `scripts/registrar-decisao.sh`), retro executável (`scripts/retro.sh`), skill
+> [`anti-padroes`](../../skills/anti-padroes/SKILL.md), gates em nível de task (cap. 10
+> §6b), economia de contexto medida (cap. 04 §6b). Registro da avaliação de ecossistema:
+> [ADR 0008](../adr/0008-avaliacao-ecossistema-sdd.md) ·
 > [ficha de pesquisa](../research/avaliacao-ecossistema-sdd.md).

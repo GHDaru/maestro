@@ -67,6 +67,16 @@ Insights do aprendiz: o eixo é **irreversibilidade × impacto**; um gate unifor
 ou catástrofe; logo **gate proporcional**. Fundamenta o mapa de gates do
 `modelo-operacional.md` §8 e a taxonomia da Constituição §IV. Diário: `[9]`.
 
+## 6b. Gates em nível de task — o padrão "wave"
+
+Os gates deste capítulo operam em nível de **ciclo** (spec → plan → merge). O mesmo
+desenho vale um nível abaixo, **dentro de uma task**: executar em fases tipadas com
+validação entre elas — construção: `map → validate → scaffold → test`; correção:
+`audit → validate → apply → verify`. Cada fase só avança se a anterior passou. É o ciclo
+do Maestro em miniatura, e confirma o padrão: **fases com gate convergem em qualquer
+granularidade** — do roadmap à task de minutos. Origem: estudo do `maestro-02`
+(Apêndice A), incorporado na spec 008.
+
 ## 7. Fontes
 
 - Anthropic — *Building effective agents* (revisão humana para alto risco): https://www.anthropic.com/engineering/building-effective-agents

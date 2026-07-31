@@ -29,6 +29,19 @@ virar objetivo.
 5. Um invariante de segurança/arquitetura vira **check negativo** (algo que NÃO pode existir):
    `grep -l <proibido> ...` deve dar **vazio**.
 
+## Sintaxe recomendada: EARS (absorvida do Kiro — ADR 0008)
+
+Para critérios de **comportamento**, escreva na forma EARS (Easy Approach to Requirements
+Syntax): `QUANDO <condição> O SISTEMA DEVE <comportamento observável>`. O critério vira
+teste quase 1:1 — a condição é o *arrange/act*, o comportamento é o *assert*.
+
+- ✅ "QUANDO o push falhar por rede, O SISTEMA DEVE tentar de novo até 4 vezes com
+  backoff exponencial" → teste: simule falha, conte tentativas.
+- ✅ "QUANDO a árvore estiver suja, O SISTEMA DEVE abortar sem alterar `main`" → teste:
+  suje a árvore, rode, verifique exit ≠ 0 e hash intacto (foi o teste real do ciclo 006).
+- Para critérios **estruturais** (arquivo existe, invariante), o par (comando, esperado)
+  do passo 3 continua sendo a forma.
+
 ## Anti-padrões (reescreva)
 
 - ❌ "a documentação está clara" → ✅ `grep -L "^description:" skills/*/SKILL.md` vazio (existe)

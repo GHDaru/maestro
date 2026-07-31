@@ -10,6 +10,15 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Absorções do estudo maestro-02 (spec 008)**: registro de decisões consultável por
+  máquina (`docs/registro/decisoes.jsonl` + protocolo + `scripts/registrar-decisao.sh`),
+  retro executável (`scripts/retro.sh`), skill `anti-padroes`, gates em nível de task
+  (handbook cap. 10 §6b), economia de contexto medida (cap. 04 §6b) e sintaxe **EARS**
+  na skill `dod-verificavel` (fecha absorção do ciclo 007). ADR 0008 aceito.
+- **Toolkit dos ciclos 003–007**: 12 subagentes executáveis (`.claude/agents/`), 3 skills
+  agentskills.io (`skills/`), 3 scripts do ritual (`scripts/`), diagramas do método
+  (`docs/diagramas/`, md+PDF), avaliação do ecossistema SDD (`docs/research/` + ADR 0008)
+  e Apêndice A do handbook (estudo do maestro-02).
 - **Site V0 (storytelling + pipeline)**: capa narrativa `site/index.html` + motor
   `publicar/` (Markdown→site multipágina, sidebar, tema, callouts, gate de link quebrado)
   + roadmap de agentes (`docs/agents/perfis.md`, `comunicacao.md`) + deploy no GitHub Pages

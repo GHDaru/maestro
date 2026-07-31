@@ -58,6 +58,15 @@ contexto)**; do "delegar" ao **ótimo local**. Confirmou decisões que já estav
 modelo (`/clear` entre tarefas, revisão em contexto fresco no §4) — o aprendiz codificou
 o *quê* antes de entender o *porquê*. Diário: `[3]`.
 
+## 6b. Economia de contexto medida
+
+"Cada agente estreito" (Princípio V) deixa de ser afirmação e vira **número**: ao fatiar
+contexto para um agente/task, estime os tokens do recorte vs. do contexto integral e
+reporte a economia (% poupado). Prática mínima: o orquestrador anota a estimativa ao
+montar contexto grande — se a economia é consistentemente baixa, o **corte de fronteira
+está errado** (sinal de revisar o plan, não de aumentar o contexto). Origem: estudo do
+`maestro-02` (Apêndice A, context-slicer), incorporado na spec 008.
+
 ## 7. Fontes
 
 - Claude Code — *Best practices* (economia de contexto, subagentes, revisão adversarial): https://code.claude.com/docs/en/best-practices
