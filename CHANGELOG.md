@@ -10,6 +10,10 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Apêndice B — estudo hands-on do Superpowers (spec 010)**: avaliação do fork
+  `GHDaru/superpowers` (obra/superpowers v6.2.0) com 10 vereditos propostos — Iron Laws,
+  TDD para skills, root cause antes de fix, review por task, zero-contexto, bootstrap de
+  enforcement — e a tensão HARD-GATE × raias registrada. Vereditos aguardam gate.
 - **Spec Kit vendorizado (spec 009, F4)**: templates `spec/plan/tasks` reescritos como
   fonte nossa (PT, raias, critérios EARS, Constitution Check I–VII, gates explícitos —
   formato provado nos ciclos 003–008), comando `/speckit.converge` trazido do fork

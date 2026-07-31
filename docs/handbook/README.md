@@ -52,6 +52,7 @@
 | Apêndice | Título | Resumo |
 |---|---|---|
 | A | [Estudo do repositório `maestro-02`](apendice-a-maestro-02.md) | Toolkit homônimo (fork de sharpdeveye/maestro): o que contribui — memória persistente consultável, auditoria com custo, retro executável, waves, context-slicing medido, catálogo de anti-padrões. Estudo de 2026-07-31. |
+| B | [Estudo hands-on do Superpowers](apendice-b-superpowers.md) | O líder do ecossistema de skills (obra/superpowers, v6.2.0): Iron Laws (enforcement linguístico), TDD para skills, root cause antes de fix, review por task — e a tensão HARD-GATE × raias. Estudo de 2026-07-31. |
 
 ## Formatos
 
