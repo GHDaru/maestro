@@ -14,3 +14,4 @@
 {"id": "gate-main-e32023f", "data": "2026-07-31", "titulo": "Gate de merge: feat(spec-kit): vendoriza templates + comando converge — spec 009 (F4)", "status": "aceita", "registro": "commit e32023f"}
 {"id": "gate-main-080dced", "data": "2026-07-31", "titulo": "Gate de merge: docs(handbook): Apêndice B — estudo hands-on do Superpowers (spec 010)", "status": "aceita", "registro": "commit 080dced"}
 {"id":"gate-010-vereditos","data":"2026-07-31","titulo":"Steward aprova todos os vereditos do Apêndice B (Superpowers): 5 absorções + 2 descartes mantidos","status":"aceita","registro":"docs/handbook/apendice-b-superpowers.md","ciclo":"010"}
+{"id": "gate-main-2534eaa", "data": "2026-07-31", "titulo": "Gate de merge: feat(skills): absorções do Superpowers — Iron Laws, TDD para skills, causa raiz (spec 011)", "status": "aceita", "registro": "commit 2534eaa"}
