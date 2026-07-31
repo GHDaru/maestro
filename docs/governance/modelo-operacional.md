@@ -5,7 +5,7 @@
 > O QUÊ (papéis/responsabilidades), QUANDO (cerimônias/cadência) e O QUE se produz
 > (entregáveis/artefatos com gate).
 >
-> **Status**: Ativo · **Versão**: 1.2.0 · **Data**: 2026-07-22 ·
+> **Status**: Ativo · **Versão**: 1.3.0 · **Data**: 2026-07-31 ·
 > **Fundamentação**: `docs/research/resultado-pesquisa-praticas-desenvolvimento-avaliacao.md`
 > · **Decisões**: `docs/adr/0004-modelo-operacional.md`,
 > `docs/adr/0005-raias-de-trabalho-e-specs-de-infra.md`,
@@ -248,7 +248,10 @@ do projeto.
 **Histórico**: 1.0.0 (2026-07-22, ADR 0004) fundação · 1.1.0 (2026-07-22, ADR 0005)
 raias de trabalho (leve/plena/infra), spec de infra com gates de reversibilidade,
 OpenSpec avaliado e descartado · 1.2.0 (2026-07-22, ADR 0006) aplicação e enforcement
-(§12): PR template com a DoD, gate de CHANGELOG na CI, comando `/dod`.
+(§12): PR template com a DoD, gate de CHANGELOG na CI, comando `/dod` · 1.3.0
+(2026-07-31, ADR 0009) registro automático do gate de merge no índice consultável
+(`docs/registro/decisoes.jsonl` via `promover-main.sh`); o índice é a fonte do estado
+dos gates.
 
 ## 12. Aplicação e enforcement (como garantir que o modelo é aplicado)
 
@@ -266,6 +269,7 @@ mecanismo, dividido entre **mecânico** (hard gate, bloqueia sozinho) e **julgam
 | Self-check do agente antes de "pronto" | **Comando** `/dod` | `.claude/commands/dod.md` |
 | DoR (spec pronta) + Constitution Check | **Templates spec-kit** + Constituição | `.specify/templates/`, `/speckit.plan` |
 | Ler Constituição/modelo antes de agir | **Diretriz** | `CLAUDE.md` / `AGENTS.md` |
+| Registro do gate de merge | **Automático** — `promover-main.sh` anexa `gate-main-<sha>` ao índice (ADR 0009) | `scripts/` + `docs/registro/decisoes.jsonl` |
 
 **A divisão é a mesma do `[5]`**: o que é mecânico (R/C automatizáveis) vira hard gate na
 máquina; o que exige julgamento — "é a coisa certa?", classe de risco (`[9]`) — fica no

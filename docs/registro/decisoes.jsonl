@@ -4,3 +4,9 @@
 {"id":"adr-0007","data":"2026-07-28","titulo":"Separação do Maestro em repositório próprio","status":"aceita","registro":"docs/adr/0007-separacao-repo-maestro.md"}
 {"id":"adr-0008","data":"2026-07-31","titulo":"Ecossistema SDD: Spec Kit único; absorver EARS e práticas do Superpowers; observar com gatilho","status":"aceita","registro":"docs/adr/0008-avaliacao-ecossistema-sdd.md","ciclo":"007"}
 {"id":"gate-008-absorcoes","data":"2026-07-31","titulo":"Steward aprova incorporar todas as absorções do estudo maestro-02","status":"aceita","registro":"docs/handbook/apendice-a-maestro-02.md","ciclo":"008"}
+{"id":"gate-003-merge","data":"2026-07-29","titulo":"Gate de merge do ciclo 003 (8 subagentes-núcleo) — aprovado pelo Steward","status":"aceita","registro":"specs/003-perfis-agentes-executaveis/qa-report.md","ciclo":"003"}
+{"id":"gate-004-merge","data":"2026-07-29","titulo":"Gate de merge do ciclo 004 (toolkit, V0 12/12) — aprovação estendida do Steward","status":"aceita","registro":"specs/004-agentes-toolkit-executaveis/qa-report.md","ciclo":"004"}
+{"id":"gate-005-merge","data":"2026-07-29","titulo":"Gate de merge do ciclo 005 (skills V0) — aprovação estendida do Steward","status":"aceita","registro":"specs/005-skills-v0/qa-report.md","ciclo":"005"}
+{"id":"gate-006-merge","data":"2026-07-29","titulo":"Gate de merge do ciclo 006 (scripts do ritual) — aprovação estendida do Steward","status":"aceita","registro":"specs/006-scripts-ritual/qa-report.md","ciclo":"006"}
+{"id":"gate-007-merge","data":"2026-07-31","titulo":"Gate de merge do ciclo 007 (avaliação SDD) — vereditos aprovados junto com as absorções","status":"aceita","registro":"specs/007-avaliacao-ecossistema-sdd/qa-report.md","ciclo":"007"}
+{"id":"adr-0009","data":"2026-07-31","titulo":"Registro automático do gate de merge no índice de decisões","status":"aceita","registro":"docs/adr/0009-registro-automatico-gate-merge.md","ciclo":"008"}

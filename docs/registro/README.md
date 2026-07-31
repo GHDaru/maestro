@@ -18,7 +18,7 @@
 
 | Campo | Obrigatório | Conteúdo |
 |---|---|---|
-| `id` | ✅ | `adr-NNNN` ou `gate-NNN-<slug>` (decisão de gate de ciclo) |
+| `id` | ✅ | `adr-NNNN` · `gate-NNN-<slug>` (gate de ciclo) · `gate-main-<sha>` (merge, **automático** via `promover-main.sh`, ADR 0009) |
 | `data` | ✅ | `YYYY-MM-DD` |
 | `titulo` | ✅ | uma linha |
 | `status` | ✅ | `aceita` · `proposta` · `superada por <id>` |

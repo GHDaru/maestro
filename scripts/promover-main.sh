@@ -40,11 +40,30 @@ if [[ "$ASSUME_YES" -ne 1 ]]; then
   [[ "$ans" == "y" || "$ans" == "Y" ]] || { echo "cancelado."; exit 1; }
 fi
 
-# 5. Executar o passo mecânico com retry exponencial no push.
+# 5. Registrar o gate no índice de decisões (regra do ADR 0009 — automático,
+#    para o registro consultável ser a fonte do estado do gate).
+SHORT=$(git rev-parse --short "$DEV")
+ATUAL=$(git symbolic-ref --short HEAD 2>/dev/null || echo "")
+if [[ "$ATUAL" == "$DEV" && -f docs/registro/decisoes.jsonl ]] && command -v python3 >/dev/null; then
+  TITULO=$(git log -1 --format=%s "$DEV" | tr '"' "'")
+  HOJE=$(date +%Y-%m-%d)
+  LINHA=$(python3 -c "import json;print(json.dumps({'id':'gate-main-$SHORT','data':'$HOJE','titulo':'Gate de merge: $TITULO','status':'aceita','registro':'commit $SHORT'},ensure_ascii=False))")
+  if scripts/registrar-decisao.sh "$LINHA" >/dev/null 2>&1; then
+    git add docs/registro/decisoes.jsonl
+    git commit -q -m "chore(registro): gate de merge gate-main-$SHORT"
+    echo "gate registrado: gate-main-$SHORT"
+  else
+    echo "aviso: não registrou o gate (id já existe?); seguindo." >&2
+  fi
+else
+  echo "aviso: registro indisponível (docs/registro/ ou python3 ausente); seguindo." >&2
+fi
+
+# 6. Executar o passo mecânico com retry exponencial no push (dev + main juntos).
 git branch -f "$MAIN" "$DEV"
 delay=2
 for attempt in 1 2 3 4 5; do
-  if git push origin "$MAIN"; then
+  if git push origin "$DEV" "$MAIN"; then
     echo "ok: '$MAIN' promovido para $(git rev-parse --short "$DEV")."
     exit 0
   fi

@@ -10,6 +10,10 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Registro automático do gate de merge (ADR 0009, modelo v1.3.0)**: `promover-main.sh`
+  anexa `gate-main-<sha>` ao índice `docs/registro/decisoes.jsonl` a cada promoção;
+  gates dos ciclos 003–007 registrados retroativamente; `retro.sh` cruza pendências dos
+  qa-reports com o registro. Regra nascida do primeiro run da retro executável.
 - **Absorções do estudo maestro-02 (spec 008)**: registro de decisões consultável por
   máquina (`docs/registro/decisoes.jsonl` + protocolo + `scripts/registrar-decisao.sh`),
   retro executável (`scripts/retro.sh`), skill `anti-padroes`, gates em nível de task

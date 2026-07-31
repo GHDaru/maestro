@@ -19,19 +19,23 @@ for d in specs/[0-9][0-9][0-9]-*/; do
   echo "  $nome — ${veredito:-sem qa-report}"
 done
 
-# 2. Gates pendentes.
+# 2. Gates: pendências dos qa-reports cruzadas com o registro (ADR 0009 —
+#    o índice docs/registro/decisoes.jsonl é a fonte do estado do gate).
 echo ""
-echo "── Gates pendentes (aguardando humano) ──"
-pendentes=$(grep -l "aguarda" specs/*/qa-report.md 2>/dev/null | grep -v -x -f <(grep -l "CONFORME" specs/*/qa-report.md 2>/dev/null) || true)
+echo "── Gates (qa-report × registro) ──"
 achou=0
 for f in $(grep -rl "Pendência de gate" specs/*/qa-report.md 2>/dev/null); do
+  ciclo=$(dirname "$f" | xargs basename | cut -d- -f1)
   pend=$(sed -n '/Pendência de gate/,$p' "$f" | grep -m1 "^- " | sed 's/^- //' || true)
-  if [[ -n "$pend" && "$pend" != *"—"* ]]; then
-    echo "  $(dirname "$f" | xargs basename): $pend"
+  [[ -n "$pend" ]] || continue
+  if grep -q "\"gate-$ciclo" docs/registro/decisoes.jsonl 2>/dev/null; then
+    echo "  $(dirname "$f" | xargs basename): ✅ fechado no registro (gate-$ciclo-*)"
+  else
+    echo "  $(dirname "$f" | xargs basename): ⏳ PENDENTE — $pend"
     achou=1
   fi
 done
-[[ "$achou" -eq 0 ]] && echo "  (verificar manualmente os qa-reports acima)"
+[[ "$achou" -eq 0 ]] && echo "  (nenhum gate pendente)"
 
 # 3. Últimas decisões registradas.
 echo ""
