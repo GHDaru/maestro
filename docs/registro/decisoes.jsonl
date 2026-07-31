@@ -11,3 +11,4 @@
 {"id":"gate-007-merge","data":"2026-07-31","titulo":"Gate de merge do ciclo 007 (avaliação SDD) — vereditos aprovados junto com as absorções","status":"aceita","registro":"specs/007-avaliacao-ecossistema-sdd/qa-report.md","ciclo":"007"}
 {"id":"adr-0009","data":"2026-07-31","titulo":"Registro automático do gate de merge no índice de decisões","status":"aceita","registro":"docs/adr/0009-registro-automatico-gate-merge.md","ciclo":"008"}
 {"id": "gate-main-f9f2896", "data": "2026-07-31", "titulo": "Gate de merge: feat(governanca): registro automático do gate de merge — ADR 0009, modelo v1.3.0", "status": "aceita", "registro": "commit f9f2896"}
+{"id": "gate-main-e32023f", "data": "2026-07-31", "titulo": "Gate de merge: feat(spec-kit): vendoriza templates + comando converge — spec 009 (F4)", "status": "aceita", "registro": "commit e32023f"}
