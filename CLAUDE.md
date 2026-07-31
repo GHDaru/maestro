@@ -5,6 +5,11 @@
 - **Antes de qualquer trabalho, leia `docs/governance/principios-maestro.md`** (a
   constituição da metodologia) e o `docs/governance/modelo-operacional.md` (a regra
   vigente). Prevalecem sobre qualquer outra prática.
+- **Skills primeiro (enforcement — ciclo 011):** antes de agir, verifique se uma skill de
+  `skills/` se aplica à tarefa (constitution-check, dod-verificavel, combater-amontoado,
+  anti-padroes, diagnostico-antes-do-fix). **Se houver chance razoável de aplicar-se,
+  siga-a** — as skills comandam, não sugerem (cada uma tem sua Iron Law). Encontrou bug?
+  `diagnostico-antes-do-fix` ANTES de propor correção.
 - **TODO o desenvolvimento da metodologia acontece neste repositório (`GHDaru/maestro`).**
   Os repositórios `ghdaru` e `flowbuilder` são **somente leitura**, para consulta de
   origem — não commitar neles.

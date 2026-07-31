@@ -10,6 +10,12 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Absorções do Superpowers (spec 011)**: Iron Laws em todas as 5 skills (enforcement
+  linguístico com brechas fechadas), protocolo TDD-para-skills no `skill-author`
+  (baseline RED sem a skill antes de publicar), skill nova `diagnostico-antes-do-fix`
+  (causa raiz antes de correção), checkpoint leve por task (raia plena >3 tasks),
+  regra de zero-contexto por task no template e enforcement "Skills primeiro" no
+  CLAUDE.md. Vereditos do Apêndice B aprovados integralmente (`gate-010-vereditos`).
 - **Apêndice B — estudo hands-on do Superpowers (spec 010)**: avaliação do fork
   `GHDaru/superpowers` (obra/superpowers v6.2.0) com 10 vereditos propostos — Iron Laws,
   TDD para skills, root cause antes de fix, review por task, zero-contexto, bootstrap de

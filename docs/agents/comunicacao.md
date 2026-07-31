@@ -49,6 +49,21 @@ do bastão. No Maestro, o **Orquestrador (humano)** é quem confirma cada handof
 **envelope (B)** só se a coordenação paralela justificar — e aí como um artefato próprio
 (`specs/NNN/handoffs.md` ou um campo no PR), nunca como chat efêmero.
 
+## Checkpoint por task (absorvido do Superpowers — ciclo 011)
+
+Na **raia plena com >3 tasks**, o `dev-implementador` emite um **checkpoint leve** ao
+fechar cada task — 3 linhas, sem cerimônia:
+
+```
+✔ T3 — <o que fechou>
+evidência: <comando/teste e resultado>
+próximo: T4 — <o quê>
+```
+
+Não é pedido de permissão (execução contínua segue; anti-"devo continuar?"); é rastro
+para o Orquestrador auditar sem recarregar contexto — e ponto de corte natural se algo
+desviou. O review independente por ciclo continua; o checkpoint não o substitui.
+
 ## Pergunta de avaliação
 
 1. Ficamos no nível **A** (artefato + handoff) por ora?

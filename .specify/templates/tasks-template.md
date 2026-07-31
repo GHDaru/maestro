@@ -3,6 +3,9 @@
 <!--
   Regras (modelo operacional + ciclos provados):
   - VERIFICAÇÃO PRIMEIRO: T0 define os checks executáveis do DoD antes de implementar.
+  - ZERO CONTEXTO: escreva cada task para quem tem zero contexto do repo — tudo que ela
+    precisa está nela ou linkado (arquivo, comando, critério). Task de 2–15 min.
+  - Ciclo com >3 tasks: checkpoint leve ao fechar cada uma (✔ o quê · evidência · próximo).
   - Uma task por vez, diff pequeno e focado (sem refatoração oportunista — anti-padrão 10).
   - Ordene por dependência; corte por fronteira permite paralelizar com segurança.
   - Bug exige teste que o reproduz ANTES do fix (red → green).

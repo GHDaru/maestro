@@ -5,6 +5,16 @@ description: Transforma critérios de aceite vagos em fitness functions executá
 
 # DoD verificável (design-time)
 
+## Iron Law
+
+```
+NENHUM CRITÉRIO DE ACEITE SEM O COMANDO QUE O PROVA
+```
+
+**Violar a letra desta regra é violar o espírito dela.** Isso NÃO é desculpa:
+- "É difícil de automatizar" — então marque explicitamente como gate humano; vago não fica.
+- "Todo mundo entende o que significa" — se não há comando, cada um entende uma coisa.
+
 O Princípio IV exige DoD **verificável autonomamente**: um agente confirma sem opinar. Esta
 skill transforma critério vago em check executável — o que foi feito à mão, igual, em vários
 ciclos.

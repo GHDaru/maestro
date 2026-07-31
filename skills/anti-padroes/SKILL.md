@@ -5,6 +5,16 @@ description: Catálogo do que NÃO fazer ao operar humano+agentes — os erros r
 
 # Anti-padrões (o catálogo do "não faça")
 
+## Iron Law
+
+```
+NOMEIE O ANTI-PADRÃO ANTES DE CORRIGI-LO
+```
+
+**Violar a letra desta regra é violar o espírito dela.** Corrigir sem nomear conserta o
+sintoma uma vez; nomear ("isso é o 4") liga ao catálogo, encurta a conversa e alimenta a
+retro — que decide se vira regra.
+
 Regra positiva diz o caminho; anti-padrão marca o precipício. Este catálogo é **vivo**:
 todo anti-padrão novo entra pela retro (erro recorrente observado), nunca por especulação.
 

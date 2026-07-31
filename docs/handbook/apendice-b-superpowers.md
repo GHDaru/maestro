@@ -126,6 +126,9 @@ Adoção integral criaria segunda fonte de verdade de processo. **Descartada** (
 | — | Adoção integral | ❌ descartar | mantém ADR 0008 |
 | — | HARD-GATE universal | ❌ não absorver | raias mandam (ADR 0005); racional acima |
 
-> **Status: proposta.** Absorções aguardam aprovação do Steward; aprovadas, viram um
-> ciclo de incorporação (padrão do ciclo 008). Referências: [ADR 0008](../adr/0008-avaliacao-ecossistema-sdd.md) ·
+> **Status: incorporado.** O Steward aprovou todos os vereditos em 2026-07-31
+> (`gate-010-vereditos`); absorções materializadas na **spec 011**: Iron Laws nas 5 skills,
+> protocolo TDD-para-skills no `skill-author`, skill `diagnostico-antes-do-fix`, checkpoint
+> por task (`comunicacao.md` + `dev-implementador`), zero-contexto no `tasks-template` e
+> enforcement "skills primeiro" no CLAUDE.md. Referências: [ADR 0008](../adr/0008-avaliacao-ecossistema-sdd.md) ·
 > [ficha do ecossistema](../research/avaliacao-ecossistema-sdd.md) · [Apêndice A](apendice-a-maestro-02.md).

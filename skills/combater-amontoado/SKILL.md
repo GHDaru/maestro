@@ -5,6 +5,16 @@ description: Checklist de revisão didática que transforma documento denso ("am
 
 # Combater o amontoado
 
+## Iron Law
+
+```
+NENHUMA SIGLA NUA — TODA SIGLA EXPANDIDA NA 1ª OCORRÊNCIA E NO GLOSSÁRIO
+```
+
+**Violar a letra desta regra é violar o espírito dela.** Isso NÃO é desculpa:
+- "Essa sigla todo mundo conhece" — o leitor de amanhã (ou o agente novo) não conhece.
+- "Expando depois" — depois é onde nasce o amontoado.
+
 "Amontoado" é o defeito nomeado pelo Steward: documento denso, muita sigla sem dicionário,
 tudo empilhado sem storytelling. Esta skill é a régua para corrigir a **forma** — nunca o
 fato técnico.

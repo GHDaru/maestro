@@ -5,6 +5,16 @@ description: Produz a tabela Constitution Check (Princípios I–VII do Maestro)
 
 # Constitution Check
 
+## Iron Law
+
+```
+NENHUM PLAN SEM AS 7 LINHAS — UMA POR PRINCÍPIO, NENHUMA VAZIA
+```
+
+**Violar a letra desta regra é violar o espírito dela.** Isso NÃO é desculpa:
+- "Este princípio obviamente não se aplica" — então escreva ✅ com a frase do porquê; a linha fica.
+- "O ciclo é pequeno" — ciclo pequeno com violação escondida vira dívida grande.
+
 Todo `plan.md` do Maestro carrega uma tabela verificando o plano contra os **7 princípios
 inegociáveis** (`docs/governance/principios-maestro.md`). Esta skill padroniza essa tabela —
 o mesmo artefato que foi refeito à mão em ciclos anteriores.
