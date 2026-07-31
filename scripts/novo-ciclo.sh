@@ -3,6 +3,9 @@
 # Padroniza a estrutura specs/NNN-slug/ com os 4 artefatos obrigatórios,
 # já com cabeçalhos preenchidos e Constitution Check em branco para preencher.
 # Não sobrescreve um ciclo existente.
+# Este esqueleto é o ATALHO MÍNIMO; a referência completa (com guidance) são os
+# templates vendorizados em .specify/templates/ — se divergirem, eles mandam
+# (.specify/UPSTREAM.md, regra 2).
 #
 # Uso:  scripts/novo-ciclo.sh <NNN> <slug>
 #       scripts/novo-ciclo.sh 007 vendorizar-spec-kit

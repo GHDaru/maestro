@@ -107,8 +107,8 @@ Cada fase = **um ciclo** (uma spec, um gate). Ordem por dependência:
 | **F0 — Fundação** | roadmap (este) + ADR de curadoria de fontes | 002 | ✅ |
 | **F1 — Agentes** | 12 subagentes executáveis (`.claude/agents/*` + `docs/agents/`): 8 núcleo + 4 toolkit | 003+004 | ✅ |
 | **F2 — Skills** | leva V0 de skills agentskills.io: `constitution-check`, `dod-verificavel`, `combater-amontoado` | 005 | ✅ |
-| **F3 — Scripts** | scripts do ritual (incl. `promote-main.sh` e scaffold de ciclo) — dor de retro | 006 | 🔜 |
-| **F4 — Vendorizar spec-kit** | trazer seletivo do fork + alinhar templates | 007 | ⏳ |
+| **F3 — Scripts** | scripts do ritual (`promover-main`, `novo-ciclo`, `verificar-agentes` + `retro`, `registrar-decisao`) | 006, 008 | ✅ |
+| **F4 — Vendorizar spec-kit** | templates spec/plan/tasks adaptados (PT, raias, EARS, Constitution Check) + comando `converge` do fork + proveniência (`.specify/UPSTREAM.md`) | 009 | ✅ |
 | **(contínuo) — Didática** | reescrita incremental dos 12 capítulos (híbrido do ciclo 001) | por capítulo | ⏳ |
 
 > Nota de numeração: os agentes ocuparam **duas** specs (003 núcleo, 004 toolkit), então as

@@ -10,6 +10,11 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Spec Kit vendorizado (spec 009, F4)**: templates `spec/plan/tasks` reescritos como
+  fonte nossa (PT, raias, critérios EARS, Constitution Check I–VII, gates explícitos —
+  formato provado nos ciclos 003–008), comando `/speckit.converge` trazido do fork
+  (sem extension hooks) e proveniência registrada em `.specify/UPSTREAM.md` (sync
+  deliberada; templates mandam sobre o esqueleto do `novo-ciclo.sh`).
 - **Registro automático do gate de merge (ADR 0009, modelo v1.3.0)**: `promover-main.sh`
   anexa `gate-main-<sha>` ao índice `docs/registro/decisoes.jsonl` a cada promoção;
   gates dos ciclos 003–007 registrados retroativamente; `retro.sh` cruza pendências dos
