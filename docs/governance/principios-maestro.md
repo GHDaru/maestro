@@ -4,7 +4,8 @@
 > deste repositório. **Todo agente e humano DEVE ler este documento antes de qualquer
 > trabalho.** Emendas via ADR + bump de versão.
 >
-> **Versão**: 1.0.0 · **Ratificada**: 2026-07-22
+> **Versão**: 1.1.0 · **Ratificada**: 2026-07-22 · **Emendada**: 2026-08-01 (ADR 0010 —
+> Princípio VIII, comunicação inteligível)
 >
 > Novo no Maestro? Leia o [Comece por aqui](../comece-por-aqui.md). Siglas: [glossário](glossario.md).
 
@@ -53,6 +54,21 @@ A governança **aprende sem inchar**: núcleo firme (esta constituição) + peri
 (modelo/handbook, versão própria) + memória append-only (ADRs) + **retro → regra
 versionada**. **YAGNI** poda o que não paga. Complexidade além do necessário é justificada
 por escrito ou removida.
+
+### VIII. Comunicação inteligível (sigla nunca nasce nua)
+
+**Iron Law:** em **cada resposta, documento ou artefato**, a **primeira ocorrência** de uma
+sigla vem **por extenso**, com a abreviação entre parênteses; a partir daí, abrevia-se à
+vontade. A contagem reinicia a cada resposta/documento — o leitor não tem obrigação de ter
+lido o anterior.
+
+> Exemplo: "a Definição de Pronto (DoD) exige evidência; sem DoD verde não há gate."
+
+Violar a letra é violar o espírito. Isso **não** é desculpa: "essa sigla todo mundo
+conhece" (o leitor de amanhã, ou o agente novo, não conhece) · "já expliquei antes" (antes
+é outra resposta) · "é jargão do domínio" (jargão órfão é o que produz o "amontoado").
+Termo novo entra também no [glossário](glossario.md). Operacionalização: skill
+`combater-amontoado`.
 
 ## Governança
 

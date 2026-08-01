@@ -10,6 +10,9 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Princípio VIII — comunicação inteligível (ADR 0010, constituição v1.1.0)**: em cada
+  resposta/documento, a primeira ocorrência de uma sigla vem por extenso (contagem
+  reinicia a cada resposta); brechas fechadas; alimenta o glossário.
 - **Apêndice C — panorama exploratório de templates (spec 012)**: varredura do resto do
   ecossistema (PRP, CCPM, claude-code-spec-workflow, memory banks, claude-flow, ADK,
   marketplaces) com triagem 🔬/👁/⛔ e gatilhos explícitos; formaliza o funil
@@ -51,6 +54,11 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
   (dor → jornada → sistema) + [`docs/governance/glossario.md`](docs/governance/glossario.md)
   (dicionário de todas as siglas); links no `README.md` e banners nos docs de governança.
   Compêndio PDF regenerado com Introdução + Apêndice Glossário (57 páginas).
+
+### Fixed
+- **Links da capa do site**: `site/index.html` (escrita à mão na V0, antes das páginas
+  existirem) apontava para arquivos `.md` no GitHub em 6 links; agora aponta para as
+  páginas internas do livro. Permanece um único link externo, deliberado ("ver no GitHub").
 
 ### Changed
 - **Rebasing (FR4)**: referências a "Constituição / Princípio IV/V/VII" nos docs migrados
