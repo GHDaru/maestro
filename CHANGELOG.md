@@ -10,6 +10,13 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Livro em cinco trilhas (spec 014)**: navegação por tipo de texto (Diátaxis) — A Jornada
+  (tutorial), Os Capítulos (explicação), Receitas (como-fazer), Referência e Bastidores —
+  cada trilha com tipo e descrição na barra lateral e no sumário; **cadência educacional**
+  no topo do sumário (Entender ~20 min · Aprender ~2 h · Aplicar ~1 dia · Aprofundar);
+  quatro receitas novas (instalar o Maestro, abrir um ciclo, escrever critério verificável,
+  rodar a retrospectiva) e o mapa da Jornada (12 paradas: tensão → pergunta → regra).
+  A capa passa a apontar para as trilhas; nenhum link de conteúdo sai para o GitHub.
 - **Livro Maestro: padrão editorial + capítulo-piloto + instalador (spec 013, ADR 0011)**:
   guia editorial (`docs/livro/guia-editorial.md`) com projeto pedagógico (Backward Design,
   Diátaxis, carga cognitiva, 4C/ID), esqueleto de capítulo em 9 seções — com exemplo de
@@ -65,6 +72,12 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
   Compêndio PDF regenerado com Introdução + Apêndice Glossário (57 páginas).
 
 ### Fixed
+- **Colisão de slug no motor do site**: os cinco `README.md` do livro (handbook, receitas,
+  jornada, adr, registro) resolviam todos para `readme.html`, sobrescrevendo-se em
+  silêncio — o portão de links não pegava porque o alvo existia. Slug de `README.md`/
+  `index.md` passa a usar o diretório pai; o resolvedor de links resolve o caminho
+  relativo antes de derivar o slug; adicionada fitness function que falha o build em
+  qualquer colisão (testada com colisão deliberada).
 - **Links da capa do site**: `site/index.html` (escrita à mão na V0, antes das páginas
   existirem) apontava para arquivos `.md` no GitHub em 6 links; agora aponta para as
   páginas internas do livro. Permanece um único link externo, deliberado ("ver no GitHub").
