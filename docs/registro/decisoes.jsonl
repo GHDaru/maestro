@@ -21,3 +21,4 @@
 {"id":"adr-0011","data":"2026-08-01","titulo":"Livro Maestro: padrão editorial (9 seções), navegação em 5 trilhas, companion com backend e instalador","status":"aceita","registro":"docs/adr/0011-livro-padrao-editorial-e-companion.md","ciclo":"013"}
 {"id": "gate-main-f9f813b", "data": "2026-08-01", "titulo": "Gate de merge: feat(livro): padrão editorial + capítulo-piloto de decisões + instalador (spec 013)", "status": "aceita", "registro": "commit f9f813b"}
 {"id": "gate-main-8f16b6a", "data": "2026-08-01", "titulo": "Gate de merge: feat(livro): navegação em cinco trilhas + receitas + mapa da Jornada (spec 014)", "status": "aceita", "registro": "commit 8f16b6a"}
+{"id": "gate-main-392c037", "data": "2026-08-01", "titulo": "Gate de merge: feat(companion): o tutor do livro — backend, busca no corpus e widget (spec 015)", "status": "aceita", "registro": "commit 392c037"}
