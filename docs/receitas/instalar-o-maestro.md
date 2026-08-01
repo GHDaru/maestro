@@ -20,9 +20,9 @@ Ele leva cinco camadas:
 
 | Camada | O que vai | Para quê |
 |---|---|---|
-| `.claude/agents/` | 12 subagentes | **quem faz** cada papel |
-| `skills/` | 5 skills | **como fazer** (cada uma com sua lei) |
-| `scripts/` | 5 scripts | o **ritual** repetido |
+| `.claude/agents/` | 13 subagentes | **quem faz** cada papel |
+| `skills/` | 6 skills | **como fazer** (cada uma com sua lei) |
+| `scripts/` | 6 scripts | o **ritual** e as verificações |
 | `.claude/commands/` + `.specify/templates/` | comandos e templates | o **motor** spec-driven |
 | `docs/governance/` | princípios, modelo, glossário | a **fonte de verdade** |
 
@@ -46,6 +46,7 @@ Cole no `CLAUDE.md` (ou `AGENTS.md`) do projeto — o script imprime este bloco 
 
 ```bash
 scripts/verificar-agentes.sh    # invariantes dos subagentes; exit 0 = ok
+scripts/verificar-papeis.sh     # todo papel do modelo tem agente; exit 0 = ok
 scripts/novo-ciclo.sh 001 primeiro-ciclo
 ```
 

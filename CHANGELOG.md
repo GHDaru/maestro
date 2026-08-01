@@ -10,6 +10,14 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Instalação visível + UX e jornadas executáveis (spec 018)**: seção de instalação no
+  `README.md` (com nota para IA: instalar = copiar o toolkit, não empacotar); agente
+  **`ux-semantica`** e skill **`jornada-viva`** — os papéis que o modelo operacional
+  prescrevia havia catorze ciclos sem nada que os entregasse; templates `ux-design` e
+  `journey`; **`scripts/verificar-papeis.sh`**, fitness function que compara o que a norma
+  manda com o que o toolkit entrega (provada falhando); BPMN ganha o **ramo de interface**
+  (tem UI? → semântica → gate de UX → captura do build real → heurística datada → journey).
+  Toolkit: 13 agentes · 6 skills · 6 scripts.
 - **Retrospectiva executada — anti-padrões 13/14/15 e BPMN (spec 017)**: auditoria do
   Steward expôs duas falhas de processo (achado que morre em "candidato" e roadmap
   congelado desde o ciclo 009) e um padrão com três ocorrências (**check que mede o proxy,

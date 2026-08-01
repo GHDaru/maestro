@@ -5,7 +5,7 @@
 set -euo pipefail
 
 AGENTS_DIR=".claude/agents"
-EXPECTED_COUNT="${MAESTRO_AGENTS_EXPECTED:-12}"
+EXPECTED_COUNT="${MAESTRO_AGENTS_EXPECTED:-13}"
 READONLY_AGENTS=(review security guardiao-processo)
 fail=0
 

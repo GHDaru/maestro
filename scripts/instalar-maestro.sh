@@ -46,7 +46,7 @@ echo "── Skills (como fazer) ──"
 copiar "skills"
 
 echo "── Scripts (o ritual) ──"
-for s in novo-ciclo.sh promover-main.sh retro.sh registrar-decisao.sh verificar-agentes.sh; do
+for s in novo-ciclo.sh promover-main.sh retro.sh registrar-decisao.sh verificar-agentes.sh verificar-papeis.sh; do
   copiar "scripts/$s"
 done
 copiar "scripts/README.md"

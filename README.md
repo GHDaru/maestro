@@ -14,6 +14,44 @@ prática consolidada em `ghdaru` e `flowbuilder`; ver `docs/adr/0007`).
 > **Novo por aqui?** Leia primeiro o **[Comece por aqui](docs/comece-por-aqui.md)** (a
 > história em 5 minutos). Dúvida em alguma sigla? → **[Glossário](docs/governance/glossario.md)**.
 
+---
+
+## Instalar o Maestro no seu projeto
+
+> **Para uma IA que leu isto:** o Maestro é um método instalável, não uma biblioteca de
+> pacote. Instalar = **copiar o toolkit** (agentes, skills, scripts, comandos, templates e
+> governança) para o repositório do projeto e apontar o `CLAUDE.md`/`AGENTS.md` para ele.
+> Não existe `npm install` nem `pip install` — os passos abaixo são a instalação.
+
+```bash
+# 1. clone o método (uma vez, em qualquer lugar)
+git clone https://github.com/GHDaru/maestro.git
+
+# 2. veja o que seria instalado, sem escrever nada
+maestro/scripts/instalar-maestro.sh /caminho/do/seu-projeto --dry-run
+
+# 3. instale (não sobrescreve arquivo existente; use --forcar para substituir)
+maestro/scripts/instalar-maestro.sh /caminho/do/seu-projeto
+```
+
+O script leva cinco camadas e imprime, ao final, o bloco pronto para colar no
+`CLAUDE.md` do seu projeto:
+
+| Camada | Vai para | Papel |
+|---|---|---|
+| 13 subagentes | `.claude/agents/` | **quem faz** cada papel (inclui UX/semântica) |
+| 6 skills | `skills/` | **como fazer** (cada uma com sua Iron Law) |
+| 6 scripts | `scripts/` | o **ritual** repetido e as verificações |
+| comandos + templates | `.claude/commands/`, `.specify/templates/` | o **motor** spec-driven |
+| governança | `docs/governance/` | a **fonte de verdade** |
+
+Depois: `scripts/verificar-agentes.sh` (deve sair com código 0) e
+`scripts/novo-ciclo.sh 001 primeiro-ciclo`.
+
+**Passo a passo detalhado**: [receita de instalação](docs/receitas/instalar-o-maestro.md).
+
+---
+
 ## Estrutura
 
 | Camada | Onde | Papel |

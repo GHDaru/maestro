@@ -21,6 +21,7 @@ O padrão de mensagens entre eles está em [`comunicacao.md`](./comunicacao.md).
 | Security | `perfis.md` | [`security`](../../.claude/agents/security.md) | Read, Grep, Glob, Bash | ✅ |
 | QA / Living-docs | `perfis.md` | [`qa`](../../.claude/agents/qa.md) | Read, Write, Bash | — |
 | Tech-Writer | `perfis.md` | [`tech-writer`](../../.claude/agents/tech-writer.md) | Read, Write, Edit, Grep | — |
+| UX / Semântica | `perfis.md` | [`ux-semantica`](../../.claude/agents/ux-semantica.md) | Read, Write, Grep, Glob | — |
 
 **Invariante de segurança:** nenhum agente read-only (Guardião, Review, Security) tem
 `Write`/`Edit` — julgar não é consertar (menor superfície de risco por agente, Princípio III).
@@ -36,7 +37,9 @@ Os meta-agentes que evoluem o próprio método, com governança:
 | Curador / Pesquisa | [`curador-pesquisa`](../../.claude/agents/curador-pesquisa.md) | Read, Write, WebSearch, WebFetch |
 | Didática / Editor | [`didatica-editor`](../../.claude/agents/didatica-editor.md) | Read, Write, Edit, Grep |
 
-**V0 completa: 12 de 12 agentes executáveis** (8 núcleo + 4 toolkit).
+**13 agentes executáveis**: 8 núcleo + 4 toolkit + **ux-semantica** (ciclo 018 — o papel
+que o modelo operacional prescrevia sem entregar). Cobertura verificada por
+`scripts/verificar-papeis.sh`.
 
 ## Humanos (indelegáveis) — não são subagentes
 

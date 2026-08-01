@@ -93,6 +93,27 @@
     </div>
   </div>
 
+
+  <!-- RAMO DE INTERFACE -->
+  <div class="raia" style="border-color:rgba(124,92,252,.28)">
+    <div class="rot"><b>Ramo de interface</b><small>só quando há tela</small></div>
+    <div class="fluxo">
+      <div class="no" style="background:rgba(255,255,255,.03);border-color:rgba(118,125,149,.4);color:#a3aabf"><b>tem UI?</b><small>senão, pula</small></div>
+      <span class="seta">→</span>
+      <div class="no ag"><b>Semântica</b><small>ux-semantica · papel antes do componente</small></div>
+      <span class="seta">→</span>
+      <div class="no art">ux-design.md</div>
+      <span class="seta">→</span>
+      <div class="gate"><span>APROVA<br>UX</span></div>
+      <span class="seta">→</span>
+      <div class="no aut"><b>Captura do build real</b><small>script versionado</small></div>
+      <span class="seta">→</span>
+      <div class="no ag"><b>Heurística datada</b><small>achados + severidade</small></div>
+      <span class="seta">→</span>
+      <div class="no art">journeys/NNN.md</div>
+    </div>
+  </div>
+
   <!-- AUTOMAÇÃO -->
   <div class="raia">
     <div class="rot"><b>Automação</b><small>scripts · integração contínua</small></div>
@@ -126,7 +147,7 @@
     </div>
   </div>
 
-  <div class="obs">
+  <div class="obs" style="flex-wrap:wrap">
     <div class="card">
       <b>Antes de tudo: a raia</b>
       <p><em>ambiguidade × raio × irreversibilidade</em> decide quanto processo a mudança recebe. <em>Leve</em>: o pull request é o artefato (pula spec/plan/tasks). <em>Plena</em>: o fluxo inteiro. <em>Infra</em>: plena + backup, dry-run e rollback.</p>
@@ -134,6 +155,10 @@
     <div class="card">
       <b>Por que o fluxo para nos losangos</b>
       <p>Gate não mede a qualidade do raciocínio do agente — <em>localiza a responsabilidade</em>. Os quatro amarelos são indelegáveis; o verde (DoD) é mecânico e bloqueia sozinho.</p>
+    </div>
+    <div class="card">
+      <b>O ramo de interface</b>
+      <p>Feature com tela abre um ramo: <em>papel semântico</em> antes do componente, gate de UX, e <em>jornada viva</em> — captura gerada do build real + heurística <em>datada</em>. Heurística mais velha que a captura = documentação vencida.</p>
     </div>
     <div class="card">
       <b>O laço que fecha</b>

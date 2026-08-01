@@ -77,6 +77,12 @@
 - **Tools**: Read, Write, Bash (testes/e2e). **Contexto**: a feature + a jornada.
 - **Handoff**: → Review.
 
+### UX / Semântica
+- **Escopo**: o PAPEL semântico de cada objeto de tela, antes da implementação; deriva do
+  catálogo; declara a jornada servida e os estados obrigatórios. **Não** implementa componente.
+- **Produz**: `ux-design.md`. **Consome**: spec, catálogo semântico, design system.
+- **Tools**: Read, Write, Grep, Glob. **Handoff**: → Dev (implementa) · → QA (evidência).
+
 ### Tech-Writer
 - **Escopo**: docs vivas no mesmo PR — journey, ADR, changelog, glossário. **Não** decide.
 - **Produz**: docs atualizadas. **Consome**: a mudança + decisões.

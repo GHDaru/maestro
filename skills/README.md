@@ -19,6 +19,7 @@ com brechas fechadas). Autor: agente `skill-author`.
 | [`combater-amontoado`](./combater-amontoado/SKILL.md) | Revisão didática (anti-"amontoado") | Feedback do Steward sobre docs densos | `didatica-editor`, `tech-writer` |
 | [`anti-padroes`](./anti-padroes/SKILL.md) | Catálogo do que NÃO fazer (contexto, orquestração, qualidade, processo) | Retros 001–008 + estudo maestro-02 (spec 008) | todos os agentes; `review`, `guardiao-processo` |
 | [`diagnostico-antes-do-fix`](./diagnostico-antes-do-fix/SKILL.md) | Causa raiz antes de qualquer correção (Iron Law + 6 fases) | Estudo Superpowers (spec 011) — lacuna real de disciplina de debugging | `dev-implementador`, `qa` |
+| [`jornada-viva`](./jornada-viva/SKILL.md) | Doc + capturas do build real + heurística **datada**, no mesmo PR | Lacuna do ciclo 018: o modelo prescrevia journey doc sem skill nem template | `qa`, `tech-writer`, `ux-semantica` |
 
 ## Skills vs. comandos vs. agentes
 
