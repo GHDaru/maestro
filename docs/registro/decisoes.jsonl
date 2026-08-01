@@ -17,3 +17,4 @@
 {"id": "gate-main-2534eaa", "data": "2026-07-31", "titulo": "Gate de merge: feat(skills): absorções do Superpowers — Iron Laws, TDD para skills, causa raiz (spec 011)", "status": "aceita", "registro": "commit 2534eaa"}
 {"id": "gate-main-53c71dc", "data": "2026-08-01", "titulo": "Gate de merge: docs(handbook): Apêndice C — panorama exploratório de templates (spec 012)", "status": "aceita", "registro": "commit 53c71dc"}
 {"id":"adr-0010","data":"2026-08-01","titulo":"Princípio VIII — comunicação inteligível (sigla por extenso na 1ª ocorrência de cada resposta)","status":"aceita","registro":"docs/adr/0010-principio-viii-comunicacao-inteligivel.md"}
+{"id": "gate-main-6125686", "data": "2026-08-01", "titulo": "Gate de merge: feat(constituicao): Princípio VIII — comunicação inteligível + fix dos links da capa", "status": "aceita", "registro": "commit 6125686"}
