@@ -100,3 +100,25 @@ def test_historico_e_apagar():
     assert len(cliente.get("/historico", params={"sessao": sessao}).json()["mensagens"]) == 2
     cliente.delete(f"/sessao/{sessao}")
     assert cliente.get("/historico", params={"sessao": sessao}).json()["mensagens"] == []
+
+def test_corpus_cobre_todas_as_paginas_do_livro():
+    """Fitness function: página do livro ausente do corpus.
+
+    Se uma página entrar no sumário e o corpus não for regenerado, este teste falha —
+    o esquecimento que o README só *pedia* para não cometer.
+
+    LIMITE (honesto): compara títulos, então pega página **faltando**, não conteúdo
+    **desatualizado** dentro de uma página existente. Para isso, a regra continua sendo
+    rodar `build_corpus.py` a cada mudança do livro.
+    """
+    import json
+
+    raiz = Path(__file__).resolve().parents[3]
+    sumario = json.loads((raiz / "publicar" / "sumario.json").read_text(encoding="utf-8"))
+    esperadas = {i["titulo"] for p in sumario["partes"] for i in p["itens"]}
+    no_corpus = {t["pagina"] for t in json.loads(Path(__file__).parents[1].joinpath("corpus.json").read_text(encoding="utf-8"))}
+    faltando = esperadas - no_corpus
+    assert not faltando, (
+        "corpus desatualizado — rode `python companion/backend/build_corpus.py`. "
+        f"Páginas ausentes: {sorted(faltando)}"
+    )

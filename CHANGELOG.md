@@ -10,6 +10,9 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Fitness function do corpus do companion (spec 016)**: teste que compara as páginas do
+  sumário com o corpus indexado — se o livro ganhar página e o corpus não for regenerado,
+  o conjunto falha com a instrução do comando. A regra de papel do README virou verificação.
 - **Companion — o tutor do livro (spec 015)**: serviço FastAPI que responde sobre o método
   **a partir do livro**, citando a página. Busca lexical em 259 trechos gerados do sumário
   (sem embeddings — YAGNI); prompt que aplica as regras do próprio livro (citar fonte,
@@ -97,6 +100,12 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
   páginas internas do livro. Permanece um único link externo, deliberado ("ver no GitHub").
 
 ### Changed
+- **Capítulo 01 migrado ao padrão editorial v2 (spec 016)**: "O princípio central: quem
+  decide o quê" ganha objetivos de aprendizagem, ideia central em uma frase, exemplo de
+  **ciclo real** (o `promover-main.sh` como materialização do princípio, com saída de
+  comando verificada), anti-padrões, verificação e "o que roubar" — preservando os 5
+  frameworks avaliados, as 6 fontes e os conceitos do v1. Primeiro dos 12 a migrar.
+
 - **Rebasing (FR4)**: referências a "Constituição / Princípio IV/V/VII" nos docs migrados
   passam a apontar para `docs/governance/principios-maestro.md` (via mapa de linhagem).
 

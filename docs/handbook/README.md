@@ -17,12 +17,13 @@
 
 ## Dois padrões, em transição
 
-Os capítulos 01–12 seguem a **anatomia v1 (7 seções)** abaixo. A partir do ciclo 013, o
+Os capítulos ainda em **anatomia v1 (7 seções)** são 02–12 (tabela abaixo); os marcados
+com ✨ já migraram. A partir do ciclo 013, o
 padrão vigente é o **esqueleto v2 (9 seções)** do [guia editorial](../livro/guia-editorial.md)
 — com objetivos de aprendizagem, exemplo de ciclo real obrigatório e verificação. O
-capítulo **13** é o piloto; os demais migram um a um, por ciclo.
+capítulo **13** foi o piloto e o **01** o primeiro migrado; os demais seguem um a um, por ciclo.
 
-## Anatomia v1 — capítulos 01–12 (7 seções)
+## Anatomia v1 — capítulos 02–12 (7 seções)
 
 1. **Pergunta central** — a pergunta que o capítulo responde.
 2. **Fundamentação teórica** — o conceito, sua origem e o princípio que o sustenta.
@@ -38,7 +39,7 @@ capítulo **13** é o piloto; os demais migram um a um, por ciclo.
 
 | Cap. | Elem. | Título | Resumo (ideia central) |
 |---|---|---|---|
-| 01 | `[1]` | [Princípio operacional central](01-principio-central.md) | IA escreve · humano decide/aprova · verificação independente valida. O que torna o **irreversível** seguro de delegar é a **reversibilidade engenheirada**. |
+| 01 ✨ | `[1]` | [O princípio central: quem decide o quê](01-principio-central.md) | IA escreve · humano decide/aprova · verificação independente valida. O gate **localiza a responsabilidade**; a **reversibilidade** é o que torna o irreversível delegável. *(padrão v2)* |
 | 02 | `[10]` | [Evidência: DORA/SPACE](02-dora-space.md) | Velocidade e estabilidade **não são trade-off**. Alavanca: **lote pequeno + reversibilidade**. Bússola, não painel. |
 | 03 | `[2]` | [Spec-Driven](03-spec-driven.md) | A **spec é a fonte de verdade** (input que gera código, não descrição). Raias leve/plena/infra por `ambiguidade × raio × irreversibilidade`. |
 | 04 | `[3]` | [Fluxo agentic e economia de contexto](04-fluxo-agentic-contexto.md) | `explore→plan→code→commit` + subagentes + `/clear` + revisor fresco = **economia de contexto**. A spec é o contexto integrador. |
