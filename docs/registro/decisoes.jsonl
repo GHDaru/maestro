@@ -24,3 +24,4 @@
 {"id": "gate-main-392c037", "data": "2026-08-01", "titulo": "Gate de merge: feat(companion): o tutor do livro — backend, busca no corpus e widget (spec 015)", "status": "aceita", "registro": "commit 392c037"}
 {"id": "gate-main-73c78d6", "data": "2026-08-01", "titulo": "Gate de merge: docs(handbook): capítulo 01 migrado ao padrão editorial v2 (spec 016)", "status": "aceita", "registro": "commit 73c78d6"}
 {"id": "gate-main-d10c467", "data": "2026-08-01", "titulo": "Gate de merge: feat(governanca): retro executada — anti-padrões 13/14/15, segunda lei e BPMN (spec 017)", "status": "aceita", "registro": "commit d10c467"}
+{"id": "gate-main-f310b7f", "data": "2026-08-01", "titulo": "Gate de merge: feat(metodo): instalação visível + UX e jornadas executáveis (spec 018)", "status": "aceita", "registro": "commit f310b7f"}
