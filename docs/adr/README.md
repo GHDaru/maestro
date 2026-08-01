@@ -13,6 +13,7 @@ consequências → fontes.
 | 0008 | [Avaliação do ecossistema SDD (Superpowers, BMAD, Kiro…)](0008-avaliacao-ecossistema-sdd.md) | Aceito |
 | 0009 | [Registro automático do gate de merge](0009-registro-automatico-gate-merge.md) | Aceito |
 | 0010 | [Princípio VIII — comunicação inteligível (sigla nunca nasce nua)](0010-principio-viii-comunicacao-inteligivel.md) | Aceito |
+| 0011 | [Livro: padrão editorial, navegação e companion com backend](0011-livro-padrao-editorial-e-companion.md) | Aceito |
 
 > Índice consultável por máquina (append-only): [`../registro/decisoes.jsonl`](../registro/decisoes.jsonl) — ver [protocolo](../registro/README.md).
 

@@ -5,49 +5,156 @@
     {
       "nome": "Abertura",
       "itens": [
-        { "arquivo": "docs/comece-por-aqui.md", "titulo": "Comece por aqui", "teaser": "A história em 5 minutos." },
-        { "arquivo": "docs/roadmap.md", "titulo": "Roadmap & mapa", "teaser": "O que construímos e em que ordem." }
+        {
+          "arquivo": "docs/comece-por-aqui.md",
+          "titulo": "Comece por aqui",
+          "teaser": "A história em 5 minutos."
+        },
+        {
+          "arquivo": "docs/roadmap.md",
+          "titulo": "Roadmap & mapa",
+          "teaser": "O que construímos e em que ordem."
+        }
       ]
     },
     {
       "nome": "Governança",
       "itens": [
-        { "arquivo": "docs/governance/principios-maestro.md", "titulo": "Princípios", "teaser": "Os inegociáveis (constituição)." },
-        { "arquivo": "docs/governance/modelo-operacional.md", "titulo": "Modelo operacional", "teaser": "A regra do dia a dia." },
-        { "arquivo": "docs/governance/glossario.md", "titulo": "Glossário", "teaser": "Todas as siglas." }
+        {
+          "arquivo": "docs/governance/principios-maestro.md",
+          "titulo": "Princípios",
+          "teaser": "Os inegociáveis (constituição)."
+        },
+        {
+          "arquivo": "docs/governance/modelo-operacional.md",
+          "titulo": "Modelo operacional",
+          "teaser": "A regra do dia a dia."
+        },
+        {
+          "arquivo": "docs/governance/glossario.md",
+          "titulo": "Glossário",
+          "teaser": "Todas as siglas."
+        }
       ]
     },
     {
       "nome": "Handbook — fundamentos por elemento",
       "itens": [
-        { "arquivo": "docs/handbook/README.md", "titulo": "Handbook — índice", "teaser": "Os 12 elementos, com resumo." },
-        { "arquivo": "docs/handbook/01-principio-central.md", "titulo": "01 — Princípio central", "teaser": "IA escreve; humano decide; reversibilidade." },
-        { "arquivo": "docs/handbook/02-dora-space.md", "titulo": "02 — Evidência (DORA/SPACE)", "teaser": "Velocidade e estabilidade não são trade-off." },
-        { "arquivo": "docs/handbook/03-spec-driven.md", "titulo": "03 — Spec-Driven", "teaser": "A spec é a fonte de verdade." },
-        { "arquivo": "docs/handbook/04-fluxo-agentic-contexto.md", "titulo": "04 — Fluxo agentic e contexto", "teaser": "Economia de contexto." },
-        { "arquivo": "docs/handbook/05-orquestracao.md", "titulo": "05 — Orquestração", "teaser": "Map-reduce cognitivo." },
-        { "arquivo": "docs/handbook/06-papeis-raci.md", "titulo": "06 — Papéis e RACI", "teaser": "Delega-se tudo menos o A." },
-        { "arquivo": "docs/handbook/07-cerimonias-cadencia.md", "titulo": "07 — Cerimônias e cadência", "teaser": "Cerimônia = função, não reunião." },
-        { "arquivo": "docs/handbook/08-entregaveis-artefatos.md", "titulo": "08 — Entregáveis e artefatos", "teaser": "Consumidor + forcing function." },
-        { "arquivo": "docs/handbook/09-definition-of-ready-done.md", "titulo": "09 — Definition of Ready/Done", "teaser": "Verificável autonomamente." },
-        { "arquivo": "docs/handbook/10-gates-classes-de-risco.md", "titulo": "10 — Gates e classes de risco", "teaser": "Gate proporcional ao risco." },
-        { "arquivo": "docs/handbook/11-rastreabilidade.md", "titulo": "11 — Rastreabilidade", "teaser": "A memória durável do projeto." },
-        { "arquivo": "docs/handbook/12-governanca-leve.md", "titulo": "12 — Governança leve", "teaser": "Aprende sem inchar." }
+        {
+          "arquivo": "docs/handbook/README.md",
+          "titulo": "Handbook — índice",
+          "teaser": "Os 12 elementos, com resumo."
+        },
+        {
+          "arquivo": "docs/handbook/01-principio-central.md",
+          "titulo": "01 — Princípio central",
+          "teaser": "IA escreve; humano decide; reversibilidade."
+        },
+        {
+          "arquivo": "docs/handbook/02-dora-space.md",
+          "titulo": "02 — Evidência (DORA/SPACE)",
+          "teaser": "Velocidade e estabilidade não são trade-off."
+        },
+        {
+          "arquivo": "docs/handbook/03-spec-driven.md",
+          "titulo": "03 — Spec-Driven",
+          "teaser": "A spec é a fonte de verdade."
+        },
+        {
+          "arquivo": "docs/handbook/04-fluxo-agentic-contexto.md",
+          "titulo": "04 — Fluxo agentic e contexto",
+          "teaser": "Economia de contexto."
+        },
+        {
+          "arquivo": "docs/handbook/05-orquestracao.md",
+          "titulo": "05 — Orquestração",
+          "teaser": "Map-reduce cognitivo."
+        },
+        {
+          "arquivo": "docs/handbook/06-papeis-raci.md",
+          "titulo": "06 — Papéis e RACI",
+          "teaser": "Delega-se tudo menos o A."
+        },
+        {
+          "arquivo": "docs/handbook/07-cerimonias-cadencia.md",
+          "titulo": "07 — Cerimônias e cadência",
+          "teaser": "Cerimônia = função, não reunião."
+        },
+        {
+          "arquivo": "docs/handbook/08-entregaveis-artefatos.md",
+          "titulo": "08 — Entregáveis e artefatos",
+          "teaser": "Consumidor + forcing function."
+        },
+        {
+          "arquivo": "docs/handbook/09-definition-of-ready-done.md",
+          "titulo": "09 — Definition of Ready/Done",
+          "teaser": "Verificável autonomamente."
+        },
+        {
+          "arquivo": "docs/handbook/10-gates-classes-de-risco.md",
+          "titulo": "10 — Gates e classes de risco",
+          "teaser": "Gate proporcional ao risco."
+        },
+        {
+          "arquivo": "docs/handbook/11-rastreabilidade.md",
+          "titulo": "11 — Rastreabilidade",
+          "teaser": "A memória durável do projeto."
+        },
+        {
+          "arquivo": "docs/handbook/12-governanca-leve.md",
+          "titulo": "12 — Governança leve",
+          "teaser": "Aprende sem inchar."
+        },
+        {
+          "arquivo": "docs/handbook/13-decisoes-de-engenharia.md",
+          "titulo": "13 — Decisões de engenharia",
+          "teaser": "Cada escolha técnica: quando, por quê, o que faz e o que provoca."
+        }
       ]
     },
     {
       "nome": "Agentes",
       "itens": [
-        { "arquivo": "docs/agents/perfis.md", "titulo": "Perfis de agentes", "teaser": "Escopo, acesso e contexto por especialista." },
-        { "arquivo": "docs/agents/comunicacao.md", "titulo": "Comunicação intra-agentes", "teaser": "Agentes conversam por artefatos." }
+        {
+          "arquivo": "docs/agents/perfis.md",
+          "titulo": "Perfis de agentes",
+          "teaser": "Escopo, acesso e contexto por especialista."
+        },
+        {
+          "arquivo": "docs/agents/comunicacao.md",
+          "titulo": "Comunicação intra-agentes",
+          "teaser": "Agentes conversam por artefatos."
+        }
+      ]
+    },
+    {
+      "nome": "O livro",
+      "itens": [
+        {
+          "arquivo": "docs/livro/guia-editorial.md",
+          "titulo": "Guia editorial",
+          "teaser": "Como o livro é escrito: projeto pedagógico, esqueleto de capítulo, cadência."
+        }
       ]
     },
     {
       "nome": "Apêndices",
       "itens": [
-        { "arquivo": "docs/handbook/apendice-a-maestro-02.md", "titulo": "Apêndice A — Estudo do maestro-02", "teaser": "O que o toolkit homônimo contribui: memória, auditoria, waves, anti-padrões." },
-        { "arquivo": "docs/handbook/apendice-b-superpowers.md", "titulo": "Apêndice B — Estudo do Superpowers", "teaser": "Hands-on no líder do ecossistema: Iron Laws, skills testadas, root cause, review por task." },
-        { "arquivo": "docs/handbook/apendice-c-panorama-templates.md", "titulo": "Apêndice C — Panorama de templates", "teaser": "Varredura exploratória do ecossistema: PRP, CCPM, memory banks, orquestração — com triagem e gatilhos." }
+        {
+          "arquivo": "docs/handbook/apendice-a-maestro-02.md",
+          "titulo": "Apêndice A — Estudo do maestro-02",
+          "teaser": "O que o toolkit homônimo contribui: memória, auditoria, waves, anti-padrões."
+        },
+        {
+          "arquivo": "docs/handbook/apendice-b-superpowers.md",
+          "titulo": "Apêndice B — Estudo do Superpowers",
+          "teaser": "Hands-on no líder do ecossistema: Iron Laws, skills testadas, root cause, review por task."
+        },
+        {
+          "arquivo": "docs/handbook/apendice-c-panorama-templates.md",
+          "titulo": "Apêndice C — Panorama de templates",
+          "teaser": "Varredura exploratória do ecossistema: PRP, CCPM, memory banks, orquestração — com triagem e gatilhos."
+        }
       ]
     }
   ]

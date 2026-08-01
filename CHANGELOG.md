@@ -10,6 +10,15 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Livro Maestro: padrão editorial + capítulo-piloto + instalador (spec 013, ADR 0011)**:
+  guia editorial (`docs/livro/guia-editorial.md`) com projeto pedagógico (Backward Design,
+  Diátaxis, carga cognitiva, 4C/ID), esqueleto de capítulo em 9 seções — com exemplo de
+  ciclo real e verificação obrigatórios — cinco trilhas de navegação e cadência
+  educacional; capítulo 13 (decisões de engenharia) como piloto, com 14 decisões no
+  formato quando/por quê/o que faz/o que provoca; `scripts/instalar-maestro.sh` para
+  instalar o método (agentes, skills, scripts, comandos, templates, governança) em outro
+  repositório, idempotente e com `--dry-run`. Companion decidido (backend próprio,
+  NVIDIA NIM + Neon) — construção em ciclo próprio.
 - **Princípio VIII — comunicação inteligível (ADR 0010, constituição v1.1.0)**: em cada
   resposta/documento, a primeira ocorrência de uma sigla vem por extenso (contagem
   reinicia a cada resposta); brechas fechadas; alimenta o glossário.

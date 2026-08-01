@@ -15,7 +15,14 @@
 > | `research/jornada-aprendizado-modelo-operacional.md` | **Diário** — os insights construídos ao criticar cada elemento |
 > | `research/resultado-pesquisa-*-avaliacao.md` | **Pesquisa** — a síntese citada que embasa tudo |
 
-## Anatomia obrigatória de cada capítulo (7 seções)
+## Dois padrões, em transição
+
+Os capítulos 01–12 seguem a **anatomia v1 (7 seções)** abaixo. A partir do ciclo 013, o
+padrão vigente é o **esqueleto v2 (9 seções)** do [guia editorial](../livro/guia-editorial.md)
+— com objetivos de aprendizagem, exemplo de ciclo real obrigatório e verificação. O
+capítulo **13** é o piloto; os demais migram um a um, por ciclo.
+
+## Anatomia v1 — capítulos 01–12 (7 seções)
 
 1. **Pergunta central** — a pergunta que o capítulo responde.
 2. **Fundamentação teórica** — o conceito, sua origem e o princípio que o sustenta.
@@ -43,6 +50,7 @@
 | 10 | `[9]` | [Gates e classes de risco](10-gates-classes-de-risco.md) | Gate **proporcional** a `irreversibilidade × impacto`. Uniforme = funil ou catástrofe. **Reversibilidade rebaixa a classe**. |
 | 11 | `[11]` | [Rastreabilidade](11-rastreabilidade.md) | `spec ↔ PR ↔ teste ↔ journey` = **memória durável** (sobrevive ao reset do agente). **Emerge** do workflow, sem ferramenta. |
 | 12 | `[12]` | [Governança leve](12-governanca-leve.md) | **Aprende sem inchar**: núcleo firme + periferia evoluível + **YAGNI**. A jornada *foi* o loop de governança em ação. |
+| 13 | — | [Decisões de engenharia](13-decisoes-de-engenharia.md) | Cada escolha técnica com **quando · por quê · o que faz · o que provoca**. Capítulo-piloto do novo padrão editorial. |
 
 > **Nota**: o número do capítulo (ordem de leitura) ≠ o rótulo do elemento `[x]`
 > (nossa linguagem compartilhada na jornada). A tabela mapeia os dois.
