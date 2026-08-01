@@ -10,6 +10,15 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Companion — o tutor do livro (spec 015)**: serviço FastAPI que responde sobre o método
+  **a partir do livro**, citando a página. Busca lexical em 259 trechos gerados do sumário
+  (sem embeddings — YAGNI); prompt que aplica as regras do próprio livro (citar fonte,
+  sigla por extenso, não inventar); porta do modelo compatível com OpenAI (NVIDIA NIM) com
+  modo `echo` sem chave e BYOK por requisição (nunca persistida); persistência em
+  Postgres/Neon com queda para memória; 6 endpoints com CORS restrito e limites por sessão.
+  Widget flutuante em HTML/JavaScript puro, com fontes clicáveis, injetado no site **apenas**
+  quando `MAESTRO_COMPANION_URL` está definida — sem ela, o site é idêntico ao anterior.
+  10 testes (feliz + falha) e evidência visual nos dois temas.
 - **Livro em cinco trilhas (spec 014)**: navegação por tipo de texto (Diátaxis) — A Jornada
   (tutorial), Os Capítulos (explicação), Receitas (como-fazer), Referência e Bastidores —
   cada trilha com tipo e descrição na barra lateral e no sumário; **cadência educacional**
@@ -72,6 +81,11 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
   Compêndio PDF regenerado com Introdução + Apêndice Glossário (57 páginas).
 
 ### Fixed
+- **Widget no tema claro**: o CSS usava `var(--fg,…)`, variável inexistente no tema do
+  livro (é `--text`) — todo o texto caía no fallback escuro e ficava ilegível no tema
+  claro. Descoberto em verificação visual com navegador real.
+- **Assets órfãos do companion**: `companion.{css,js}` permaneciam em `site/` após remover
+  `MAESTRO_COMPANION_URL` (o build limpava apenas `.html`); agora são removidos.
 - **Colisão de slug no motor do site**: os cinco `README.md` do livro (handbook, receitas,
   jornada, adr, registro) resolviam todos para `readme.html`, sobrescrevendo-se em
   silêncio — o portão de links não pegava porque o alvo existia. Slug de `README.md`/

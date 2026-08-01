@@ -14,6 +14,8 @@ const AQUI = dirname(fileURLToPath(import.meta.url));
 const RAIZ = resolve(AQUI, "..");
 const SAIDA = resolve(RAIZ, "site");
 const GITHUB_BASE = "https://github.com/GHDaru/maestro/blob/main/";
+// Endpoint do companion; vazio -> widget não é injetado (site funciona igual).
+const COMPANION_URL = process.env.MAESTRO_COMPANION_URL || "";
 
 const sumario = JSON.parse(readFileSync(resolve(AQUI, "sumario.json"), "utf8"));
 const itens = sumario.partes.flatMap((p) => p.itens.map((i) => ({ ...i, parte: p.nome })));
@@ -100,6 +102,7 @@ function pagina({ tituloPagina, corpo, atual, prev, next, ehSumario }) {
 <title>${tituloPagina} · ${sumario.titulo}</title>
 <meta name="description" content="${sumario.subtitulo}">
 <link rel="stylesheet" href="assets/estilo.css">
+${COMPANION_URL ? '<link rel="stylesheet" href="assets/companion.css">' : ""}
 </head><body${ehSumario ? ' class="p-sumario"' : ""}>
 <button id="alt-tema" aria-label="Alternar tema">◐</button>
 <div class="layout">
@@ -115,6 +118,7 @@ function pagina({ tituloPagina, corpo, atual, prev, next, ehSumario }) {
   </main>
 </div>
 <script src="assets/app.js"></script>
+${COMPANION_URL ? `<script>window.MAESTRO_COMPANION_URL=${JSON.stringify(COMPANION_URL)};</script><script src="assets/companion.js"></script>` : ""}
 </body></html>`;
 }
 
@@ -123,6 +127,13 @@ mkdirSync(resolve(SAIDA, "assets"), { recursive: true });
 // limpa páginas geradas antigas (preserva a capa index.html, mantida à mão)
 for (const f of readdirSync(SAIDA)) if (f.endsWith(".html") && f !== "index.html") rmSync(resolve(SAIDA, f));
 cpSync(resolve(AQUI, "tema/estilo.css"), resolve(SAIDA, "assets/estilo.css"));
+// assets do companion: copiados só quando há endpoint; removidos quando não há
+// (senão ficam órfãos de um build anterior e vão para o site publicado).
+for (const f of ["companion.css", "companion.js"]) {
+  const destino = resolve(SAIDA, "assets", f);
+  if (COMPANION_URL) cpSync(resolve(RAIZ, "companion/widget", f), destino);
+  else if (existsSync(destino)) rmSync(destino);
+}
 cpSync(resolve(AQUI, "tema/app.js"), resolve(SAIDA, "assets/app.js"));
 writeFileSync(resolve(SAIDA, ".nojekyll"), "");
 

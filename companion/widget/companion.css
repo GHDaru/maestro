@@ -1,0 +1,68 @@
+/* Companion — widget flutuante. Usa as variáveis do tema do livro quando existem. */
+.cmp-botao{
+  position:fixed; right:20px; bottom:20px; z-index:60;
+  width:52px; height:52px; border-radius:50%; cursor:pointer;
+  border:1px solid var(--line,rgba(230,195,117,.16)); background:var(--bg2,#141833);
+  color:var(--text,#edeef5); font-size:22px; line-height:1;
+  box-shadow:0 8px 28px rgba(0,0,0,.35); transition:transform .15s ease, border-color .15s ease;
+}
+.cmp-botao:hover{transform:translateY(-2px); border-color:var(--accent,#e6c375)}
+.cmp-botao.aberto{border-color:var(--accent,#e6c375)}
+
+.cmp-painel{
+  position:fixed; right:20px; bottom:84px; z-index:60;
+  width:min(400px, calc(100vw - 40px)); height:min(560px, calc(100vh - 130px));
+  display:flex; flex-direction:column; overflow:hidden;
+  background:var(--bg,#0d1023); border:1px solid var(--line,rgba(230,195,117,.16));
+  border-radius:16px; box-shadow:0 20px 60px rgba(0,0,0,.45);
+}
+.cmp-painel[hidden]{display:none}
+
+.cmp-cab{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 14px; border-bottom:1px solid var(--line,rgba(230,195,117,.16));
+}
+.cmp-cab strong{font-size:14px; color:var(--text,#edeef5)}
+.cmp-cab small{display:block; font-size:11px; color:var(--muted,#a3aabf)}
+.cmp-fechar{background:none; border:none; color:var(--muted,#a3aabf); cursor:pointer; font-size:15px}
+.cmp-fechar:hover{color:var(--text,#edeef5)}
+
+.cmp-msgs{flex:1; overflow-y:auto; padding:14px; display:flex; flex-direction:column; gap:10px}
+.cmp-msg{
+  font-size:14px; line-height:1.5; padding:10px 12px; border-radius:12px; max-width:92%;
+  word-wrap:break-word;
+}
+.cmp-usuario{align-self:flex-end; background:var(--accent,#e6c375); color:var(--bg,#0d1023); font-weight:500}
+.cmp-assistente{align-self:flex-start; background:var(--bg2,#141833); color:var(--text,#edeef5); border:1px solid var(--line,rgba(230,195,117,.16))}
+.cmp-erro{align-self:flex-start; background:rgba(231,178,76,.12); color:var(--text,#edeef5); border:1px solid rgba(231,178,76,.4)}
+
+.cmp-fontes{margin-top:8px; padding-top:8px; border-top:1px solid var(--line,rgba(230,195,117,.16)); font-size:12px; color:var(--muted,#a3aabf)}
+.cmp-fontes span{text-transform:uppercase; letter-spacing:.1em; font-size:10px; margin-right:4px}
+.cmp-fontes a{color:var(--accent,#e6c375); text-decoration:none}
+.cmp-fontes a:hover{text-decoration:underline}
+
+.cmp-sugestoes{display:flex; flex-direction:column; gap:6px}
+.cmp-sug{
+  text-align:left; font-size:13px; padding:8px 10px; cursor:pointer;
+  background:transparent; color:var(--muted,#a3aabf);
+  border:1px dashed var(--line,rgba(230,195,117,.16)); border-radius:10px;
+}
+.cmp-sug:hover{border-color:var(--accent,#e6c375); color:var(--text,#edeef5)}
+
+.cmp-form{display:flex; gap:8px; padding:12px; border-top:1px solid var(--line,rgba(230,195,117,.16))}
+.cmp-entrada{
+  flex:1; padding:9px 12px; font-size:14px; font-family:inherit;
+  background:var(--bg2,#141833); color:var(--text,#edeef5);
+  border:1px solid var(--line,rgba(230,195,117,.16)); border-radius:10px;
+}
+.cmp-entrada:focus{outline:2px solid var(--accent,#e6c375); outline-offset:1px}
+.cmp-enviar{
+  padding:0 14px; cursor:pointer; font-size:16px;
+  background:var(--accent,#e6c375); color:var(--bg,#0d1023); border:none; border-radius:10px; font-weight:600;
+}
+.cmp-rodape{margin:0; padding:0 12px 10px; font-size:11px; color:var(--muted,#a3aabf); text-align:center}
+
+@media (max-width:520px){
+  .cmp-painel{right:10px; left:10px; width:auto; bottom:76px; height:min(70vh, calc(100vh - 110px))}
+  .cmp-botao{right:14px; bottom:14px}
+}

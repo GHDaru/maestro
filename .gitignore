@@ -7,3 +7,8 @@ site/sumario.html
 site/*.html
 !site/index.html
 site/.nojekyll
+
+# companion — segredos nunca no repositório
+companion/backend/.env
+companion/backend/__pycache__/
+companion/backend/tests/__pycache__/
