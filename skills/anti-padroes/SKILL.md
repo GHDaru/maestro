@@ -55,6 +55,25 @@ todo anti-padrão novo entra pela retro (erro recorrente observado), nunca por e
     versionada. A retro existe para isso; repetir correção é falha de processo, não do
     agente.
 
+## De verificação
+
+13. **Check que mede o proxy, não o fato** — o comando passa, mas prova outra coisa.
+    Sintomas: casa com o *texto* em vez do artefato (`grep -l companion` acha a palavra
+    escrita na página, não o widget injetado); conta *linhas* em vez de itens
+    (`grep -c "https://"` reporta 5 onde há 6 fontes); confirma que a *seção existe* em
+    vez de que ela *está atualizada* ("avaliação heurística presente" ≠ "revisitada com
+    data nova"). **Antídoto**: prove o check **falhando** antes de confiar nele — se você
+    não viu o check acusar, não sabe o que ele mede (ver skill `dod-verificavel`).
+
+## De processo (continuação)
+
+14. **Achado que morre em "candidato"** — registrar "candidato a regra" no relatório e não
+    executar a retrospectiva. O ciclo `retro → regra versionada` só existe se for
+    **rodado**; anotação sem cerimônia é dívida silenciosa.
+15. **Artefato de planejamento que congela** — roadmap/mapa que para de ser atualizado
+    enquanto os ciclos avançam. Vira ficção: descreve um projeto que não é mais o seu
+    (Princípio VI — artefato vivo ou morto, não há meio-termo).
+
 ## Como usar
 
 - **Desenhando**: percorra o catálogo como checklist negativo (nenhum item presente?).

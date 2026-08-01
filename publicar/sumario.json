@@ -207,6 +207,11 @@
       "descricao": "Como as decisões foram tomadas e o que estudamos para decidir. É onde mora o link para o repositório.",
       "itens": [
         {
+          "arquivo": "docs/diagramas/05-bpmn-processo.md",
+          "titulo": "BPMN do processo",
+          "teaser": "O método em raias: quem executa o quê e onde o fluxo para."
+        },
+        {
           "arquivo": "docs/adr/README.md",
           "titulo": "Decisões (ADRs)",
           "teaser": "Registros imutáveis: contexto, alternativas, consequências."

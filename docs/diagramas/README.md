@@ -10,6 +10,7 @@ Cada peça existe em três formas: **markdown** (conteúdo textual, versionável
 | 02 | **Problema → solução** | [md](02-problema-solucao.md) | [pdf](pdf/02-problema-solucao.pdf) | [html](fontes/02-problema-solucao.html) |
 | 03 | **Fluxo** — o ciclo spec-driven (timeline) | [md](03-fluxo.md) | [pdf](pdf/03-fluxo.pdf) | [html](fontes/03-fluxo.html) |
 | 04 | **SIPOC** — o ciclo de entrega como processo | [md](04-sipoc.md) | [pdf](pdf/04-sipoc.pdf) | [html](fontes/04-sipoc.html) |
+| 05 | **BPMN** — o processo em raias, com os gates onde o fluxo para | [md](05-bpmn-processo.md) | [png](05-bpmn-processo.png) | [html](fontes/05-bpmn-processo.html) |
 
 ## Código de cores (comum a todas as peças)
 

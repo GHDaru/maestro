@@ -1,0 +1,145 @@
+<style>
+  @font-face{font-family:x}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#0d1023;font-family:ui-sans-serif,system-ui,'Segoe UI',Roboto,sans-serif;padding:34px}
+  .quadro{width:1720px;background:linear-gradient(165deg,#141833,#0d1023 70%);border:1px solid rgba(230,195,117,.18);border-radius:16px;padding:30px 34px 26px}
+  h1{font-family:Georgia,serif;font-size:27px;color:#edeef5;font-weight:600;letter-spacing:-.01em}
+  h1 em{font-style:normal;color:#e6c375}
+  .sub{color:#a3aabf;font-size:13.5px;margin-top:5px}
+  .leg{display:flex;gap:20px;margin:16px 0 20px;flex-wrap:wrap;align-items:center}
+  .li{display:flex;align-items:center;gap:7px;font-size:11.5px;color:#a3aabf}
+  .sq{width:15px;height:15px;flex:0 0 auto;border-radius:4px}
+  .sq.hum{background:#e6c375;transform:rotate(45deg);border-radius:2px;width:13px;height:13px}
+  .sq.ag{background:#7c5cfc}
+  .sq.aut{background:#34d77b;border-radius:50%}
+  .sq.art{background:transparent;border:1px dashed #767d95}
+
+  .raia{display:grid;grid-template-columns:132px 1fr;border:1px solid rgba(230,195,117,.14);border-radius:11px;margin-bottom:11px;overflow:hidden}
+  .rot{background:rgba(255,255,255,.03);padding:13px 11px;display:flex;flex-direction:column;justify-content:center;gap:3px;border-right:1px solid rgba(230,195,117,.14)}
+  .rot b{font-size:12.5px;color:#edeef5;line-height:1.25}
+  .rot small{font-size:10px;color:#767d95;line-height:1.3}
+  .fluxo{display:flex;align-items:center;gap:7px;padding:13px 14px;flex-wrap:nowrap;overflow:visible}
+
+  .no{border-radius:9px;padding:8px 11px;font-size:11.5px;line-height:1.3;color:#edeef5;flex:0 0 auto;border:1px solid;text-align:center;min-width:74px}
+  .no b{display:block;font-size:12px;font-weight:600}
+  .no small{font-size:9.5px;color:#a3aabf;display:block;margin-top:2px}
+  .ag{background:rgba(124,92,252,.16);border-color:rgba(124,92,252,.5)}
+  .aut{background:rgba(52,215,123,.13);border-color:rgba(52,215,123,.45)}
+  .art{background:transparent;border-color:rgba(118,125,149,.5);border-style:dashed;color:#a3aabf;font-family:ui-monospace,Menlo,monospace;font-size:10px;min-width:0;padding:5px 8px}
+
+  .gate{width:60px;height:60px;flex:0 0 auto;background:rgba(230,195,117,.14);border:1px solid rgba(230,195,117,.6);transform:rotate(45deg);display:flex;align-items:center;justify-content:center;border-radius:6px;margin:0 6px}
+  .gate span{transform:rotate(-45deg);font-size:9px;color:#e6c375;font-weight:700;text-align:center;line-height:1.15;letter-spacing:.02em}
+
+  .ini,.fim{width:38px;height:38px;flex:0 0 auto;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px}
+  .ini{background:rgba(230,195,117,.16);border:1px solid rgba(230,195,117,.5)}
+  .fim{background:rgba(52,215,123,.16);border:2px solid rgba(52,215,123,.6)}
+  .seta{color:#767d95;font-size:14px;flex:0 0 auto}
+
+  .obs{display:flex;gap:12px;margin-top:6px;flex-wrap:wrap}
+  .card{flex:1;min-width:250px;border:1px solid rgba(230,195,117,.14);border-radius:10px;padding:11px 13px;background:rgba(255,255,255,.02)}
+  .card b{font-size:11px;color:#e6c375;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:5px}
+  .card p{font-size:11.5px;color:#a3aabf;line-height:1.45}
+  .card p em{font-style:normal;color:#edeef5}
+  .rod{margin-top:14px;font-size:10.5px;color:#767d95;text-align:center;font-style:italic}
+</style>
+
+<div class="quadro">
+  <h1>Maestro — o processo em <em>BPMN</em></h1>
+  <p class="sub">Raias por executor. O losango é gate: onde o fluxo <strong style="color:#e6c375">para</strong> até alguém decidir. Um humano rege; muitos agentes executam.</p>
+
+  <div class="leg">
+    <span class="li"><span class="sq hum"></span> Humano — gate indelegável</span>
+    <span class="li"><span class="sq ag"></span> Agente de IA</span>
+    <span class="li"><span class="sq aut"></span> Automação (script/CI)</span>
+    <span class="li"><span class="sq art"></span> Artefato produzido</span>
+  </div>
+
+  <!-- STEWARD -->
+  <div class="raia">
+    <div class="rot"><b>Steward</b><small>humano · Accountable</small></div>
+    <div class="fluxo">
+      <div class="ini">▶</div><span class="seta">→</span>
+      <div class="no" style="background:rgba(230,195,117,.12);border-color:rgba(230,195,117,.45)"><b>Intenção</b><small>o quê · por quê · apetite</small></div>
+      <span class="seta">→</span>
+      <div class="gate"><span>APROVA<br>SPEC</span></div>
+      <span class="seta">→</span>
+      <div class="gate"><span>APROVA<br>PLANO</span></div>
+      <span class="seta">→</span>
+      <div class="gate"><span>GATE DE<br>MERGE</span></div>
+      <span class="seta">→</span>
+      <div class="no" style="background:rgba(230,195,117,.12);border-color:rgba(230,195,117,.45)"><b>Retro</b><small>erro → regra</small></div>
+      <span class="seta">→</span>
+      <div class="fim">◉</div>
+    </div>
+  </div>
+
+  <!-- AGENTES -->
+  <div class="raia">
+    <div class="rot"><b>Agentes de IA</b><small>12 subagentes estreitos</small></div>
+    <div class="fluxo">
+      <div class="no ag"><b>Especificar</b><small>spec-agent</small></div>
+      <span class="seta">→</span>
+      <div class="no ag"><b>Clarificar</b><small>ambiguidade → pergunta</small></div>
+      <span class="seta">→</span>
+      <div class="no ag"><b>Planejar</b><small>plan-arquiteto</small></div>
+      <span class="seta">→</span>
+      <div class="no ag"><b>Fatiar</b><small>tasks por fronteira</small></div>
+      <span class="seta">→</span>
+      <div class="no ag"><b>Implementar</b><small>dev · diffs pequenos</small></div>
+      <span class="seta">→</span>
+      <div class="no ag"><b>Verificar</b><small>review fresco · security · qa</small></div>
+      <span class="seta">→</span>
+      <div class="no ag"><b>Documentar</b><small>tech-writer · mesmo PR</small></div>
+    </div>
+  </div>
+
+  <!-- AUTOMAÇÃO -->
+  <div class="raia">
+    <div class="rot"><b>Automação</b><small>scripts · integração contínua</small></div>
+    <div class="fluxo">
+      <div class="no aut"><b>novo-ciclo</b><small>esqueleto NNN</small></div>
+      <span class="seta">→</span>
+      <div class="no aut"><b>Constitution Check</b><small>princípios I–VIII</small></div>
+      <span class="seta">→</span>
+      <div class="no aut"><b>Testes + fitness</b><small>feliz + falha</small></div>
+      <span class="seta">→</span>
+      <div class="gate" style="background:rgba(52,215,123,.13);border-color:rgba(52,215,123,.5)"><span style="color:#34d77b">DoD<br>VERDE?</span></div>
+      <span class="seta">→</span>
+      <div class="no aut"><b>promover-main</b><small>+ registra o gate</small></div>
+      <span class="seta">→</span>
+      <div class="no aut"><b>Publica</b><small>site · livro</small></div>
+    </div>
+  </div>
+
+  <!-- ARTEFATOS -->
+  <div class="raia">
+    <div class="rot"><b>Artefatos</b><small>a trilha auditável</small></div>
+    <div class="fluxo">
+      <div class="no art">spec.md</div><span class="seta">→</span>
+      <div class="no art">plan.md + ADR</div><span class="seta">→</span>
+      <div class="no art">tasks.md</div><span class="seta">→</span>
+      <div class="no art">código + testes</div><span class="seta">→</span>
+      <div class="no art">qa-report.md</div><span class="seta">→</span>
+      <div class="no art">CHANGELOG · docs</div><span class="seta">→</span>
+      <div class="no art">decisoes.jsonl</div><span class="seta">→</span>
+      <div class="no art">regra nova</div>
+    </div>
+  </div>
+
+  <div class="obs">
+    <div class="card">
+      <b>Antes de tudo: a raia</b>
+      <p><em>ambiguidade × raio × irreversibilidade</em> decide quanto processo a mudança recebe. <em>Leve</em>: o pull request é o artefato (pula spec/plan/tasks). <em>Plena</em>: o fluxo inteiro. <em>Infra</em>: plena + backup, dry-run e rollback.</p>
+    </div>
+    <div class="card">
+      <b>Por que o fluxo para nos losangos</b>
+      <p>Gate não mede a qualidade do raciocínio do agente — <em>localiza a responsabilidade</em>. Os quatro amarelos são indelegáveis; o verde (DoD) é mecânico e bloqueia sozinho.</p>
+    </div>
+    <div class="card">
+      <b>O laço que fecha</b>
+      <p>A retrospectiva devolve ao início: erro recorrente vira <em>regra versionada</em> (princípio, skill ou script). O processo aprende — e cada volta o deixa mais barato.</p>
+    </div>
+  </div>
+
+  <p class="rod">Maestro · o humano decide a política e os pontos irreversíveis; a máquina executa e prova. Reversibilidade compra velocidade.</p>
+</div>

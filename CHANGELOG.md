@@ -10,6 +10,14 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Retrospectiva executada — anti-padrões 13/14/15 e BPMN (spec 017)**: auditoria do
+  Steward expôs duas falhas de processo (achado que morre em "candidato" e roadmap
+  congelado desde o ciclo 009) e um padrão com três ocorrências (**check que mede o proxy,
+  não o fato**). Convertidos em regra: anti-padrões 13, 14 e 15 no catálogo; **segunda lei**
+  na skill `dod-verificavel` (*um check que você nunca viu acusar não é um check, é uma
+  esperança* — prove-o falhando); roadmap descongelado com F5/F6/F7, gatilhos abertos e
+  regra de manutenção no cabeçalho. Novo diagrama **BPMN** do processo (quatro raias, os
+  gates onde o fluxo para) em imagem, fonte e página do livro.
 - **Fitness function do corpus do companion (spec 016)**: teste que compara as páginas do
   sumário com o corpus indexado — se o livro ganhar página e o corpus não for regenerado,
   o conjunto falha com a instrução do comando. A regra de papel do README virou verificação.

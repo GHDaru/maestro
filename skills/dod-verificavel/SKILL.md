@@ -15,6 +15,18 @@ NENHUM CRITÉRIO DE ACEITE SEM O COMANDO QUE O PROVA
 - "É difícil de automatizar" — então marque explicitamente como gate humano; vago não fica.
 - "Todo mundo entende o que significa" — se não há comando, cada um entende uma coisa.
 
+## Segunda lei: prove o check falhando
+
+```
+UM CHECK QUE VOCÊ NUNCA VIU ACUSAR NÃO É UM CHECK — É UMA ESPERANÇA
+```
+
+Antes de confiar num check novo, **quebre o mundo de propósito** e veja-o falhar: injete a
+colisão, remova o arquivo, deixe a data velha. É o vermelho-antes-do-verde aplicado à
+verificação. Sem isso você não sabe se ele mede o **fato** ou apenas um **proxy** dele
+(anti-padrão 13) — os três casos que motivaram esta lei passavam alegremente enquanto
+mediam a coisa errada.
+
 O Princípio IV exige DoD **verificável autonomamente**: um agente confirma sem opinar. Esta
 skill transforma critério vago em check executável — o que foi feito à mão, igual, em vários
 ciclos.
