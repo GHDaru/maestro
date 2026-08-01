@@ -10,6 +10,11 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Apêndice C — panorama exploratório de templates (spec 012)**: varredura do resto do
+  ecossistema (PRP, CCPM, claude-code-spec-workflow, memory banks, claude-flow, ADK,
+  marketplaces) com triagem 🔬/👁/⛔ e gatilhos explícitos; formaliza o funil
+  exploratório → gatilho → hands-on → absorção por gate. Achados novos com gatilho:
+  PRP (código de produto) e CCPM (multi-dev com Issues).
 - **Absorções do Superpowers (spec 011)**: Iron Laws em todas as 5 skills (enforcement
   linguístico com brechas fechadas), protocolo TDD-para-skills no `skill-author`
   (baseline RED sem a skill antes de publicar), skill nova `diagnostico-antes-do-fix`
