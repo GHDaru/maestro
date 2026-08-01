@@ -25,3 +25,4 @@
 {"id": "gate-main-73c78d6", "data": "2026-08-01", "titulo": "Gate de merge: docs(handbook): capítulo 01 migrado ao padrão editorial v2 (spec 016)", "status": "aceita", "registro": "commit 73c78d6"}
 {"id": "gate-main-d10c467", "data": "2026-08-01", "titulo": "Gate de merge: feat(governanca): retro executada — anti-padrões 13/14/15, segunda lei e BPMN (spec 017)", "status": "aceita", "registro": "commit d10c467"}
 {"id": "gate-main-f310b7f", "data": "2026-08-01", "titulo": "Gate de merge: feat(metodo): instalação visível + UX e jornadas executáveis (spec 018)", "status": "aceita", "registro": "commit f310b7f"}
+{"id":"adr-0012","data":"2026-08-01","titulo":"Distribuição em três camadas: script completo, plugin do Claude Code e npx skills add","status":"aceita","registro":"docs/adr/0012-distribuicao-em-tres-camadas.md","ciclo":"019"}

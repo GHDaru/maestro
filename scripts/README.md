@@ -10,6 +10,9 @@ gargalo) sem tirar dele a **decisão**. Cada script nasceu de dor de retro, não
 | [`verificar-agentes.sh`](./verificar-agentes.sh) | Roda os invariantes dos subagentes (contagem, frontmatter, read-only) | Antes de dar por pronto um ciclo de agentes | Nada — só reporta; exit ≠ 0 se quebra |
 | [`retro.sh`](./retro.sh) | Pré-computa o material da retro (ciclos, vereditos, gates pendentes, decisões, inventário) | Na retro de fim de ciclo | As respostas — a retro continua humana |
 | [`registrar-decisao.sh`](./registrar-decisao.sh) | Anexa decisão ao índice `docs/registro/decisoes.jsonl` (append-only, valida JSON) | Ao aceitar ADR / decidir gate | O mérito — só registra o que o humano decidiu |
+| [`verificar-papeis.sh`](./verificar-papeis.sh) | Papel prescrito no modelo × agente existente; artefato essencial × template | Antes de fechar ciclo que mexe em papéis | Nada — só reporta; exit ≠ 0 se a norma não tem executável |
+| [`instalar-maestro.sh`](./instalar-maestro.sh) | Instala o método completo em outro repositório | Ao levar o Maestro para um projeto | Não sobrescreve; `--dry-run` mostra antes |
+| [`empacotar-plugin.sh`](./empacotar-plugin.sh) | Gera `plugin/maestro/` (Claude Code) das fontes; `--verificar` prova a sincronia | Ao mudar agente/skill/comando | Nada — reempacota ou acusa divergência |
 
 ## Princípio (II + III)
 

@@ -10,6 +10,14 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Distribuição em três camadas + templates faltantes (spec 019, ADR 0012)**: templates
+  de **ADR** e **qa-report** (artefatos de todo ciclo que eram reescritos à mão);
+  **plugin do Claude Code** (`scripts/empacotar-plugin.sh` gera `plugin/maestro/` das
+  fontes; `.claude-plugin/marketplace.json` publica) com fitness function de sincronia
+  provada falhando; compatibilidade com **`npx skills add GHDaru/maestro`** verificada
+  (o layout já era o padrão da comunidade — 75+ agentes, sem mudança); README com os três
+  caminhos e o que cada um **não** leva. CLI próprio estilo Spec Kit descartado com
+  racional (~6.900 linhas para o que um script de 90 entrega).
 - **Instalação visível + UX e jornadas executáveis (spec 018)**: seção de instalação no
   `README.md` (com nota para IA: instalar = copiar o toolkit, não empacotar); agente
   **`ux-semantica`** e skill **`jornada-viva`** — os papéis que o modelo operacional

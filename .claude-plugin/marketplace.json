@@ -1,0 +1,15 @@
+{
+  "name": "ghdaru-maestro",
+  "owner": { "name": "GHDaru", "url": "https://github.com/GHDaru" },
+  "metadata": {
+    "description": "Marketplace do Maestro — a metodologia de um humano regendo N agentes de IA.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "maestro",
+      "source": "./plugin/maestro",
+      "description": "13 subagentes do fluxo spec-driven, 6 skills com suas Iron Laws e os comandos do ciclo (spec → plan → tasks → implement → DoD → gate)."
+    }
+  ]
+}

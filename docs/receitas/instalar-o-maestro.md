@@ -3,6 +3,16 @@
 > Objetivo: fazer a Inteligência Artificial (IA) seguir o método no **seu** repositório.
 > Tempo: ~5 min. Pré-requisito: ter o repositório do Maestro clonado.
 
+## Escolha o caminho
+
+| Caminho | Leva | Quando usar |
+|---|---|---|
+| **A. Script** (abaixo) | método **inteiro** | padrão — qualquer projeto, qualquer assistente |
+| **B. Plugin** `/plugin marketplace add GHDaru/maestro` → `/plugin install maestro@ghdaru-maestro` | 13 agentes + 6 skills + comandos | usa Claude Code e quer atualização automática |
+| **C. `npx skills add GHDaru/maestro`** | só as 6 skills | quer só as skills, em qualquer um dos 75+ agentes |
+
+> B e C **não** trazem scripts nem governança. Para o método completo, siga o caminho A.
+
 ## 1. Veja o que será instalado (sem escrever nada)
 
 ```bash

@@ -12,3 +12,5 @@ site/.nojekyll
 companion/backend/.env
 companion/backend/__pycache__/
 companion/backend/tests/__pycache__/
+
+# empacotamento do plugin é gerado (mas versionado — ver ADR 0012); ignorar só temporários
