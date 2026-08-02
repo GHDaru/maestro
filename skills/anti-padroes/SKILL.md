@@ -74,12 +74,23 @@ todo anti-padrão novo entra pela retro (erro recorrente observado), nunca por e
     enquanto os ciclos avançam. Vira ficção: descreve um projeto que não é mais o seu
     (Princípio VI — artefato vivo ou morto, não há meio-termo).
 
+## De verificação (continuação)
+
+16. **Portão que cobre um formato e ignora os vizinhos** — a verificação nasce para um
+    caso e nunca enumera os irmãos daquela família. O portão de links do site validava
+    `<a href>` e ignorava `<img src>` (imagem quebrada passava verde); corrigido, ainda
+    ignorava `href` terminado em `.md` não reescrito. **Antídoto**: ao escrever um portão,
+    liste **toda** a família do que ele guarda — no HTML, todo atributo que vira requisição
+    (`href`, `src`, `srcset`, `poster`); num schema, todo campo obrigatório; num diretório,
+    toda extensão publicada — e prove o portão falhando **em cada** formato listado.
+    *(ciclo 020, terceira reincidência do 13.)*
+
 ## Como usar
 
 - **Desenhando**: percorra o catálogo como checklist negativo (nenhum item presente?).
 - **Revisando**: nomeie o anti-padrão pelo número — "isso é o 4" encurta a conversa.
 - **Na retro**: erro recorrente novo → nova entrada aqui (com o ciclo de origem).
 
-**Fontes:** retros dos ciclos 001–008 · catálogo "workflow slop" do
+**Fontes:** retros dos ciclos 001–008 e 017–020 · catálogo "workflow slop" do
 [maestro-02/sharpdeveye](https://github.com/GHDaru/maestro-02) (adaptado — ver Apêndice A
-do handbook) · princípios I–VII.
+do handbook) · princípios I–VIII.

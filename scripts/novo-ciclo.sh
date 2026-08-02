@@ -71,6 +71,7 @@ write_if_absent "$DIR/plan.md" <<EOF
 | V. Economia de contexto / fronteira |  |
 | VI. Artefatos vivos |  |
 | VII. Governança leve / YAGNI |  |
+| VIII. Comunicação inteligível |  |
 
 ## Como
 <...>

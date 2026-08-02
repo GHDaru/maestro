@@ -49,24 +49,29 @@ const md = new MarkdownIt({ html: true, linkify: false, typographer: false }).us
 });
 
 // Reescrita de links internos: .md publicado -> .html; qualquer outro alvo do repo -> GitHub.
+function resolverHref(href, srcDir) {
+  if (!href || /^https?:|^#|^mailto:|^\/\//.test(href)) return href;
+  const [alvo, hash] = href.split("#");
+  const anc = hash ? "#" + hash : "";
+  // resolve o caminho relativo à origem antes de derivar o slug (READMEs de pastas
+  // diferentes têm slugs diferentes — ver slugDe).
+  const rel = path.posix.normalize(path.posix.join(srcDir || ".", alvo)).replace(/^(\.\.\/)+/, "");
+  const slug = slugDe(rel);
+  return /\.md$/i.test(alvo) && publicados.has(slug) ? slug + ".html" + anc : GITHUB_BASE + rel + anc;
+}
+
 const defOpen = md.renderer.rules.link_open || ((t, i, o, e, s) => s.renderToken(t, i, o));
 md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
   const href = tokens[idx].attrGet("href");
-  if (href && !/^https?:|^#|^mailto:|^\/\//.test(href)) {
-    const [alvo, hash] = href.split("#");
-    const anc = hash ? "#" + hash : "";
-    // resolve o caminho relativo à origem antes de derivar o slug (READMEs de pastas
-    // diferentes têm slugs diferentes — ver slugDe).
-    const rel = path.posix.normalize(path.posix.join(env.srcDir || ".", alvo)).replace(/^(\.\.\/)+/, "");
-    const slug = slugDe(rel);
-    if (/\.md$/i.test(alvo) && publicados.has(slug)) {
-      tokens[idx].attrSet("href", slug + ".html" + anc);
-    } else {
-      tokens[idx].attrSet("href", GITHUB_BASE + rel + anc);
-    }
-  }
+  if (href) tokens[idx].attrSet("href", resolverHref(href, env.srcDir));
   return defOpen(tokens, idx, options, env, self);
 };
+
+// Bloco de HTML embutido no Markdown (ex.: o BPMN navegável) passa direto pelo
+// renderer — nenhuma regra de link o toca. Reescreve os `<a href="...md">` dele
+// com a MESMA regra, para o link valer no GitHub e no livro (ciclo 020).
+const resolverHtmlBruto = (html, srcDir) =>
+  html.replace(/(<a\b[^>]*\bhref=")([^"]+?\.md(?:#[^"]*)?)(")/gi, (_, ini, href, fim) => ini + resolverHref(href, srcDir) + fim);
 
 // Callouts pedagógicos (didática): marca seções conhecidas para o CSS estilizar.
 const TIPOS = [
@@ -138,11 +143,20 @@ cpSync(resolve(AQUI, "tema/app.js"), resolve(SAIDA, "assets/app.js"));
 writeFileSync(resolve(SAIDA, ".nojekyll"), "");
 
 let gerados = 0;
+const imagens = new Set();
 for (let k = 0; k < itens.length; k++) {
   const item = itens[k];
   const caminho = resolve(RAIZ, item.arquivo);
   if (!existsSync(caminho)) { console.warn(`  aviso: ausente -> ${item.arquivo}`); continue; }
-  const corpo = marcarCallouts(md.render(readFileSync(caminho, "utf8"), { srcDir: dirname(item.arquivo) }));
+  const fonte = readFileSync(caminho, "utf8");
+  const corpo = marcarCallouts(resolverHtmlBruto(md.render(fonte, { srcDir: dirname(item.arquivo) }), dirname(item.arquivo)));
+  // Copia as imagens que a página referencia (relativas à origem do markdown).
+  for (const m of fonte.matchAll(/!\[[^\]]*\]\(([^)\s]+)\)/g)) {
+    const alvo = m[1];
+    if (/^https?:|^data:/.test(alvo)) continue;
+    const origem = resolve(RAIZ, dirname(item.arquivo), alvo);
+    if (existsSync(origem)) { cpSync(origem, resolve(SAIDA, basename(alvo))); imagens.add(basename(alvo)); }
+  }
   writeFileSync(
     resolve(SAIDA, `${item.slug}.html`),
     pagina({ tituloPagina: item.titulo, corpo, atual: item.slug, prev: k === 0 ? { slug: "sumario", titulo: "Sumário" } : itens[k - 1], next: itens[k + 1] })
@@ -177,9 +191,20 @@ for (const f of readdirSync(SAIDA)) {
   const html = readFileSync(resolve(SAIDA, f), "utf8");
   for (const m of html.matchAll(/href="([^"]+)"/g)) {
     const href = m[1];
-    if (/^https?:|^#|^mailto:|^\/\//.test(href) || !/\.html(#|$)/.test(href)) continue;
+    if (/^https?:|^#|^mailto:|^\/\//.test(href)) continue;
+    // .md que sobrou no HTML publicado = link não reescrito (some no site).
+    if (/\.md(#|$)/.test(href)) { quebrados.push(`${f} -> [md cru] ${href}`); continue; }
+    if (!/\.html(#|$)/.test(href)) continue;
     const alvo = basename(href.split("#")[0]);
     if (!paginas.has(alvo)) quebrados.push(`${f} -> ${href}`);
+  }
+  // Imagens também são links: <img src> quebrado é página quebrada (ciclo 020).
+  for (const m of html.matchAll(/<img[^>]+src="([^"]+)"/g)) {
+    const src = m[1];
+    if (/^https?:|^data:|^\/\//.test(src)) continue;
+    if (!imagens.has(basename(src)) && !existsSync(resolve(SAIDA, src))) {
+      quebrados.push(`${f} -> [img] ${src}`);
+    }
   }
 }
 if (quebrados.length) { console.error(`✗ ${quebrados.length} link(s) interno(s) quebrado(s):`); quebrados.forEach((q) => console.error("   " + q)); process.exit(1); }

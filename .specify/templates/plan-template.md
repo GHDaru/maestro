@@ -20,6 +20,7 @@
 | V. Economia de contexto / fronteira | [fatias estreitas, corte por fronteira?] |
 | VI. Artefatos vivos | [doc e código no mesmo PR?] |
 | VII. Governança leve / YAGNI | [só o necessário agora?] |
+| VIII. Comunicação inteligível | [sigla por extenso na 1ª ocorrência; texto legível por quem chega hoje?] |
 
 **[Sem violações. | Complexity Tracking: ...]**
 

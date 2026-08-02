@@ -90,3 +90,34 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);line-height:1.
 .s-cad-t{font-family:var(--fm);font-size:11px;color:var(--muted);letter-spacing:.08em}
 .s-cad-p{font-size:13px;color:var(--muted);line-height:1.45}
 .nav-tipo{font-style:normal;text-transform:none;letter-spacing:0;font-size:9px;color:var(--muted);margin-left:6px;opacity:.75}
+
+/* --- BPMN navegável (ciclo 020): o diagrama como mapa de leitura --- */
+.bpmn{display:flex;flex-direction:column;gap:10px;margin:22px 0}
+.bpmn-raia{display:grid;grid-template-columns:minmax(120px,150px) 1fr;border:1px solid var(--line);border-radius:11px;overflow:hidden;background:var(--bg2)}
+.bpmn-rot{background:var(--panel);padding:12px 11px;display:flex;flex-direction:column;justify-content:center;gap:3px;border-right:1px solid var(--line)}
+.bpmn-rot b{font-size:12.5px;color:var(--text);line-height:1.2}
+.bpmn-rot small{font-size:10px;color:var(--faint);line-height:1.3}
+.bpmn-fluxo{display:flex;align-items:center;gap:6px;padding:12px 13px;flex-wrap:wrap}
+.bpmn-no{display:inline-flex;flex-direction:column;gap:2px;padding:7px 11px;border-radius:9px;border:1px solid;text-decoration:none;font-size:12px;line-height:1.25;transition:transform .12s ease,border-color .12s ease}
+.bpmn-no:hover{transform:translateY(-1px)}
+.bpmn-no b{font-weight:600;font-size:12px}
+.bpmn-no small{font-size:9.5px;color:var(--muted)}
+.bpmn-ag{background:color-mix(in srgb,var(--accent) 10%,transparent);border-color:color-mix(in srgb,var(--accent) 45%,transparent);color:var(--text)}
+.bpmn-ag:hover{border-color:var(--accent)}
+.bpmn-aut{background:color-mix(in srgb,var(--ok) 12%,transparent);border-color:color-mix(in srgb,var(--ok) 45%,transparent);color:var(--text)}
+.bpmn-aut:hover{border-color:var(--ok)}
+/* humano: a paleta é gold+green, então o humano se distingue pela barra sólida à esquerda */
+.bpmn-hum{background:color-mix(in srgb,var(--accent2) 16%,transparent);border-color:color-mix(in srgb,var(--accent2) 50%,transparent);border-left:4px solid var(--accent2);color:var(--text)}
+.bpmn-gate{background:color-mix(in srgb,var(--accent2) 16%,transparent);border:1px solid var(--accent2);color:var(--text);font-weight:600;border-radius:9px;padding:7px 12px;text-decoration:none;font-size:11.5px;display:inline-flex;align-items:center;gap:5px}
+.bpmn-gate::before{content:"◆";color:var(--accent2);font-size:10px}
+.bpmn-gate:hover{background:color-mix(in srgb,var(--accent2) 26%,transparent)}
+.bpmn-dod{background:color-mix(in srgb,var(--ok) 14%,transparent);border-color:var(--ok)}
+.bpmn-dod::before{color:var(--ok)}
+.bpmn-dod:hover{background:color-mix(in srgb,var(--ok) 24%,transparent)}
+.bpmn-ou{font-family:var(--fm);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+.bpmn-art{border:1px dashed var(--line);color:var(--muted);font-family:var(--fm);font-size:10.5px;padding:5px 9px;border-radius:7px;text-decoration:none}
+.bpmn-art:hover{border-color:var(--accent);color:var(--text)}
+.bpmn-seta{color:var(--faint);font-size:13px;user-select:none}
+.bpmn-legenda{display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);margin:4px 0 0}
+.bpmn-legenda span{display:inline-flex;align-items:center;gap:6px}
+.bpmn-legenda i{width:11px;height:11px;border-radius:3px;font-style:normal;border-style:solid;border-width:1px;display:inline-block}

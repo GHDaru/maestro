@@ -10,6 +10,14 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **BPMN navegável no livro (spec 020)**: o diagrama do processo virou **navegação** — as
+  seis raias em HTML do próprio tema, com **38 links**: cada caixa leva ao capítulo,
+  receita ou norma que define aquele passo (Especificar → cap. 03 · Gate de merge → cap. 10
+  · DoD verde? → cap. 09 · três camadas → receita de instalação). A imagem única continua
+  logo abaixo, rotulada como versão para apresentação e impressão. Humano se distingue por
+  barra sólida (a paleta é ouro+verde: cor sozinha não separava humano de agente); a DoD
+  aparece em verde por ser o único losango mecânico.
+
 - **Distribuição em três camadas + templates faltantes (spec 019, ADR 0012)**: templates
   de **ADR** e **qa-report** (artefatos de todo ciclo que eram reescritos à mão);
   **plugin do Claude Code** (`scripts/empacotar-plugin.sh` gera `plugin/maestro/` das
@@ -108,6 +116,17 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
   Compêndio PDF regenerado com Introdução + Apêndice Glossário (57 páginas).
 
 ### Fixed
+- **A imagem do BPMN não aparecia no site publicado**: o motor de publicação nunca copiava
+  os arquivos referenciados por `![...](...)`, e o portão de links validava só `<a href>` —
+  a página quebrada passava verde. O motor passa a copiar as imagens de cada página e o
+  portão a validar `<img src>` (**provado falhando** com imagem inexistente).
+- **Link em HTML embutido no Markdown não era reescrito**: `resolverHref()` foi extraída da
+  regra de link e agora se aplica também ao HTML bruto, então o mesmo `href="../x.md"` vale
+  no GitHub (fonte) e no livro (vira `x.html`). Terceiro portão: `.md` relativo que sobrar
+  no HTML publicado falha o build (**provado falhando** com a reescrita desligada).
+- **Template de plano parado em I–VII**: o Constitution Check não tinha linha para o
+  princípio VIII (comunicação inteligível, ADR 0010) desde 01/08 — norma sem forcing
+  function outra vez. Corrigido em `.specify/templates/plan-template.md` e `novo-ciclo.sh`.
 - **Widget no tema claro**: o CSS usava `var(--fg,…)`, variável inexistente no tema do
   livro (é `--text`) — todo o texto caía no fallback escuro e ficava ilegível no tema
   claro. Descoberto em verificação visual com navegador real.
