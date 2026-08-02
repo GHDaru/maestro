@@ -10,6 +10,13 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Capítulo 03 migrado ao padrão editorial v2 (spec 023)**: o capítulo que explica por que
+  existe spec passa a seguir a própria norma. Ganhou a explicação de **EARS** (*Easy
+  Approach to Requirements Syntax*) com frase real e o caminho completo de **um requisito**
+  — FR3 do ciclo 021 → laço em `verificar-instalacao.sh` → a primeira execução, vermelha.
+  A seção ⭐ publica também o dado que nos desabona: **19 das 22 specs marcadas como
+  plena, só 2 como leve** — sinal de que a régua de raias não está sendo aplicada, achado
+  registrado com pergunta objetiva para a retrospectiva.
 - **Capítulo 02 migrado ao padrão editorial v2 (spec 022)**: "A evidência: velocidade e
   estabilidade andam juntas" nas nove seções do guia. A seção ⭐ traz o retrato DORA
   (*DevOps Research and Assessment*) do **próprio repositório**, inclusive a métrica ruim:
