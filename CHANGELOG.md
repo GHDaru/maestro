@@ -10,6 +10,12 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Capítulo 07 migrado ao padrão editorial v2 (spec 027)**: cerimônias por **função**, com
+  a retrospectiva provada em vez de elogiada — as quatro levas do catálogo de anti-padrões
+  aparecem datadas no histórico do arquivo (specs 008, 011, 017, 020), incluindo o
+  anti-padrão 14, que nasceu de duas retros **não executadas**. Trabalho em curso igual a
+  um, confirmado por `git branch -a` (duas branches em 26 ciclos). Achado aberto: a
+  retrospectiva não tem gatilho definido.
 - **Capítulo 06 migrado ao padrão editorial v2 (spec 026)**: papéis e RACI (*Responsible,
   Accountable, Consulted, Informed*) com a prova em vez da promessa — a independência de
   quem verifica é **linha de configuração** (três dos treze agentes, os que julgam, não têm
