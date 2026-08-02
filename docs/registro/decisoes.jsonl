@@ -39,3 +39,4 @@
 {"id": "gate-main-db77664", "data": "2026-08-02", "titulo": "Gate de merge: docs(livro): capítulo 06 (papéis e RACI) no padrão v2 (spec 026)", "status": "aceita", "registro": "commit db77664"}
 {"id": "gate-main-a6b7907", "data": "2026-08-02", "titulo": "Gate de merge: docs(livro): capítulo 07 (cerimônias e cadência) no padrão v2 (spec 027)", "status": "aceita", "registro": "commit a6b7907"}
 {"id": "gate-main-0049887", "data": "2026-08-02", "titulo": "Gate de merge: docs(livro): capítulo 08 (entregáveis e artefatos) no padrão v2 (spec 028)", "status": "aceita", "registro": "commit 0049887"}
+{"id": "gate-main-e406400", "data": "2026-08-02", "titulo": "Gate de merge: docs(livro): capítulo 09 (DoR/DoD) no padrão v2 (spec 029)", "status": "aceita", "registro": "commit e406400"}
