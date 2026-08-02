@@ -31,3 +31,4 @@
 {"id": "gate-main-0021b20", "data": "2026-08-02", "titulo": "Gate de merge: feat(livro): BPMN navegável — cada caixa do processo leva à sua referência (spec 020)", "status": "aceita", "registro": "commit 0021b20"}
 {"id": "gate-main-63537d1", "data": "2026-08-02", "titulo": "Gate de merge: docs(qa): ciclo 020 — verificação do BPMN navegável no site publicado", "status": "aceita", "registro": "commit 63537d1"}
 {"id":"adr-0013","data":"2026-08-02","titulo":"Instrução para a IA: fonte única (AGENTS.md symlink), bloco gerado das skills e verificar-instalacao.sh","status":"aceita","registro":"docs/adr/0013-instrucao-para-ia-gerada-e-fonte-unica.md","ciclo":"021"}
+{"id": "gate-main-12332c3", "data": "2026-08-02", "titulo": "Gate de merge: feat(metodo): o Maestro instalado no próprio Maestro (spec 021, ADR 0013)", "status": "aceita", "registro": "commit 12332c3"}
