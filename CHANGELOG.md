@@ -10,6 +10,12 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Capítulo 06 migrado ao padrão editorial v2 (spec 026)**: papéis e RACI (*Responsible,
+  Accountable, Consulted, Informed*) com a prova em vez da promessa — a independência de
+  quem verifica é **linha de configuração** (três dos treze agentes, os que julgam, não têm
+  `Write`/`Edit`, e `verificar-agentes.sh` falha se ganharem), o responsável final humano
+  deixa **21 gates registrados** em 38 decisões, e o caso do papel prescrito por catorze
+  ciclos sem executável (ciclo 018) entra no livro junto com a verificação que nasceu dele.
 - **Capítulo 05 migrado ao padrão editorial v2 (spec 025)**: o catálogo de padrões de
   orquestração passa a dizer **quais usamos**. Em 25 ciclos: encadeamento fixo domina (os
   11 comandos versionados), avaliador-otimizador aparece em quatro relatórios de qualidade
