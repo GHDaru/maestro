@@ -10,6 +10,17 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Capítulo 02 migrado ao padrão editorial v2 (spec 022)**: "A evidência: velocidade e
+  estabilidade andam juntas" nas nove seções do guia. A seção ⭐ traz o retrato DORA
+  (*DevOps Research and Assessment*) do **próprio repositório**, inclusive a métrica ruim:
+  17 promoções em três dias, cada ciclo num commit, zero reversões — e **nove defeitos
+  escapados** para a linha principal, ~1 a cada 2 entregas, nenhum pego por revisão e
+  todos pegos por um check escrito depois.
+- **`scripts/verificar-capitulos.sh`**: a Iron Law editorial vira executável — nove seções
+  na ordem, cabeçalho de datação e seção 6 com evidência real, além de listar por nome os
+  capítulos que faltam migrar. Provado falhando em quatro modos; o quarto só apareceu ao
+  provar os outros: o capítulo **saía do check** ao perder a frase "migrado ao padrão v2",
+  então a detecção passou a ser estrutural.
 - **O Maestro instalado no próprio Maestro (spec 021, ADR 0013)**: nova fitness function
   **`scripts/verificar-instalacao.sh`** — o método está no disco *e* a Inteligência
   Artificial (IA) sabe que deve segui-lo? Falha se `CLAUDE.md`/`AGENTS.md` não apontar

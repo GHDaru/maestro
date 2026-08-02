@@ -49,6 +49,7 @@
   scripts/verificar-agentes.sh              # invariantes dos subagentes
   scripts/verificar-papeis.sh               # papel do modelo × agente que o entrega
   scripts/verificar-instalacao.sh           # método instalado e coerente neste repo
+  scripts/verificar-capitulos.sh            # Iron Law editorial: 9 seções, datação, exemplo real
   scripts/empacotar-plugin.sh --verificar   # plugin sincronizado com as fontes
   node publicar/build.mjs                   # livro: links, imagens e slugs
   ```
