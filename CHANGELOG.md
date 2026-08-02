@@ -10,6 +10,12 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Capítulo 05 migrado ao padrão editorial v2 (spec 025)**: o catálogo de padrões de
+  orquestração passa a dizer **quais usamos**. Em 25 ciclos: encadeamento fixo domina (os
+  11 comandos versionados), avaliador-otimizador aparece em quatro relatórios de qualidade
+  (portão provado falhando — ciclos 017, 018, 020, 021) e o padrão **autônomo nunca foi
+  usado**. Os seis nomes vêm traduzidos (Princípio VIII) e o achado das raias é retomado:
+  roteamento que manda quase tudo para o mesmo tratamento não está roteando.
 - **Capítulo 04 migrado ao padrão editorial v2 (spec 024)**: economia de contexto deixa de
   ser afirmação e vira medida — os 13 subagentes somam **267 linhas** (média de 20), e a
   independência do revisor aparece na linha `tools:` (sem `Write`/`Edit`), verificada por
