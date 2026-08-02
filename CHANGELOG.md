@@ -10,6 +10,12 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Capítulo 08 migrado ao padrão editorial v2 (spec 028)**: o critério "consumidor +
+  forcing function, ou imutabilidade" passa a vir com as cobranças reais — o trecho literal
+  do gate de changelog na integração contínua (com a válvula `skip-changelog` explicada), a
+  imutabilidade dos registros de decisão **contada** (nove dos dez com um único commit; o
+  décimo mudou só a linha de status) e 26 dos 28 ciclos com os quatro artefatos completos.
+  O índice de decisões entrou no catálogo, de onde faltava.
 - **Capítulo 07 migrado ao padrão editorial v2 (spec 027)**: cerimônias por **função**, com
   a retrospectiva provada em vez de elogiada — as quatro levas do catálogo de anti-padrões
   aparecem datadas no histórico do arquivo (specs 008, 011, 017, 020), incluindo o
