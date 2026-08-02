@@ -27,6 +27,15 @@
 - **FR6** (distinção visual): ✅ agente (ouro claro), automação (verde), humano (barra sólida),
   gate humano ◆ ouro, DoD ◆ verde, artefato tracejado — com legenda.
 
+## Verificação no site publicado (após a promoção)
+
+| Check | Resultado |
+|---|---|
+| `05-bpmn-processo.png` em `ghdaru.github.io/maestro/` | ✅ HTTP 200 |
+| Raias renderizadas na página publicada | ✅ 6 |
+| Destinos únicos do bloco, um a um por HTTP | ✅ 19/19 respondem 200 |
+| `href` terminando em `.md` na página publicada | ✅ nenhum |
+
 ## Achados
 
 1. **Terceira ocorrência da mesma classe de erro** (anti-padrão 13 — o check mede o proxy,
