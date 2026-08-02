@@ -34,3 +34,4 @@
 {"id": "gate-main-12332c3", "data": "2026-08-02", "titulo": "Gate de merge: feat(metodo): o Maestro instalado no próprio Maestro (spec 021, ADR 0013)", "status": "aceita", "registro": "commit 12332c3"}
 {"id": "gate-main-bf90f63", "data": "2026-08-02", "titulo": "Gate de merge: docs(livro): capítulo 02 no padrão v2 + Iron Law editorial executável (spec 022)", "status": "aceita", "registro": "commit bf90f63"}
 {"id": "gate-main-ba9c1c4", "data": "2026-08-02", "titulo": "Gate de merge: docs(livro): capítulo 03 (Spec-Driven) no padrão v2 (spec 023)", "status": "aceita", "registro": "commit ba9c1c4"}
+{"id": "gate-main-78a43e4", "data": "2026-08-02", "titulo": "Gate de merge: docs(livro): capítulo 04 (contexto) no padrão v2 (spec 024)", "status": "aceita", "registro": "commit 78a43e4"}
