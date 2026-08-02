@@ -49,6 +49,22 @@ for par in "ux-design.md:.specify/templates/ux-design-template.md" \
   fi
 done
 
+# A constituição cresce; o Constitution Check precisa crescer junto. O princípio VIII
+# entrou no ciclo 013 e o template ficou em I–VII até o 020 — oito ciclos de planos sem
+# onde marcá-lo. Contar os dois lados é o que impede a norma nova de nascer invisível.
+echo ""
+echo "── Princípios da constituição × linhas do Constitution Check ──"
+CONST="docs/governance/principios-maestro.md"
+TPL=".specify/templates/plan-template.md"
+n_princ=$(grep -cE '^### [IVX]+\. ' "$CONST" || true)
+n_tpl=$(grep -cE '^\| [IVX]+\. ' "$TPL" || true)
+if [[ "$n_princ" -ne "$n_tpl" ]]; then
+  echo "  ✗ a constituição tem $n_princ princípios; o template de plano checa $n_tpl." >&2
+  falhas=$((falhas + 1))
+else
+  echo "  ok: $n_princ princípios → $n_tpl linhas no template"
+fi
+
 echo ""
 if [[ "$falhas" -ne 0 ]]; then
   echo "✗ $falhas divergência(s) entre o que o modelo manda e o que o toolkit entrega." >&2

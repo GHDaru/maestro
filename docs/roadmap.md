@@ -4,7 +4,7 @@
 > skills, workflows, scripts). Também serve de **orientação**: se você está perdido, comece
 > por aqui. Documento vivo — atualizado a cada fase.
 >
-> **Status**: Ativo · **Atualizado**: 2026-08-02 (ciclo 020) · **Regra**: este mapa é
+> **Status**: Ativo · **Atualizado**: 2026-08-02 (ciclo 021) · **Regra**: este mapa é
 > artefato vivo — todo ciclo concluído atualiza a tabela de fases **no mesmo PR**
 > (anti-padrão 15: artefato de planejamento que congela).
 
@@ -116,6 +116,7 @@ Cada fase = **um ciclo** (uma spec, um gate). Ordem por dependência:
 | **F7 — Estudos de campo** | apêndices A (maestro-02), B (Superpowers) e C (panorama) + absorções | 010–012 | ✅ |
 | **F8 — Método instalável** | instalação visível + agente `ux-semantica` + skill `jornada-viva` + `verificar-papeis.sh`; distribuição em três camadas (script · plugin · `npx skills add`) | 018, 019 | ✅ |
 | **F9 — O processo visível** | BPMN com raia de UX e de distribuição; diagrama **navegável** no livro (cada caixa aponta para sua referência) + portões de imagem e de link em HTML bruto | 020 | ✅ |
+| **F10 — Dogfood: o Maestro no Maestro** | `verificar-instalacao.sh` (camadas + IA instruída + skills visíveis), instrução gerada do disco (`--bloco`), `AGENTS.md` como fonte única, Constitution Check I–VIII | 021 | ✅ |
 | **(contínuo) — Migração didática** | capítulos ao padrão v2, **um por ciclo**: 01 ✅ · 02–12 ⏳ | 016 e seguintes | 🔄 1/12 |
 | **(contínuo) — Retrospectiva** | erro recorrente → regra versionada (catálogo de anti-padrões, leis das skills) | 017 e seguintes | 🔄 |
 

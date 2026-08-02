@@ -11,7 +11,8 @@ gargalo) sem tirar dele a **decisão**. Cada script nasceu de dor de retro, não
 | [`retro.sh`](./retro.sh) | Pré-computa o material da retro (ciclos, vereditos, gates pendentes, decisões, inventário) | Na retro de fim de ciclo | As respostas — a retro continua humana |
 | [`registrar-decisao.sh`](./registrar-decisao.sh) | Anexa decisão ao índice `docs/registro/decisoes.jsonl` (append-only, valida JSON) | Ao aceitar ADR / decidir gate | O mérito — só registra o que o humano decidiu |
 | [`verificar-papeis.sh`](./verificar-papeis.sh) | Papel prescrito no modelo × agente existente; artefato essencial × template | Antes de fechar ciclo que mexe em papéis | Nada — só reporta; exit ≠ 0 se a norma não tem executável |
-| [`instalar-maestro.sh`](./instalar-maestro.sh) | Instala o método completo em outro repositório | Ao levar o Maestro para um projeto | Não sobrescreve; `--dry-run` mostra antes |
+| [`verificar-instalacao.sh`](./verificar-instalacao.sh) | O método está instalado **de fato** aqui? camadas + instrução da IA + skills todas visíveis | Neste repo e em todo projeto que recebe o método | Nada — só reporta; exit ≠ 0 se a IA não foi instruída |
+| [`instalar-maestro.sh`](./instalar-maestro.sh) | Instala o método completo em outro repositório; `--bloco` imprime a instrução para o `CLAUDE.md` | Ao levar o Maestro para um projeto | Não sobrescreve; `--dry-run` mostra antes |
 | [`empacotar-plugin.sh`](./empacotar-plugin.sh) | Gera `plugin/maestro/` (Claude Code) das fontes; `--verificar` prova a sincronia | Ao mudar agente/skill/comando | Nada — reempacota ou acusa divergência |
 
 ## Princípio (II + III)
@@ -26,5 +27,6 @@ ritual é economia de contexto; automatizar a *decisão* seria violar o Princíp
 ```bash
 scripts/novo-ciclo.sh 007 vendorizar-spec-kit   # abre o próximo ciclo
 scripts/verificar-agentes.sh                    # fitness function dos agentes
-scripts/promover-main.sh                         # promove após o "sim" (pergunta antes)
+scripts/verificar-instalacao.sh                 # o método está instalado de fato?
+scripts/promover-main.sh                        # promove após o "sim" (pergunta antes)
 ```

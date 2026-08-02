@@ -60,7 +60,7 @@ write_if_absent "$DIR/plan.md" <<EOF
 - **Spec**: \`spec.md\` · **Raia**: <...> · **Data**: ${DATE}
 
 ## Constitution Check (principios-maestro.md)
-<preencher I–VII — ver skill constitution-check>
+<preencher I–VIII — ver skill constitution-check>
 
 | Princípio | Conformidade |
 |---|---|

@@ -75,12 +75,12 @@ ou os dois com gate.
 | **Arquiteto / Tech Lead** | Humano + `plan-agent` | Decisões arquiteturais (DDD/hexagonal, contratos, ADRs); Constitution Check | Humano aprova o plan |
 | **Spec-agent** (`/speckit.specify`, `clarify`) | Agente (humano decide) | Redige `spec.md` a partir da intenção; levanta ambiguidades | Humano aprova a spec |
 | **Plan-agent** (`/speckit.plan`) | Agente | Redige `plan.md`, `ux-design.md`, Constitution Check | Humano aprova o plan |
-| **UX-agent** | Agente + skills | Consulta design system + camada semântica; define `ux-design.md` | Objeto semântico obrigatório (P. VII) |
+| **UX-agent** | Agente + skills | Consulta design system + camada semântica; define `ux-design.md` | Papel semântico antes do componente (§6) |
 | **Dev-agent** (`/speckit.implement`) | Agente | Implementa tasks; escreve testes; diffs pequenos | Testes verdes + fitness functions |
 | **QA/SDET-agent** | Agente | Cobertura feliz + falha por caso de uso; testes de contrato/arquitetura | DoD (§7) |
 | **Review-agent** (revisor independente) | Agente em **contexto fresco** | Revisa o diff contra o plan; aponta lacunas de correção/requisito | `/code-review`, gate de merge |
 | **Security-agent** | Agente | Revisão de injeção/segredos/autorização; secret scanning | Gate de segurança leve (§7) |
-| **Tech Writer-agent** | Agente | Atualiza `docs/journeys/`, ADRs, changelog no mesmo PR | Documentação viva (P. VII) |
+| **Tech Writer-agent** | Agente | Atualiza `docs/journeys/`, ADRs, changelog no mesmo PR | Artefatos vivos (P. VI) |
 | **Orquestrador** | **Humano** | Sequencia agentes; `/clear` entre tarefas; decide paralelo/pipeline; para quando algo é caro de reverter | — |
 
 **RACI por etapa do ciclo de vida** (R = executa, A = aprova/accountable,
@@ -133,12 +133,12 @@ Catálogo dos artefatos do ciclo de vida, com **dono**, **gate** e **onde vive**
 | **Brief / intenção** | Humano | issue/spec header | — | Essencial |
 | **Spec** (`spec.md`) | Spec-agent | `specs/NNN-*/` | Humano aprova (DoR) | Essencial (raia plena) |
 | **Plan** (`plan.md`) + Constitution Check | Plan-agent | `specs/NNN-*/` | Humano aprova | Essencial (raia plena) |
-| **UX design** (`ux-design.md`) | UX-agent | `specs/NNN-*/` | Objeto semântico (P. VII) | Essencial (se UI) |
+| **UX design** (`ux-design.md`) | UX-agent | `specs/NNN-*/` | Papel semântico antes do componente (§4) | Essencial (se UI) |
 | **Tasks** (`tasks.md`) | Plan-agent | `specs/NNN-*/` | — | Essencial (raia plena) |
 | **Spec de infra** | Humano + agente | `specs/NNN-*/` | Sempre raia plena + gates de reversibilidade (§7) | Essencial (infra/migração) |
 | **Código + testes** | Dev-agent | `apps/` | Testes + fitness functions verdes | Essencial |
 | **ADR** | Tech Writer-agent | `docs/adr/NNNN-*.md` | Decisão arquitetural registrada | Essencial (por decisão) |
-| **Journey doc** | Tech Writer-agent | `docs/journeys/NNN-*.md` | Capturas + heurística no mesmo PR (P. VII) | Essencial (se jornada) |
+| **Journey doc** | Tech Writer-agent | `docs/journeys/NNN-*.md` | Artefatos vivos (P. VI) | Essencial (se jornada) |
 | **Runbook** | Humano + agente | `docs/infra/` | Estratégia de rollback documentada | Essencial (infra) |
 | **Changelog / release notes** | Tech Writer-agent | `CHANGELOG.md` | Atualizado no PR de release | **A formalizar** |
 | **Definition of Ready/Done** | Humano | este doc (§7) | Checklist verificável | Essencial (este doc) |

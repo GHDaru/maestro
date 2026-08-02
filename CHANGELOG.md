@@ -10,6 +10,15 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **O Maestro instalado no próprio Maestro (spec 021, ADR 0013)**: nova fitness function
+  **`scripts/verificar-instalacao.sh`** — o método está no disco *e* a Inteligência
+  Artificial (IA) sabe que deve segui-lo? Falha se `CLAUDE.md`/`AGENTS.md` não apontar
+  para a constituição, o fluxo e as raias, e falha se uma skill existir em `skills/` sem
+  ser citada na instrução. **`instalar-maestro.sh --bloco`** passa a gerar o bloco de
+  instrução **lendo as skills do disco** (nome + primeira frase), em vez de um texto fixo
+  que envelhece. `verificar-papeis.sh` ganhou a contagem princípios da constituição ×
+  linhas do Constitution Check (provada falhando).
+
 - **BPMN navegável no livro (spec 020)**: o diagrama do processo virou **navegação** — as
   seis raias em HTML do próprio tema, com **38 links**: cada caixa leva ao capítulo,
   receita ou norma que define aquele passo (Especificar → cap. 03 · Gate de merge → cap. 10
@@ -116,6 +125,16 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
   Compêndio PDF regenerado com Introdução + Apêndice Glossário (57 páginas).
 
 ### Fixed
+- **A instrução da IA tinha derivado em três pontos** — achados da auto-instalação, todos
+  da mesma família (lista à mão sem comparação com o disco): `AGENTS.md` estava sem a
+  regra "skills primeiro" (do ciclo 011) e agora é **link simbólico** para `CLAUDE.md`
+  (fonte única); a skill `jornada-viva` existia desde o ciclo 018 e era **invisível** para
+  a IA; o Constitution Check dizia "I–VII" na skill, em `plan-arquiteto` e em
+  `guardiao-processo` — o princípio VIII existe desde o ciclo 013, ou seja, **oito ciclos
+  de planos sem onde marcá-lo**.
+- **Referências de princípio erradas no modelo operacional**: quatro linhas citavam
+  "(P. VII)" com a numeração de outra constituição; corrigidas para P. VI (artefatos
+  vivos) e para a seção do próprio modelo.
 - **A imagem do BPMN não aparecia no site publicado**: o motor de publicação nunca copiava
   os arquivos referenciados por `![...](...)`, e o portão de links validava só `<a href>` —
   a página quebrada passava verde. O motor passa a copiar as imagens de cada página e o

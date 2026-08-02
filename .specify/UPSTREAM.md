@@ -15,7 +15,7 @@
 | Peça | Origem | Estado |
 |---|---|---|
 | `templates/spec-template.md` | upstream 0.4.3 | **Adaptado** (ciclo 009): PT, Raia, EARS, Fora de escopo, Clarify, gates — formato provado nos ciclos 003–008 |
-| `templates/plan-template.md` | upstream 0.4.3 | **Adaptado** (009): Constitution Check I–VII nomeado, Como por fronteira, Verificação executável |
+| `templates/plan-template.md` | upstream 0.4.3 | **Adaptado** (009): Constitution Check I–VIII nomeado, Como por fronteira, Verificação executável |
 | `templates/tasks-template.md` | upstream 0.4.3 | **Adaptado** (009): verificação primeiro, doc viva no mesmo PR, gate humano + registro automático |
 | `.claude/commands/speckit.converge.md` | fork `0117a7b` | **Adaptado** (009): sem extension hooks (YAGNI); anexa, nunca reescreve |
 | `templates/checklist-template.md` | upstream 0.4.3 | Verbatim (pouco uso; adaptar quando doer) |

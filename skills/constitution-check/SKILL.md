@@ -1,6 +1,6 @@
 ---
 name: constitution-check
-description: Produz a tabela Constitution Check (Princípios I–VII do Maestro) dentro de um plan.md, decide quando um princípio conta como violado e o que fazer com a violação. Use quando estiver escrevendo ou revisando um plan.md, abrindo um ciclo (spec-kit), ou sempre que precisar checar um plano contra os princípios inegociáveis do Maestro.
+description: Produz a tabela Constitution Check (Princípios I–VIII do Maestro) dentro de um plan.md, decide quando um princípio conta como violado e o que fazer com a violação. Use quando estiver escrevendo ou revisando um plan.md, abrindo um ciclo (spec-kit), ou sempre que precisar checar um plano contra os princípios inegociáveis do Maestro.
 ---
 
 # Constitution Check
@@ -25,7 +25,7 @@ Escrevendo/revisando um `plan.md`; no `/speckit.plan`; antes de liberar um plano
 
 ## Passo a passo
 
-1. Para **cada** princípio I–VII, escreva uma linha: `✅` (conforme) ou `⚠️/❌` (tensão/violação)
+1. Para **cada** princípio I–VIII, escreva uma linha: `✅` (conforme) ou `⚠️/❌` (tensão/violação)
    + **uma frase** de porquê. Não pule princípio — a tabela é sempre completa.
 2. Um princípio conta como **violado** quando o plano só funciona **quebrando-o** (ex.: um
    agente read-only precisaria de `Write`; uma decisão irreversível sem gate humano; um
