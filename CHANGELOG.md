@@ -10,6 +10,13 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Capítulo 09 migrado ao padrão editorial v2 (spec 029)**: a Definição de Pronto (DoD)
+  passa a vir com o inventário dos **seis portões executáveis** do repositório (quatro
+  scripts `verificar-*`, duas saídas de erro no gerador do livro, onze testes do companion)
+  e com a **segunda lei** — "um check que você nunca viu acusar não é um check" —, que
+  existia desde o ciclo 017 na skill e nunca tinha entrado no livro. Fecha com o limite do
+  verde: nove defeitos escaparam com o gate verde, e a resposta certa é ampliar a família
+  coberta, não revisar com mais cuidado.
 - **Capítulo 08 migrado ao padrão editorial v2 (spec 028)**: o critério "consumidor +
   forcing function, ou imutabilidade" passa a vir com as cobranças reais — o trecho literal
   do gate de changelog na integração contínua (com a válvula `skip-changelog` explicada), a
