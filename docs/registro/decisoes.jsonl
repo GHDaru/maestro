@@ -37,3 +37,4 @@
 {"id": "gate-main-78a43e4", "data": "2026-08-02", "titulo": "Gate de merge: docs(livro): capítulo 04 (contexto) no padrão v2 (spec 024)", "status": "aceita", "registro": "commit 78a43e4"}
 {"id": "gate-main-c47ea48", "data": "2026-08-02", "titulo": "Gate de merge: docs(livro): capítulo 05 (orquestração) no padrão v2 (spec 025)", "status": "aceita", "registro": "commit c47ea48"}
 {"id": "gate-main-db77664", "data": "2026-08-02", "titulo": "Gate de merge: docs(livro): capítulo 06 (papéis e RACI) no padrão v2 (spec 026)", "status": "aceita", "registro": "commit db77664"}
+{"id": "gate-main-a6b7907", "data": "2026-08-02", "titulo": "Gate de merge: docs(livro): capítulo 07 (cerimônias e cadência) no padrão v2 (spec 027)", "status": "aceita", "registro": "commit a6b7907"}
