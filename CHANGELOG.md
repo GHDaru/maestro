@@ -10,6 +10,12 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Capítulo 11 migrado ao padrão editorial v2 (spec 031)**: a rastreabilidade passa a ser
+  percorrida **de trás para frente** com dados reais — linha do gate no índice de decisões →
+  commit → pasta do ciclo → registro de decisão, quatro saltos e nenhuma ferramenta. E o
+  capítulo nomeia o elo frágil em vez de exibi-lo como virtude: a citação `spec NNN` na
+  mensagem de commit aparece em 28 commits e **nenhum portão a exige** — candidato a portão,
+  com o critério esboçado no próprio exercício de verificação.
 - **Capítulo 10 migrado ao padrão editorial v2 (spec 030)**: os gates passam a aparecer como
   são — o `promover-main.sh` abortando de verdade, os **21 gates de merge registrados** e a
   explicação de por que promovemos com frequência sem dupla aprovação (classe baixa por
