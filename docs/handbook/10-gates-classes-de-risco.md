@@ -1,85 +1,161 @@
-# Capítulo 10 — Gates humanos e classes de risco (elemento `[9]`)
+# 10 — Gates humanos e classes de risco
 
-> Um gate **uniforme** está sempre errado: pesado demais vira funil, leve demais deixa o
-> irreversível escapar. O peso do gate escala com **irreversibilidade × impacto**.
+> **Capturado em** 2026-08 · última revisão 2026-08-02 · ciclo 030 (migrado ao padrão v2)
+>
+> **Gate uniforme está sempre errado**: pesado em tudo vira funil, leve em tudo deixa o
+> irreversível escapar. O peso escala com **irreversibilidade × impacto**.
 
-## 1. Pergunta central
+## 1. Objetivos
 
-Você barateou os gates mecânicos (`[8]`) e guardou o humano para o global e o "é a coisa
-certa". Mas aprovar um typo ≠ aprovar uma migração destrutiva. **Por que graduar o gate
-por risco em vez de um gate uniforme — e qual eixo decide o peso?**
+Ao fim deste capítulo você será capaz de:
 
-## 2. Fundamentação teórica
+1. **Explicar** os dois fracassos simétricos do gate uniforme;
+2. **Classificar** uma ação na taxonomia de risco e dizer que gate ela merece;
+3. **Aplicar** a alavanca da reversibilidade para **rebaixar** a classe de uma ação;
+4. **Distinguir** o eixo que decide **processo** (raia) do eixo que decide **gate**.
 
-**Os dois fracassos do gate uniforme:**
-- **pesado em tudo** → você aprova até o trivial → vira o **funil** (o gargalo do `[6]`);
-- **leve em tudo** → uma ação irreversível **escapa** sem aprovação → a migração do `[1]`.
+## 2. O problema
 
-**O eixo: irreversibilidade × impacto (blast radius).** O gate deve ser **proporcional ao
-risco**: automatize o baixo, escale o alto. Taxonomia oficial (Constituição §IV; modelo
-§8):
+Você barateou os gates mecânicos e guardou o humano para o que é irredutível. Falta decidir
+**quando** ele age — e a resposta ingênua é "sempre", que reproduz o gargalo que se queria
+evitar.
+
+Aprovar a correção de um erro de digitação e aprovar uma migração destrutiva com o mesmo
+rito produz um dos dois desastres: ou o humano aprova tanta coisa que passa a carimbar sem
+ler, ou o rito é afrouxado para todos e a ação irreversível escorre junto com o trivial.
+
+## 3. A ideia central
+
+> **Gate proporcional ao risco.** Automatize o baixo, escale o alto, bloqueie o
+> catastrófico — e prefira **rebaixar a classe** da ação a acrescentar mais uma aprovação.
+
+## 4. A regra vigente
+
+1. **Gate proporcional pela taxonomia** (constituição, princípio III; modelo operacional §8).
+2. **Indelegáveis, sempre humanos**: aprovar spec, aprovar plano, aprovar merge, autorizar
+   implantação ou migração.
+3. **Autorização fora do modelo**: quem decide permissão é a política, não a Inteligência
+   Artificial (IA) — dado que chega de fora é hostil por padrão.
+4. **Reversibilidade rebaixa a classe**: cópia de segurança, execução a seco, ambiente de
+   homologação e exclusão lógica movem a ação para baixo na escada — e o gate fica mais leve.
+5. **Ação em lote, entre inquilinos ou administrativa fica bloqueada** para agente: exige
+   fluxo humano formal.
+6. **Fases com gate valem em qualquer granularidade** — do ciclo à tarefa de minutos.
+
+## 5. Fundamentos
+
+### 5.1 Os dois fracassos simétricos
+
+**Pesado em tudo** → o humano vira funil e, pior, carimbo: quem aprova duzentos itens por
+dia não aprova nenhum de verdade. **Leve em tudo** → a ação irreversível passa sem que
+ninguém tenha olhado, e o relatório perfeito não traz o dado de volta.
+
+### 5.2 A taxonomia
 
 | Classe | Exemplo | Agente sozinho? | Gate |
 |---|---|---|---|
 | Leitura | explorar, buscar | ✅ | nenhum |
-| Leitura sensível | PII/segredos | ⚠️ política + máscara | revisão |
-| Criação reversível | feature em branch | ✅ | merge |
-| **Alteração** | refactor amplo, contrato | ❌ | aprovação com resumo |
-| **Exclusão / externa** | apagar dados, push, API externa | ❌ | confirmação forte |
-| **Financeira / irreversível** | deploy, migração destrutiva | ❌ | dupla aprovação |
-| **Lote / cross-tenant / admin** | migração em massa | ❌ **bloqueado** | workflow humano formal |
+| Leitura sensível | dados pessoais, segredos | ⚠️ política e máscara | revisão |
+| Criação reversível | feature numa branch | ✅ | no merge |
+| **Alteração** | refatoração ampla, contrato | ❌ | aprovação com resumo |
+| **Exclusão ou efeito externo** | apagar dados, publicar, chamar terceiro | ❌ | confirmação forte |
+| **Financeira ou irreversível** | implantar, migração destrutiva | ❌ | dupla aprovação |
+| **Lote, entre inquilinos, administrativa** | migração em massa | ❌ **bloqueado** | fluxo humano formal |
 
-**Dois amarres:**
-1. **Mesmo eixo das raias (`[2]`).** `ambiguidade × raio × irreversibilidade` decide quanto
-   **processo** (spec); `irreversibilidade × impacto` decide quanto **gate**. Mesma física:
-   *processo* para construir, *gate* para agir.
-2. **Reversibilidade rebaixa a classe.** Tornar a ação reversível (backup/staging/
-   soft-delete — `[1]`) move-a escada de risco **abaixo** → gate mais leve → menos funil.
+### 5.3 Dois eixos, mesma física
 
-## 3. Frameworks / abordagens avaliados
+`ambiguidade × raio × irreversibilidade` decide quanto **processo** a mudança recebe (a
+raia). `irreversibilidade × impacto` decide quanto **gate** a ação recebe. Processo é para
+construir; gate é para agir — e os dois compartilham o fator que mais pesa.
+
+### 5.4 Abordagens avaliadas
 
 | Abordagem | O que oferece | Veredito |
 |---|---|---|
-| **Política `allow/deny/ask`** (OpenAI Agents approvals; OPA) | Decisão declarativa por classe | **Adotado** — a máquina de estados de ação (Const. §IV) |
-| **Taxonomia de classes de risco** (Const. §IV) | Grada o gate | **Adotado** — base do `[9]` |
-| **Human approval for high-stakes** (Anthropic) | Humano no ponto consequente | **Adotado** — gates indelegáveis |
-| **Least privilege / RBAC-ABAC** | Autorização fora do LLM | **Adotado** — política decide, não o modelo |
-| **Gate uniforme (um approve pra tudo)** | Simplicidade aparente | **Rejeitado** — funil ou catástrofe |
+| **Política declarativa `permitir/negar/perguntar`** | decidir por classe, não por instância | **Adotado** |
+| **Taxonomia de classes de risco** | gradua o gate | **Adotado** — base deste capítulo |
+| **Aprovação humana para alto risco** | humano no ponto consequente | **Adotado** — os quatro indelegáveis |
+| **Menor privilégio e autorização declarativa** | permissão fora do modelo | **Adotado** |
+| **Gate uniforme** | simplicidade aparente | **Rejeitado** — funil ou catástrofe |
 
-## 4. Recomendação de utilização (1 humano + N agentes)
+## 6. ⭐ Na prática — o ciclo real
 
-- **Gate proporcional** pela taxonomia do modelo §8; automatizar baixo risco, escalar alto,
-  **bloquear** lote/cross-tenant/admin.
-- **Indelegáveis** (sempre humano): aprovar spec, plan, merge, autorizar deploy/migração.
-- **Autorização fora do LLM** (RBAC/ABAC/política) — o modelo nunca decide permissão.
-- **Investir em reversibilidade** para rebaixar classes e reduzir gates pesados.
+**O gate de merge é um script que se recusa a decidir.** O `promover-main.sh` executa o
+mecânico e para diante de tudo que cheira a risco:
 
-## 5. Conexões
+```
+$ scripts/promover-main.sh
+abortado: árvore de trabalho suja — commite ou limpe antes de promover.
+```
 
-- **`[1]`** — reversibilidade é o eixo e a alavanca (rebaixa a classe).
-- **`[2]`** — mesma física das raias, aplicada a ações.
-- **`[5]`** — o A humano age exatamente nos gates altos; delega os baixos.
-- **`[6]` / `[8]`** — gate barato/automático no baixo risco evita o funil.
+As guardas são explícitas no código: aborta com árvore suja, aborta se a branch não existe,
+aborta se não há avanço, e — sem o `--yes` — **pergunta**. O cabeçalho do arquivo declara o
+limite em uma frase: o script cuida da execução, não da decisão.
 
-## 6. Insight da jornada e impacto no modelo
+Depois do "sim", ele registra o gate sozinho:
 
-Insights do aprendiz: o eixo é **irreversibilidade × impacto**; um gate uniforme é funil
-ou catástrofe; logo **gate proporcional**. Fundamenta o mapa de gates do
-`modelo-operacional.md` §8 e a taxonomia da Constituição §IV. Diário: `[9]`.
+```
+gate registrado: gate-main-0021b20
+ok: 'main' promovido para 0cf56ab.
+```
 
-## 6b. Gates em nível de task — o padrão "wave"
+Vinte e um gates de merge registrados até aqui, cada um com identificador, data e título. O
+gate deixou de ser um momento e virou **uma linha auditável**.
 
-Os gates deste capítulo operam em nível de **ciclo** (spec → plan → merge). O mesmo
-desenho vale um nível abaixo, **dentro de uma task**: executar em fases tipadas com
-validação entre elas — construção: `map → validate → scaffold → test`; correção:
-`audit → validate → apply → verify`. Cada fase só avança se a anterior passou. É o ciclo
-do Maestro em miniatura, e confirma o padrão: **fases com gate convergem em qualquer
-granularidade** — do roadmap à task de minutos. Origem: estudo do `maestro-02`
-(Apêndice A), incorporado na spec 008.
+**A alavanca da reversibilidade aparece na prática mais banal do repositório**: todo ciclo
+é um commit pequeno numa branch, promovido depois do gate. Isso mantém quase toda mudança
+na classe "criação reversível" — e é por isso que o método consegue promover dezessete vezes
+em três dias sem dupla aprovação: **não é gate frouxo, é ação de classe baixa**.
 
-## 7. Fontes
+**E o `--yes` é honesto.** Ele existe, está documentado no cabeçalho e é usado quando o
+humano já decidiu na conversa — o que preserva a semântica ("o humano decidiu") sem
+teatro de confirmação. Um gate que ninguém consegue pular vira gate contornado por fora; um
+gate com escape declarado mantém a decisão no lugar certo, registrada.
 
-- Anthropic — *Building effective agents* (revisão humana para alto risco): https://www.anthropic.com/engineering/building-effective-agents
-- OWASP — *LLM01 Prompt Injection* (dados também são hostis; política fora do LLM): https://genai.owasp.org/llmrisk/llm01-prompt-injection/
-- Open Policy Agent: https://www.openpolicyagent.org/docs
-- `principios-maestro.md` (Princípio III, classes de risco); `docs/governance/modelo-operacional.md` §8.
+**O que ainda não temos**, e o capítulo não vai fingir que sim: nenhuma ação deste
+repositório chegou às classes "financeira/irreversível" ou "lote/administrativa". A
+taxonomia inteira está escrita, mas só as três primeiras classes foram exercitadas de fato.
+
+## 7. Erros e anti-padrões
+
+- **Gate uniforme** — funil ou catástrofe, nunca outra coisa.
+- **Aprovar por hábito** — carimbo com aparência de controle.
+- **Deixar o modelo decidir permissão** — autorização é política, não julgamento de texto.
+- **Acrescentar aprovação em vez de reversibilidade** — quase sempre mais caro e menos
+  seguro.
+- **Gate sem escape declarado** — vira contorno por fora, e o contorno não fica registrado.
+
+## 8. Verificação
+
+1. Uma tarefa apaga registros de produção. Classifique-a e diga o gate. Depois diga que
+   três mudanças a rebaixariam de classe — e por que isso vale mais que outra aprovação.
+2. Explique a diferença entre o eixo que escolhe a raia e o eixo que escolhe o gate, e o
+   que os dois têm em comum.
+3. Por que a política de permissão deve viver fora do modelo, mesmo que ele "entenda" a
+   regra?
+
+## 9. O que roubar
+
+- **Grade o gate por irreversibilidade × impacto** — e escreva a tabela antes de precisar
+  dela.
+- **Prefira rebaixar a classe a somar aprovação**: reversibilidade compra velocidade.
+- **Bloqueie o catastrófico**, não o dificulte: lote, entre inquilinos e administrativo
+  exigem fluxo humano formal.
+- **Declare o escape do gate** e registre quem o usou — gate sem saída legítima é gate
+  burlado.
+
+---
+
+**Conexões**: [01 — o princípio central](01-principio-central.md) (o gate localiza a
+responsabilidade) · [03 — Spec-Driven](03-spec-driven.md) (o eixo das raias) ·
+[06 — papéis e RACI](06-papeis-raci.md) (o responsável final age exatamente aqui) ·
+[09 — DoR/DoD](09-definition-of-ready-done.md) (gate barato no baixo risco) ·
+[11 — rastreabilidade](11-rastreabilidade.md) (o gate vira linha auditável) ·
+[Diário da jornada](../research/jornada-aprendizado-modelo-operacional.md) `[9]`.
+
+**Fontes**: Anthropic, *Building effective agents* —
+https://www.anthropic.com/engineering/building-effective-agents ·
+OWASP, *LLM01 Prompt Injection* — https://genai.owasp.org/llmrisk/llm01-prompt-injection/ ·
+Open Policy Agent — https://www.openpolicyagent.org/docs ·
+[Princípios](../governance/principios-maestro.md) (III — classes de risco) ·
+[Modelo operacional](../governance/modelo-operacional.md) §8.

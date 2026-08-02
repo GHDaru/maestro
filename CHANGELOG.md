@@ -10,6 +10,12 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Capítulo 10 migrado ao padrão editorial v2 (spec 030)**: os gates passam a aparecer como
+  são — o `promover-main.sh` abortando de verdade, os **21 gates de merge registrados** e a
+  explicação de por que promovemos com frequência sem dupla aprovação (classe baixa por
+  reversibilidade, não gate frouxo). O capítulo declara também o que **não** exercitamos:
+  quatro das sete classes de risco nunca ocorreram aqui. A seção "6b" enxertada no ciclo 008
+  foi absorvida na regra vigente — fases com gate valem em qualquer granularidade.
 - **Capítulo 09 migrado ao padrão editorial v2 (spec 029)**: a Definição de Pronto (DoD)
   passa a vir com o inventário dos **seis portões executáveis** do repositório (quatro
   scripts `verificar-*`, duas saídas de erro no gerador do livro, onze testes do companion)
