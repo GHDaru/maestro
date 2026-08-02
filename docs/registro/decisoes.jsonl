@@ -36,3 +36,4 @@
 {"id": "gate-main-ba9c1c4", "data": "2026-08-02", "titulo": "Gate de merge: docs(livro): capítulo 03 (Spec-Driven) no padrão v2 (spec 023)", "status": "aceita", "registro": "commit ba9c1c4"}
 {"id": "gate-main-78a43e4", "data": "2026-08-02", "titulo": "Gate de merge: docs(livro): capítulo 04 (contexto) no padrão v2 (spec 024)", "status": "aceita", "registro": "commit 78a43e4"}
 {"id": "gate-main-c47ea48", "data": "2026-08-02", "titulo": "Gate de merge: docs(livro): capítulo 05 (orquestração) no padrão v2 (spec 025)", "status": "aceita", "registro": "commit c47ea48"}
+{"id": "gate-main-db77664", "data": "2026-08-02", "titulo": "Gate de merge: docs(livro): capítulo 06 (papéis e RACI) no padrão v2 (spec 026)", "status": "aceita", "registro": "commit db77664"}
