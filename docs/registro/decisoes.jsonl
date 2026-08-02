@@ -42,3 +42,4 @@
 {"id": "gate-main-e406400", "data": "2026-08-02", "titulo": "Gate de merge: docs(livro): capítulo 09 (DoR/DoD) no padrão v2 (spec 029)", "status": "aceita", "registro": "commit e406400"}
 {"id": "gate-main-fd6492f", "data": "2026-08-02", "titulo": "Gate de merge: docs(livro): capítulo 10 (gates e classes de risco) no padrão v2 (spec 030)", "status": "aceita", "registro": "commit fd6492f"}
 {"id": "gate-main-da71e5b", "data": "2026-08-02", "titulo": "Gate de merge: docs(livro): capítulo 11 (rastreabilidade) no padrão v2 (spec 031)", "status": "aceita", "registro": "commit da71e5b"}
+{"id": "gate-main-45a88fb", "data": "2026-08-02", "titulo": "Gate de merge: docs(livro): capítulo 12 (governança leve) no padrão v2 — migração fecha em 13/13 (spec 032)", "status": "aceita", "registro": "commit 45a88fb"}
