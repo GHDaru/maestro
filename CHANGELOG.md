@@ -10,6 +10,12 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Capítulo 04 migrado ao padrão editorial v2 (spec 024)**: economia de contexto deixa de
+  ser afirmação e vira medida — os 13 subagentes somam **267 linhas** (média de 20), e a
+  independência do revisor aparece na linha `tools:` (sem `Write`/`Edit`), verificada por
+  `verificar-agentes.sh`. A seção ⭐ também registra o limite honesto: nem todos os treze
+  papéis são acionados em todo ciclo. A antiga seção "6b — economia de contexto medida",
+  que só recomendava medir, saiu.
 - **Capítulo 03 migrado ao padrão editorial v2 (spec 023)**: o capítulo que explica por que
   existe spec passa a seguir a própria norma. Ganhou a explicação de **EARS** (*Easy
   Approach to Requirements Syntax*) com frase real e o caminho completo de **um requisito**
