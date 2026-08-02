@@ -10,6 +10,14 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Capítulo 12 migrado ao padrão editorial v2 (spec 032) — a migração fecha em 13/13**: a
+  governança leve mostra as duas forças com dado real — a constituição tocada **três vezes**
+  em 32 ciclos enquanto a periferia executável cresceu para 6 skills e 10 scripts — e a poda
+  com a lista do que foi recusado (três dos dez registros de decisão existem para
+  descartar). Fecha com a governança se auditando (o princípio VIII sem linha no
+  Constitution Check, ciclo 021) e com os **quatro achados abertos** declarados no próprio
+  livro, em vez de conclusão redonda. `scripts/verificar-capitulos.sh` passa a reportar
+  **0 pendentes**.
 - **Capítulo 11 migrado ao padrão editorial v2 (spec 031)**: a rastreabilidade passa a ser
   percorrida **de trás para frente** com dados reais — linha do gate no índice de decisões →
   commit → pasta do ciclo → registro de decisão, quatro saltos e nenhuma ferramenta. E o
