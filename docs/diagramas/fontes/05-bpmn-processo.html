@@ -45,7 +45,7 @@
 
 <div class="quadro">
   <h1>Maestro — o processo em <em>BPMN</em></h1>
-  <p class="sub">Raias por executor. O losango é gate: onde o fluxo <strong style="color:#e6c375">para</strong> até alguém decidir. Um humano rege; muitos agentes executam.</p>
+  <p class="sub">Raias por executor — do pedido ao método instalado. O losango é gate: onde o fluxo <strong style="color:#e6c375">para</strong> até alguém decidir. Um humano rege; muitos agentes executam.</p>
 
   <div class="leg">
     <span class="li"><span class="sq hum"></span> Humano — gate indelegável</span>
@@ -75,7 +75,7 @@
 
   <!-- AGENTES -->
   <div class="raia">
-    <div class="rot"><b>Agentes de IA</b><small>12 subagentes estreitos</small></div>
+    <div class="rot"><b>Agentes de IA</b><small>13 subagentes estreitos</small></div>
     <div class="fluxo">
       <div class="no ag"><b>Especificar</b><small>spec-agent</small></div>
       <span class="seta">→</span>
@@ -132,6 +132,25 @@
     </div>
   </div>
 
+
+  <!-- DISTRIBUIÇÃO -->
+  <div class="raia" style="border-color:rgba(52,215,123,.25)">
+    <div class="rot"><b>Distribuição</b><small>o método instalável</small></div>
+    <div class="fluxo">
+      <div class="no aut"><b>empacotar-plugin</b><small>fontes → pacote</small></div>
+      <span class="seta">→</span>
+      <div class="gate" style="background:rgba(52,215,123,.13);border-color:rgba(52,215,123,.5)"><span style="color:#34d77b">PACOTE<br>SINCRO?</span></div>
+      <span class="seta">→</span>
+      <div class="no art">A · instalar-maestro.sh <span style="color:#767d95">(método inteiro)</span></div>
+      <span class="seta">→</span>
+      <div class="no art">B · /plugin install <span style="color:#767d95">(agentes+skills+comandos)</span></div>
+      <span class="seta">→</span>
+      <div class="no art">C · npx skills add <span style="color:#767d95">(6 skills, 75+ agentes)</span></div>
+      <span class="seta">→</span>
+      <div class="fim" style="background:rgba(230,195,117,.16);border-color:rgba(230,195,117,.6)">👥</div>
+    </div>
+  </div>
+
   <!-- ARTEFATOS -->
   <div class="raia">
     <div class="rot"><b>Artefatos</b><small>a trilha auditável</small></div>
@@ -159,6 +178,10 @@
     <div class="card">
       <b>O ramo de interface</b>
       <p>Feature com tela abre um ramo: <em>papel semântico</em> antes do componente, gate de UX, e <em>jornada viva</em> — captura gerada do build real + heurística <em>datada</em>. Heurística mais velha que a captura = documentação vencida.</p>
+    </div>
+    <div class="card">
+      <b>O método sai do repositório</b>
+      <p>Três camadas, do completo ao leve: <em>A</em> script (tudo) · <em>B</em> plugin do Claude Code · <em>C</em> <em>npx skills add</em> (75+ agentes). Cada uma diz o que <em>não</em> leva — instalar um quinto do método não é instalar o método.</p>
     </div>
     <div class="card">
       <b>O laço que fecha</b>

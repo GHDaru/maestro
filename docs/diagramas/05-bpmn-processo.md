@@ -17,6 +17,7 @@
 | **Agentes de IA** | Especificar → clarificar → planejar → fatiar → implementar → verificar → documentar |
 | **Automação** | Esqueleto do ciclo · Constitution Check · testes e *fitness functions* · promoção com registro · publicação |
 | **Ramo de interface** | Só quando há tela: semântica (papel antes do componente) → `ux-design.md` → ◆gate de UX → captura do build real → heurística datada → journey |
+| **Distribuição** | O método sai do repositório: empacotar → ◆pacote sincronizado? → três camadas (A script completo · B plugin do Claude Code · C `npx skills add`) |
 | **Artefatos** | A trilha auditável: `spec.md` → `plan.md`+ADR → `tasks.md` → código+testes → `qa-report.md` → docs → `decisoes.jsonl` → regra nova |
 
 **O losango é onde o fluxo para.** Quatro em ouro (humanos, indelegáveis): aprovar a
@@ -34,7 +35,9 @@ migração. Um em verde: a Definição de Pronto (DoD), mecânica, que bloqueia 
    papel semântico **antes** do componente, gate de UX, e jornada viva (captura gerada do
    build real + heurística **datada**). Heurística mais velha que a captura é documentação
    vencida. *(Acrescentado no ciclo 018: o desenho anterior refletia o toolkit, não a norma.)*
-4. **O laço fecha na retrospectiva**: erro recorrente vira regra versionada (princípio,
+4. **O método é instalável** — a última raia mostra o Maestro saindo do próprio repositório
+   em três camadas, cada uma declarando o que **não** leva (ADR 0012).
+5. **O laço fecha na retrospectiva**: erro recorrente vira regra versionada (princípio,
    skill ou script) e volta ao início. É o que torna o processo mais barato a cada volta.
 
 **Ver também**: [SIPOC](04-sipoc.md) (o mesmo ciclo como cadeia fornecedor→cliente) ·
