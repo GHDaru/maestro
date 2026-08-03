@@ -170,6 +170,11 @@
           "teaser": "Os oito inegociáveis."
         },
         {
+          "arquivo": "docs/governance/axioms.md",
+          "titulo": "Axiomas e teoremas",
+          "teaser": "As verdades assumidas — e o que se deriva delas."
+        },
+        {
           "arquivo": "docs/governance/operating-model.md",
           "titulo": "Modelo operacional",
           "teaser": "Papéis, cerimônias, artefatos, raias, gates."

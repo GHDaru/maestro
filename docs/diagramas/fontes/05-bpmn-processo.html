@@ -67,7 +67,9 @@
       <span class="seta">→</span>
       <div class="gate"><span>GATE DE<br>MERGE</span></div>
       <span class="seta">→</span>
-      <div class="no" style="background:rgba(230,195,117,.12);border-color:rgba(230,195,117,.45)"><b>Retro</b><small>erro → regra</small></div>
+      <div class="gate"><span>DÍVIDA DE<br>ACHADOS?</span></div>
+      <span class="seta">→</span>
+      <div class="no" style="background:rgba(230,195,117,.12);border-color:rgba(230,195,117,.45)"><b>Retro</b><small>erro → regra versionada</small></div>
       <span class="seta">→</span>
       <div class="fim">◉</div>
     </div>
@@ -81,7 +83,7 @@
       <span class="seta">→</span>
       <div class="no ag"><b>Clarificar</b><small>ambiguidade → pergunta</small></div>
       <span class="seta">→</span>
-      <div class="no ag"><b>Planejar</b><small>plan-arquiteto</small></div>
+      <div class="no ag"><b>Planejar</b><small>plan-architect</small></div>
       <span class="seta">→</span>
       <div class="no ag"><b>Fatiar</b><small>tasks por fronteira</small></div>
       <span class="seta">→</span>
@@ -100,7 +102,7 @@
     <div class="fluxo">
       <div class="no" style="background:rgba(255,255,255,.03);border-color:rgba(118,125,149,.4);color:#a3aabf"><b>tem UI?</b><small>senão, pula</small></div>
       <span class="seta">→</span>
-      <div class="no ag"><b>Semântica</b><small>ux-semantica · papel antes do componente</small></div>
+      <div class="no ag"><b>Semântica</b><small>ux-semantics · papel antes do componente</small></div>
       <span class="seta">→</span>
       <div class="no art">ux-design.md</div>
       <span class="seta">→</span>
@@ -118,15 +120,15 @@
   <div class="raia">
     <div class="rot"><b>Automação</b><small>scripts · integração contínua</small></div>
     <div class="fluxo">
-      <div class="no aut"><b>novo-ciclo</b><small>esqueleto NNN</small></div>
+      <div class="no aut"><b>new-cycle</b><small>esqueleto NNN</small></div>
       <span class="seta">→</span>
       <div class="no aut"><b>Constitution Check</b><small>princípios I–VIII</small></div>
       <span class="seta">→</span>
-      <div class="no aut"><b>Testes + fitness</b><small>feliz + falha</small></div>
+      <div class="no aut"><b>Testes + fitness</b><small>8 portões · feliz + falha</small></div>
       <span class="seta">→</span>
       <div class="gate" style="background:rgba(52,215,123,.13);border-color:rgba(52,215,123,.5)"><span style="color:#34d77b">DoD<br>VERDE?</span></div>
       <span class="seta">→</span>
-      <div class="no aut"><b>promover-main</b><small>+ registra o gate</small></div>
+      <div class="no aut"><b>promote-main</b><small>+ registra o gate</small></div>
       <span class="seta">→</span>
       <div class="no aut"><b>Publica</b><small>site · livro</small></div>
     </div>
@@ -137,17 +139,32 @@
   <div class="raia" style="border-color:rgba(52,215,123,.25)">
     <div class="rot"><b>Distribuição</b><small>o método instalável</small></div>
     <div class="fluxo">
-      <div class="no aut"><b>empacotar-plugin</b><small>fontes → pacote</small></div>
+      <div class="no aut"><b>package-plugin</b><small>fontes → pacote</small></div>
       <span class="seta">→</span>
       <div class="gate" style="background:rgba(52,215,123,.13);border-color:rgba(52,215,123,.5)"><span style="color:#34d77b">PACOTE<br>SINCRO?</span></div>
       <span class="seta">→</span>
-      <div class="no art">A · instalar-maestro.sh <span style="color:#767d95">(método inteiro)</span></div>
+      <div class="no art">A · install-maestro.sh <span style="color:#767d95">(método inteiro)</span></div>
       <span class="seta">→</span>
       <div class="no art">B · /plugin install <span style="color:#767d95">(agentes+skills+comandos)</span></div>
       <span class="seta">→</span>
       <div class="no art">C · npx skills add <span style="color:#767d95">(6 skills, 75+ agentes)</span></div>
       <span class="seta">→</span>
       <div class="fim" style="background:rgba(230,195,117,.16);border-color:rgba(230,195,117,.6)">👥</div>
+    </div>
+  </div>
+
+  <!-- PORTÕES -->
+  <div class="raia" style="border-color:rgba(52,215,123,.25)">
+    <div class="rot"><b>Portões</b><small>a DoD executável</small></div>
+    <div class="fluxo">
+      <div class="no aut"><b>check-agents</b><small>13 papéis</small></div><span class="seta">·</span>
+      <div class="no aut"><b>check-roles</b><small>norma × executável</small></div><span class="seta">·</span>
+      <div class="no aut"><b>check-install</b><small>instalado de fato</small></div><span class="seta">·</span>
+      <div class="no aut"><b>check-language</b><small>inglês no instalável</small></div><span class="seta">·</span>
+      <div class="no aut"><b>check-cycle</b><small>raia + elo do commit</small></div><span class="seta">·</span>
+      <div class="no aut"><b>check-links</b><small>todo link resolve</small></div><span class="seta">·</span>
+      <div class="no aut"><b>check-chapters</b><small>9 seções · skill × cap.</small></div><span class="seta">·</span>
+      <div class="no aut"><b>check-retro</b><small>dívida de achados</small></div>
     </div>
   </div>
 
@@ -162,6 +179,8 @@
       <div class="no art">qa-report.md</div><span class="seta">→</span>
       <div class="no art">CHANGELOG · docs</div><span class="seta">→</span>
       <div class="no art">decisoes.jsonl</div><span class="seta">→</span>
+      <div class="no art">achado aberto ⟲</div><span class="seta">→</span>
+      <div class="no art">axioma / teorema</div><span class="seta">→</span>
       <div class="no art">regra nova</div>
     </div>
   </div>

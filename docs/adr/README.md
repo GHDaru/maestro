@@ -17,6 +17,7 @@ consequências → fontes.
 | 0012 | [Distribuição em três camadas (script · plugin · skills CLI)](0012-distribuicao-em-tres-camadas.md) | Aceito |
 | 0013 | [Instrução para a IA: fonte única e gerada do disco](0013-instrucao-para-ia-gerada-e-fonte-unica.md) | Aceito |
 | 0014 | [Inglês como idioma do método instalável](0014-ingles-no-instalavel.md) | Aceito |
+| 0015 | [Axiomas, teoremas e corolários como camada de derivação](0015-axiomas-teoremas-corolarios.md) | Aceito |
 
 > Índice consultável por máquina (append-only): [`../records/decisoes.jsonl`](../records/decisoes.jsonl) — ver [protocolo](../records/README.md).
 

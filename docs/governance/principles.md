@@ -4,11 +4,11 @@
 > repository. **Every agent and every human MUST read this document before any work.**
 > Amendments go through an ADR (Architecture Decision Record) plus a version bump.
 >
-> **Version**: 1.2.0 · **Ratified**: 2026-07-22 · **Amended**: 2026-08-02 (ADR 0014 —
-> English as the language of the installable method)
+> **Version**: 1.3.0 · **Ratified**: 2026-07-22 · **Amended**: 2026-08-03 (ADR 0015 —
+> axioms, theorems and corollaries as the derivation layer)
 >
 > New to Maestro? Start with [Comece por aqui](../comece-por-aqui.md) (Portuguese).
-> Acronyms: [glossary](glossary.md).
+> Acronyms: [glossary](glossary.md). Assumed truths: [axioms](axioms.md) (ADR 0015).
 
 Maestro is the method of **one human conducting many AI agents**: the specification is the
 source of truth, the agents execute, the human decides, approves and verifies. These are the
@@ -75,6 +75,14 @@ acronym" (tomorrow's reader, or the new agent, does not) · "I explained it befo
 was another answer) · "it is domain jargon" (orphan jargon is what produces the pile-up).
 A new term also enters the [glossary](glossary.md). Operationalised by the
 `fight-the-pile-up` skill.
+
+## Where the principles come from
+
+The eight principles above are the **operative norm**. What they are derived *from* lives in
+[axioms.md](axioms.md): five assumed truths, six theorems proved with evidence from this
+repository, and ten corollaries. A new rule is argued against that layer — a rule that
+derives from no axiom is either a new axiom (argued for, through an ADR) or ceremony (pruned
+by YAGNI).
 
 ## Governance
 

@@ -10,6 +10,21 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Axiomas, teoremas e corolários (spec 035, ADR 0015)**: `docs/governance/axioms.md` traz a
+  camada de **derivação** que faltava — cinco verdades assumidas (intenção é humana ·
+  consequência precisa de dono · contexto é finito e degrada · o que está escrito sobrevive ·
+  o custo é assimétrico entre fazer e desfazer), seis teoremas **com evidência deste
+  repositório** e dez corolários amarrados a artefatos existentes. Cada axioma declara sua
+  **independência** (o que quebra se ele sair) e cada teorema traz o fato que o sustenta,
+  inclusive o desfavorável: os nove defeitos escapados com portão verde entram como evidência
+  do teorema 4. A constituição vai a 1.3.0 e aponta para lá; o Constitution Check continua
+  checando os oito princípios.
+- **BPMN v4**: o desenho do processo ganha o **gatilho da retrospectiva** (o losango "dívida
+  de achados?"), a **raia de portões** com os oito checks e os nomes em inglês; a trilha de
+  artefatos passa a terminar em `achado aberto → axioma/teorema → regra nova`. Atualizado nas
+  duas versões — o bloco navegável do livro e a imagem, regenerada do fonte versionado.
+
+### Added
 - **Retrospectiva executada: cinco achados abertos viram portão (spec 034)**. O mais velho
   estava aberto havia **onze ciclos** — literalmente o anti-padrão 14. Cada um virou
   executável: **`check-retro.sh`** (a retro passa a ser cobrada por **dívida de achados**,

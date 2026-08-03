@@ -84,6 +84,7 @@ echo "── Governance (the source of truth) ──"
 copy "docs/governance/principles.md"
 copy "docs/governance/operating-model.md"
 copy "docs/governance/glossary.md"
+copy "docs/governance/axioms.md"
 copy "docs/records/README.md"
 
 if [[ "$DRY" -eq 0 ]]; then
