@@ -44,3 +44,4 @@
 {"id": "gate-main-da71e5b", "data": "2026-08-02", "titulo": "Gate de merge: docs(livro): capítulo 11 (rastreabilidade) no padrão v2 (spec 031)", "status": "aceita", "registro": "commit da71e5b"}
 {"id": "gate-main-45a88fb", "data": "2026-08-02", "titulo": "Gate de merge: docs(livro): capítulo 12 (governança leve) no padrão v2 — migração fecha em 13/13 (spec 032)", "status": "aceita", "registro": "commit 45a88fb"}
 {"id":"adr-0014","data":"2026-08-02","titulo":"Inglês como idioma do método instalável (agentes, skills, scripts, comandos, templates e governança); livro segue em português","status":"aceita","registro":"docs/adr/0014-ingles-no-instalavel.md","ciclo":"033"}
+{"id": "gate-main-7caefbc", "data": "2026-08-03", "titulo": "Gate de merge: feat(metodo): inglês no que é instalável — toolkit e governança (spec 033, ADR 0014)", "status": "aceita", "registro": "commit 7caefbc"}
