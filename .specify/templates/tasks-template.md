@@ -1,32 +1,32 @@
-# Tasks NNN — [TÍTULO]
+# Tasks NNN — [TITLE]
 
 <!--
-  Regras (modelo operacional + ciclos provados):
-  - VERIFICAÇÃO PRIMEIRO: T0 define os checks executáveis do DoD antes de implementar.
-  - ZERO CONTEXTO: escreva cada task para quem tem zero contexto do repo — tudo que ela
-    precisa está nela ou linkado (arquivo, comando, critério). Task de 2–15 min.
-  - Ciclo com >3 tasks: checkpoint leve ao fechar cada uma (✔ o quê · evidência · próximo).
-  - Uma task por vez, diff pequeno e focado (sem refatoração oportunista — anti-padrão 10).
-  - Ordene por dependência; corte por fronteira permite paralelizar com segurança.
-  - Bug exige teste que o reproduz ANTES do fix (red → green).
-  - Task de doc viva entra AQUI (mesmo PR), não "depois".
+  Rules (operating model plus proven cycles):
+  - VERIFICATION FIRST: T0 defines the executable DoD checks before implementing.
+  - ZERO CONTEXT: write each task for someone with zero context of the repository —
+    everything it needs is in it or linked (file, command, criterion). 2–15 minutes per task.
+  - Cycle with more than 3 tasks: a light checkpoint when each one closes
+    (✔ what · evidence · next).
+  - One task at a time, small focused diff (no opportunistic refactor — anti-pattern 10).
+  - Order by dependency; cutting by boundary is what makes parallel work safe.
+  - A bug requires a test that reproduces it BEFORE the fix (red → green).
+  - Living-doc tasks belong HERE (same pull request), not "later".
 -->
 
-## Verificação primeiro
+## Verification first
 
-- [ ] **T0** — Definir os checks executáveis do DoD (ver `plan.md § Verificação`).
+- [ ] **T0** — Define the executable DoD checks (see `plan.md § Verification`).
 
-## Implementação
+## Implementation
 
 - [ ] **T1** — [... (FRn)]
 - [ ] **T2** — [... (FRn)]
 
-## Documentação viva (mesmo PR)
+## Living documentation (same pull request)
 
-- [ ] **Tn** — [journey/ADR/CHANGELOG/glossário afetados]
+- [ ] **Tn** — [journey / ADR / changelog / glossary affected]
 
 ## Gate
 
-- [ ] **Tz** — DoD verde → veredito do Guardião → **gate de merge humano (indelegável)**;
-  promoção via `scripts/promover-main.sh` (registra `gate-main-<sha>` automaticamente,
-  ADR 0009).
+- [ ] **Tz** — DoD green → guardian verdict → **human merge gate (not delegable)**;
+  promotion via `scripts/promote-main.sh` (records `gate-main-<sha>` automatically, ADR 0009).

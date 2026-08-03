@@ -78,12 +78,12 @@ delegável. Reversibilidade compra velocidade.
 
 ## 6. ⭐ Na prática — o ciclo real
 
-O princípio virou código no `scripts/promover-main.sh`, o script que promove o trabalho
+O princípio virou código no `scripts/promote-main.sh`, o script que promove o trabalho
 para a linha principal. Ele executa o **mecânico** (mover a referência, empurrar com nova
 tentativa em caso de falha de rede, registrar a decisão) e **não decide nada**:
 
 ```
-$ scripts/promover-main.sh
+$ scripts/promote-main.sh
 abortado: árvore de trabalho suja — commite ou limpe antes de promover.
 ```
 
@@ -143,4 +143,4 @@ https://www.microsoft.com/en-us/research/publication/principles-mixed-initiative
 M. Nygard, *Documenting Architecture Decisions* —
 https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions ·
 OWASP, *LLM01 Prompt Injection* — https://genai.owasp.org/llmrisk/llm01-prompt-injection/ ·
-[Princípios do Maestro](../governance/principios-maestro.md) (III — reversibilidade e gates).
+[Princípios do Maestro](../governance/principles.md) (III — reversibilidade e gates).

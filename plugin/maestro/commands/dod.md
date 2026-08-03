@@ -1,22 +1,25 @@
 ---
-description: Roda a Definition of Done verificável (testes, fitness functions, typecheck/build) e mostra a evidência antes de dar uma feature por pronta.
+description: Runs the verifiable Definition of Done (tests, fitness functions, type check and build) and shows the evidence before calling a feature done.
 ---
 
-Execute a **Definition of Done verificável** (modelo operacional §7) e **mostre a
-evidência** de cada check — nunca afirme sucesso sem output ("prove, não declare").
+Run the **verifiable Definition of Done** (operating model §7) and **show the evidence**
+for every check — never claim success without output ("prove it, don't claim it").
 
-Rode e reporte o resultado de cada item:
+Run and report the result of each item:
 
-1. **Web** (em `apps/web`): `pnpm test` (inclui as fitness functions `architecture.test.ts`) e `pnpm build` (typecheck + build).
-2. **API** (em `apps/api`): `uv run pytest` e `uv run lint-imports` (contratos de arquitetura).
-3. **Segredos**: verifique que nenhum segredo/token foi commitado no diff.
-4. **Rastreabilidade** (§9): confirme o elo `spec NNN ↔ PR ↔ testes ↔ journey`.
-5. **CHANGELOG**: confirme uma entrada em `[Unreleased]` no `CHANGELOG.md` (ou raia leve com label `skip-changelog`).
-6. **Docs vivas**: journey atualizada (se tocou jornada) e ADR se houve decisão.
+1. **Tests and build** of the project at hand, including the fitness functions.
+2. **Method fitness functions**: `scripts/check-agents.sh`, `scripts/check-roles.sh`,
+   `scripts/check-install.sh` (and `scripts/check-chapters.sh` when the book changed).
+3. **Secrets**: confirm that no secret or token was committed in the diff.
+4. **Traceability** (§9): confirm the link `spec NNN ↔ pull request ↔ tests ↔ journey`.
+5. **Changelog**: confirm an entry under `[Unreleased]` in `CHANGELOG.md` (or a light-lane
+   change carrying the `skip-changelog` label).
+6. **Living docs**: journey updated (if a journey was touched) and an ADR if a decision was
+   made.
 
-Para cada item que **passa**, mostre o comando e o resultado. Para cada item que
-**falha**, mostre o output e o que corrigir.
+For every item that **passes**, show the command and its result. For every item that
+**fails**, show the output and what to fix.
 
-**Lembrete (§8):** verde local ≠ certo global. Sinalize explicitamente se a jornada ou o
-conjunto maior pode ter sido comprometido — essa avaliação e o "é a coisa certa" ficam
-com o humano (o Accountable, §4).
+**Reminder (§8):** green locally ≠ right globally. Flag explicitly when the journey or the
+larger whole may have been compromised — that judgement, and "is this the right thing", stay
+with the human (the Accountable, §4).

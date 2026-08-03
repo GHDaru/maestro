@@ -1,48 +1,49 @@
-# Plan NNN — [TÍTULO]
+# Plan NNN — [TITLE]
 
-- **Spec**: `spec.md` · **Raia**: [plena|infra] · **Data**: [YYYY-MM-DD]
+- **Spec**: `spec.md` · **Lane**: [full|infra] · **Date**: [YYYY-MM-DD]
 
-## Constitution Check (principios-maestro.md)
+## Constitution Check (governance/principles.md)
 
 <!--
-  OBRIGATÓRIO e COMPLETO — uma linha por princípio, nunca pule (skill constitution-check).
-  ✅ = conforme (uma frase de porquê). Violado = o plano SÓ funciona quebrando o princípio;
-  desconforto ≠ violação. Violação real → reformule OU registre em Complexity Tracking
-  (qual princípio, por que inevitável, o que a torna reversível) → gate humano decide.
+  MANDATORY and COMPLETE — one row per principle, never skip one (skill constitution-check).
+  ✅ = compliant (one sentence of why). Violated = the plan ONLY works by breaking the
+  principle; discomfort is not violation. A real violation → rework the plan OR record it in
+  Complexity Tracking (which principle, why it is unavoidable, what makes it reversible) →
+  the human gate decides.
 -->
 
-| Princípio | Conformidade |
+| Principle | Compliance |
 |---|---|
-| I. Spec-Driven | [nasce de spec aprovada?] |
-| II. Orquestração humano-governada | [o A humano é preservado?] |
-| III. Reversibilidade / gates de risco | [dá para desfazer? gate ∝ risco?] |
-| IV. Test-First / DoD verificável | [sucesso verificável autonomamente?] |
-| V. Economia de contexto / fronteira | [fatias estreitas, corte por fronteira?] |
-| VI. Artefatos vivos | [doc e código no mesmo PR?] |
-| VII. Governança leve / YAGNI | [só o necessário agora?] |
-| VIII. Comunicação inteligível | [sigla por extenso na 1ª ocorrência; texto legível por quem chega hoje?] |
+| I. Spec-driven | [does it come from an approved spec?] |
+| II. Human-governed orchestration | [is the human Accountable preserved?] |
+| III. Reversibility / risk gates | [can it be undone? is the gate proportional?] |
+| IV. Test-first / verifiable DoD | [is success autonomously verifiable?] |
+| V. Context economy / boundary | [narrow slices, cut along a boundary?] |
+| VI. Living artifacts | [docs and code in the same pull request?] |
+| VII. Light governance / YAGNI | [only what is needed now?] |
+| VIII. Intelligible communication | [acronym expanded on first occurrence; readable by someone arriving today?] |
 
-**[Sem violações. | Complexity Tracking: ...]**
+**[No violations. | Complexity Tracking: ...]**
 
-## Como
+## How
 
 <!--
-  O COMO: arquitetura, corte por fronteira (bounded context — permite paralelizar com
-  segurança), decisões (decisão arquitetural → ADR, imutável). Em feature de CÓDIGO,
-  gere também data-model.md/contracts/; em docs, não se aplicam.
-  Raia infra: inclua backup/dry-run/rollback AQUI (bloco de reversibilidade do §7).
+  The HOW: architecture, cutting by boundary (bounded context — which makes parallel work
+  safe), decisions (an architectural decision becomes an ADR, immutable). For CODE features,
+  also produce the data model and contracts; for docs work they do not apply.
+  Infra lane: put backup, dry run and rollback HERE (the reversibility block of §7).
 -->
 
 - [...]
 
-## Verificação (DoD)
+## Verification (DoD)
 
-<!-- Os comandos que provam os critérios da spec, com o esperado de cada um.
-     O comando /dod roda; aqui você ESCREVE (design-time — skill dod-verificavel). -->
+<!-- The commands that prove the criteria of the spec, each with its expected result.
+     The /dod command runs them; here you WRITE them (design time — skill verifiable-dod). -->
 
-- `[comando]` → [esperado]
+- `[command]` → [expected]
 
 <!--
-  GATE (indelegável): plan aprovado por humano antes de virar tasks.
-  Handoff: plan-arquiteto → (aprovação) → tasks → dev-implementador.
+  GATE (not delegable): the plan is approved by a human before it becomes tasks.
+  Handoff: plan-architect → (approval) → tasks → dev-implementer.
 -->

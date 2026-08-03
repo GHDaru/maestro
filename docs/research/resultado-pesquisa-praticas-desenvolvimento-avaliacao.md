@@ -157,7 +157,7 @@ decidir e aprovar; testes, gates e revisão independente para validar.*
 
 ## O que complementa (ações — entram na Fase 2)
 
-1. **Modelo operacional explícito** (`docs/governance/modelo-operacional.md`): papéis
+1. **Modelo operacional explícito** (`docs/governance/operating-model.md`): papéis
    como matriz humano × agentes, cerimônias mínimas (shaping, checkpoint de ciclo,
    retro), catálogo de artefatos com dono e gate — **este é o entregável da Fase 2**.
 2. **Definition of Ready e Definition of Done** verificáveis (checklist que um agente

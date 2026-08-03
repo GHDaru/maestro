@@ -104,7 +104,7 @@ O trecho abaixo mostra o caminho inteiro de **uma frase** — da spec ao execut�
 > **FR3**: QUANDO uma skill existe em `skills/` e não é citada na instrução, O SISTEMA DEVE
 > falhar — skill invisível é skill que não existe.
 
-Depois o executável que nasceu dele, em `scripts/verificar-instalacao.sh` — a condição da
+Depois o executável que nasceu dele, em `scripts/check-install.sh` — a condição da
 frase virou laço, o comportamento virou saída e código de saída:
 
 ```bash
@@ -139,7 +139,7 @@ próprio repositório, à espera da retrospectiva.
 - **Spec que descreve solução** — "criar tabela X com colunas Y". Isso é plano. A spec diz
   o problema e o que se observa quando ele está resolvido.
 - **Critério não verificável** — "deve ser rápido", "deve ser intuitivo". Sem número, sem
-  comando, sem observável, não entra (skill `dod-verificavel`).
+  comando, sem observável, não entra (skill `verifiable-dod`).
 - **Spec escrita depois** para satisfazer o processo — documento a jusante de novo, com
   custo de cerimônia e zero benefício.
 - **Raia plena para tudo** — cerimônia de papel (anti-padrão 11): processo que não muda

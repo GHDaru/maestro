@@ -80,11 +80,11 @@ construir; gate é para agir — e os dois compartilham o fator que mais pesa.
 
 ## 6. ⭐ Na prática — o ciclo real
 
-**O gate de merge é um script que se recusa a decidir.** O `promover-main.sh` executa o
+**O gate de merge é um script que se recusa a decidir.** O `promote-main.sh` executa o
 mecânico e para diante de tudo que cheira a risco:
 
 ```
-$ scripts/promover-main.sh
+$ scripts/promote-main.sh
 abortado: árvore de trabalho suja — commite ou limpe antes de promover.
 ```
 
@@ -157,5 +157,5 @@ responsabilidade) · [03 — Spec-Driven](03-spec-driven.md) (o eixo das raias) 
 https://www.anthropic.com/engineering/building-effective-agents ·
 OWASP, *LLM01 Prompt Injection* — https://genai.owasp.org/llmrisk/llm01-prompt-injection/ ·
 Open Policy Agent — https://www.openpolicyagent.org/docs ·
-[Princípios](../governance/principios-maestro.md) (III — classes de risco) ·
-[Modelo operacional](../governance/modelo-operacional.md) §8.
+[Princípios](../governance/principles.md) (III — classes de risco) ·
+[Modelo operacional](../governance/operating-model.md) §8.

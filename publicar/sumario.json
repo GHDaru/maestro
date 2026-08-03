@@ -165,17 +165,17 @@
       "descricao": "A regra vigente, para consultar durante o trabalho. Fonte de verdade — prevalece sobre qualquer outra página.",
       "itens": [
         {
-          "arquivo": "docs/governance/principios-maestro.md",
+          "arquivo": "docs/governance/principles.md",
           "titulo": "Princípios (constituição)",
           "teaser": "Os oito inegociáveis."
         },
         {
-          "arquivo": "docs/governance/modelo-operacional.md",
+          "arquivo": "docs/governance/operating-model.md",
           "titulo": "Modelo operacional",
           "teaser": "Papéis, cerimônias, artefatos, raias, gates."
         },
         {
-          "arquivo": "docs/governance/glossario.md",
+          "arquivo": "docs/governance/glossary.md",
           "titulo": "Glossário",
           "teaser": "Todas as siglas, expandidas."
         },
@@ -217,7 +217,7 @@
           "teaser": "Registros imutáveis: contexto, alternativas, consequências."
         },
         {
-          "arquivo": "docs/registro/README.md",
+          "arquivo": "docs/records/README.md",
           "titulo": "Registro consultável",
           "teaser": "O índice de decisões legível por máquina."
         },

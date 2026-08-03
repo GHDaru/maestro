@@ -12,7 +12,7 @@ em qualquer projeto que recebeu o método e seguiu a vida:
 1. `CLAUDE.md` e `AGENTS.md` eram cópias quase iguais, escritas à mão. O `AGENTS.md`
    ficou sem a regra "skills primeiro" (adicionada ao `CLAUDE.md` no ciclo 011): quem lê
    `AGENTS.md` — a maioria dos assistentes que não é Claude Code — trabalhava sem ela.
-2. A lista de skills no `CLAUDE.md` estava em cinco de seis: a `jornada-viva`, criada no
+2. A lista de skills no `CLAUDE.md` estava em cinco de seis: a `living-journey`, criada no
    ciclo 018, existia no disco e era **invisível** para a IA havia três ciclos.
 3. O `Constitution Check` da skill e de dois agentes dizia "I–VII"; a constituição tem
    VIII desde o ciclo 013 (ADR 0010). Oito ciclos de planos sem onde marcar o princípio.
@@ -25,13 +25,13 @@ repositório declarava ter.
 
 1. **Fonte única**: `AGENTS.md` passa a ser link simbólico para `CLAUDE.md`. Duas cópias
    escritas à mão divergem — a pergunta não é *se*, é *quando*.
-2. **Instrução gerada**: `scripts/instalar-maestro.sh --bloco` monta o bloco de instrução
+2. **Instrução gerada**: `scripts/install-maestro.sh --block` monta o bloco de instrução
    **lendo `skills/`**, com nome e primeira frase de cada `SKILL.md`. Quem instala cola o
    que o disco tem, não o que a documentação lembrava de ter.
-3. **Fitness function de instalação**: `scripts/verificar-instalacao.sh` verifica as duas
+3. **Fitness function de instalação**: `scripts/check-install.sh` verifica as duas
    metades — camadas presentes **e** IA instruída — e falha se uma skill do disco não
    aparecer na instrução. Roda neste repositório e em todo projeto que recebe o método.
-4. **Contagem de princípios**: `scripts/verificar-papeis.sh` passa a comparar quantos
+4. **Contagem de princípios**: `scripts/check-roles.sh` passa a comparar quantos
    princípios a constituição tem com quantas linhas o template de plano checa.
 
 ## Alternativas consideradas
@@ -60,8 +60,8 @@ repositório declarava ter.
 
 ## Registro
 
-- `scripts/verificar-instalacao.sh` (novo) · `scripts/instalar-maestro.sh` (`--bloco`)
-- `scripts/verificar-papeis.sh` (princípios × Constitution Check)
+- `scripts/check-install.sh` (novo) · `scripts/install-maestro.sh` (`--bloco`)
+- `scripts/check-roles.sh` (princípios × Constitution Check)
 - `CLAUDE.md` reescrito · `AGENTS.md` → link simbólico
 - `skills/constitution-check/`, `.claude/agents/{plan-arquiteto,guardiao-processo}.md`: I–VIII
 - `docs/receitas/instalar-o-maestro.md` · spec do ciclo `specs/021-maestro-instalado-no-maestro/`

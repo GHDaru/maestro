@@ -33,7 +33,7 @@
 
 ### Guardião de Processo (Spec-Kit)
 - **Escopo**: garante o full cycle e o **Constitution Check**; barra o que não conforma.
-- **Responsabilidade**: conformidade com `principios-maestro.md`. **Não** escreve conteúdo.
+- **Responsabilidade**: conformidade com `principles.md`. **Não** escreve conteúdo.
 - **Produz**: veredito de conformidade. **Consome**: spec, plan.
 - **Tools**: Read, Grep, Glob. **Contexto**: princípios + o artefato em revisão.
 - **Handoff**: bloqueia (volta ao autor) ou libera → próxima etapa.
@@ -93,8 +93,8 @@
 
 ## 🛠️ Agentes de toolkit (construir o próprio Maestro)
 
-> Executáveis desde a spec 004: `agent-designer`, `skill-author`, `curador-pesquisa`,
-> `didatica-editor` em `.claude/agents/`. V0 completa (12/12). Índice: `README.md`.
+> Executáveis desde a spec 004: `agent-designer`, `skill-author`, `research-curator`,
+> `didactics-editor` em `.claude/agents/`. V0 completa (12/12). Índice: `README.md`.
 
 ### Agent-Designer (meta)
 - **Escopo**: desenha e mantém os perfis de agente (`.claude/agents/*` + este doc).

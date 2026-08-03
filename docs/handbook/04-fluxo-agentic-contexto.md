@@ -100,13 +100,13 @@ A separação de papéis aparece na **declaração de ferramentas**, não numa r
 comportamento. Quem julga não pode consertar:
 
 ```
-$ grep -H "^tools:" .claude/agents/review.md .claude/agents/dev-implementador.md
+$ grep -H "^tools:" .claude/agents/review.md .claude/agents/dev-implementer.md
 .claude/agents/review.md:tools: Read, Grep, Glob, Bash
-.claude/agents/dev-implementador.md:tools: Read, Write, Edit, Bash
+.claude/agents/dev-implementer.md:tools: Read, Write, Edit, Bash
 ```
 
 O `review` não tem `Write` nem `Edit` — e isso é **verificado**, não confiado:
-`scripts/verificar-agentes.sh` falha se um agente somente-leitura ganhar permissão de
+`scripts/check-agents.sh` falha se um agente somente-leitura ganhar permissão de
 escrita. Foi essa fitness function que acusou, no ciclo 019, a diferença entre 12 e 13
 agentes quando um papel novo entrou.
 
@@ -167,4 +167,4 @@ https://code.claude.com/docs/en/best-practices ·
 Anthropic, *Building effective agents* —
 https://www.anthropic.com/engineering/building-effective-agents ·
 [Apêndice A](apendice-a-maestro-02.md) (context-slicer: economia medida) ·
-[Princípios do Maestro](../governance/principios-maestro.md) (V — economia de contexto).
+[Princípios do Maestro](../governance/principles.md) (V — economia de contexto).

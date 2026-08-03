@@ -1,43 +1,43 @@
-# ADR NNNN — [TÍTULO DA DECISÃO]
+# ADR NNNN — [DECISION TITLE]
 
-- **Status**: Proposta | Aceito | Superado por ADR NNNN · **Data**: [AAAA-MM-DD]
-- **Ciclo**: [NNN] · **Decisor**: [Steward / quem aprovou]
+- **Status**: Proposed | Accepted | Superseded by ADR NNNN · **Date**: [YYYY-MM-DD]
+- **Cycle**: [NNN] · **Decider**: [Steward / whoever approved it]
 
 <!--
-  ADR (Architecture Decision Record — Registro de Decisão de Arquitetura) é IMUTÁVEL:
-  nunca se edita o mérito. Mudou de ideia? Novo ADR que SUPERA este (e este ganha
-  "Superado por"). O registro é a memória do projeto — editar apaga a memória.
-  Registre também no índice consultável: scripts/registrar-decisao.sh
+  An ADR (Architecture Decision Record) is IMMUTABLE: its merit is never edited. Changed your
+  mind? A new ADR SUPERSEDES this one (and this one gains "Superseded by"). The record is the
+  project's memory — editing it erases the memory.
+  Also record it in the queryable index: scripts/record-decision.sh
 -->
 
-## Contexto
+## Context
 
-[Qual é a situação e a força que empurra para decidir. Fatos, não opinião — e o
-gatilho: por que agora?]
+[The situation and the force pushing towards a decision. Facts, not opinion — and the
+trigger: why now?]
 
-## Decisão
+## Decision
 
-[O que foi decidido, em voz ativa: "adotamos X", "descartamos Y". Numere se houver
-mais de uma parte.]
+[What was decided, in active voice: "we adopt X", "we discard Y". Number the parts if there
+is more than one.]
 
-## Alternativas consideradas
+## Alternatives considered
 
-<!-- Sem alternativas escritas, a decisão não é auditável: ninguém sabe o que foi
-     pesado nem consegue reabrir com honestidade. -->
+<!-- With no written alternatives the decision is not auditable: nobody knows what was
+     weighed, and nobody can reopen it honestly. -->
 
-- **[Alternativa A]**: [o que oferecia] — [por que não]
-- **[Alternativa B]**: [o que oferecia] — [por que não]
-- **[Não fazer nada]**: [o que aconteceria] — [por que não]
+- **[Alternative A]**: [what it offered] — [why not]
+- **[Alternative B]**: [what it offered] — [why not]
+- **[Do nothing]**: [what would happen] — [why not]
 
-## Consequências
+## Consequences
 
-<!-- OBRIGATÓRIO listar o que a decisão PROVOCA de indesejado. Decisão sem preço
-     escrito não é revogável depois (capítulo 13). -->
+<!-- MANDATORY: list what the decision CAUSES that is unwanted. A decision with no written
+     price cannot be revoked honestly later. -->
 
-- (+) [benefício concreto]
-- (+) [benefício concreto]
-- (−) [custo aceito / efeito colateral assumido]
+- (+) [concrete benefit]
+- (+) [concrete benefit]
+- (−) [accepted cost / assumed side effect]
 
-## Registro
+## Record
 
-[Onde a decisão vira artefato: arquivos alterados, versão de documento, spec do ciclo.]
+[Where the decision becomes an artifact: files changed, document version, cycle spec.]

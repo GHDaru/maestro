@@ -2,7 +2,7 @@
 
 - **Status**: Aceito
 - **Data**: 2026-07-22
-- **Relacionado**: `docs/governance/principios-maestro.md`; ADR 0004/0005/0006
+- **Relacionado**: `docs/governance/principles.md`; ADR 0004/0005/0006
 
 ## Contexto
 
@@ -19,7 +19,7 @@ Extrair a metodologia para o repositório próprio **`GHDaru/maestro`**, que pas
 consulta de origem, somente leitura).
 
 Migrados (preservando o layout `docs/` para manter referências internas):
-- `docs/governance/modelo-operacional.md` + novo `docs/governance/principios-maestro.md`
+- `docs/governance/operating-model.md` + novo `docs/governance/principles.md`
   (constituição própria da metodologia);
 - `docs/handbook/` (12 capítulos + apresentações + prompts);
 - ADRs 0004–0006 (números preservados);
@@ -28,7 +28,7 @@ Migrados (preservando o layout `docs/` para manter referências internas):
   CHANGELOG no CI.
 
 **Não migrados**: a constituição da plataforma `ghdaru` e ADRs 0001–0003 (específicos de
-produto). No Maestro, "a Constituição" corresponde a `principios-maestro.md`.
+produto). No Maestro, "a Constituição" corresponde a `principles.md`.
 
 ## Consequências
 
@@ -37,9 +37,9 @@ produto). No Maestro, "a Constituição" corresponde a `principios-maestro.md`.
 - As cópias em `ghdaru` tornam-se redundantes; podem ser removidas de lá quando esta
   migração for confirmada (fora do escopo deste ADR).
 - **Follow-up**: rebaixar as referências "Constituição / Princípio IV/V/VII" nos documentos
-  migrados para apontar a `principios-maestro.md` (o mapa de linhagem está no fim daquele
+  migrados para apontar a `principles.md` (o mapa de linhagem está no fim daquele
   documento).
 
 ## Fontes
 
-- `docs/governance/principios-maestro.md` (nota de linhagem); `README.md`.
+- `docs/governance/principles.md` (nota de linhagem); `README.md`.

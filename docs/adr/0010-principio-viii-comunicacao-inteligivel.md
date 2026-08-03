@@ -5,7 +5,7 @@
 ## Contexto
 
 O defeito nomeado desde o início — o "amontoado" — tem uma causa recorrente: **sigla sem
-expansão**. Já havia a skill `combater-amontoado` (regra de documento) e o glossário, mas
+expansão**. Já havia a skill `fight-the-pile-up` (regra de documento) e o glossário, mas
 faltava a regra para a **conversa**: cada resposta é lida isoladamente, e "já expliquei
 antes" não ajuda quem entra agora. O Steward pediu que a regra subisse à constituição.
 
@@ -21,7 +21,7 @@ Constituição sobe para **1.1.0** (MINOR: novo princípio).
 
 ## Alternativas consideradas
 
-- **Manter só na skill `combater-amontoado`**: a skill governa documentos; a lacuna era a
+- **Manter só na skill `fight-the-pile-up`**: a skill governa documentos; a lacuna era a
   resposta em conversa — e skill não tem a força de princípio inegociável.
 - **Regra apenas no CLAUDE.md**: valeria para agentes deste repo, não para o método
   (o Maestro é o produto; a regra é do método, não da instância).
@@ -35,5 +35,5 @@ Constituição sobe para **1.1.0** (MINOR: novo princípio).
 
 ## Registro
 
-`docs/governance/principios-maestro.md` v1.1.0 (Princípio VIII); skill
-`combater-amontoado` permanece como operacionalização em documentos.
+`docs/governance/principles.md` v1.1.0 (Princípio VIII); skill
+`fight-the-pile-up` permanece como operacionalização em documentos.

@@ -1,7 +1,7 @@
 {
   "name": "maestro",
-  "description": "Metodologia de um humano regendo N agentes de IA: spec como fonte de verdade, gates proporcionais ao risco e reversibilidade que compra velocidade. Traz os subagentes do fluxo spec-driven, as skills com suas leis e os comandos do ciclo.",
-  "version": "1.1.0",
+  "description": "The method of one human conducting many AI agents: the spec as the source of truth, gates proportional to risk, and reversibility that buys speed. Ships the spec-driven subagents, the skills with their Iron Laws and the cycle commands.",
+  "version": "1.2.0",
   "author": { "name": "GHDaru" },
   "homepage": "https://ghdaru.github.io/maestro/",
   "repository": "https://github.com/GHDaru/maestro",

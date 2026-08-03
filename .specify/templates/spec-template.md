@@ -1,50 +1,51 @@
-# Spec NNN — [TÍTULO]
+# Spec NNN — [TITLE]
 
-- **Status**: Rascunho · **Raia**: [leve|plena|infra] · **Data**: [YYYY-MM-DD]
-- **Origem**: [de onde vem esta demanda — pedido do Steward, roadmap, retro, bug]
+- **Status**: Draft · **Lane**: [light|full|infra] · **Date**: [YYYY-MM-DD]
+- **Origin**: [where this demand comes from — Steward request, roadmap, retrospective, bug]
 
 <!--
-  RAIA (modelo operacional §3): valor da spec ∝ ambiguidade × raio × irreversibilidade.
-  - leve: dá para descrever o diff numa frase → NEM PRECISA desta spec (o PR é o artefato).
-  - plena: feature ambígua, contrato, mudança cross-feature → este template inteiro.
-  - infra: infra/migração/deploy → SEMPRE plena + gates de reversibilidade (§7).
-  Na dúvida entre leve e plena → plena. Infra nunca é leve.
+  LANE (operating model §3): the value of a spec ∝ ambiguity × blast radius × irreversibility.
+  - light: the diff fits in one sentence → you do NOT need this spec (the pull request is the artifact).
+  - full: ambiguous feature, contract, cross-feature change → this whole template.
+  - infra: infrastructure, migration, deployment → ALWAYS full plus reversibility gates (§7).
+  In doubt between light and full → full. Infra is never light.
 -->
 
-## O quê e por quê
+## What and why
 
-[O problema e o valor de negócio. O QUÊ e o PORQUÊ — nunca o COMO (isso é do plan).
-Jornada(s) servida(s), se houver.]
+[The problem and the business value. The WHAT and the WHY — never the HOW (that belongs to
+the plan). The journey(s) served, if any.]
 
-## Requisitos funcionais
+## Functional requirements
 
 - **FR1**: [...]
 - **FR2**: [...]
 
-## Fora de escopo
+## Out of scope
 
-<!-- Tão importante quanto o escopo: o que este ciclo NÃO faz, para ninguém "aproveitar". -->
+<!-- As important as the scope: what this cycle does NOT do, so nobody "takes the chance". -->
 - [...]
 
-## Critérios de aceite (DoD)
+## Acceptance criteria (DoD)
 
 <!--
-  VERIFICÁVEL AUTONOMAMENTE (Princípio IV; skill dod-verificavel):
-  - Comportamento → forma EARS: "QUANDO <condição> O SISTEMA DEVE <comportamento observável>"
-    (vira teste quase 1:1: condição = arrange/act, comportamento = assert).
-  - Estrutura/invariante → par (comando, esperado): grep/ls/teste com saída vazia/não-vazia/exit code.
-  - Se não dá para responder "que comando prova isto?", o critério ainda está vago — reescreva.
-  - Proibido: meta numérica gameável ("cobertura ≥ X%"), "está claro", "funciona bem".
+  AUTONOMOUSLY VERIFIABLE (Principle IV; skill verifiable-dod):
+  - Behaviour → EARS form: "WHEN <condition> THE SYSTEM SHALL <observable behaviour>"
+    (becomes a test almost 1:1: condition = arrange/act, behaviour = assert).
+  - Structure or invariant → (command, expected) pair: grep/ls/test with empty or non-empty
+    output, or an exit code.
+  - If you cannot answer "which command proves this?", the criterion is still vague — rewrite it.
+  - Forbidden: gameable numeric targets ("coverage ≥ X%"), "it is clear", "it works well".
 -->
-- [ ] QUANDO [condição] O SISTEMA DEVE [comportamento observável].
-- [ ] `[comando]` → [esperado: vazio | = N | exit 0].
+- [ ] WHEN [condition] THE SYSTEM SHALL [observable behaviour].
+- [ ] `[command]` → [expected: empty | = N | exit 0].
 
 ## Clarify
 
-<!-- Ambiguidade NÃO se inventa — vira pergunta ao Steward. Resolvidas → registre a resposta aqui. -->
-1. [pergunta] → [resposta/decisão, quando resolvida]
+<!-- Ambiguity is NOT invented — it becomes a question for the Steward. Once resolved, record the answer here. -->
+1. [question] → [answer or decision, once resolved]
 
 <!--
-  GATE (DoR — indelegável): esta spec só vira plan após aprovação humana.
-  Handoff: spec-agent → (aprovação) → plan-arquiteto.
+  GATE (DoR — not delegable): this spec only becomes a plan after human approval.
+  Handoff: spec-agent → (approval) → plan-architect.
 -->

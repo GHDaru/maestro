@@ -31,4 +31,4 @@ $ARGUMENTS
 - Escopo é o da spec — trabalho novo descoberto que **não** está na spec vira nota de
   clarify/registro, não task silenciosa (anti-padrão 10: mudança silenciosa de escopo).
 - Raia infra: confirme também os gates de reversibilidade (backup/dry-run/rollback).
-- Handoff: → `dev-implementador` (tasks novas) ou → gate humano (se convergido).
+- Handoff: → `dev-implementer` (tasks novas) ou → gate humano (se convergido).

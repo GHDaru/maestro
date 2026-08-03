@@ -1,33 +1,33 @@
-# QA-report NNN — [TÍTULO]
+# QA report NNN — [TITLE]
 
-- **Data**: [AAAA-MM-DD] · **Raia**: [leve|plena|infra] · **Veredito**: ✅ CONFORME | ❌ NÃO CONFORME
+- **Date**: [YYYY-MM-DD] · **Lane**: [light|full|infra] · **Verdict**: ✅ COMPLIANT | ❌ NON-COMPLIANT
 
 ## Fitness functions (DoD)
 
-<!-- Cada linha é um par (comando, esperado, resultado REAL). "Prove, não declare":
-     resultado copiado da execução, nunca presumido. Se um check nunca foi visto
-     falhar, ele ainda não é um check (segunda lei da skill dod-verificavel). -->
+<!-- Every row is a (command, expected, REAL result) triple. "Prove it, don't claim it":
+     the result is copied from the run, never assumed. A check nobody has seen fail is not
+     yet a check (second law of the verifiable-dod skill). -->
 
-| Check | Esperado | Resultado |
+| Check | Expected | Result |
 |---|---|---|
-| `[comando]` | [esperado] | [real] ✅/❌ |
+| `[command]` | [expected] | [real] ✅/❌ |
 
-## Cobertura dos requisitos
+## Requirement coverage
 
-- **FR1**: [entregue? onde?]
+- **FR1**: [delivered? where?]
 - **FR2**: [...]
-- **Fora de escopo respeitado**: [o que ficou de fora, conforme a spec]
+- **Out of scope respected**: [what was left out, per the spec]
 
-## Achados e correções do ciclo
+## Findings and fixes inside the cycle
 
-<!-- Defeito encontrado DURANTE o ciclo entra aqui com causa raiz — é evidência de
-     que a verificação funcionou. Silenciar achado é pior que tê-lo. -->
+<!-- A defect found DURING the cycle goes here with its root cause — it is evidence that the
+     verification worked. Silencing a finding is worse than having one. -->
 
-## Lição para a retrospectiva
+## Lesson for the retrospective
 
-<!-- Erro recorrente? Nomeie. Se for a 2ª ou 3ª ocorrência, ele DEVE virar regra
-     versionada agora — anotar "candidato" e seguir é o anti-padrão 14. -->
+<!-- Recurring mistake? Name it. If this is the second or third occurrence, it MUST become a
+     versioned rule now — writing "candidate" and moving on is anti-pattern 14. -->
 
-## Pendência de gate
+## Pending gate
 
-- [o que aguarda decisão humana, ou "nenhuma"]
+- [what awaits a human decision, or "none"]

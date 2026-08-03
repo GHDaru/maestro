@@ -92,11 +92,11 @@ cognitiva tem.** Lote pequeno + reversibilidade = rápido *e* estável.
 Nós não instrumentamos nada. Mesmo assim as quatro métricas são legíveis no repositório,
 porque o método deixa rastro — e o retrato é honesto, inclusive na parte ruim.
 
-**Frequência de entrega.** O índice de decisões (`docs/registro/decisoes.jsonl`) registra
-cada promoção para a linha principal, porque o `promover-main.sh` grava o gate sozinho:
+**Frequência de entrega.** O índice de decisões (`docs/records/decisoes.jsonl`) registra
+cada promoção para a linha principal, porque o `promote-main.sh` grava o gate sozinho:
 
 ```
-$ grep -c '"id": "gate-main' docs/registro/decisoes.jsonl
+$ grep -c '"id": "gate-main' docs/records/decisoes.jsonl
 17
 ```
 
@@ -105,7 +105,7 @@ mérito de velocidade individual: é consequência de a unidade de trabalho ser 
 pequeno com gate próprio.
 
 **Lead time.** Cada ciclo entra na linha principal em **um único commit**, no mesmo dia em
-que abre. Do `novo-ciclo.sh` ao `promover-main.sh`, as horas do ciclo 021 desta página
+que abre. Do `new-cycle.sh` ao `promote-main.sh`, as horas do ciclo 021 desta página
 cabem numa sessão de trabalho — e o que o encurta não é pressa, é escopo: uma spec, uma
 fronteira, um gate.
 
@@ -117,7 +117,7 @@ pontos. Com 17 promoções, é grosseiramente **um defeito escapado a cada duas 
 
 E o padrão é o mesmo nos nove: **nenhum foi pego por revisão — todos foram pegos quando
 alguém escreveu um check.** Foi assim que a imagem quebrada apareceu (portão de `<img
-src>`, ciclo 020) e assim que a skill invisível apareceu (`verificar-instalacao.sh`, ciclo
+src>`, ciclo 020) e assim que a skill invisível apareceu (`check-install.sh`, ciclo
 021, que nasceu vermelho com deriva de três ciclos).
 
 **Tempo de recuperação.** Zero reversões no histórico (`git log --grep=revert` → nenhuma).
@@ -127,7 +127,7 @@ bastante para caber num commit — a reversibilidade estava lá, não precisou s
 **A leitura DORA deste retrato**: throughput de elite, estabilidade medíocre. A resposta
 certa **não** é entregar mais devagar — é atacar a capacidade que falta. No nosso caso ela
 tem nome: *fitness function* onde hoje há só leitura atenta. Foi o que os ciclos 020 e 021
-fizeram, e é por isso que a segunda lei da skill `dod-verificavel` existe:
+fizeram, e é por isso que a segunda lei da skill `verifiable-dod` existe:
 
 ```
 UM CHECK QUE VOCÊ NUNCA VIU ACUSAR NÃO É UM CHECK — É UMA ESPERANÇA
@@ -180,5 +180,5 @@ https://dora.dev/guides/dora-metrics-four-keys/ ·
 Swarmia, *Comparing DORA, SPACE and DX Core 4* —
 https://www.swarmia.com/blog/comparing-developer-productivity-frameworks/ ·
 N. Forsgren, J. Humble, G. Kim, *Accelerate* (2018) ·
-[Princípios do Maestro](../governance/principios-maestro.md) (III — reversibilidade;
+[Princípios do Maestro](../governance/principles.md) (III — reversibilidade;
 VII — governança leve).

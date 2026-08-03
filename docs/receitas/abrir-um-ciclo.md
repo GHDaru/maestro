@@ -18,7 +18,7 @@ Na dúvida entre leve e plena → **plena**. Infra **nunca** é leve.
 ## 2. Crie o esqueleto
 
 ```bash
-scripts/novo-ciclo.sh 014 nome-do-ciclo    # NNN de 3 dígitos, slug em kebab-case
+scripts/new-cycle.sh 014 nome-do-ciclo    # NNN de 3 dígitos, slug em kebab-case
 ```
 
 Cria `specs/014-nome-do-ciclo/` com os quatro artefatos. Não sobrescreve ciclo existente.

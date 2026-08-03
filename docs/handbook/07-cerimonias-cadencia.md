@@ -91,7 +91,7 @@ escalar é tornar cada gate mais barato.
 dezesseis itens, e o arquivo mostra quando cada leva entrou:
 
 ```
-$ git log --format="%ad %s" --date=short -- skills/anti-padroes/SKILL.md
+$ git log --format="%ad %s" --date=short -- skills/anti-patterns/SKILL.md
 2026-08-02  BPMN navegável … (spec 020)      → anti-padrão 16
 2026-08-01  retro executada — anti-padrões 13/14/15, segunda lei (spec 017)
 2026-07-31  absorções do Superpowers — Iron Laws, causa raiz (spec 011)
@@ -166,5 +166,5 @@ vez de um "mutirão de documentação" que nunca termina.
 
 **Fontes**: Basecamp, *Shape Up* (apetite, ciclo, folga) — https://basecamp.com/shapeup ·
 DORA, *four keys* — https://dora.dev/guides/dora-metrics-four-keys/ ·
-[Modelo operacional](../governance/modelo-operacional.md) §5 ·
-[Skill `anti-padroes`](https://github.com/GHDaru/maestro/blob/main/skills/anti-padroes/SKILL.md).
+[Modelo operacional](../governance/operating-model.md) §5 ·
+[Skill `anti-patterns`](https://github.com/GHDaru/maestro/blob/main/skills/anti-patterns/SKILL.md).

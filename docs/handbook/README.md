@@ -1,7 +1,7 @@
 # Handbook do Modelo Operacional — Fundamentos por elemento
 
 > Manual de referência dos elementos do modelo operacional
-> (`docs/governance/modelo-operacional.md`). **Um capítulo por elemento**, cada um com
+> (`docs/governance/operating-model.md`). **Um capítulo por elemento**, cada um com
 > a mesma anatomia: fundamentação teórica → frameworks avaliados → recomendação de uso
 > no nosso contexto (1 humano orquestrando N agentes de IA).
 >
@@ -10,7 +10,7 @@
 >
 > | Documento | Papel |
 > |---|---|
-> | `governance/modelo-operacional.md` | **Normativo** — a regra vigente (o quê é obrigatório) |
+> | `governance/operating-model.md` | **Normativo** — a regra vigente (o quê é obrigatório) |
 > | `handbook/` (aqui) | **Fundamentos** — por que a regra é essa; teoria + frameworks + recomendação |
 > | `research/jornada-aprendizado-modelo-operacional.md` | **Diário** — os insights construídos ao criticar cada elemento |
 > | `research/resultado-pesquisa-*-avaliacao.md` | **Pesquisa** — a síntese citada que embasa tudo |
@@ -29,7 +29,7 @@ capítulo **13** foi o piloto e o **01** o primeiro migrado; os demais seguem um
 2. **Fundamentação teórica** — o conceito, sua origem e o princípio que o sustenta.
 3. **Frameworks / abordagens avaliados** — o que existe lá fora, comparado, com veredito.
 4. **Recomendação de utilização** — como aplicamos no contexto 1 humano + N agentes;
-   ligação com o `modelo-operacional.md` e com a Constituição.
+   ligação com o `operating-model.md` e com a Constituição.
 5. **Conexões** — como o elemento se liga aos demais capítulos.
 6. **Insight da jornada e impacto no modelo** — o que refinamos ao avaliar criticamente
    e o efeito normativo (ADR/versão), com link ao diário.

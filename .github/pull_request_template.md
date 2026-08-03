@@ -1,4 +1,4 @@
-<!-- Espelha a Definition of Done do modelo operacional (docs/governance/modelo-operacional.md §7).
+<!-- Espelha a Definition of Done do modelo operacional (docs/governance/operating-model.md §7).
      O que é mecânico já é hard gate na CI; este checklist cobre o que exige julgamento. -->
 
 ## O que muda

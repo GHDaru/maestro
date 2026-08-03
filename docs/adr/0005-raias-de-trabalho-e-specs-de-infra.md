@@ -2,7 +2,7 @@
 
 - **Status**: Aceito
 - **Data**: 2026-07-22
-- **Relacionado**: `docs/governance/modelo-operacional.md` (v1.1.0); ADR 0004;
+- **Relacionado**: `docs/governance/operating-model.md` (v1.1.0); ADR 0004;
   Constituição v1.3.0 (Princípios I, IV, V)
 
 ## Contexto
@@ -52,7 +52,7 @@ pessoa, nomear a *responsabilidade* basta.
   DoD, não boa intenção.
 - Uma ferramenta só reduz carga cognitiva e de manutenção; a decisão sobre OpenSpec
   fica registrada para não ser reaberta sem novo contexto.
-- `modelo-operacional.md` sobe para **v1.1.0** (MINOR); disciplina de branch/remote do
+- `operating-model.md` sobe para **v1.1.0** (MINOR); disciplina de branch/remote do
   FlowBuilder foi avaliada e **não** trazida (específica daquele repositório).
 
 ## Fontes

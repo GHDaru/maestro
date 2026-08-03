@@ -4,18 +4,18 @@
 > skills, workflows, scripts). Também serve de **orientação**: se você está perdido, comece
 > por aqui. Documento vivo — atualizado a cada fase.
 >
-> **Status**: Ativo · **Atualizado**: 2026-08-02 (ciclo 032) · **Regra**: este mapa é
+> **Status**: Ativo · **Atualizado**: 2026-08-02 (ciclo 033) · **Regra**: este mapa é
 > artefato vivo — todo ciclo concluído atualiza a tabela de fases **no mesmo PR**
 > (anti-padrão 15: artefato de planejamento que congela).
 
 ## 1. Por onde começar (a ordem de leitura)
 
 1. [`comece-por-aqui.md`](comece-por-aqui.md) — a história em 5 min.
-2. [`governance/principios-maestro.md`](governance/principios-maestro.md) — os inegociáveis.
-3. [`governance/modelo-operacional.md`](governance/modelo-operacional.md) — a regra do dia a dia.
+2. [`governance/principles.md`](governance/principles.md) — os inegociáveis.
+3. [`governance/operating-model.md`](governance/operating-model.md) — a regra do dia a dia.
 4. [`handbook/README.md`](handbook/README.md) — o *porquê* de cada regra (consulta).
 5. **Este roadmap** — o que vamos construir e em que ordem.
-6. Dúvida em sigla → [`governance/glossario.md`](governance/glossario.md).
+6. Dúvida em sigla → [`governance/glossary.md`](governance/glossary.md).
 
 ## 2. O que já temos (inventário)
 
@@ -108,16 +108,17 @@ Cada fase = **um ciclo** (uma spec, um gate). Ordem por dependência:
 |---|---|---|---|
 | **F0 — Fundação** | roadmap (este) + ADR de curadoria de fontes | 002 | ✅ |
 | **F1 — Agentes** | 12 subagentes executáveis (`.claude/agents/*` + `docs/agents/`): 8 núcleo + 4 toolkit | 003+004 | ✅ |
-| **F2 — Skills** | leva V0 de skills agentskills.io: `constitution-check`, `dod-verificavel`, `combater-amontoado` | 005 | ✅ |
+| **F2 — Skills** | leva V0 de skills agentskills.io: `constitution-check`, `verifiable-dod`, `fight-the-pile-up` | 005 | ✅ |
 | **F3 — Scripts** | scripts do ritual (`promover-main`, `novo-ciclo`, `verificar-agentes` + `retro`, `registrar-decisao`) | 006, 008 | ✅ |
 | **F4 — Vendorizar spec-kit** | templates spec/plan/tasks adaptados (PT, raias, EARS, Constitution Check) + comando `converge` do fork + proveniência (`.specify/UPSTREAM.md`) | 009 | ✅ |
 | **F5 — O Livro** | padrão editorial (9 seções) + navegação em 5 trilhas + receitas + mapa da Jornada | 013, 014 | ✅ |
 | **F6 — Companion** | tutor do livro: backend (busca no corpus + NVIDIA NIM + Neon) e widget | 015 | ✅ (falta publicar o serviço) |
 | **F7 — Estudos de campo** | apêndices A (maestro-02), B (Superpowers) e C (panorama) + absorções | 010–012 | ✅ |
-| **F8 — Método instalável** | instalação visível + agente `ux-semantica` + skill `jornada-viva` + `verificar-papeis.sh`; distribuição em três camadas (script · plugin · `npx skills add`) | 018, 019 | ✅ |
+| **F8 — Método instalável** | instalação visível + agente `ux-semantics` + skill `living-journey` + `check-roles.sh`; distribuição em três camadas (script · plugin · `npx skills add`) | 018, 019 | ✅ |
 | **F9 — O processo visível** | BPMN com raia de UX e de distribuição; diagrama **navegável** no livro (cada caixa aponta para sua referência) + portões de imagem e de link em HTML bruto | 020 | ✅ |
-| **F10 — Dogfood: o Maestro no Maestro** | `verificar-instalacao.sh` (camadas + IA instruída + skills visíveis), instrução gerada do disco (`--bloco`), `AGENTS.md` como fonte única, Constitution Check I–VIII | 021 | ✅ |
-| **(contínuo) — Migração didática** | capítulos ao padrão v2, **um por ciclo**: **13/13 ✅** — contagem por `scripts/verificar-capitulos.sh` (0 pendentes) | 016, 022–032 | ✅ |
+| **F10 — Dogfood: o Maestro no Maestro** | `check-install.sh` (camadas + IA instruída + skills visíveis), instrução gerada do disco (`--bloco`), `AGENTS.md` como fonte única, Constitution Check I–VIII | 021 | ✅ |
+| **(contínuo) — Migração didática** | capítulos ao padrão v2, **um por ciclo**: **13/13 ✅** — contagem por `scripts/check-chapters.sh` (0 pendentes) | 016, 022–032 | ✅ |
+| **F11 — Método em inglês** | superfície instalável (agentes, skills, scripts, comandos, templates, governança) traduzida e renomeada; `check-language.sh` guarda a fronteira; livro segue em português | 033 (ADR 0014) | ✅ |
 | **(contínuo) — Retrospectiva** | erro recorrente → regra versionada (catálogo de anti-padrões, leis das skills) | 017 e seguintes | 🔄 |
 
 ### Gatilhos abertos (decisões adiadas, com condição de revisão)

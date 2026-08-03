@@ -1,33 +1,36 @@
-# Scripts do Maestro
+# Maestro scripts
 
-Scripts do **ritual repetido** — tiram o passo mecânico da atenção do Orquestrador (o
-gargalo) sem tirar dele a **decisão**. Cada script nasceu de dor de retro, não especulação.
+Scripts of the **repeated ritual** — they take the mechanical step away from the
+Orchestrator's attention (the bottleneck) without taking away the **decision**. Each one was
+born from real pain in a retrospective, never from speculation.
 
-| Script | O que faz | Quando usar | O que NÃO decide |
+| Script | What it does | When to use it | What it does NOT decide |
 |---|---|---|---|
-| [`promover-main.sh`](./promover-main.sh) | `dev → main` + push com retry exponencial | Depois do **gate humano** de merge | **Se** promover — exige confirmação e aborta com árvore suja |
-| [`novo-ciclo.sh`](./novo-ciclo.sh) | Cria `specs/NNN-slug/` com os 4 artefatos-esqueleto | Ao abrir um ciclo novo | O conteúdo — só o esqueleto; você preenche |
-| [`verificar-agentes.sh`](./verificar-agentes.sh) | Roda os invariantes dos subagentes (contagem, frontmatter, read-only) | Antes de dar por pronto um ciclo de agentes | Nada — só reporta; exit ≠ 0 se quebra |
-| [`retro.sh`](./retro.sh) | Pré-computa o material da retro (ciclos, vereditos, gates pendentes, decisões, inventário) | Na retro de fim de ciclo | As respostas — a retro continua humana |
-| [`registrar-decisao.sh`](./registrar-decisao.sh) | Anexa decisão ao índice `docs/registro/decisoes.jsonl` (append-only, valida JSON) | Ao aceitar ADR / decidir gate | O mérito — só registra o que o humano decidiu |
-| [`verificar-papeis.sh`](./verificar-papeis.sh) | Papel prescrito no modelo × agente existente; artefato essencial × template | Antes de fechar ciclo que mexe em papéis | Nada — só reporta; exit ≠ 0 se a norma não tem executável |
-| [`verificar-capitulos.sh`](./verificar-capitulos.sh) | Iron Law editorial executável: 9 seções na ordem, datação e seção ⭐ com evidência real; lista os capítulos pendentes | Ao migrar/editar capítulo do livro | O mérito do texto — só o esqueleto |
-| [`verificar-instalacao.sh`](./verificar-instalacao.sh) | O método está instalado **de fato** aqui? camadas + instrução da IA + skills todas visíveis | Neste repo e em todo projeto que recebe o método | Nada — só reporta; exit ≠ 0 se a IA não foi instruída |
-| [`instalar-maestro.sh`](./instalar-maestro.sh) | Instala o método completo em outro repositório; `--bloco` imprime a instrução para o `CLAUDE.md` | Ao levar o Maestro para um projeto | Não sobrescreve; `--dry-run` mostra antes |
-| [`empacotar-plugin.sh`](./empacotar-plugin.sh) | Gera `plugin/maestro/` (Claude Code) das fontes; `--verificar` prova a sincronia | Ao mudar agente/skill/comando | Nada — reempacota ou acusa divergência |
+| [`promote-main.sh`](./promote-main.sh) | `dev → main` plus push with exponential backoff | After the **human merge gate** | **Whether** to promote — it asks for confirmation and aborts on a dirty tree |
+| [`new-cycle.sh`](./new-cycle.sh) | Creates `specs/NNN-slug/` with the four skeleton artifacts | When opening a new cycle | The content — only the skeleton; you fill it in |
+| [`check-agents.sh`](./check-agents.sh) | Runs the subagent invariants (count, front matter, read-only) | Before calling an agent cycle done | Nothing — it only reports; exit ≠ 0 when something breaks |
+| [`check-roles.sh`](./check-roles.sh) | Role prescribed in the model × agent that exists; essential artifact × template; constitution principles × Constitution Check rows | Before closing a cycle that touches roles | Nothing — it only reports |
+| [`check-install.sh`](./check-install.sh) | Is the method installed **for real** here? layers, the instruction the AI reads, every skill visible | In this repository and in every project that receives the method | Nothing — it only reports; exit ≠ 0 when the AI was not instructed |
+| [`check-language.sh`](./check-language.sh) | Portuguese residue in the installable surface (ADR 0014) | After touching agents, skills, scripts, templates or governance | Nothing — it only reports the leftovers |
+| [`check-chapters.sh`](./check-chapters.sh) | The editorial Iron Law as an executable: nine sections in order, dating, and the starred section with real evidence | When migrating or editing a book chapter | The merit of the text — only the skeleton |
+| [`retro.sh`](./retro.sh) | Pre-computes the retrospective material (cycles, verdicts, pending gates, decisions, inventory) | In the end-of-cycle retrospective | The answers — the retrospective stays human |
+| [`record-decision.sh`](./record-decision.sh) | Appends a decision to `docs/records/decisoes.jsonl` (append-only, validates the JSON) | When accepting an ADR or deciding a gate | The merit — it only records what the human decided |
+| [`install-maestro.sh`](./install-maestro.sh) | Installs the complete method into another repository; `--block` prints the instruction for `CLAUDE.md` | When taking Maestro to a project | It never overwrites; `--dry-run` shows first |
+| [`package-plugin.sh`](./package-plugin.sh) | Builds `plugin/maestro/` (Claude Code) from the sources; `--verify` proves they are in sync | After changing an agent, skill or command | Nothing — it repackages or reports the divergence |
 
-## Princípio (II + III)
+## Principle (II + III)
 
-O script executa o **mecânico**; o **gate continua humano**. `promover-main.sh` **não**
-promove sozinho: mostra os commits, pede confirmação (ou `--yes` explícito) e aborta se a
-árvore estiver suja ou `dev` não estiver à frente de `main`. Automatizar a *execução* do
-ritual é economia de contexto; automatizar a *decisão* seria violar o Princípio II.
+The script performs the **mechanical** part; the **gate stays human**. `promote-main.sh` does
+**not** promote by itself: it shows the commits, asks for confirmation (or an explicit
+`--yes`) and aborts when the tree is dirty or `dev` is not ahead of `main`. Automating the
+*execution* of the ritual saves attention; automating the *decision* would violate
+Principle II.
 
-## Uso rápido
+## Quick start
 
 ```bash
-scripts/novo-ciclo.sh 007 vendorizar-spec-kit   # abre o próximo ciclo
-scripts/verificar-agentes.sh                    # fitness function dos agentes
-scripts/verificar-instalacao.sh                 # o método está instalado de fato?
-scripts/promover-main.sh                        # promove após o "sim" (pergunta antes)
+scripts/new-cycle.sh 007 vendor-spec-kit   # opens the next cycle
+scripts/check-agents.sh                    # agent fitness functions
+scripts/check-install.sh                   # is the method really installed here?
+scripts/promote-main.sh                    # promotes after the "yes" (it asks first)
 ```

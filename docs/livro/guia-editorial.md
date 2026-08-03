@@ -23,7 +23,7 @@
 6. **⭐ Na prática — o ciclo real** — evidência dos nossos próprios ciclos (número da spec,
    identificador do registro, saída de comando). **Obrigatória**: sem exemplo real, o
    capítulo não publica.
-7. **Erros e anti-padrões** — o que dá errado, nomeado (liga à skill `anti-padroes`).
+7. **Erros e anti-padrões** — o que dá errado, nomeado (liga à skill `anti-patterns`).
 8. **Verificação** — 2–3 perguntas que testam exatamente os objetivos do item 1.
 9. **O que roubar** — leitura executiva: o que exportar para outro contexto.
 
@@ -42,7 +42,7 @@ virando didática — e é o que nenhum concorrente consegue copiar sem ter oper
 - **Prosa em português**; termos técnicos consagrados sem tradução (spec, gate, commit).
 - **Tabela para fato enumerável**; a explicação vive na prosa, não nas células.
 - **Uma ideia nova por seção** — se a seção mistura dois temas, separe (skill
-  `combater-amontoado`).
+  `fight-the-pile-up`).
 - **Voz**: segunda pessoa para instrução ("escreva a spec"), primeira do plural para
   decisão nossa ("decidimos manter uma ferramenta só").
 

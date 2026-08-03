@@ -12,7 +12,7 @@ Este repositório é o **lar da metodologia**, evoluído de forma independente (
 prática consolidada em `ghdaru` e `flowbuilder`; ver `docs/adr/0007`).
 
 > **Novo por aqui?** Leia primeiro o **[Comece por aqui](docs/comece-por-aqui.md)** (a
-> história em 5 minutos). Dúvida em alguma sigla? → **[Glossário](docs/governance/glossario.md)**.
+> história em 5 minutos). Dúvida em alguma sigla? → **[Glossário](docs/governance/glossary.md)**.
 
 ---
 
@@ -32,10 +32,10 @@ Há **três caminhos**, do mais completo ao mais leve. Escolha pelo que você pr
 git clone https://github.com/GHDaru/maestro.git
 
 # 2. veja o que seria instalado, sem escrever nada
-maestro/scripts/instalar-maestro.sh /caminho/do/seu-projeto --dry-run
+maestro/scripts/install-maestro.sh /caminho/do/seu-projeto --dry-run
 
 # 3. instale (não sobrescreve arquivo existente; use --forcar para substituir)
-maestro/scripts/instalar-maestro.sh /caminho/do/seu-projeto
+maestro/scripts/install-maestro.sh /caminho/do/seu-projeto
 ```
 
 Leva **tudo**: agentes, skills, scripts, comandos, templates e governança. Funciona com
@@ -57,8 +57,8 @@ governança — para o método inteiro, use o caminho A.
 npx skills add GHDaru/maestro
 ```
 
-Instala as **6 skills** (`constitution-check`, `dod-verificavel`, `combater-amontoado`,
-`anti-padroes`, `diagnostico-antes-do-fix`, `jornada-viva`) em Claude Code, Cursor, Codex,
+Instala as **6 skills** (`constitution-check`, `verifiable-dod`, `fight-the-pile-up`,
+`anti-patterns`, `diagnose-before-fix`, `living-journey`) em Claude Code, Cursor, Codex,
 Copilot, Cline e outros. É a fatia menor — sem agentes, scripts ou fluxo.
 
 O script leva cinco camadas e imprime, ao final, o bloco pronto para colar no
@@ -72,8 +72,8 @@ O script leva cinco camadas e imprime, ao final, o bloco pronto para colar no
 | comandos + templates | `.claude/commands/`, `.specify/templates/` | o **motor** spec-driven |
 | governança | `docs/governance/` | a **fonte de verdade** |
 
-Depois: `scripts/verificar-agentes.sh` (deve sair com código 0) e
-`scripts/novo-ciclo.sh 001 primeiro-ciclo`.
+Depois: `scripts/check-agents.sh` (deve sair com código 0) e
+`scripts/new-cycle.sh 001 primeiro-ciclo`.
 
 **Passo a passo detalhado**: [receita de instalação](docs/receitas/instalar-o-maestro.md).
 
@@ -84,9 +84,9 @@ Depois: `scripts/verificar-agentes.sh` (deve sair com código 0) e
 | Camada | Onde | Papel |
 |---|---|---|
 | **Comece por aqui** | [`docs/comece-por-aqui.md`](docs/comece-por-aqui.md) | porta de entrada narrativa (dor → jornada → sistema) |
-| **Glossário** | [`docs/governance/glossario.md`](docs/governance/glossario.md) | dicionário de todas as siglas |
-| **Princípios** | [`docs/governance/principios-maestro.md`](docs/governance/principios-maestro.md) | inegociáveis da metodologia (constituição do Maestro) |
-| **Modelo operacional** | [`docs/governance/modelo-operacional.md`](docs/governance/modelo-operacional.md) | a regra vigente: papéis, cerimônias, artefatos, raias, gates |
+| **Glossário** | [`docs/governance/glossary.md`](docs/governance/glossary.md) | dicionário de todas as siglas |
+| **Princípios** | [`docs/governance/principles.md`](docs/governance/principles.md) | inegociáveis da metodologia (constituição do Maestro) |
+| **Modelo operacional** | [`docs/governance/operating-model.md`](docs/governance/operating-model.md) | a regra vigente: papéis, cerimônias, artefatos, raias, gates |
 | **Handbook** | [`docs/handbook/`](docs/handbook/README.md) | fundamentos por elemento — 12 capítulos (teoria + frameworks + recomendação) |
 | **Decisões** | [`docs/adr/`](docs/adr/README.md) | ADRs (imutáveis) |
 | **Pesquisa + diário** | [`docs/research/`](docs/research/) | a síntese citada e o diário de aprendizado |
@@ -116,4 +116,4 @@ Governança   [12] Constituição · ADRs · YAGNI
 2. Consulte o **handbook** para o "porquê" de cada regra.
 3. Use os **templates** (PR, `/dod`, gate de CHANGELOG) numa feature real.
 
-> **Antes de qualquer trabalho, leia `docs/governance/principios-maestro.md`.**
+> **Antes de qualquer trabalho, leia `docs/governance/principles.md`.**

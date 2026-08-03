@@ -1,31 +1,33 @@
-# Jornada NNN — [NOME DA JORNADA]
+# Journey NNN — [JOURNEY NAME]
 
-- **Spec**: `specs/NNN-*/` · **Capturas geradas em**: [AAAA-MM-DD] ·
-  **Script**: `e2e/journeys/<nome>.mjs` (versionado)
+- **Spec**: `specs/NNN-*/` · **Screenshots generated on**: [YYYY-MM-DD] ·
+  **Script**: `e2e/journeys/<name>.mjs` (versioned)
 
-<!-- Skill `jornada-viva`: doc + capturas do BUILD REAL por script + heurística DATADA,
-     tudo no mesmo PR. Heurística com data anterior às capturas = documentação vencida. -->
+<!-- Skill `living-journey`: document + screenshots from the REAL BUILD by script + a DATED
+     heuristic, all in the same pull request. A heuristic dated before the screenshots is
+     expired documentation. -->
 
-## O que o usuário quer conseguir
+## What the user wants to achieve
 
-[Uma frase, na voz do usuário — não na voz do sistema.]
+[One sentence, in the user's voice — not the system's.]
 
-## O caminho (passo a passo, com evidência)
+## The path (step by step, with evidence)
 
-| # | Passo | O que o usuário vê | Captura |
+| # | Step | What the user sees | Screenshot |
 |---|---|---|---|
 | 1 |  |  | `img/NNN-01.png` |
 | 2 |  |  | `img/NNN-02.png` |
 
-## Avaliação heurística — revisitada em [AAAA-MM-DD]
+## Heuristic evaluation — revisited on [YYYY-MM-DD]
 
-<!-- OBRIGATÓRIO: a data acima deve ser >= a data das capturas. Regenerou imagem?
-     Revisite a tabela. Achado não resolvido NÃO some: fica com severidade e destino. -->
+<!-- MANDATORY: the date above must be >= the screenshot date. Regenerated an image?
+     Revisit the table. An unresolved finding does NOT disappear: it keeps its severity and
+     destination. -->
 
-| ID | Achado | Severidade | Status |
+| ID | Finding | Severity | Status |
 |---|---|---|---|
-| R1 |  | Alta/Média/Baixa | ✅ conforme · ✅ corrigido no ciclo · 📝 registrado para o ciclo NNN |
+| R1 |  | High/Medium/Low | ✅ compliant · ✅ fixed in the cycle · 📝 recorded for cycle NNN |
 
-## Rastreabilidade
+## Traceability
 
-`spec NNN` ↔ `pull request #NN` ↔ `teste <arquivo>` ↔ esta jornada.
+`spec NNN` ↔ `pull request #NN` ↔ `test <file>` ↔ this journey.

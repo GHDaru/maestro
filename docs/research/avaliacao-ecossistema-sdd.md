@@ -1,6 +1,6 @@
 # Avaliação do ecossistema SDD — Superpowers, BMAD, Kiro, Taskmaster, Agent OS e afins
 
-> Ficha de pesquisa (papel `curador-pesquisa`) · Ciclo: spec 007 · Data: 2026-07-30
+> Ficha de pesquisa (papel `research-curator`) · Ciclo: spec 007 · Data: 2026-07-30
 > Pergunta: **que ferramentas/metodologias de Spec-Driven Development e toolkits de agentes
 > existem além do Spec Kit (adotado) e OpenSpec (descartado, ADR 0005), e o que o Maestro
 > deve adotar, absorver, observar ou descartar?**
@@ -35,7 +35,7 @@ A diferença estrutural entre eles: spec como **documento que o agente lê** vs.
 - **Veredito**: **absorver ideias + observar como referência**. Ideias absorvidas:
   (a) **git worktree isolado por task** → candidato a script/skill na F3 (destino:
   `scripts/`/`skills/`, quando houver dor real de paralelismo); (b) **rigor "mandatório vs.
-  sugestão"** nas nossas skills → reforço na skill `dod-verificavel` e nos system prompts.
+  sugestão"** nas nossas skills → reforço na skill `verifiable-dod` e nos system prompts.
   Não adotar por atacado.
 - **Fontes**: https://github.com/obra/superpowers ·
   https://augmentclaude.com/s/superpowers-obra ·
@@ -71,7 +71,7 @@ A diferença estrutural entre eles: spec como **documento que o agente lê** vs.
 - **Onde conflita**: ferramenta **proprietária, presa a uma IDE** e ao ecossistema AWS —
   contra nossa reversibilidade (lock-in) e contra o motor único (Spec Kit).
 - **Veredito**: **absorver ideia (EARS), descartar a ferramenta**. Destino concreto: sintaxe
-  EARS entra como **forma recomendada de critério de aceite** na skill `dod-verificavel` e
+  EARS entra como **forma recomendada de critério de aceite** na skill `verifiable-dod` e
   no `spec-template` (F4 da vendorização).
 - **Fontes**: https://kiro.dev/docs/specs/ · https://kiro.dev/docs/specs/feature-specs/ ·
   https://aws.plainenglish.io/what-is-spec-driven-development-and-how-to-implement-it-with-kiro-b5846bd55869
@@ -136,7 +136,7 @@ A diferença estrutural entre eles: spec como **documento que o agente lê** vs.
 | OpenSpec | ❌ descartada (já) | ideia absorvida: raia leve (delta) | ADR 0005 |
 | **Superpowers** | 🔄 absorver ideias + observar | worktree/task (F3 futura); rigor mandatório nas skills | ADR 0008 |
 | **BMAD-METHOD** | ❌ descartar adoção | nada essencial não coberto | ADR 0008 |
-| **Kiro (AWS)** | 🔄 absorver **EARS**; descartar ferramenta | EARS na skill `dod-verificavel` + spec-template (F4) | ADR 0008 |
+| **Kiro (AWS)** | 🔄 absorver **EARS**; descartar ferramenta | EARS na skill `verifiable-dod` + spec-template (F4) | ADR 0008 |
 | **Taskmaster** | 👁 observar | gatilho: >20 tasks paralelas / multi-projeto | ADR 0008 |
 | **Agent OS** | 🔄 absorver parcial + observar | standards por camada (se codebase de produto) | ADR 0008 |
 | **GSD** | 👁 observar | raia leve já cobre | ADR 0008 |

@@ -2,7 +2,7 @@
 
 - **Status**: Aceito
 - **Data**: 2026-07-22
-- **Relacionado**: `docs/governance/modelo-operacional.md` (v1.2.0, §7, §12); ADR 0004/0005;
+- **Relacionado**: `docs/governance/operating-model.md` (v1.2.0, §7, §12); ADR 0004/0005;
   Constituição v1.4.0 (Princípio V)
 
 ## Contexto
@@ -42,11 +42,11 @@ revisão até o tooling existir).
   checklist do PR + aprovação humana (`[9]`) — a mesma divisão R/C→máquina, A→humano do
   `[5]`.
 - O CHANGELOG deixa de depender de memória: quebra se esquecido.
-- `modelo-operacional.md` sobe para **v1.2.0** (novo §12).
+- `operating-model.md` sobe para **v1.2.0** (novo §12).
 - Follow-up: habilitar o secret scanning nativo no repositório; avaliar lint (ruff/eslint).
 
 ## Fontes
 
 - Claude Code — *Best practices* (dê ao agente um check que ele rode): https://code.claude.com/docs/en/best-practices
 - Keep a Changelog: https://keepachangelog.com/pt-BR/1.1.0/
-- `docs/handbook/09-definition-of-ready-done.md`; `docs/governance/modelo-operacional.md` §12.
+- `docs/handbook/09-definition-of-ready-done.md`; `docs/governance/operating-model.md` §12.

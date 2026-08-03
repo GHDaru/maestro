@@ -87,7 +87,7 @@ reversibilidade do capítulo 01 aplicada à governança.
 trinta e dois ciclos:
 
 ```
-$ git log --format="%ad %s" --date=short -- docs/governance/principios-maestro.md
+$ git log --format="%ad %s" --date=short -- docs/governance/principles.md
 2026-08-01  Princípio VIII — comunicação inteligível (ADR 0010)
 2026-07-28  camada didática de governança
 2026-07-27  fundação do repositório
@@ -166,6 +166,6 @@ emenda) · [08 — artefatos](08-entregaveis-artefatos.md) (o registro imutável
 **Fontes**: M. Nygard, *Documenting Architecture Decisions* —
 https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions ·
 GitHub Spec Kit (constituição versionada) — https://github.com/github/spec-kit ·
-[Princípios do Maestro](../governance/principios-maestro.md) ·
-[Modelo operacional](../governance/modelo-operacional.md) §10–§11 ·
+[Princípios do Maestro](../governance/principles.md) ·
+[Modelo operacional](../governance/operating-model.md) §10–§11 ·
 [Registros de decisão](../adr/README.md).

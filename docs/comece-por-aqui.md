@@ -1,7 +1,7 @@
 # Comece por aqui
 
 > Cinco minutos para entender o Maestro — a história antes das siglas. Se em algum ponto
-> aparecer uma sigla que você não conhece, o [glossário](governance/glossario.md) tem todas.
+> aparecer uma sigla que você não conhece, o [glossário](governance/glossary.md) tem todas.
 
 ## A dor
 
@@ -54,8 +54,8 @@ Três ideias costuram o sistema inteiro — se você guardar só isto, já enten
 
 ## Como usar (o mapa de leitura)
 
-1. **[Princípios](governance/principios-maestro.md)** — os inegociáveis (5 minutos). Comece aqui.
-2. **[Modelo operacional](governance/modelo-operacional.md)** — a regra vigente: papéis,
+1. **[Princípios](governance/principles.md)** — os inegociáveis (5 minutos). Comece aqui.
+2. **[Modelo operacional](governance/operating-model.md)** — a regra vigente: papéis,
    cerimônias, artefatos, raias, gates. É o que você segue no dia a dia.
 3. **[Handbook](handbook/README.md)** — o *porquê* de cada regra, um capítulo por elemento,
    com teoria e frameworks. Consulte quando quiser fundo.
@@ -63,4 +63,4 @@ Três ideias costuram o sistema inteiro — se você guardar só isto, já enten
    (DoD, revisão, aprovação humana) e é rastreável (spec ↔ PR ↔ teste). Os templates
    (`.github/pull_request_template.md`, comando `/dod`) já estão prontos.
 
-> Dúvida em qualquer sigla? → [glossário](governance/glossario.md).
+> Dúvida em qualquer sigla? → [glossário](governance/glossary.md).

@@ -50,7 +50,7 @@ Iron Law: *"NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST"* — fase de invest
 obrigatória antes de propor qualquer correção; symptom fix = falha.
 - **Comparação**: **lacuna real** — temos "bug exige teste que reproduz", mas nenhuma
   disciplina de diagnóstico antes do fix.
-- **Veredito: 🔄 absorver** — skill `diagnostico-antes-do-fix` (nasce com o protocolo de
+- **Veredito: 🔄 absorver** — skill `diagnose-before-fix` (nasce com o protocolo de
   teste da ideia 2 — dogfood duplo).
 
 ### 4. Review por task (não só por ciclo)
@@ -60,7 +60,7 @@ após CADA task**, e review amplo do branch no fim. Dois níveis de verificaçã
 - **Comparação**: nosso `review` é por ciclo/PR; validamos o contexto fresco (igual),
   mas não o checkpoint por task.
 - **Veredito: 🔄 absorver parcial** — na raia plena com >3 tasks, checkpoint leve por
-  task (destino: `comunicacao.md` + system prompt do `dev-implementador`).
+  task (destino: `comunicacao.md` + system prompt do `dev-implementer`).
 
 ### 5. "Assuma zero contexto" nos planos
 
@@ -117,8 +117,8 @@ Adoção integral criaria segunda fonte de verdade de processo. **Descartada** (
 |---|---|---|---|
 | 1 | Iron Law / enforcement linguístico | 🔄 absorver | reescrever leis das 4 skills + guidance no `skill-author` |
 | 2 | TDD para skills (baseline + pressão) | 🔄 absorver | protocolo de teste no `skill-author` |
-| 3 | Root cause antes de fix | 🔄 absorver | skill nova `diagnostico-antes-do-fix` |
-| 4 | Review por task | 🔄 absorver parcial | raia plena >3 tasks: checkpoint leve (`comunicacao.md`, `dev-implementador`) |
+| 3 | Root cause antes de fix | 🔄 absorver | skill nova `diagnose-before-fix` |
+| 4 | Review por task | 🔄 absorver parcial | raia plena >3 tasks: checkpoint leve (`comunicacao.md`, `dev-implementer`) |
 | 5 | "Assuma zero contexto" na task | 🔄 absorver | 1 linha no `tasks-template.md` |
 | 6 | Continuous execution | ✅ validação | — |
 | 7 | Worktrees por task | 👁 observar | gatilho F3 inalterado |
@@ -128,7 +128,7 @@ Adoção integral criaria segunda fonte de verdade de processo. **Descartada** (
 
 > **Status: incorporado.** O Steward aprovou todos os vereditos em 2026-07-31
 > (`gate-010-vereditos`); absorções materializadas na **spec 011**: Iron Laws nas 5 skills,
-> protocolo TDD-para-skills no `skill-author`, skill `diagnostico-antes-do-fix`, checkpoint
-> por task (`comunicacao.md` + `dev-implementador`), zero-contexto no `tasks-template` e
+> protocolo TDD-para-skills no `skill-author`, skill `diagnose-before-fix`, checkpoint
+> por task (`comunicacao.md` + `dev-implementer`), zero-contexto no `tasks-template` e
 > enforcement "skills primeiro" no CLAUDE.md. Referências: [ADR 0008](../adr/0008-avaliacao-ecossistema-sdd.md) ·
 > [ficha do ecossistema](../research/avaliacao-ecossistema-sdd.md) · [Apêndice A](apendice-a-maestro-02.md).

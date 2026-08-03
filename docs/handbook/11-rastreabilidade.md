@@ -103,7 +103,7 @@ guarda o porquê — inclusive as alternativas descartadas e o custo aceito.
 
 Quatro saltos, nenhuma ferramenta: linha do gate → commit → ciclo → decisão. É o sentido
 **para trás** funcionando, e cada elo existe porque algum passo do fluxo o obriga —
-`promover-main.sh` escreve a linha, o padrão de mensagem cita a spec, `novo-ciclo.sh` cria a
+`promote-main.sh` escreve a linha, o padrão de mensagem cita a spec, `new-cycle.sh` cria a
 pasta, a Definição de Pronto exige o relatório.
 
 **O elo mais frágil está declarado**: a citação `spec NNN` no assunto do commit é
@@ -148,5 +148,5 @@ necessário) · [08 — artefatos](08-entregaveis-artefatos.md) (o que liga o qu
 https://dora.dev/guides/dora-metrics-four-keys/ ·
 L. Mezzalira, *Documenting software architecture* —
 https://lucamezzalira.medium.com/how-to-document-software-architecture-techniques-and-best-practices-2556b1915850 ·
-[Modelo operacional](../governance/modelo-operacional.md) §8–§9 ·
-[Protocolo do índice de decisões](../registro/README.md).
+[Modelo operacional](../governance/operating-model.md) §8–§9 ·
+[Protocolo do índice de decisões](../records/README.md).

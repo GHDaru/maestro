@@ -9,7 +9,7 @@ Uma Inteligência Artificial (IA) tentou instalar o Maestro e concluiu que "não
 pergunta seguinte do Steward: **precisamos de um padrão? qual a da comunidade? como fazer
 um instalador como o do Spec Kit?**
 
-Levantamento (agente `curador-pesquisa`, 2026-08):
+Levantamento (agente `research-curator`, 2026-08):
 
 | Padrão | O que faz | Alcance | Custo |
 |---|---|---|---|
@@ -21,11 +21,11 @@ Levantamento (agente `curador-pesquisa`, 2026-08):
 
 **Três camadas, do completo ao leve** — não uma escolha única:
 
-1. **A — script `instalar-maestro.sh`** (recomendado): leva o método **inteiro** (agentes,
+1. **A — script `install-maestro.sh`** (recomendado): leva o método **inteiro** (agentes,
    skills, scripts, comandos, templates, governança) para qualquer projeto e qualquer
    assistente. É o caminho canônico.
 2. **B — plugin do Claude Code**: `plugin/maestro/` gerado das fontes por
-   `scripts/empacotar-plugin.sh`, publicado pelo `.claude-plugin/marketplace.json` do
+   `scripts/package-plugin.sh`, publicado pelo `.claude-plugin/marketplace.json` do
    próprio repositório. Entrega agentes + skills + comandos com versão e atualização.
 3. **C — `npx skills add GHDaru/maestro`**: as 6 skills em 75+ agentes. **Já funciona sem
    nenhuma mudança** — nosso layout coincide com o padrão da comunidade.
@@ -48,11 +48,11 @@ Levantamento (agente `curador-pesquisa`, 2026-08):
 - (+) A camada C saiu de graça — o padrão da comunidade validou nosso layout.
 - (+) Versão e atualização automáticas para quem usa Claude Code (camada B).
 - (−) **Duplicação controlada**: o plugin espera `agents/` e `commands/` na raiz, nossas
-  fontes vivem em `.claude/`. Mitigado por `empacotar-plugin.sh --verificar`, que falha
+  fontes vivem em `.claude/`. Mitigado por `package-plugin.sh --verify`, que falha
   quando o pacote diverge das fontes (provado falhando antes de aceito).
 - (−) Três caminhos exigem três documentações — todas no `README.md`, sem duplicar conteúdo.
 
 ## Registro
 
-`scripts/empacotar-plugin.sh` · `.claude-plugin/marketplace.json` · `plugin/maestro/` ·
+`scripts/package-plugin.sh` · `.claude-plugin/marketplace.json` · `plugin/maestro/` ·
 `README.md` (os três caminhos) · ciclo `specs/019-distribuicao-e-templates/`.

@@ -91,14 +91,14 @@ scripts dedicados —
 
 ```
 $ ls scripts/verificar-*.sh
-verificar-agentes.sh  verificar-capitulos.sh  verificar-instalacao.sh  verificar-papeis.sh
+check-agents.sh  check-chapters.sh  check-install.sh  check-roles.sh
 ```
 
 — mais dois dentro do gerador do livro (`process.exit(1)` para colisão de endereço e para
 link ou imagem quebrada) e onze testes automatizados no companion.
 
-**A segunda lei em ação, com data.** O `verificar-instalacao.sh` nasceu no ciclo 021 e a
-primeira execução foi vermelha, acusando deriva de três ciclos. O `verificar-capitulos.sh`
+**A segunda lei em ação, com data.** O `check-install.sh` nasceu no ciclo 021 e a
+primeira execução foi vermelha, acusando deriva de três ciclos. O `check-chapters.sh`
 (ciclo 022) foi provado falhando em **quatro** modos — e o quarto só apareceu porque
 insistimos: ao quebrar a datação, o capítulo **saía do check** em silêncio, porque o
 detector procurava uma frase em vez da estrutura. Um check que passa quando o mundo está
@@ -158,5 +158,5 @@ portão (anti-padrão 16).
 **Fontes**: Claude Code, *Best practices* — https://code.claude.com/docs/en/best-practices ·
 DORA, *four keys* — https://dora.dev/guides/dora-metrics-four-keys/ ·
 K. C. Dodds, *The Testing Trophy* ·
-[Modelo operacional](../governance/modelo-operacional.md) §7 ·
-[Skill `dod-verificavel`](https://github.com/GHDaru/maestro/blob/main/skills/dod-verificavel/SKILL.md).
+[Modelo operacional](../governance/operating-model.md) §7 ·
+[Skill `verifiable-dod`](https://github.com/GHDaru/maestro/blob/main/skills/verifiable-dod/SKILL.md).

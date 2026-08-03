@@ -4,7 +4,7 @@
 > Tempo: ~5 min. Pré-requisito: ter o repositório do Maestro clonado.
 >
 > **Instalar não é copiar arquivos.** Copiar é o passo 2; instalado é quando a IA sabe que
-> deve segui-los (passo 3) — e `scripts/verificar-instalacao.sh` (passo 4) só fica verde
+> deve segui-los (passo 3) — e `scripts/check-install.sh` (passo 4) só fica verde
 > quando as duas metades existem.
 
 ## Escolha o caminho
@@ -20,13 +20,13 @@
 ## 1. Veja o que será instalado (sem escrever nada)
 
 ```bash
-scripts/instalar-maestro.sh /caminho/do/seu-projeto --dry-run
+scripts/install-maestro.sh /caminho/do/seu-projeto --dry-run
 ```
 
 ## 2. Instale
 
 ```bash
-scripts/instalar-maestro.sh /caminho/do/seu-projeto
+scripts/install-maestro.sh /caminho/do/seu-projeto
 ```
 
 O script **não sobrescreve** arquivos existentes (use `--forcar` se quiser substituir).
@@ -46,7 +46,7 @@ O bloco é **gerado das skills que existem no disco** — lista escrita à mão 
 calada. Cole no `CLAUDE.md` do projeto:
 
 ```bash
-scripts/instalar-maestro.sh --bloco >> /caminho/do/seu-projeto/CLAUDE.md
+scripts/install-maestro.sh --block >> /caminho/do/seu-projeto/CLAUDE.md
 ```
 
 E mantenha **uma fonte só**, para as duas instruções não divergirem:
@@ -58,20 +58,20 @@ cd /caminho/do/seu-projeto && ln -s CLAUDE.md AGENTS.md
 ## 4. Prove que está instalado
 
 ```bash
-scripts/verificar-instalacao.sh    # camadas + instrução da IA + skills todas visíveis
-scripts/verificar-agentes.sh       # invariantes dos subagentes; exit 0 = ok
-scripts/verificar-papeis.sh        # todo papel do modelo tem agente; exit 0 = ok
-scripts/novo-ciclo.sh 001 primeiro-ciclo
+scripts/check-install.sh    # camadas + instrução da IA + skills todas visíveis
+scripts/check-agents.sh       # invariantes dos subagentes; exit 0 = ok
+scripts/check-roles.sh        # todo papel do modelo tem agente; exit 0 = ok
+scripts/new-cycle.sh 001 primeiro-ciclo
 ```
 
-`verificar-instalacao.sh` falha enquanto o `CLAUDE.md` não apontar para o método — e falha
+`check-install.sh` falha enquanto o `CLAUDE.md` não apontar para o método — e falha
 de novo se amanhã entrar uma skill que ninguém citou na instrução. É assim que a instalação
 continua verdadeira depois do primeiro dia.
 
 ## Pronto quando
 
-- [ ] `scripts/verificar-instalacao.sh` sai com código 0
-- [ ] `scripts/verificar-agentes.sh` sai com código 0
+- [ ] `scripts/check-install.sh` sai com código 0
+- [ ] `scripts/check-agents.sh` sai com código 0
 - [ ] O `CLAUDE.md` do projeto aponta para os princípios e lista as skills
 - [ ] `specs/001-*/` existe com os quatro artefatos
 

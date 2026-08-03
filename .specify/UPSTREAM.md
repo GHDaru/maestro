@@ -29,5 +29,5 @@
 1. **Sync deliberada**: novidade do upstream/fork só entra por **spec** (nunca
    reinstalar por cima — apagaria as adaptações). Compare, escolha, adapte, registre aqui.
 2. **Hierarquia de scaffolds**: estes templates são a **referência completa** (é o que os
-   comandos `/speckit.*` leem); o esqueleto do `scripts/novo-ciclo.sh` é o atalho mínimo
+   comandos `/speckit.*` leem); o esqueleto do `scripts/new-cycle.sh` é o atalho mínimo
    derivado. Se divergirem, **os templates mandam** — atualize o script.

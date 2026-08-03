@@ -1,41 +1,41 @@
-# UX design NNN — [TÍTULO]
+# UX design NNN — [TITLE]
 
-- **Spec**: `spec.md` · **Data**: [AAAA-MM-DD] · **Agente**: `ux-semantica`
+- **Spec**: `spec.md` · **Date**: [YYYY-MM-DD] · **Agent**: `ux-semantics`
 
 <!--
-  PAPEL ANTES DE COMPONENTE (Iron Law do agente ux-semantica): pergunte "qual é o PAPEL
-  deste objeto?" — do papel deriva a anatomia obrigatória, nunca o contrário.
-  Papel já catalogado -> consuma o componente. Papel novo -> entra PRIMEIRO no catálogo
-  (linha com anatomia) + componente comum + teste; só então é usado na tela.
+  ROLE BEFORE COMPONENT (Iron Law of the ux-semantics agent): ask "what is the ROLE of this
+  object?" — the mandatory anatomy derives from the role, never the other way round.
+  An already catalogued role → consume the component. A new role → enters the catalogue FIRST
+  (a row with its anatomy) plus a shared component plus a test; only then is it used.
 -->
 
-## Jornada(s) servida(s)
+## Journey(s) served
 
-- [`docs/journeys/NNN-<slug>.md`] — o que o usuário quer conseguir aqui.
+- [`docs/journeys/NNN-<slug>.md`] — what the user wants to achieve here.
 
-## Papéis semânticos consumidos (já catalogados)
+## Semantic roles consumed (already catalogued)
 
-| Papel | Componente do catálogo | Onde aparece |
+| Role | Catalogue component | Where it appears |
 |---|---|---|
 |  |  |  |
 
-## Papéis introduzidos (novos — exigem catalogação antes do uso)
+## Roles introduced (new — must be catalogued before use)
 
-| Papel | Anatomia obrigatória | Por que não deriva de um existente |
+| Role | Mandatory anatomy | Why it does not derive from an existing one |
 |---|---|---|
 |  |  |  |
 
-## Estados obrigatórios
+## Mandatory states
 
-- [ ] **Vazio** — o que se vê quando não há dado (e o que fazer a seguir)
-- [ ] **Carregando** — feedback, sem salto de layout
-- [ ] **Erro** — o que houve **e** como resolver
-- [ ] **Sem permissão** — quando aplicável
+- [ ] **Empty** — what is shown when there is no data (and what to do next)
+- [ ] **Loading** — feedback, with no layout jump
+- [ ] **Error** — what happened **and** how to resolve it
+- [ ] **No permission** — where applicable
 
-## Acessibilidade (não é etapa final)
+## Accessibility (not a final step)
 
-- [ ] Rótulo acessível em todo controle sem texto visível
-- [ ] Foco de teclado visível e ordem previsível
-- [ ] Contraste suficiente nos dois temas (quando houver)
+- [ ] Accessible label on every control without visible text
+- [ ] Visible keyboard focus and predictable order
+- [ ] Sufficient contrast in both themes (when there are two)
 
-<!-- GATE: humano aprova o ux-design antes da implementação (DoR, se houver interface). -->
+<!-- GATE: the human approves the ux design before implementation (DoR, when there is a user interface). -->

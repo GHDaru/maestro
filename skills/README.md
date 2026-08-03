@@ -1,35 +1,36 @@
-# Skills do Maestro (padrão agentskills.io)
+# Maestro skills (community `SKILL.md` standard)
 
-Skill = procedimento recorrente empacotado como `skills/<slug>/SKILL.md` — frontmatter
-`name` + `description` (com **gatilho** "Use quando…") + corpo em passos. Dispara sozinha no
-contexto certo, padronizando a execução sem depender da memória do humano.
+A skill is a recurring procedure packaged as `skills/<slug>/SKILL.md` — front matter with
+`name` and `description` (carrying the **trigger**: "Use it when…") plus a body of steps. It
+fires on its own in the right context, standardising execution without depending on the
+human's memory.
 
-**Regra de nascimento (YAGNI + TDD):** uma skill só existe a partir de **dor recorrente
-comprovada** (retro/ciclos), nunca especulativa — e skill original nova só publica com
-**baseline testado** (cenário de pressão: agente falha SEM a skill, cumpre COM ela — ver
-protocolo no `skill-author`). Toda skill carrega sua **Iron Law** (a regra inegociável,
-com brechas fechadas). Autor: agente `skill-author`.
+**Birth rule (YAGNI plus test-first):** a skill only exists from **proven recurring pain**
+(retrospectives and cycles), never speculation — and a new original skill ships only with a
+**tested baseline** (pressure scenario: the agent fails WITHOUT the skill, complies WITH it —
+see the protocol in `skill-author`). Every skill carries its **Iron Law** (the non-negotiable
+rule, with the loopholes closed). Author: the `skill-author` agent.
 
-## Catálogo (V0 — spec 005)
+## Catalogue
 
-| Skill | Para quê | Nasce da dor | Consumida por |
+| Skill | What for | Born from | Consumed by |
 |---|---|---|---|
-| [`constitution-check`](./constitution-check/SKILL.md) | Tabela Princípios I–VIII no `plan.md` | Refeita à mão em 003/004 | `plan-arquiteto`, `guardiao-processo` |
-| [`dod-verificavel`](./dod-verificavel/SKILL.md) | Critério de aceite → fitness function (grep/ls/teste) | Checks reescritos iguais a cada ciclo | `spec-agent`, `qa`, comando `/dod` |
-| [`combater-amontoado`](./combater-amontoado/SKILL.md) | Revisão didática (anti-"amontoado") | Feedback do Steward sobre docs densos | `didatica-editor`, `tech-writer` |
-| [`anti-padroes`](./anti-padroes/SKILL.md) | Catálogo do que NÃO fazer (contexto, orquestração, qualidade, processo) | Retros 001–008 + estudo maestro-02 (spec 008) | todos os agentes; `review`, `guardiao-processo` |
-| [`diagnostico-antes-do-fix`](./diagnostico-antes-do-fix/SKILL.md) | Causa raiz antes de qualquer correção (Iron Law + 6 fases) | Estudo Superpowers (spec 011) — lacuna real de disciplina de debugging | `dev-implementador`, `qa` |
-| [`jornada-viva`](./jornada-viva/SKILL.md) | Doc + capturas do build real + heurística **datada**, no mesmo PR | Lacuna do ciclo 018: o modelo prescrevia journey doc sem skill nem template | `qa`, `tech-writer`, `ux-semantica` |
+| [`constitution-check`](./constitution-check/SKILL.md) | The Principles I–VIII table in `plan.md` | Rewritten by hand in cycles 003 and 004 | `plan-architect`, `process-guardian` |
+| [`verifiable-dod`](./verifiable-dod/SKILL.md) | Acceptance criterion → fitness function (grep, ls, test) | Checks rewritten identically every cycle | `spec-agent`, `qa`, the `/dod` command |
+| [`fight-the-pile-up`](./fight-the-pile-up/SKILL.md) | Editorial review against the "pile-up" | Steward feedback on dense documents | `didactics-editor`, `tech-writer` |
+| [`anti-patterns`](./anti-patterns/SKILL.md) | Catalogue of what NOT to do (context, orchestration, quality, process, verification) | Retrospectives of cycles 001–008 and 017–020 | every agent; `review`, `process-guardian` |
+| [`diagnose-before-fix`](./diagnose-before-fix/SKILL.md) | Root cause before any fix (Iron Law plus six phases) | A real gap in debugging discipline (cycle 011) | `dev-implementer`, `qa` |
+| [`living-journey`](./living-journey/SKILL.md) | Document plus screenshots from the real build plus a **dated** heuristic, in the same pull request | Cycle 018 gap: the model prescribed a journey document with no skill and no template | `qa`, `tech-writer`, `ux-semantics` |
 
-## Skills vs. comandos vs. agentes
+## Skills versus commands versus agents
 
-- **Skill** (`skills/*/SKILL.md`) — *como fazer* um procedimento; dispara pelo contexto.
-- **Comando** (`.claude/commands/*.md`) — invocação explícita (`/dod`, `/speckit.*`).
-- **Agente** (`.claude/agents/*.md`) — *quem faz*; consome skills e comandos.
+- **Skill** (`skills/*/SKILL.md`) — *how to do* a procedure; fires from context.
+- **Command** (`.claude/commands/*.md`) — explicit invocation (`/dod`, `/speckit.*`).
+- **Agent** (`.claude/agents/*.md`) — *who does it*; consumes skills and commands.
 
-Ex.: a skill `dod-verificavel` ajuda a **escrever** os checks; o comando `/dod` os **roda**.
+For example: the `verifiable-dod` skill helps you **write** the checks; the `/dod` command
+**runs** them.
 
-## Próximas (por retro, não especulação)
+## Next ones (from retrospectives, not speculation)
 
-Candidatas quando a dor aparecer: `preparar-pr`, `abrir-ciclo`. Fase 3 traz workflows/scripts
-(incl. `promote-main.sh`).
+Candidates when the pain shows up: preparing a pull request, opening a cycle.

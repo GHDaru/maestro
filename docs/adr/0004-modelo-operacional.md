@@ -3,7 +3,7 @@
 - **Status**: Aceito
 - **Data**: 2026-07-22
 - **Relacionado**: Constituição v1.3.0 (Princípios I, IV, V, VII e Governance);
-  `docs/governance/modelo-operacional.md`;
+  `docs/governance/operating-model.md`;
   `docs/research/resultado-pesquisa-praticas-desenvolvimento-avaliacao.md`
 
 ## Contexto
@@ -32,7 +32,7 @@ Shape Up, Swarmia — e concluiu:
 
 ## Decisão
 
-Adotar o **Modelo Operacional** documentado em `docs/governance/modelo-operacional.md`,
+Adotar o **Modelo Operacional** documentado em `docs/governance/operating-model.md`,
 que:
 
 1. Define os **papéis como modos de trabalho** exercidos por humano, agente ou os dois

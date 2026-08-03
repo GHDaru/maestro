@@ -98,7 +98,7 @@ imutável, com contexto, alternativas, decisão e consequências. Este capítulo
 
 - **Por quê**: regra de arquitetura que vive só em documento é violada em silêncio.
 - **O que faz**: as regras viram **teste executável** na integração contínua (ex.: nosso
-  `verificar-agentes.sh` prova que nenhum agente somente-leitura tem permissão de escrita).
+  `check-agents.sh` prova que nenhum agente somente-leitura tem permissão de escrita).
 - **O que provoca**: ✅ arquitetura que se defende sozinha; ⚠️ falso senso de segurança —
   a função testa o que foi codificado, não o que foi esquecido.
 
@@ -185,7 +185,7 @@ ciclos 003 a 007 ainda diziam "aguarda aprovação humana" — os gates tinham s
 na conversa, mas nenhum artefato registrava o fechamento.
 
 O ciclo seguinte transformou o achado em regra executável (ADR 0009): o
-`scripts/promover-main.sh` passou a **anexar automaticamente** a decisão do gate antes de
+`scripts/promote-main.sh` passou a **anexar automaticamente** a decisão do gate antes de
 publicar. A primeira promoção depois disso auto-registrou:
 
 ```

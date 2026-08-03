@@ -80,7 +80,7 @@ O skill-núcleo lista explicitamente o que NÃO fazer (não despeje o codebase n
 não use multi-agente para problema de agente único; não repita o mesmo prompt esperando
 resultado diferente; não entregue sem avaliação). Nós registramos o que não adotamos
 (modelo operacional §10), mas não temos um **catálogo de anti-padrões de execução**.
-*Contribuição:* candidata a skill `anti-padroes` nascida das nossas retros.
+*Contribuição:* candidata a skill `anti-patterns` nascida das nossas retros.
 
 ## Onde ele NÃO nos serve
 
@@ -99,13 +99,13 @@ resultado diferente; não entregue sem avaliação). Nós registramos o que não
 | Retro executável (`/reflect`) | 🔄 absorver | `scripts/retro.sh` na evolução da F3 |
 | Wave (fases+validação intra-comando) | 🔄 absorver conceito | vocabulário de gates em nível de task |
 | Context-slicing medido | 🔄 absorver conceito | medir economia de contexto (Princípio V com número) |
-| Catálogo de anti-padrões | 🔄 absorver | skill `anti-padroes` alimentada por retros |
+| Catálogo de anti-padrões | 🔄 absorver | skill `anti-patterns` alimentada por retros |
 | Adoção integral do toolkit | ❌ descartar | conflito com ferramenta única (ADR 0005/0008) |
 
 > **Status: incorporado.** O Steward aprovou todas as absorções em 2026-07-31; elas foram
-> materializadas na **spec 008**: registro consultável (`docs/registro/` +
-> `scripts/registrar-decisao.sh`), retro executável (`scripts/retro.sh`), skill
-> [`anti-padroes`](../../skills/anti-padroes/SKILL.md), gates em nível de task (cap. 10
+> materializadas na **spec 008**: registro consultável (`docs/records/` +
+> `scripts/record-decision.sh`), retro executável (`scripts/retro.sh`), skill
+> [`anti-patterns`](../../skills/anti-patterns/SKILL.md), gates em nível de task (cap. 10
 > §6b), economia de contexto medida (cap. 04 §6b). Registro da avaliação de ecossistema:
 > [ADR 0008](../adr/0008-avaliacao-ecossistema-sdd.md) ·
 > [ficha de pesquisa](../research/avaliacao-ecossistema-sdd.md).

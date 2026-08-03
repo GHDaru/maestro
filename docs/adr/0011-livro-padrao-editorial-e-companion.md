@@ -26,7 +26,7 @@ faz"*. Faltava projeto pedagógico, trilha de leitura e o companion.
    (cota gratuita do Steward, demanda baixa) e persistência em **Postgres (Neon)** —
    sem `DATABASE_URL`, cai para memória. Arquitetura de referência: o `chat-companion` do
    `harness_engineering` (FastAPI hospedado em Railway).
-5. **Instalação do método**: `scripts/instalar-maestro.sh` — instala agentes, skills,
+5. **Instalação do método**: `scripts/install-maestro.sh` — instala agentes, skills,
    scripts, comandos, templates e governança em outro repositório, sem sobrescrever.
 
 ## Alternativas consideradas
@@ -51,4 +51,4 @@ faz"*. Faltava projeto pedagógico, trilha de leitura e o companion.
 ## Registro
 
 `docs/livro/guia-editorial.md` · `docs/handbook/13-decisoes-de-engenharia.md` (piloto) ·
-`scripts/instalar-maestro.sh` · ciclo `specs/013-livro-guia-editorial-piloto/`.
+`scripts/install-maestro.sh` · ciclo `specs/013-livro-guia-editorial-piloto/`.

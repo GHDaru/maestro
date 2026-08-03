@@ -14,4 +14,4 @@
 
 Se você precisar entender **por que** o passo existe, siga o link para o capítulo. Receita
 não explica: **executa**. Misturar os dois é o que produz o "amontoado" (skill
-`combater-amontoado`).
+`fight-the-pile-up`).

@@ -1,7 +1,7 @@
 # Jornada de aprendizado — Modelo Operacional (por elemento)
 
 > Registro dos insights construídos ao avaliar criticamente cada elemento do modelo
-> operacional (`docs/governance/modelo-operacional.md`), no formato de tutoria
+> operacional (`docs/governance/operating-model.md`), no formato de tutoria
 > (perguntar → criticar → refinar), não de exposição. Documento **vivo**: cresce à
 > medida que a jornada avança pelos elementos.
 >
@@ -50,7 +50,7 @@ Status: ✅ **JORNADA COMPLETA** — `[1]` `[2]` `[3]` `[4]` `[5]` `[6]` `[7]` `
   **raia leve**.
 - Infra: **decisão de que infra tem specs exclusivas** → infra deve ser *mais* estrita
   (zona de alta irreversibilidade).
-- **Produziu mudança real**: `modelo-operacional.md` v1.1.0 (§3 Raias de trabalho;
+- **Produziu mudança real**: `operating-model.md` v1.1.0 (§3 Raias de trabalho;
   spec de infra com gates de reversibilidade) + ADR 0005.
 
 ## `[3]` Fluxo agentic — *explore→plan→code→commit + subagentes + /clear + revisor fresco*
@@ -217,7 +217,7 @@ A jornada não é uma lista; é **um sistema** costurado por poucos fios recorre
 **Jornada concluída (12/12).** Handbook completo em `docs/handbook/` (capítulos 01–12).
 
 Enforcement implementado (ADR 0006, modelo v1.2.0 §12): PR template com a DoD, gate de
-CHANGELOG na CI, comando `/dod`, `CHANGELOG.md`. Ver `docs/governance/modelo-operacional.md`
+CHANGELOG na CI, comando `/dod`, `CHANGELOG.md`. Ver `docs/governance/operating-model.md`
 §12 (mapa item → mecanismo).
 
 Próximo passo restante: **aplicar o modelo numa feature real** via spec-kit (o teste de

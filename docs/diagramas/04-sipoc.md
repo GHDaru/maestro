@@ -22,7 +22,7 @@ classe de risco da mudança (define a **raia**).
 
 1. **Especificar** — `spec-agent` → `spec.md`
    - ◆ **Gate DoR** — humano aprova a spec
-2. **Planejar** — `plan-arquiteto` → `plan.md` + Constitution Check
+2. **Planejar** — `plan-architect` → `plan.md` + Constitution Check
    - ◆ **Gate** — humano aprova o plan
 3. **Fatiar** — → `tasks.md` por fronteira
 4. **Implementar** — `dev` → código + testes (diffs pequenos)

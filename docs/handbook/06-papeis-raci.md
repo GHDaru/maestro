@@ -94,14 +94,14 @@ security.md
 ```
 
 Não é recomendação de conduta: o `review` **não consegue** corrigir o que aponta. E isso é
-cobrado por fitness function — `scripts/verificar-agentes.sh` falha se um agente
+cobrado por fitness function — `scripts/check-agents.sh` falha se um agente
 somente-leitura ganhar `Write` ou `Edit`.
 
 **O A humano deixa rastro.** Cada promoção para a linha principal exige o "sim" do Steward,
 e o script registra o gate sozinho no índice de decisões:
 
 ```
-$ grep -c '"id": "gate-main' docs/registro/decisoes.jsonl
+$ grep -c '"id": "gate-main' docs/records/decisoes.jsonl
 21
 ```
 
@@ -114,7 +114,7 @@ agente que o entregasse. A resposta não foi criar o agente e seguir em frente: 
 agente **e a verificação** que impede a lacuna de voltar:
 
 ```
-$ scripts/verificar-papeis.sh
+$ scripts/check-roles.sh
   ok: Spec-agent → spec-agent.md
   ok: UX-agent → ux-semantica.md
   ...
@@ -166,5 +166,5 @@ permite delegar o C) · [10 — gates e risco](10-gates-classes-de-risco.md) ·
 **Fontes**: Anthropic, *Building effective agents* —
 https://www.anthropic.com/engineering/building-effective-agents ·
 Matriz RACI (prática consolidada de atribuição de responsabilidades) ·
-[Modelo operacional](../governance/modelo-operacional.md) §4 (papéis e RACI) ·
+[Modelo operacional](../governance/operating-model.md) §4 (papéis e RACI) ·
 [Perfis dos agentes](../agents/perfis.md).

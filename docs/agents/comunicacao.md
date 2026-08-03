@@ -51,7 +51,7 @@ do bastão. No Maestro, o **Orquestrador (humano)** é quem confirma cada handof
 
 ## Checkpoint por task (absorvido do Superpowers — ciclo 011)
 
-Na **raia plena com >3 tasks**, o `dev-implementador` emite um **checkpoint leve** ao
+Na **raia plena com >3 tasks**, o `dev-implementer` emite um **checkpoint leve** ao
 fechar cada task — 3 linhas, sem cerimônia:
 
 ```

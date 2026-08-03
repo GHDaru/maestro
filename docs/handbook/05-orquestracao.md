@@ -157,4 +157,4 @@ o *reduce* e por quê) · [10 — gates e risco](10-gates-classes-de-risco.md) �
 **Fontes**: Anthropic, *Building effective agents* (fluxo × agente; seis padrões; menor
 autonomia) — https://www.anthropic.com/engineering/building-effective-agents ·
 Claude Code, *Best practices* — https://code.claude.com/docs/en/best-practices ·
-[Modelo operacional](../governance/modelo-operacional.md) §3–§4.
+[Modelo operacional](../governance/operating-model.md) §3–§4.

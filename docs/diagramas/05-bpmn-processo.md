@@ -10,7 +10,7 @@
 <div class="bpmn-raia">
   <div class="bpmn-rot"><b>Steward</b><small>humano · Accountable · os gates indelegáveis</small></div>
   <div class="bpmn-fluxo">
-    <a class="bpmn-no bpmn-hum" href="../governance/modelo-operacional.md"><b>Intenção</b><small>o quê · por quê · apetite</small></a>
+    <a class="bpmn-no bpmn-hum" href="../governance/operating-model.md"><b>Intenção</b><small>o quê · por quê · apetite</small></a>
     <span class="bpmn-seta">→</span>
     <a class="bpmn-gate" href="../handbook/09-definition-of-ready-done.md">APROVA SPEC (DoR)</a>
     <span class="bpmn-seta">→</span>
@@ -44,7 +44,7 @@
 <div class="bpmn-raia">
   <div class="bpmn-rot"><b>Ramo de interface</b><small>só quando há tela</small></div>
   <div class="bpmn-fluxo">
-    <a class="bpmn-gate" href="../governance/modelo-operacional.md">TEM UI? senão, pula</a>
+    <a class="bpmn-gate" href="../governance/operating-model.md">TEM UI? senão, pula</a>
     <span class="bpmn-seta">→</span>
     <a class="bpmn-no bpmn-ag" href="../agents/perfis.md"><b>Semântica</b><small>ux-semantica · papel antes do componente</small></a>
     <span class="bpmn-seta">→</span>
@@ -65,7 +65,7 @@
   <div class="bpmn-fluxo">
     <a class="bpmn-no bpmn-aut" href="../receitas/abrir-um-ciclo.md"><b>novo-ciclo</b><small>esqueleto NNN</small></a>
     <span class="bpmn-seta">→</span>
-    <a class="bpmn-no bpmn-aut" href="../governance/principios-maestro.md"><b>Constitution Check</b><small>princípios I–VIII</small></a>
+    <a class="bpmn-no bpmn-aut" href="../governance/principles.md"><b>Constitution Check</b><small>princípios I–VIII</small></a>
     <span class="bpmn-seta">→</span>
     <a class="bpmn-no bpmn-aut" href="../receitas/escrever-criterio-verificavel.md"><b>Testes + fitness</b><small>caminho feliz + falha</small></a>
     <span class="bpmn-seta">→</span>
@@ -84,7 +84,7 @@
     <span class="bpmn-seta">→</span>
     <a class="bpmn-gate" href="../receitas/instalar-o-maestro.md">PACOTE SINCRO?</a>
     <span class="bpmn-seta">→</span>
-    <a class="bpmn-no bpmn-aut" href="../receitas/instalar-o-maestro.md"><b>A · instalar-maestro.sh</b><small>o método inteiro</small></a>
+    <a class="bpmn-no bpmn-aut" href="../receitas/instalar-o-maestro.md"><b>A · install-maestro.sh</b><small>o método inteiro</small></a>
     <span class="bpmn-ou">ou</span>
     <a class="bpmn-no bpmn-aut" href="../receitas/instalar-o-maestro.md"><b>B · /plugin install</b><small>agentes + skills + comandos</small></a>
     <span class="bpmn-ou">ou</span>
@@ -107,9 +107,9 @@
     <span class="bpmn-seta">→</span>
     <a class="bpmn-art" href="../livro/guia-editorial.md">CHANGELOG · docs</a>
     <span class="bpmn-seta">→</span>
-    <a class="bpmn-art" href="../registro/README.md">decisoes.jsonl</a>
+    <a class="bpmn-art" href="../records/README.md">decisoes.jsonl</a>
     <span class="bpmn-seta">→</span>
-    <a class="bpmn-art" href="../governance/principios-maestro.md">regra nova ⟲</a>
+    <a class="bpmn-art" href="../governance/principles.md">regra nova ⟲</a>
   </div>
 </div>
 

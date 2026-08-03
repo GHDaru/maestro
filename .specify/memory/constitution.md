@@ -1,14 +1,14 @@
 # Constituição — Maestro (para o Spec Kit)
 
 > A constituição **completa** da metodologia vive em
-> [`docs/governance/principios-maestro.md`](../../docs/governance/principios-maestro.md)
+> [`docs/governance/principles.md`](../../docs/governance/principles.md)
 > (fonte de verdade, humana). Este arquivo é o ponto de entrada que o Spec Kit lê no
 > **Constitution Check** de cada `plan.md`. Mantê-los em sincronia; emendas via
 > `/speckit.constitution` + ADR + bump de versão.
 >
 > **Version**: 1.0.0 · **Ratified**: 2026-07-22 · **Last Amended**: 2026-07-22
 
-## Princípios (resumo — texto completo em principios-maestro.md)
+## Princípios (resumo — texto completo em principles.md)
 
 - **I. Spec-Driven** — a spec é a fonte de verdade (input que gera código, não descrição).
 - **II. Orquestração humano-governada (1 rege N)** — RACI; Accountable humano pela política.

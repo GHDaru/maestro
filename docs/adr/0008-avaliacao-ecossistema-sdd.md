@@ -20,7 +20,7 @@ fichou 7 ferramentas com fontes primárias.
    de verdade de processo).
 2. **Absorver ideias com destino concreto**:
    - **EARS** (Kiro) — sintaxe `QUANDO <condição> O SISTEMA DEVE <comportamento>` vira a
-     forma recomendada de critério de aceite → skill `dod-verificavel` + `spec-template`
+     forma recomendada de critério de aceite → skill `verifiable-dod` + `spec-template`
      (na F4 de vendorização).
    - **Worktree isolado por task + rigor mandatório** (Superpowers) → candidatos a
      script/skill na F3 futura, quando houver dor real de paralelismo (registrar em retro).

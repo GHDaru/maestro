@@ -13,10 +13,10 @@ mas nenhum artefato registrou o fechamento. O estado do gate vivia fora do repos
 
 ## Decisão
 
-1. **O índice `docs/registro/decisoes.jsonl` é a fonte do estado dos gates de merge.**
-2. **O registro é automático**: `scripts/promover-main.sh`, após a confirmação humana e
+1. **O índice `docs/records/decisoes.jsonl` é a fonte do estado dos gates de merge.**
+2. **O registro é automático**: `scripts/promote-main.sh`, após a confirmação humana e
    antes do push, anexa `gate-main-<sha>` (data, título do commit promovido) via
-   `registrar-decisao.sh` e o commita — impossível esquecer, impossível divergir.
+   `record-decision.sh` e o commita — impossível esquecer, impossível divergir.
 3. **qa-reports históricos não são reescritos** (artefato histórico); o fechamento dos
    gates passados foi registrado retroativamente no índice (`gate-003-merge` …
    `gate-007-merge`).
@@ -34,8 +34,8 @@ mas nenhum artefato registrou o fechamento. O estado do gate vivia fora do repos
 
 - (+) Estado de gate auditável por máquina, dentro do repo, à prova de esquecimento.
 - (+) O ciclo retro → regra → automação fechou em **um ciclo** (achado 008 → regra 009).
-- (−) `promover-main.sh` ganha um commit extra por promoção (aceitável; é rastreabilidade).
+- (−) `promote-main.sh` ganha um commit extra por promoção (aceitável; é rastreabilidade).
 
 ## Registro
 
-Modelo operacional **v1.3.0** (§12); `docs/registro/README.md` (formato `gate-main-*`).
+Modelo operacional **v1.3.0** (§12); `docs/records/README.md` (formato `gate-main-*`).

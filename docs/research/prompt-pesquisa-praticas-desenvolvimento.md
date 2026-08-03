@@ -2,7 +2,7 @@
 
 > Gerado em 2026-07-22 para embasar a definição do **modelo operacional** da
 > plataforma (papéis, responsabilidades, cerimônias, entregáveis e artefatos).
-> Resultado será consolidado em `docs/governance/modelo-operacional.md` e em ADR.
+> Resultado será consolidado em `docs/governance/operating-model.md` e em ADR.
 
 ---
 

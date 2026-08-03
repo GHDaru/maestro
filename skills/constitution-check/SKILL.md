@@ -1,6 +1,6 @@
 ---
 name: constitution-check
-description: Produz a tabela Constitution Check (Princípios I–VIII do Maestro) dentro de um plan.md, decide quando um princípio conta como violado e o que fazer com a violação. Use quando estiver escrevendo ou revisando um plan.md, abrindo um ciclo (spec-kit), ou sempre que precisar checar um plano contra os princípios inegociáveis do Maestro.
+description: Produces the Constitution Check table (Maestro Principles I–VIII) inside a plan.md, decides when a principle counts as violated and what to do with the violation. Use it when writing or reviewing a plan.md, when opening a cycle, or whenever a plan must be checked against Maestro's non-negotiable principles.
 ---
 
 # Constitution Check
@@ -8,49 +8,53 @@ description: Produz a tabela Constitution Check (Princípios I–VIII do Maestro
 ## Iron Law
 
 ```
-NENHUM PLAN SEM AS 7 LINHAS — UMA POR PRINCÍPIO, NENHUMA VAZIA
+NO PLAN WITHOUT THE EIGHT ROWS — ONE PER PRINCIPLE, NONE EMPTY
 ```
 
-**Violar a letra desta regra é violar o espírito dela.** Isso NÃO é desculpa:
-- "Este princípio obviamente não se aplica" — então escreva ✅ com a frase do porquê; a linha fica.
-- "O ciclo é pequeno" — ciclo pequeno com violação escondida vira dívida grande.
+**Violating the letter of this rule violates its spirit.** This is NOT an excuse:
+- "this principle obviously does not apply" — then write ✅ with the sentence saying why;
+  the row stays.
+- "the cycle is small" — a small cycle with a hidden violation becomes large debt.
 
-Todo `plan.md` do Maestro carrega uma tabela verificando o plano contra os **7 princípios
-inegociáveis** (`docs/governance/principios-maestro.md`). Esta skill padroniza essa tabela —
-o mesmo artefato que foi refeito à mão em ciclos anteriores.
+Every Maestro `plan.md` carries a table checking the plan against the **eight non-negotiable
+principles** (`docs/governance/principles.md`). This skill standardises that table.
 
-## Quando disparar
+## When to fire
 
-Escrevendo/revisando um `plan.md`; no `/speckit.plan`; antes de liberar um plano para tasks.
+Writing or reviewing a `plan.md`; during `/speckit.plan`; before releasing a plan to tasks.
 
-## Passo a passo
+## Step by step
 
-1. Para **cada** princípio I–VIII, escreva uma linha: `✅` (conforme) ou `⚠️/❌` (tensão/violação)
-   + **uma frase** de porquê. Não pule princípio — a tabela é sempre completa.
-2. Um princípio conta como **violado** quando o plano só funciona **quebrando-o** (ex.: um
-   agente read-only precisaria de `Write`; uma decisão irreversível sem gate humano; um
-   artefato de doc sem par vivo). Desconforto ≠ violação; impossibilidade-sem-quebrar = violação.
-3. Violação real → **duas saídas, nunca ignorar**:
-   - **Reformular** o plano para não violar (preferido); ou
-   - Registrar em **Complexity Tracking**: qual princípio, por que é inevitável aqui, e o
-     que a torna reversível/limitada. Vai para o gate humano decidir.
-4. Feche com o veredito: **"Sem violações."** ou a lista do que foi para Complexity Tracking.
+1. For **each** principle I–VIII write one row: `✅` (compliant) or `⚠️/❌` (tension or
+   violation) plus **one sentence** of why. Never skip a principle — the table is always
+   complete.
+2. A principle counts as **violated** when the plan only works by **breaking it** (for
+   example: a read-only agent would need `Write`; an irreversible decision without a human
+   gate; a documentation artifact with no living counterpart). Discomfort is not violation;
+   impossible-without-breaking is.
+3. A real violation has **two exits, never "ignore"**:
+   - **Rework** the plan so it does not violate (preferred); or
+   - Record it under **Complexity Tracking**: which principle, why it is unavoidable here,
+     and what makes it reversible or bounded. The human gate decides.
+4. Close with the verdict: **"No violations."** or the list of what went to Complexity
+   Tracking.
 
-## Os 7 princípios (âncora)
+## The eight principles (anchor)
 
-| # | Princípio | Pergunta de checagem |
+| # | Principle | Checking question |
 |---|---|---|
-| I | Spec-Driven | Nasce de uma spec aprovada? |
-| II | Orquestração humano-governada | O **A** (Accountable) humano é preservado? |
-| III | Reversibilidade / gates de risco | Dá pra desfazer? Gate proporcional ao risco? |
-| IV | Test-First / DoD verificável | O sucesso é verificável autonomamente? |
-| V | Economia de contexto / fronteira | Cada fatia é estreita, cortada por fronteira? |
-| VI | Artefatos vivos | Doc e código evoluem juntos (mesmo PR)? |
-| VII | Governança leve / YAGNI | Só o necessário agora, sem regra especulativa? |
+| I | Spec-driven | Does it come from an approved spec? |
+| II | Human-governed orchestration | Is the human **Accountable** preserved? |
+| III | Reversibility / risk-proportional gates | Can it be undone? Is the gate proportional? |
+| IV | Test-first / verifiable DoD | Is success autonomously verifiable? |
+| V | Context economy / cut by boundary | Is each slice narrow and cut along a boundary? |
+| VI | Living artifacts | Do docs and code evolve together, in the same pull request? |
+| VII | Light governance / YAGNI | Only what is needed now, no speculative rule? |
+| VIII | Intelligible communication | Every acronym expanded on first occurrence? |
 
-## Exemplo (do plan 003)
+## Example
 
-> III. Reversibilidade / gates de risco — ✅ **tools estreitas** = menor superfície de risco
-> por agente (read-only onde cabe).
+> III. Reversibility / risk gates — ✅ **narrow tools** mean a smaller risk surface per
+> agent (read-only wherever it fits).
 
-**Consumido por:** `plan-arquiteto` (produz), `guardiao-processo` (verifica).
+**Consumed by:** `plan-architect` (produces it), `process-guardian` (verifies it).

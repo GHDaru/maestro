@@ -1,7 +1,7 @@
 # Receita — escrever um critério verificável
 
 > Objetivo: transformar critério vago em check que uma máquina confere sozinha.
-> Tempo: ~5 min por critério. Skill: `dod-verificavel`.
+> Tempo: ~5 min por critério. Skill: `verifiable-dod`.
 
 ## A pergunta que resolve tudo
 

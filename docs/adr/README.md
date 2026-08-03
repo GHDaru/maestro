@@ -16,8 +16,9 @@ consequências → fontes.
 | 0011 | [Livro: padrão editorial, navegação e companion com backend](0011-livro-padrao-editorial-e-companion.md) | Aceito |
 | 0012 | [Distribuição em três camadas (script · plugin · skills CLI)](0012-distribuicao-em-tres-camadas.md) | Aceito |
 | 0013 | [Instrução para a IA: fonte única e gerada do disco](0013-instrucao-para-ia-gerada-e-fonte-unica.md) | Aceito |
+| 0014 | [Inglês como idioma do método instalável](0014-ingles-no-instalavel.md) | Aceito |
 
-> Índice consultável por máquina (append-only): [`../registro/decisoes.jsonl`](../registro/decisoes.jsonl) — ver [protocolo](../registro/README.md).
+> Índice consultável por máquina (append-only): [`../records/decisoes.jsonl`](../records/decisoes.jsonl) — ver [protocolo](../records/README.md).
 
 ## Nota de numeração
 

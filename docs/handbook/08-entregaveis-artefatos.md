@@ -121,8 +121,8 @@ proposta para aceito, quando o Steward aprovou), não o mérito. É a exceção 
 regra: o conteúdo da decisão nunca foi reescrito.
 
 **O índice de decisões é o artefato mais barato de manter do repositório** porque ninguém o
-mantém à mão: `promover-main.sh` escreve a linha do gate sozinho, e
-`registrar-decisao.sh` valida JSON, campos obrigatórios e unicidade do identificador antes
+mantém à mão: `promote-main.sh` escreve a linha do gate sozinho, e
+`record-decision.sh` valida JSON, campos obrigatórios e unicidade do identificador antes
 de anexar. Trinta e oito linhas, nenhuma editada depois de escrita.
 
 **E a prova de que o catálogo é seguido**: vinte e seis dos vinte e oito ciclos têm os
@@ -170,5 +170,5 @@ https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions ·
 S. Brown, *C4 model* — https://c4model.com/ ·
 L. Mezzalira, *Documenting software architecture* —
 https://lucamezzalira.medium.com/how-to-document-software-architecture-techniques-and-best-practices-2556b1915850 ·
-[Modelo operacional](../governance/modelo-operacional.md) §6 ·
-[Princípios](../governance/principios-maestro.md) (VI — artefatos vivos).
+[Modelo operacional](../governance/operating-model.md) §6 ·
+[Princípios](../governance/principles.md) (VI — artefatos vivos).

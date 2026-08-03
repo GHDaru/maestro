@@ -34,14 +34,14 @@ registro, últimas decisões, inventário do toolkit e as três perguntas abaixo
 ## 4. Registre
 
 ```bash
-scripts/registrar-decisao.sh '{"id":"adr-00NN","data":"AAAA-MM-DD","titulo":"...","status":"aceita","registro":"docs/adr/00NN-....md"}'
+scripts/record-decision.sh '{"id":"adr-00NN","data":"AAAA-MM-DD","titulo":"...","status":"aceita","registro":"docs/adr/00NN-....md"}'
 ```
 
 ## Exemplo real (ciclo 008 → 009)
 
 O primeiro `retro.sh` mostrou que relatórios de ciclos já promovidos ainda diziam "aguarda
 aprovação" — o gate acontecera na conversa, sem artefato. Pergunta 1 disparou → virou o
-**ADR 0009** → virou **automação** no `promover-main.sh`. Ferramenta achou a falha, falha
+**ADR 0009** → virou **automação** no `promote-main.sh`. Ferramenta achou a falha, falha
 virou regra, regra virou código. Em dois ciclos.
 
 ## Pronto quando

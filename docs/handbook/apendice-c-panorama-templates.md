@@ -21,7 +21,7 @@ Cada item: o que é → o que teria a nos ensinar → **triagem**:
 Workflow automatizado em 2 trilhas: feature (`Requirements → Design → Tasks →
 Implementation`) e **bug-fix** (`Report → Analyze → Fix → Verify`).
 - **O que ensina**: a trilha dupla é a **validação externa das nossas raias** — feature
-  = plena, bug = leve; e o `Analyze` antes do `Fix` ecoa nossa `diagnostico-antes-do-fix`.
+  = plena, bug = leve; e o `Analyze` antes do `Fix` ecoa nossa `diagnose-before-fix`.
 - **Triagem**: 👁 observar — nada que nossas raias + skills não cubram; confirma o desenho.
 - Fonte: [github.com/Pimzino/claude-code-spec-workflow](https://github.com/Pimzino/claude-code-spec-workflow)
 
@@ -65,7 +65,7 @@ ativo, progresso) que o agente relê a cada sessão.
 
 ### context-forge
 CLI que faz scaffold de documentação de context engineering (planos por estágio, regras).
-- **Triagem**: 👁 — nosso `novo-ciclo.sh` + templates vendorizados já fazem o scaffold.
+- **Triagem**: 👁 — nosso `new-cycle.sh` + templates vendorizados já fazem o scaffold.
 - Fonte: [github.com/webdevtodayjason/context-forge](https://github.com/webdevtodayjason/context-forge)
 
 ## C. Orquestração multi-agente pesada
@@ -87,7 +87,7 @@ determinísticos para compliance.
 ## D. Coleções e marketplaces (fontes de garimpo, não frameworks)
 
 - **awesome-claude-code / awesome-claude-skills** — diretórios curados (centenas de
-  skills/comandos/agentes). **Uso**: fonte de garimpo pontual pelo `curador-pesquisa`
+  skills/comandos/agentes). **Uso**: fonte de garimpo pontual pelo `research-curator`
   quando uma dor específica surgir — nunca importação em bloco (YAGNI).
 - **Claude Plugins Plus Skills** — marketplace comunitário (~425 plugins / ~2.810 skills,
   05/2026) com CLI próprio. Mesmo uso: garimpo por dor.
@@ -111,7 +111,7 @@ determinísticos para compliance.
 | context-forge | 👁 | — |
 | claude-flow | ⛔ por ora | frota real de agentes |
 | Google ADK/Gemini | 👁 | ida a nuvem gerenciada |
-| Coleções/marketplaces | fonte de garimpo | dor específica (via `curador-pesquisa`) |
+| Coleções/marketplaces | fonte de garimpo | dor específica (via `research-curator`) |
 
 **Leitura crítica**: o panorama converge para as apostas que já fizemos — spec como
 contexto, trilhas por tipo de mudança, rastreabilidade, disciplina de diagnóstico. As
