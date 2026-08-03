@@ -28,6 +28,22 @@ lines — which is exactly what this file exists to prevent.
 | `status` | ✅ | `aceita` (accepted) · `proposta` (proposed) · `superada por <id>` (superseded by) |
 | `registro` | ✅ | path of the prose document (ADR, qa report, spec) |
 | `ciclo` | — | cycle `NNN` when it comes from one |
+| `fecha` | — | the id of the **finding this line closes** (see below) |
+
+## Findings and the retrospective trigger
+
+A finding that did not fit inside its cycle is recorded here with an id starting with
+`achado-` and status `aberta`. It is what makes the retrospective a **debt**, not a date:
+`scripts/check-retro.sh` fails with four or more open findings, or with one open for six
+cycles or longer.
+
+Closing does not edit the old line (append-only): a **new** line names the finding it closes
+in the `fecha` field. The link is a field, not prose — a closing recognised by matching words
+would be a check measuring the text instead of the fact.
+
+```json
+{"id":"retro-034-fecha-027","fecha":"achado-027-retro-sem-gatilho","data":"2026-08-03","titulo":"Closed: check-retro.sh …","status":"fechada por retro-034","registro":"specs/034-…/qa-report.md","ciclo":"034"}
+```
 
 ## How to record
 

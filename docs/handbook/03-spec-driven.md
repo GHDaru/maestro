@@ -1,6 +1,6 @@
 # 03 — Desenvolvimento dirigido por especificação
 
-> **Capturado em** 2026-08 · última revisão 2026-08-02 · ciclo 023 (migrado ao padrão v2)
+> **Capturado em** 2026-08 · última revisão 2026-08-03 · ciclo 023 (migrado ao padrão v2)
 >
 > **A especificação é a fonte de verdade — não o código, não o prompt.** O que muda não é
 > escrever mais documento: é inverter quem depende de quem.

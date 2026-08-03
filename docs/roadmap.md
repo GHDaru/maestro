@@ -4,7 +4,7 @@
 > skills, workflows, scripts). Também serve de **orientação**: se você está perdido, comece
 > por aqui. Documento vivo — atualizado a cada fase.
 >
-> **Status**: Ativo · **Atualizado**: 2026-08-02 (ciclo 033) · **Regra**: este mapa é
+> **Status**: Ativo · **Atualizado**: 2026-08-03 (ciclo 034) · **Regra**: este mapa é
 > artefato vivo — todo ciclo concluído atualiza a tabela de fases **no mesmo PR**
 > (anti-padrão 15: artefato de planejamento que congela).
 
@@ -119,7 +119,7 @@ Cada fase = **um ciclo** (uma spec, um gate). Ordem por dependência:
 | **F10 — Dogfood: o Maestro no Maestro** | `check-install.sh` (camadas + IA instruída + skills visíveis), instrução gerada do disco (`--bloco`), `AGENTS.md` como fonte única, Constitution Check I–VIII | 021 | ✅ |
 | **(contínuo) — Migração didática** | capítulos ao padrão v2, **um por ciclo**: **13/13 ✅** — contagem por `scripts/check-chapters.sh` (0 pendentes) | 016, 022–032 | ✅ |
 | **F11 — Método em inglês** | superfície instalável (agentes, skills, scripts, comandos, templates, governança) traduzida e renomeada; `check-language.sh` guarda a fronteira; livro segue em português | 033 (ADR 0014) | ✅ |
-| **(contínuo) — Retrospectiva** | erro recorrente → regra versionada (catálogo de anti-padrões, leis das skills) | 017 e seguintes | 🔄 |
+| **(contínuo) — Retrospectiva** | erro recorrente → regra versionada; **gatilho por dívida de achados** (`check-retro.sh`) desde o ciclo 034 | 017, 034 e seguintes | 🔄 |
 
 ### Gatilhos abertos (decisões adiadas, com condição de revisão)
 

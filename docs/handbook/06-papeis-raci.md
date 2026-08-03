@@ -1,6 +1,6 @@
 # 06 — Papéis e responsabilidades: os contrapesos sem o time
 
-> **Capturado em** 2026-08 · última revisão 2026-08-02 · ciclo 026 (migrado ao padrão v2)
+> **Capturado em** 2026-08 · última revisão 2026-08-03 · ciclo 026 (migrado ao padrão v2)
 >
 > **Delega-se tudo, menos o A.** E o humano responde pela **política, pelos gates e pelos
 > critérios** — não por conferir cada item, senão vira gargalo.

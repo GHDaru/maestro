@@ -87,6 +87,25 @@ through speculation.
     every published extension — and prove the gate failing **for each** listed format.
     *(cycle 020, third recurrence of number 13.)*
 
+## Process (continued)
+
+17. **A ceremony with no trigger** — a rule that says "do X regularly" and leaves *when* to
+    memory. The retrospective, the highest-return ceremony of the method, had no clock for
+    thirty-three cycles: it happened when somebody noticed. **Antidote**: every recurring
+    ceremony declares its trigger as a **measurable condition** (open findings, cycles
+    elapsed, size of a queue) and a check fails when the condition is met and the ceremony
+    did not happen. *(cycle 034, from the finding of cycle 027.)*
+
+## Verification (continued)
+
+18. **Mass rename by text substitution** — a global search and replace matches the
+    *pattern*, not the *target*: renaming `operating-model.md` also rewrote
+    `0004-operating-model.md` (a file that was never renamed) and turned a research path into
+    one that does not exist, in fourteen files. **Antidote**: after any rename touching more
+    than a handful of files, run a link check over the **whole repository** — not only over
+    the pages that get published, because that is where the silent breakage hides.
+    *(cycle 034, from the finding of cycle 033.)*
+
 ## How to use it
 
 - **Designing**: walk the catalogue as a negative checklist (is any item present?).

@@ -1,6 +1,6 @@
 # 05 — Padrões de orquestração de agentes
 
-> **Capturado em** 2026-08 · última revisão 2026-08-02 · ciclo 025 (migrado ao padrão v2)
+> **Capturado em** 2026-08 · última revisão 2026-08-03 · ciclo 025 (migrado ao padrão v2)
 >
 > **Fatiar é fácil; juntar de volta é o trabalho.** E o corte errado é pior que o
 > *reduce* ruim — nenhuma reconciliação salva fatias cortadas fora da costura.

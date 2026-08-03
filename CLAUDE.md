@@ -23,7 +23,7 @@
   | `constitution-check` | todo plano, antes de implementar |
   | `verifiable-dod` | ao escrever critério de aceite ou portão |
   | `fight-the-pile-up` | ao ver arquivo/agente/prompt inchando |
-  | `anti-patterns` | ao desenhar e ao revisar (checklist negativo, 16 itens) |
+  | `anti-patterns` | ao desenhar e ao revisar (checklist negativo, 18 itens) |
   | `diagnose-before-fix` | **encontrou bug? antes de propor correção** |
   | `living-journey` | mexeu em tela: captura do build real + heurística datada |
 
@@ -55,6 +55,9 @@
   scripts/check-roles.sh               # papel do modelo × agente que o entrega
   scripts/check-install.sh           # método instalado e coerente neste repo
   scripts/check-language.sh          # inglês no que é instalável (ADR 0014)
+  scripts/check-cycle.sh             # raia justificada + commit citando o ciclo
+  scripts/check-links.sh             # todo link relativo do repositório resolve
+  scripts/check-retro.sh             # dívida de achados abertos (gatilho da retro)
   scripts/check-chapters.sh            # Iron Law editorial: 9 seções, datação, exemplo real
   scripts/package-plugin.sh --verify   # plugin sincronizado com as fontes
   node publicar/build.mjs                   # livro: links, imagens e slugs

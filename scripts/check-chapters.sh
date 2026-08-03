@@ -52,6 +52,29 @@ for f in "$DIR"/[0-9][0-9]-*.md; do
   [[ "$fail" -eq 0 ]] && echo "  ok: $name"
 done
 
+# A rule born in a skill must reach the chapter that teaches it. The second law of
+# verifiable-dod lived ten cycles inside the skill and never entered the book (cycle 029).
+# The check compares the last change of each SKILL.md with the "última revisão" date of the
+# chapters that cite it — if the skill moved after the chapter, the chapter is behind.
+echo ""
+echo "── Skill freshness × chapter that teaches it ──"
+for d in skills/*/; do
+  skill="$(basename "$d")"
+  skill_date=$(git log -1 --format=%ad --date=short -- "$d/SKILL.md" 2>/dev/null || true)
+  [[ -n "$skill_date" ]] || continue
+  for f in "$DIR"/[0-9][0-9]-*.md; do
+    grep -q "$skill" "$f" 2>/dev/null || continue
+    chapter_date=$(grep -oE 'última revisão [0-9]{4}-[0-9]{2}-[0-9]{2}' "$f" | head -1 | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}' || true)
+    [[ -n "$chapter_date" ]] || continue
+    if [[ "$skill_date" > "$chapter_date" ]]; then
+      echo "  ✗ skill '$skill' changed on $skill_date; $(basename "$f") was revised on $chapter_date — the chapter is behind" >&2
+      fail=$((fail + 1))
+    else
+      echo "  ok: $skill ($skill_date) ≤ $(basename "$f") ($chapter_date)"
+    fi
+  done
+done
+
 echo ""
 echo "migrated to v2: $migrated · pending: ${#pending[@]} (${pending[*]:-none})"
 if [[ "$fail" -ne 0 ]]; then

@@ -1,6 +1,6 @@
 # 04 — Fluxo agentic e economia de contexto
 
-> **Capturado em** 2026-08 · última revisão 2026-08-02 · ciclo 024 (migrado ao padrão v2)
+> **Capturado em** 2026-08 · última revisão 2026-08-03 · ciclo 024 (migrado ao padrão v2)
 >
 > **O inimigo não é a falta de contexto — é o acúmulo.** Quatro práticas que parecem
 > soltas contornam a mesma restrição física: a janela é finita e degrada enquanto enche.

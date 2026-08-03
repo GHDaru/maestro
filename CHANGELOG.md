@@ -9,6 +9,18 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 
 ## [Unreleased]
 
+### Added
+- **Retrospectiva executada: cinco achados abertos viram portão (spec 034)**. O mais velho
+  estava aberto havia **onze ciclos** — literalmente o anti-padrão 14. Cada um virou
+  executável: **`check-retro.sh`** (a retro passa a ser cobrada por **dívida de achados**,
+  não por calendário: falha com ≥4 abertos ou um aberto há ≥6 ciclos), **`check-cycle.sh`**
+  (a raia precisa vir **justificada** pelos três fatores, a distribuição é impressa, e todo
+  commit à frente de `main` precisa citar `spec NNN` ou `ADR NNNN`), **`check-links.sh`**
+  (todo link relativo do repositório resolve — não só as páginas publicadas) e a comparação
+  **data da skill × revisão do capítulo** dentro de `check-chapters.sh`. Anti-padrões **17**
+  (cerimônia sem gatilho) e **18** (renome em massa por substituição de texto) entram no
+  catálogo, com o ciclo de origem.
+
 ### Changed
 - **O método instalável passa a ser escrito em inglês (spec 033, ADR 0014)**: agentes,
   skills, scripts, comandos, templates e `docs/governance/` — nome de arquivo, conteúdo,

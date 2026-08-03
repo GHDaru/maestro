@@ -1,6 +1,6 @@
 # 12 — Governança leve: aprender sem inchar
 
-> **Capturado em** 2026-08 · última revisão 2026-08-02 · ciclo 032 (migrado ao padrão v2)
+> **Capturado em** 2026-08 · última revisão 2026-08-03 · ciclo 032 (migrado ao padrão v2)
 >
 > **Um sistema de regras que só cresce vira o processo pesado que você cortou no começo.**
 > Governança precisa de duas forças opostas: aprender e podar.

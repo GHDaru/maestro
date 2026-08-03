@@ -1,6 +1,6 @@
 # 08 — Entregáveis e artefatos: o que merece existir
 
-> **Capturado em** 2026-08 · última revisão 2026-08-02 · ciclo 028 (migrado ao padrão v2)
+> **Capturado em** 2026-08 · última revisão 2026-08-03 · ciclo 028 (migrado ao padrão v2)
 >
 > **Todo artefato custa duas vezes** — escrever e manter. Só sobrevive o que é **consumido
 > por alguém a jusante, com algo que falha alto quando ele envelhece** — ou o que é

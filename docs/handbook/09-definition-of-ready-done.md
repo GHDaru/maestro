@@ -1,6 +1,6 @@
 # 09 — Pronto para começar e Pronto de verdade
 
-> **Capturado em** 2026-08 · última revisão 2026-08-02 · ciclo 029 (migrado ao padrão v2)
+> **Capturado em** 2026-08 · última revisão 2026-08-03 · ciclo 029 (migrado ao padrão v2)
 >
 > **A Definição de Pronto (DoD) *é* o gate.** Um gate barato é o que se verifica sozinho —
 > e mesmo verde, ele não garante que era a coisa certa.

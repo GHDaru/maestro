@@ -1,6 +1,6 @@
 # 10 — Gates humanos e classes de risco
 
-> **Capturado em** 2026-08 · última revisão 2026-08-02 · ciclo 030 (migrado ao padrão v2)
+> **Capturado em** 2026-08 · última revisão 2026-08-03 · ciclo 030 (migrado ao padrão v2)
 >
 > **Gate uniforme está sempre errado**: pesado em tudo vira funil, leve em tudo deixa o
 > irreversível escapar. O peso escala com **irreversibilidade × impacto**.

@@ -1,6 +1,6 @@
 # 01 — O princípio central: quem decide o quê
 
-> **Capturado em** 2026-08 · última revisão 2026-08-01 · ciclo 016 (migrado ao padrão v2)
+> **Capturado em** 2026-08 · última revisão 2026-08-03 · ciclo 016 (migrado ao padrão v2)
 >
 > **IA para explorar, propor e escrever; humano para especificar, decidir e aprovar;
 > testes, gates e revisão independente para validar.**

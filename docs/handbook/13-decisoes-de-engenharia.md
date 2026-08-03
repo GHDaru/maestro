@@ -1,6 +1,6 @@
 # 13 — Decisões de engenharia de software (por que o Maestro é assim)
 
-> **Capturado em** 2026-08 · última revisão 2026-08-01 · ciclo 013
+> **Capturado em** 2026-08 · última revisão 2026-08-03 · ciclo 013
 > *Capítulo-piloto do novo padrão editorial ([guia](../livro/guia-editorial.md)).*
 
 ## 1. Objetivos

@@ -1,6 +1,6 @@
 # 02 — A evidência: velocidade e estabilidade andam juntas
 
-> **Capturado em** 2026-08 · última revisão 2026-08-02 · ciclo 022 (migrado ao padrão v2)
+> **Capturado em** 2026-08 · última revisão 2026-08-03 · ciclo 022 (migrado ao padrão v2)
 >
 > **Não existe o trade-off "rápido ou estável".** Os mesmos times são as duas coisas — e a
 > alavanca que produz as duas é a mesma: **lote pequeno**.

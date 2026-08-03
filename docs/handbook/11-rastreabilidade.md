@@ -1,6 +1,6 @@
 # 11 — Rastreabilidade: a memória que sobrevive ao reset
 
-> **Capturado em** 2026-08 · última revisão 2026-08-02 · ciclo 031 (migrado ao padrão v2)
+> **Capturado em** 2026-08 · última revisão 2026-08-03 · ciclo 031 (migrado ao padrão v2)
 >
 > **O agente esquece; o repositório não.** Rastreabilidade devolve *o quê* e *o porquê* sem
 > re-derivar — e **emerge** do fluxo, sem matriz que ninguém mantém.
