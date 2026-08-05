@@ -4,7 +4,7 @@
 > skills, workflows, scripts). Também serve de **orientação**: se você está perdido, comece
 > por aqui. Documento vivo — atualizado a cada fase.
 >
-> **Status**: Ativo · **Atualizado**: 2026-08-03 (ciclo 035) · **Regra**: este mapa é
+> **Status**: Ativo · **Atualizado**: 2026-08-03 (ciclo 036) · **Regra**: este mapa é
 > artefato vivo — todo ciclo concluído atualiza a tabela de fases **no mesmo PR**
 > (anti-padrão 15: artefato de planejamento que congela).
 
@@ -126,6 +126,7 @@ Cada fase = **um ciclo** (uma spec, um gate). Ordem por dependência:
 
 | Item | Gatilho para reavaliar |
 |---|---|
+| **Upstream: objeto `outcome` + skill de corte + `check-outcomes.sh`** (pesquisa do ciclo 036) | primeira intenção grande **real** que não caiba em um ciclo — ou 1º projeto com usuários externos |
 | **PRP** (contexto de codebase na spec) | 1º ciclo regendo **código de produto** |
 | **CCPM** (rastreabilidade via Issues) | projeto **multi-dev** com backlog em Issues |
 | **Worktree por task** (Superpowers) | dor real de **paralelismo** entre tasks |

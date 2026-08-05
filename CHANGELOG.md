@@ -10,6 +10,20 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Pesquisa do upstream (spec 036)**: `docs/research/upstream-decomposicao.md` responde se
+  existe método pronto para ir de uma intenção grande até o conjunto de specs. **O gap foi
+  medido, não afirmado**: 20 das 34 specs deste repositório nasceram de pedido pontual, e
+  nenhum agente, skill, template ou portão cobre o que vem antes da spec — o **Spec Kit não
+  tem upstream**, confirmado comando a comando. Fichadas quatro famílias com 16 fontes:
+  frameworks agênticos (BMAD, Agent OS), skills publicadas (o catálogo de 70 skills de
+  produto é **CC BY-NC-SA**, incompatível com a nossa distribuição — citar sim, copiar não),
+  relatos de decomposição para agentes (três passadas: superfície, jornada, risco) e a
+  literatura de corte (nove padrões de fatiamento, SPIDR, INVEST, fatia vertical). Proposta
+  contida em **um objeto** (`outcome`), **um verbo** (skill `slice-outcome`), **um portão**
+  (`check-outcomes.sh`) e **um gate humano** (aprovar o corte) — com a recomendação honesta
+  de **não construir sem dor real** e um gatilho aberto no roadmap.
+
+### Added
 - **Axiomas, teoremas e corolários (spec 035, ADR 0015)**: `docs/governance/axioms.md` traz a
   camada de **derivação** que faltava — cinco verdades assumidas (intenção é humana ·
   consequência precisa de dono · contexto é finito e degrada · o que está escrito sobrevive ·

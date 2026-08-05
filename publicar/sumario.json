@@ -240,6 +240,11 @@
           "arquivo": "docs/handbook/apendice-c-panorama-templates.md",
           "titulo": "Apêndice C — Panorama",
           "teaser": "PRP, CCPM, memory banks — triagem e gatilhos."
+        },
+        {
+          "arquivo": "docs/research/upstream-decomposicao.md",
+          "titulo": "Pesquisa — o upstream",
+          "teaser": "Como decompor um projeto grande: o que existe, o que serve e o que falta."
         }
       ]
     }
