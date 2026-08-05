@@ -59,3 +59,4 @@
 {"id": "gate-main-7264fe6", "data": "2026-08-03", "titulo": "Gate de merge: feat(governanca): retro executada — cinco achados viram portão (spec 034)", "status": "aceita", "registro": "commit 7264fe6"}
 {"id":"adr-0015","data":"2026-08-03","titulo":"Axiomas, teoremas e corolarios como camada de derivacao (5 axiomas, 6 teoremas, 10 corolarios)","status":"aceita","registro":"docs/adr/0015-axiomas-teoremas-corolarios.md","ciclo":"035"}
 {"id": "gate-main-c46cc33", "data": "2026-08-03", "titulo": "Gate de merge: feat(governanca): axiomas, teoremas e corolários + BPMN v4 (spec 035, ADR 0015)", "status": "aceita", "registro": "commit c46cc33"}
+{"id": "gate-main-01ccea1", "data": "2026-08-05", "titulo": "Gate de merge: docs(research): pesquisa do upstream — decompor projeto grande (spec 036)", "status": "aceita", "registro": "commit 01ccea1"}
