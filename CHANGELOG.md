@@ -10,6 +10,23 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Evals: linha de base para saída não-determinística (spec 037, ADR 0016)**. Os oito
+  portões mediam só o que se compara por igualdade; **treze agentes operaram trinta e seis
+  ciclos sem nenhuma linha de base**. O limite já estava escrito e ignorado: a única
+  ocorrência de `judge` em `scripts/` é o comentário do `check-cycle.sh:8` admitindo que o
+  portão *"cannot judge the answer"*. Entra o **teorema T7** (onde a saída não se compara,
+  o critério é uma linha de base registrada) e o **corolário C11** (um eval nomeia seu alvo
+  e defasa quando o alvo muda) — axiomas 1.0.0 → 1.1.0. A anatomia de um caso são três
+  arquivos em `evals/<NNN-slug>/`, com dois campos carregando o desenho: `MUST-NOT-CLAIM`
+  (sem o lado negativo, o caso passa com qualquer resposta prolixa) e `First-red` (a segunda
+  lei da `verifiable-dod` virada campo). A verificação é partida em duas: `check-evals.sh`
+  é determinístico e gratuito; `/eval` roda o julgamento em contexto fresco, sob demanda,
+  **fora da integração contínua** — um portão que exige chave deixa de ser portão. Dois
+  casos-semente: `review` diante de um requisito silenciosamente descartado e
+  `process-guardian` diante de uma raia subdeclarada.
+  **O portão entrega vermelho, de propósito** — as duas linhas de base exigem modelo no
+  laço, que este ciclo não executou; a dívida está no índice como achado aberto. Precedente:
+  o `check-install.sh` nasceu vermelho no ciclo 021 com deriva real de três ciclos.
 - **Pesquisa do upstream (spec 036)**: `docs/research/upstream-decomposicao.md` responde se
   existe método pronto para ir de uma intenção grande até o conjunto de specs. **O gap foi
   medido, não afirmado**: 20 das 34 specs deste repositório nasceram de pedido pontual, e

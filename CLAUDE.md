@@ -58,6 +58,7 @@
   scripts/check-cycle.sh             # raia justificada + commit citando o ciclo
   scripts/check-links.sh             # todo link relativo do repositório resolve
   scripts/check-retro.sh             # dívida de achados abertos (gatilho da retro)
+  scripts/check-evals.sh             # corpus de evals: alvo real, discrimina, não defasou
   scripts/check-chapters.sh            # Iron Law editorial: 9 seções, datação, exemplo real
   scripts/package-plugin.sh --verify   # plugin sincronizado com as fontes
   node publicar/build.mjs                   # livro: links, imagens e slugs
@@ -65,6 +66,9 @@
 
 - **Checklist humano/agente**: `.github/pull_request_template.md` (espelha a DoD).
 - **Self-check do agente**: comando `/dod` (`.claude/commands/dod.md`).
+- **Julgamento (saída não-determinística)**: o portão determinístico mede a saúde do corpus;
+  a avaliação em si é o comando `/eval` (`.claude/commands/eval.md`), em contexto fresco e
+  sob demanda. Anatomia e limites: `evals/README.md`, ADR 0016, teorema T7.
 - Decisões de metodologia viram **ADR** em `docs/adr/`.
 
 ## Onde está o quê

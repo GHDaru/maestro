@@ -20,8 +20,10 @@ set -euo pipefail
 TARGETS=(
   ".claude/agents"
   ".claude/commands/dod.md"
+  ".claude/commands/eval.md"
   "skills"
   "scripts"
+  "evals"
   "docs/governance"
   "docs/records/README.md"
   ".specify/templates/spec-template.md"

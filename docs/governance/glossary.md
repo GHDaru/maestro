@@ -21,6 +21,7 @@
 | **DoR** | *Definition of Ready* | Criteria for "ready to start" (a spec executable without guessing). | Ch. 9 |
 | **DORA** | *DevOps Research and Assessment* | Programme and four delivery-performance metrics. | Ch. 2 |
 | **DX** | *Developer Experience* | Developer experience. | Ch. 2 |
+| **Eval** (*evaluation*) | Judgement baseline | Fixed input + assertions that discriminate + a dated observation, for output that cannot be compared by equality. **Not** a test (equality) and **not** a benchmark (models against each other). | `evals/` · ADR 0016 |
 | **Fitness function** | Architecture test | Checks dependency rules in continuous integration. | Ch. 9 |
 | **Forcing function** | Mechanism that forces | What **fails loudly** when an artifact is not kept up to date. | Ch. 8 |
 | **AI / IA** | Artificial Intelligence | The agent that executes under orchestration. | — |

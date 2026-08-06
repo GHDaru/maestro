@@ -5,7 +5,7 @@
 > repository**. A corollary is what follows immediately, and is where most of the day-to-day
 > rules come from.
 >
-> **Version**: 1.0.0 · **Date**: 2026-08-03 · **Cycle**: 035 · ADR 0015
+> **Version**: 1.1.0 · **Date**: 2026-08-06 · **Cycles**: 035, 037 · ADR 0015, ADR 0016
 > · Constitution: [principles.md](principles.md) · Acronyms: [glossary](glossary.md)
 
 ## How to read this document
@@ -136,6 +136,26 @@ a versioned rule survives into the next.
 > before the antidote became law in a skill. And the retrospective itself was a rule with no
 > trigger for thirty-three cycles — until cycle 034 gave it one.
 
+### T7 — Where output is not comparable, the criterion is a baseline (from A2 and A4)
+
+T4 says a criterion needs a command. But a command can only settle what is comparable by
+equality: a section is present or absent, a link resolves or does not. A **judgement** — a
+review verdict, a lane call, a trade-off in a plan — has no such comparison, and reading it
+attentively is not a criterion: it produces no artifact (A4) and nothing to hold anyone to
+(A2).
+
+What replaces the comparison is a **recorded baseline**: a fixed input, assertions that
+separate a right answer from a merely plausible one, and an observation with a date. The
+positive assertion is not enough — a case that only asks "did it find something?" passes on
+any verbose answer. What discriminates is the negative side: what a wrong answer *would*
+claim.
+
+> **Evidence**: for thirty-six cycles, thirteen agents operated with no baseline at all —
+> nothing would have noticed a regression in `review.md`. And the limit was known and
+> written down: the only occurrence of *judge* in `scripts/` is the comment at
+> `check-cycle.sh:8` conceding that the gate "cannot judge the answer". Knowing the gap and
+> stopping there is what T7 names.
+
 ---
 
 ## The corollaries (where the everyday rules come from)
@@ -152,6 +172,7 @@ a versioned rule survives into the next.
 | C8 | A narrow agent is cheaper than a capable one | T2, T5 | 13 agents in 267 lines |
 | C9 | Documentation that nothing consumes will rot, however good it is | T5 | artifact catalogue; the "we do not adopt" list |
 | C10 | What is installed is read by machines; what is published is read by people | A4 | ADR 0014: English toolkit, Portuguese book |
+| C11 | An evaluation names its target and goes stale when the target moves | T7, T5 | `check-evals.sh`; `evals/*/baseline.md` |
 
 ## What this document does NOT do
 

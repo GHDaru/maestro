@@ -4,7 +4,7 @@
 > skills, workflows, scripts). Também serve de **orientação**: se você está perdido, comece
 > por aqui. Documento vivo — atualizado a cada fase.
 >
-> **Status**: Ativo · **Atualizado**: 2026-08-03 (ciclo 036) · **Regra**: este mapa é
+> **Status**: Ativo · **Atualizado**: 2026-08-06 (ciclo 037) · **Regra**: este mapa é
 > artefato vivo — todo ciclo concluído atualiza a tabela de fases **no mesmo PR**
 > (anti-padrão 15: artefato de planejamento que congela).
 
@@ -120,6 +120,7 @@ Cada fase = **um ciclo** (uma spec, um gate). Ordem por dependência:
 | **(contínuo) — Migração didática** | capítulos ao padrão v2, **um por ciclo**: **13/13 ✅** — contagem por `scripts/check-chapters.sh` (0 pendentes) | 016, 022–032 | ✅ |
 | **F11 — Método em inglês** | superfície instalável (agentes, skills, scripts, comandos, templates, governança) traduzida e renomeada; `check-language.sh` guarda a fronteira; livro segue em português | 033 (ADR 0014) | ✅ |
 | **F12 — Camada de derivação** | axiomas, teoremas e corolários (`docs/governance/axioms.md`) — a base contra a qual regra nova é argumentada e regra velha é podada; BPMN v4 com gatilho da retro e raia de portões | 035 (ADR 0015) | ✅ |
+| **F13 — Julgamento com linha de base** | teorema T7 + corolário C11; `evals/` (anatomia em três arquivos), `check-evals.sh` determinístico e comando `/eval` com modelo no laço; dois casos-semente | 037 (ADR 0016) | ⚠️ entregue **vermelho**: linhas de base pendentes |
 | **(contínuo) — Retrospectiva** | erro recorrente → regra versionada; **gatilho por dívida de achados** (`check-retro.sh`) desde o ciclo 034 | 017, 034 e seguintes | 🔄 |
 
 ### Gatilhos abertos (decisões adiadas, com condição de revisão)
@@ -127,6 +128,8 @@ Cada fase = **um ciclo** (uma spec, um gate). Ordem por dependência:
 | Item | Gatilho para reavaliar |
 |---|---|
 | **Upstream: objeto `outcome` + skill de corte + `check-outcomes.sh`** (pesquisa do ciclo 036) | primeira intenção grande **real** que não caiba em um ciclo — ou 1º projeto com usuários externos |
+| **Cobertura de evals além dos dois casos-semente** (ciclo 037) | um agente que **regrediu** — cada regressão observada ganha caso, e a cobertura cresce por dor, não por meta |
+| **Progressive disclosure** de contexto nas skills (leitura do artigo, ciclo 037) | orçamento de contexto do instalado passar de ~600 linhas (hoje: 419 nas seis skills) |
 | **PRP** (contexto de codebase na spec) | 1º ciclo regendo **código de produto** |
 | **CCPM** (rastreabilidade via Issues) | projeto **multi-dev** com backlog em Issues |
 | **Worktree por task** (Superpowers) | dor real de **paralelismo** entre tasks |

@@ -70,10 +70,15 @@ echo "── Skills (how to do it) ──"
 copy "skills"
 
 echo "── Scripts (the ritual) ──"
-for s in new-cycle.sh promote-main.sh retro.sh record-decision.sh check-agents.sh check-roles.sh check-install.sh; do
+for s in new-cycle.sh promote-main.sh retro.sh record-decision.sh check-agents.sh check-roles.sh check-install.sh check-evals.sh; do
   copy "scripts/$s"
 done
 copy "scripts/README.md"
+
+echo "── Evaluations (the baseline for judgement) ──"
+# Only the anatomy travels. The cases stay behind: each one names a target file in the
+# repository that owns it, so an imported case would arrive stale (corollary C11).
+copy "evals/README.md"
 
 echo "── Commands and templates (the spec-driven engine) ──"
 copy ".claude/commands"
