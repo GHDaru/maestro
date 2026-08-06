@@ -19,6 +19,7 @@ consequências → fontes.
 | 0014 | [Inglês como idioma do método instalável](0014-ingles-no-instalavel.md) | Aceito |
 | 0015 | [Axiomas, teoremas e corolários como camada de derivação](0015-axiomas-teoremas-corolarios.md) | Aceito |
 | 0016 | [Evals como critério para saída não-determinística](0016-evals-para-saida-nao-deterministica.md) | Aceito |
+| 0017 | [Divisão em dois repositórios: toolkit e guia](0017-divisao-em-dois-repositorios.md) | Aceito |
 
 > Índice consultável por máquina (append-only): [`../records/decisoes.jsonl`](../records/decisoes.jsonl) — ver [protocolo](../records/README.md).
 

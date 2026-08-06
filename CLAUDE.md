@@ -59,6 +59,7 @@
   scripts/check-links.sh             # todo link relativo do repositório resolve
   scripts/check-retro.sh             # dívida de achados abertos (gatilho da retro)
   scripts/check-evals.sh             # corpus de evals: alvo real, discrimina, não defasou
+  scripts/check-boundary.sh          # fronteira dos dois repositórios decidível (ADR 0017)
   scripts/check-chapters.sh            # Iron Law editorial: 9 seções, datação, exemplo real
   scripts/package-plugin.sh --verify   # plugin sincronizado com as fontes
   node publicar/build.mjs                   # livro: links, imagens e slugs

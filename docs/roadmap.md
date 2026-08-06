@@ -121,6 +121,8 @@ Cada fase = **um ciclo** (uma spec, um gate). Ordem por dependência:
 | **F11 — Método em inglês** | superfície instalável (agentes, skills, scripts, comandos, templates, governança) traduzida e renomeada; `check-language.sh` guarda a fronteira; livro segue em português | 033 (ADR 0014) | ✅ |
 | **F12 — Camada de derivação** | axiomas, teoremas e corolários (`docs/governance/axioms.md`) — a base contra a qual regra nova é argumentada e regra velha é podada; BPMN v4 com gatilho da retro e raia de portões | 035 (ADR 0015) | ✅ |
 | **F13 — Julgamento com linha de base** | teorema T7 + corolário C11; `evals/` (anatomia em três arquivos), `check-evals.sh` determinístico e comando `/eval` com modelo no laço; dois casos-semente | 037 (ADR 0016) | ⚠️ entregue **vermelho**: linhas de base pendentes |
+| **F14 — Dois repositórios (fatia 1)** | corte por leitor (C10): `boundary.json` como fonte única + `check-boundary.sh` (um dono por arquivo · espelho com fonte · página publicada com origem). Nada movido: 282 toolkit / 79 guia / 5 espelhos | 038 (ADR 0017) | ✅ critério pronto |
+| **F14b — Dois repositórios (fatia 2)** | criar o remoto do guia, mover, mecanismo de espelho com forcing function, `GITHUB_BASE` por origem, dividir `check-links`/`check-chapters` | — | ⏳ **aguarda gate humano** |
 | **(contínuo) — Retrospectiva** | erro recorrente → regra versionada; **gatilho por dívida de achados** (`check-retro.sh`) desde o ciclo 034 | 017, 034 e seguintes | 🔄 |
 
 ### Gatilhos abertos (decisões adiadas, com condição de revisão)

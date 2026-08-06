@@ -10,6 +10,19 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Divisão em dois repositórios — fatia 1: a fronteira decidível (spec 038, ADR 0017)**.
+  O corte é o corolário **C10** executado: *o que é instalado é lido por máquinas; o que é
+  publicado é lido por pessoas*. A medição impediu o corte ingênuo — o site publica **37
+  páginas e 9 nascem no lado instalável**; o livro atravessa a fronteira em **35 links** e
+  cita **22 caminhos de código** como evidência. Duas incógnitas foram ao **gate humano**
+  antes de qualquer código: a memória (`specs/`, ADRs, índice, changelog, roadmap) **fica
+  toda no toolkit**, e o site **continua completo por consumo**, nunca por cópia manual
+  (rejeitada com o precedente do ciclo 021). Entra `boundary.json` como fonte única e
+  `check-boundary.sh` com três invariantes: um dono por arquivo · espelho tem fonte no
+  toolkit · toda página publicada tem origem reclamada. Classificação: **282 arquivos do
+  toolkit, 79 do guia, 5 caminhos espelhados**, zero órfãos.
+  **Nenhum arquivo mudou de lugar** — divisão de repositório é irreversibilidade alta, então
+  a fatia 1 entrega o critério e a fatia 2 executa, com o portão verde como pré-condição.
 - **Evals: linha de base para saída não-determinística (spec 037, ADR 0016)**. Os oito
   portões mediam só o que se compara por igualdade; **treze agentes operaram trinta e seis
   ciclos sem nenhuma linha de base**. O limite já estava escrito e ignorado: a única

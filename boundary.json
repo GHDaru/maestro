@@ -1,0 +1,60 @@
+{
+  "_": "The boundary between the two Maestro repositories. Consumed by scripts/check-boundary.sh — never edited by hand without running it. ADR 0017. Corollary C10: what is installed is read by machines; what is published is read by people.",
+  "repos": {
+    "toolkit": {
+      "name": "maestro",
+      "reader": "machine",
+      "owns": [
+        ".claude/",
+        ".claude-plugin/",
+        ".specify/",
+        ".github/",
+        "skills/",
+        "scripts/",
+        "evals/",
+        "plugin/",
+        "specs/",
+        "docs/governance/",
+        "docs/adr/",
+        "docs/records/",
+        "docs/agents/",
+        "docs/roadmap.md",
+        "CHANGELOG.md",
+        "CLAUDE.md",
+        "AGENTS.md",
+        "README.md",
+        ".gitignore",
+        "boundary.json"
+      ]
+    },
+    "guide": {
+      "name": "maestro-guia",
+      "reader": "human",
+      "owns": [
+        "docs/handbook/",
+        "docs/receitas/",
+        "docs/diagramas/",
+        "docs/research/",
+        "docs/livro/",
+        "docs/jornada/",
+        "docs/comece-por-aqui.md",
+        "publicar/",
+        "site/",
+        "companion/"
+      ]
+    }
+  },
+  "mirrored": {
+    "_": "Owned by the toolkit, needed by the guide's site so the reader keeps one navigation. The guide consumes them; it never edits them. Every path here MUST also appear in toolkit.owns — the mirror is a copy with a direction, not shared ownership.",
+    "paths": [
+      "docs/governance/",
+      "docs/agents/",
+      "docs/adr/README.md",
+      "docs/records/README.md",
+      "docs/roadmap.md"
+    ]
+  },
+  "unclassified_allowed": [
+    "publicar/node_modules/"
+  ]
+}
