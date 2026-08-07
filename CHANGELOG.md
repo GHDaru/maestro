@@ -9,7 +9,33 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 
 ## [Unreleased]
 
+### Changed
+- **A divisão em dois repositórios foi revertida antes de mover qualquer arquivo (spec 039,
+  ADR 0018 supersede o 0017)**. A medição pedida pelo Steward mudou a decisão — e o próprio
+  número teve de ser corrigido durante a medição: o acoplamento bruto de 40% caía para
+  **20%** ao descontar `CHANGELOG`, roadmap, índice e `specs/`, que toda entrega toca por
+  forcing function. Três supostos ganhos não sobreviveram: o instalável **já** é separado
+  pelo `install-maestro.sh` (copia 0 arquivos do guia), "cada um libera no seu ritmo" é
+  teórico (0 tags, 0 versões fechadas) e não há segundo contribuidor. Contra três ganhos
+  reais mas não urgentes (contexto do agente, 7× de peso de clone, dependências isoladas),
+  quatro perdas mensuráveis — atomicidade dos 20% acoplados, 252 links verificados virando
+  35 externos sem verificação, a evidência de código do livro sem portão possível, e um
+  espelho novo com defasagem própria. **A fronteira ficou**, como fronteira **interna**:
+  `boundary.json` passa a declarar `domains`/`shared` e a terceira invariante muda de razão
+  (não protege mais contra perder páginas na mudança; protege contra o site publicar um
+  documento voltado a máquina sem declaração). Gatilhos de reabertura no roadmap.
+
 ### Added
+- **Portão para os perfis de agente (spec 039)**. A auditoria de organização encontrou o
+  último lugar do repositório que dependia de memória: `docs/agents/README.md` documenta 13
+  agentes com suas *tools*, `.claude/agents/` tem 13 executáveis, e **nenhum script comparava
+  os dois** — `check-roles.sh` olhava o modelo operacional, nunca o índice de perfis. Os 13
+  batiam com os 13 no dia da auditoria, que é exatamente por que era perigoso: parecia
+  saudável e a saúde dependia de alguém lembrar (a família do ciclo 021, três derivas de
+  uma vez). O `check-roles.sh` passa a comparar **nos dois sentidos**, pelo link markdown e
+  não pelo rótulo em prosa: agente sem documentação · índice apontando para arquivo
+  inexistente · **tool no disco fora da linha do índice** (o caso caro — agente ganha `Edit`
+  e o índice segue dizendo read-only) · total declarado em prosa diferente da contagem.
 - **Divisão em dois repositórios — fatia 1: a fronteira decidível (spec 038, ADR 0017)**.
   O corte é o corolário **C10** executado: *o que é instalado é lido por máquinas; o que é
   publicado é lido por pessoas*. A medição impediu o corte ingênuo — o site publica **37

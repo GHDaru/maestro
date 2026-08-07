@@ -1,6 +1,10 @@
 # ADR 0017 — Divisão em dois repositórios: toolkit e guia
 
-- **Status**: Aceito · **Data**: 2026-08-06
+- **Status**: **Superado pelo [ADR 0018](0018-fronteira-interna-em-vez-de-divisao.md)**
+  (2026-08-06) — a divisão em dois repositórios foi revertida antes de qualquer arquivo se
+  mover; a fronteira permaneceu, como fronteira **interna**. O corpo abaixo fica intacto:
+  ADR é imutável, e o par 0017 → 0018 registra que a medição mudou a decisão.
+- **Data**: 2026-08-06
 - **Ciclo**: 038 · **Decisor**: Steward
 - **Escopo deste ADR**: o corte e suas invariantes. A mudança física dos arquivos é a
   **fatia 2**, com gate humano próprio.

@@ -1,8 +1,8 @@
 {
-  "_": "The boundary between the two Maestro repositories. Consumed by scripts/check-boundary.sh — never edited by hand without running it. ADR 0017. Corollary C10: what is installed is read by machines; what is published is read by people.",
-  "repos": {
+  "_": "The INTERNAL boundary between Maestro's two domains, inside ONE repository. ADR 0018 supersedes ADR 0017: the split into two repositories was measured and rejected. Consumed by scripts/check-boundary.sh — never edited by hand without running it. Corollary C10: what is installed is read by machines; what is published is read by people.",
+  "domains": {
     "toolkit": {
-      "name": "maestro",
+      "label": "the installable method and its memory",
       "reader": "machine",
       "owns": [
         ".claude/",
@@ -28,7 +28,7 @@
       ]
     },
     "guide": {
-      "name": "maestro-guia",
+      "label": "the book and the engine that publishes it",
       "reader": "human",
       "owns": [
         "docs/handbook/",
@@ -44,8 +44,8 @@
       ]
     }
   },
-  "mirrored": {
-    "_": "Owned by the toolkit, needed by the guide's site so the reader keeps one navigation. The guide consumes them; it never edits them. Every path here MUST also appear in toolkit.owns — the mirror is a copy with a direction, not shared ownership.",
+  "shared": {
+    "_": "Owned by the toolkit AND published by the guide's site. In one repository this is not a copy — it is one file with two readers. What the declaration buys: whoever edits these knows the edit is public. Every path here MUST also appear in toolkit.owns.",
     "paths": [
       "docs/governance/",
       "docs/agents/",

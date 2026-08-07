@@ -67,9 +67,71 @@ else
   echo "  ok: $n_principles principles → $n_rows rows in the template"
 fi
 
+# The profile index (docs/agents/README.md) is a hand-written table describing every
+# agent: which file delivers it and which tools it holds. Nothing compared it to disk.
+# That is the failure family this repository knows best — cycle 021 found three drifts at
+# once, all from hand-written lists never checked against the disk. The list matching today
+# is exactly why it is dangerous: it looks healthy, and the health depends on memory.
+#
+# The link is structural (a markdown link to the file), never the role's prose label — a
+# label read as prose would be a check measuring the words instead of the fact.
+echo ""
+echo "── Agent profile index (docs/agents/README.md) × agents on disk ──"
+INDEX="docs/agents/README.md"
+if [[ ! -f "$INDEX" ]]; then
+  echo "  ✗ profile index missing: $INDEX" >&2
+  fail=$((fail + 1))
+else
+  # every agent linked from the index, as a bare slug
+  documented=$(grep -oE '\.\./\.\./\.claude/agents/[a-z-]+\.md' "$INDEX" | sed 's|.*/||; s|\.md$||' | sort -u)
+  on_disk=$(ls .claude/agents/*.md 2>/dev/null | sed 's|.*/||; s|\.md$||' | sort -u)
+
+  # 1. an agent on disk that the index never mentions is an invisible agent
+  while read -r slug; do
+    [[ -z "$slug" ]] && continue
+    if ! grep -qx "$slug" <<<"$documented"; then
+      echo "  ✗ agent on disk and ABSENT from the index: $slug" >&2
+      fail=$((fail + 1))
+    fi
+  done <<<"$on_disk"
+
+  # 2. an index row pointing at nothing is a profile for an agent that does not exist
+  while read -r slug; do
+    [[ -z "$slug" ]] && continue
+    if [[ ! -f ".claude/agents/${slug}.md" ]]; then
+      echo "  ✗ index documents an agent that does not exist: $slug" >&2
+      fail=$((fail + 1))
+    fi
+  done <<<"$documented"
+
+  # 3. the tools column is a promise about permissions — the place where a silent drift
+  #    would be most expensive (Principle III: the judging role gets no write access).
+  while read -r slug; do
+    [[ -z "$slug" ]] && continue
+    [[ -f ".claude/agents/${slug}.md" ]] || continue
+    real=$(grep -m1 '^tools:' ".claude/agents/${slug}.md" | sed 's/^tools:[[:space:]]*//' | tr -d ' ')
+    row=$(grep -m1 "agents/${slug}\.md" "$INDEX")
+    for tool in ${real//,/ }; do
+      grep -q "$tool" <<<"$row" || {
+        echo "  ✗ $slug holds '$tool' on disk and the index row does not list it" >&2
+        fail=$((fail + 1))
+      }
+    done
+  done <<<"$documented"
+
+  n_doc=$(grep -c . <<<"$documented"); n_disk=$(grep -c . <<<"$on_disk")
+  # 4. the index states a total in prose; a stale number is how a reader learns the wrong size
+  stated=$(grep -oE '\*\*[0-9]+ agentes executáveis\*\*' "$INDEX" | grep -oE '[0-9]+' || true)  # PT-DATA (Portuguese index)
+  if [[ -n "$stated" && "$stated" -ne "$n_disk" ]]; then
+    echo "  ✗ the index claims $stated executable agents; there are $n_disk on disk" >&2
+    fail=$((fail + 1))
+  fi
+  echo "  checked: $n_doc documented / $n_disk on disk / stated ${stated:-–}"
+fi
+
 echo ""
 if [[ "$fail" -ne 0 ]]; then
   echo "✗ $fail divergence(s) between what the model prescribes and what the toolkit delivers." >&2
   exit 1
 fi
-echo "✓ every prescribed role has an executable; every essential artifact has a template."
+echo "✓ every prescribed role has an executable; every agent is documented with its real tools."
