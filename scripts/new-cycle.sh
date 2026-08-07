@@ -72,6 +72,19 @@ write_if_absent "$DIR/plan.md" <<EOF
 | VII. Light governance / YAGNI |  |
 | VIII. Intelligible communication |  |
 
+## Artifacts of this cycle (declare all five — silence is not a decision)
+
+<!-- Read by scripts/check-conformance.sh. Declaring =yes means the file MUST exist here.
+     What each one is for: docs/governance/artifacts.md -->
+
+| Artifact | Declaration | Why |
+|---|---|---|
+| \`research.md\` | \`ART:research=no\` | <technical unknown to resolve first?> |
+| \`data-model.md\` | \`ART:data-model=no\` | <entities and relations — code features> |
+| \`contracts/\` | \`ART:contracts=no\` | <interfaces: routes, ports, events> |
+| \`checklist.md\` | \`ART:checklist=no\` | <quality checklist for this cycle> |
+| \`ux-design.md\` | \`ART:ux-design=no\` | <touches a screen? then NOT optional> |
+
 ## How
 <...>
 
@@ -88,8 +101,12 @@ write_if_absent "$DIR/tasks.md" <<EOF
 ## Implementation
 - [ ] T1 — <...>
 
-## Gate
-- [ ] Tn — DoD green -> guardian verdict -> human merge gate
+## Closing tail — MANDATORY, one line each, never delete
+<!-- Do not delete a line to say it does not apply: write \`n/a: <reason>\` on it.
+     check-conformance.sh requires the evidence of every non-n/a step in qa-report.md. -->
+- [ ] TAIL:review — independent review in fresh context, by whoever did not execute
+- [ ] TAIL:security — security pass proportional to the risk class
+- [ ] TAIL:gate — DoD green -> guardian verdict -> human merge gate (not delegable)
 EOF
 
 write_if_absent "$DIR/qa-report.md" <<EOF
@@ -101,6 +118,12 @@ write_if_absent "$DIR/qa-report.md" <<EOF
 | Check | Expected | Result |
 |---|---|---|
 |  |  |  |
+
+## Closing tail — the evidence
+<!-- One entry per non-n/a TAIL token. What was OBSERVED, never the intention restated. -->
+- TAIL:review — <who reviewed, fresh context, verdict, what was done with the findings>
+- TAIL:security — <the pass and its result, or the n/a reason mirrored from tasks.md>
+- TAIL:gate — <what awaits the human, or the recorded gate-main-<sha>>
 
 ## Requirement coverage
 - FR1: <...>

@@ -9,6 +9,35 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 
 ## [Unreleased]
 
+### Added
+- **Conformidade executável: a cauda sobrevive ao artefato (spec 042, ADR 0019)**. Origem:
+  uma agente companheira noutro repositório, perguntada se tinha seguido o Maestro,
+  respondeu honestamente que **em parte** — o `plan.md` dela parava em "docs e fitness
+  verdes", a cauda do método vivia na spec e na memória de trabalho, e a compactação de
+  contexto promoveu a versão truncada a fonte de verdade. Ela dirigiu até o pull request
+  **obedecendo com fidelidade**. Medido aqui, o mesmo defeito é pior: **35 de 40** ciclos
+  cujo `tasks.md` perdeu o gate humano que o template carrega, **0 de 40** com qualquer dos
+  cinco artefatos condicionais, e a regra de quando eles se aplicam guardada num documento
+  que o instalador **não copia** — enquanto o `/speckit.plan` copiado exige quatro deles.
+  O defeito ganhou nome: **anti-padrão 22, o método instalado como cópia com perda**.
+  Corolários **C12** (o que sobrevive à compactação é o que está em artefato consumido — o
+  resto é apagado, não degradado) e **C13** (pergunta respondível de memória será respondida
+  de memória, e memória relata intenção) — axiomas 1.1.0 → 1.2.0.
+  O movimento é **transformar omissão em declaração**: tokens `ART:<artefato>=yes|no` com
+  razão no `plan.md`, e `TAIL:review` · `TAIL:security` · `TAIL:gate` no `tasks.md`, com a
+  evidência no `qa-report.md`. Token e não prosa, porque prosa é traduzida e reescrita.
+  Entra `docs/governance/artifacts.md` — **instalável** — como fonte única do catálogo; a
+  tabela do roadmap §3 virou ponteiro. E `scripts/check-conformance.sh` responde "estou
+  seguindo o Maestro?" pelos artefatos, com a instrução de **não responder de memória**
+  chegando ao `CLAUDE.md` de todo projeto de destino.
+  **A revisão independente reprovou este ciclo** ("do not promote", 7 achados, 2
+  bloqueadores) e é a primeira vez que a cauda é cumprida em vez de marcada. O pior achado:
+  um esqueleto vazio recém-gerado passava verde, porque o portão testava a *presença* do
+  token e o gerador escrevia os tokens — e o `qa-report.md` deste próprio ciclo era esse
+  esqueleto, com o `TAIL:review` já marcado. Anti-padrão 22 cometido dentro do ciclo que o
+  criou, mais o 16 (corrigi um ramo e deixei o irmão). Tudo corrigido antes do commit;
+  o relato completo está no `qa-report.md`.
+
 ### Changed
 - **Retro executada pelo gatilho, não pela memória (spec 041)**. O `check-retro.sh` foi a
   vermelho sozinho — `✗ 4 open findings (limit 4)` — sete ciclos depois de ganhar gatilho.

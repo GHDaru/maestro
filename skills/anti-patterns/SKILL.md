@@ -131,6 +131,21 @@ through speculation.
     variable and match against that (`grep -q … <<<"$var"`); never end a pipe in `grep -q`
     inside a condition. *(cycle 041 — the second occurrence is what made it a rule.)*
 
+## Process (continued)
+
+22. **The installed method as a lossy copy of the method** — the executor follows the
+    artifact it is given, faithfully, and the artifact is a subset. On a companion repository
+    a `plan.md` listed the implementation steps and stopped at "docs and fitness green": the
+    closing tail (independent review, security, human gate) lived in the spec and in working
+    memory. Context compaction promoted the truncated version to source of truth, and the
+    agent drove straight to a pull request — obeying perfectly. In this repository the same
+    defect measured **35 of 40** cycles whose `tasks.md` had lost the human gate the template
+    carries, and a catalogue of conditional artifacts that shipped in a document the installer
+    never copies. Omission is invisible: it violates nothing you can see. **Antidote**: every
+    mandatory step exists as a machine-readable token in the artifact the executor consumes,
+    a conditional artifact is **declared** rather than merely absent (`=yes`/`=no` with a
+    reason), and a gate compares the two. *(cycle 042, from a companion repository's cycle 029.)*
+
 ## How to use it
 
 - **Designing**: walk the catalogue as a negative checklist (is any item present?).

@@ -26,7 +26,26 @@
 
 - [ ] **Tn** — [journey / ADR / changelog / glossary affected]
 
-## Gate
+## Closing tail — MANDATORY, one line each, never delete
 
-- [ ] **Tz** — DoD green → guardian verdict → **human merge gate (not delegable)**;
+<!--
+  This block is why cycle 042 exists. On a companion repository, a plan listed the
+  implementation steps and stopped at "docs and fitness green": the closing tail lived in the
+  spec and in the agent's working memory, never in the checklist the executor follows.
+  Context compaction then promoted the truncated version to source of truth, and the agent
+  drove faithfully to a pull request with no independent review and no security pass.
+  Faithful obedience to a lossy source (corollary C12, anti-pattern 22).
+
+  Do NOT delete a line to say it does not apply — write `n/a: <reason>` on it instead. An
+  absent step is invisible; a declared exception is auditable. `scripts/check-conformance.sh`
+  reads these tokens, and for every step that is not `n/a` it requires the evidence to be in
+  `qa-report.md`. A ticked box is not a witness.
+-->
+
+- [ ] **TAIL:review** — independent review in **fresh context**, by whoever did not execute
+  (Theorem 2). Evidence: the verdict, in `qa-report.md`.
+- [ ] **TAIL:security** — security pass proportional to the risk class. When the change has
+  no risk surface, replace this line's tail with `n/a:` followed by the actual reason — a
+  placeholder is rejected by the gate.
+- [ ] **TAIL:gate** — DoD green → guardian verdict → **human merge gate (not delegable)**;
   promotion via `scripts/promote-main.sh` (records `gate-main-<sha>` automatically, ADR 0009).

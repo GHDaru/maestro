@@ -5,7 +5,7 @@
 > repository**. A corollary is what follows immediately, and is where most of the day-to-day
 > rules come from.
 >
-> **Version**: 1.1.0 · **Date**: 2026-08-06 · **Cycles**: 035, 037 · ADR 0015, ADR 0016
+> **Version**: 1.2.0 · **Date**: 2026-08-07 · **Cycles**: 035, 037, 042 · ADR 0015, 0016, 0019
 > · Constitution: [principles.md](principles.md) · Acronyms: [glossary](glossary.md)
 
 ## How to read this document
@@ -173,6 +173,8 @@ claim.
 | C9 | Documentation that nothing consumes will rot, however good it is | T5 | artifact catalogue; the "we do not adopt" list |
 | C10 | What is installed is read by machines; what is published is read by people | A4 | ADR 0014: English toolkit, Portuguese book |
 | C11 | An evaluation names its target and goes stale when the target moves | T7, T5 | `check-evals.sh`; `evals/*/baseline.md` |
+| C12 | What survives compaction is what is in a consumed artifact — the rest is deleted, not degraded | A3, A4 | `check-conformance.sh`; the closing tail in `tasks.md` |
+| C13 | A question answerable from memory will be answered from memory, and memory reports intention | A4, T4 | `check-conformance.sh` replaces "are you following the method?" |
 
 ## What this document does NOT do
 

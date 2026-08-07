@@ -12,6 +12,19 @@
 |---|---|---|
 | `[command]` | [expected] | [real] ✅/❌ |
 
+## Closing tail — the evidence
+
+<!-- One entry per TAIL token declared in `tasks.md` that is not `n/a`. The token must appear
+     here: `scripts/check-conformance.sh` requires it, because a ticked box in tasks.md only
+     proves that somebody ticked a box. What goes here is what was OBSERVED — the verdict,
+     the command and its output — never a restatement of the intention. -->
+
+- **TAIL:review** — [who reviewed, in which fresh context, the verdict, and what was done
+  with the findings]
+- **TAIL:security** — [the pass that was run and its result, or the `n/a` reason mirrored
+  from `tasks.md`]
+- **TAIL:gate** — [what awaits the human, or the recorded `gate-main-<sha>`]
+
 ## Requirement coverage
 
 - **FR1**: [delivered? where?]

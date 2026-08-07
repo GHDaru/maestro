@@ -1,6 +1,6 @@
 # 07 — Cerimônias e cadência: o que sobrevive quando o time é um
 
-> **Capturado em** 2026-08 · última revisão 2026-08-03 · ciclo 027 (migrado ao padrão v2)
+> **Capturado em** 2026-08 · última revisão 2026-08-07 · ciclo 042 (revisita do 027)
 >
 > **Cerimônia é função, não reunião.** E o limite de trabalho em curso não é a capacidade
 > dos agentes — é a **atenção do humano**.
@@ -88,19 +88,32 @@ escalar é tornar cada gate mais barato.
 ## 6. ⭐ Na prática — o ciclo real
 
 **A retrospectiva rendeu regra, e a regra tem data.** O catálogo de anti-padrões tem hoje
-dezesseis itens, e o arquivo mostra quando cada leva entrou:
+vinte e dois itens, e o arquivo mostra quando cada leva entrou:
 
 ```
 $ git log --format="%ad %s" --date=short -- skills/anti-patterns/SKILL.md
-2026-08-02  BPMN navegável … (spec 020)      → anti-padrão 16
+2026-08-07  conformidade executável (spec 042)          → anti-padrão 22
+2026-08-07  retro disparada pelo gatilho (spec 041)     → anti-padrões 19/20/21
+2026-08-03  retro executada — cinco achados (spec 034)  → anti-padrões 17/18
+2026-08-02  BPMN navegável … (spec 020)                 → anti-padrão 16
 2026-08-01  retro executada — anti-padrões 13/14/15, segunda lei (spec 017)
-2026-07-31  absorções do Superpowers — Iron Laws, causa raiz (spec 011)
-2026-07-31  incorpora as sugestões do estudo maestro-02 (spec 008)
 ```
 
 Repare no anti-padrão **14** — "achado que morre em candidato" — e no motivo dele existir:
 duas vezes escrevemos "candidato a anti-padrão" num relatório e **não rodamos a retro**. A
 cerimônia que estava faltando virou item de catálogo na primeira vez que foi executada.
+
+**E repare na data de 2026-08-07.** Ela é a primeira vez que a cerimônia acontece **sem
+ninguém lembrar dela**: o `check-retro.sh` foi a vermelho sozinho, com quatro achados
+abertos no teto de quatro, sete ciclos depois de ganhar gatilho. A retro do ciclo 034 tinha
+dado relógio à cerimônia; o ciclo 041 foi a primeira vez que o relógio tocou.
+
+O que essa retro encontrou vale mais que os três anti-padrões que ela produziu: **a
+ferramenta que apura o material da retro estava mentindo**. O `retro.sh` reconhecia
+identificadores de gate num formato que só sete gates usaram, e reportava como pendente
+todo ciclo do 011 em diante — vinte e nove ciclos de um instrumento com crédito e sem
+verdade. Cerimônia com gatilho encontra o que cerimônia por memória nunca encontraria,
+porque a memória não desconfia do próprio instrumento.
 
 **A retro tem script, e o script não decide nada.** `scripts/retro.sh` pré-computa o
 material (ciclos, vereditos, gates pendentes, decisões, inventário) e é somente-leitura por

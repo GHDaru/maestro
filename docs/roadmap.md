@@ -4,7 +4,7 @@
 > skills, workflows, scripts). Também serve de **orientação**: se você está perdido, comece
 > por aqui. Documento vivo — atualizado a cada fase.
 >
-> **Status**: Ativo · **Atualizado**: 2026-08-07 (ciclo 041) · **Regra**: este mapa é
+> **Status**: Ativo · **Atualizado**: 2026-08-07 (ciclo 042) · **Regra**: este mapa é
 > artefato vivo — todo ciclo concluído atualiza a tabela de fases **no mesmo PR**
 > (anti-padrão 15: artefato de planejamento que congela).
 
@@ -33,19 +33,12 @@
 Spec Kit = o **motor do passo a passo** ("defina o que construir antes de construir").
 Comandos: `constitution · specify · clarify · plan · tasks · analyze · checklist · implement`.
 
-**Quando cada artefato entra** (isto respondia sua dúvida):
-
-| Artefato | Gerado em | Aplica-se a |
-|---|---|---|
-| `spec.md` | `/specify` | **sempre** (o quê e por quê) |
-| `plan.md` | `/plan` | **sempre** (como + Constitution Check) |
-| `research.md` | `/plan` | quando há incógnitas técnicas a resolver |
-| `data-model.md`, `contracts/` | `/plan` | **features de código** (entidades, APIs) — não em docs |
-| `tasks.md` | `/tasks` | sempre |
-| `checklist.md` | `/checklist` | quando vale um checklist de qualidade específico |
-
-> No ciclo 001 (docs) geramos spec/plan/tasks; **não** data-model/contracts — não se
-> aplicavam. Isto passa a estar documentado aqui (era uma confusão legítima).
+**Quando cada artefato entra**: a fonte única passou a ser
+[`governance/artifacts.md`](governance/artifacts.md) (ciclo 042, ADR 0019) — catálogo dos
+quatro obrigatórios, dos cinco condicionais e dos três passos da cauda, **instalável** e
+lido por `scripts/check-conformance.sh`. A tabela que vivia aqui foi removida: ela dizia a
+mesma coisa, não era entregue a quem instala o método, e já estava desatualizada (nunca
+mencionou `ux-design.md`, o condicional que mais custa pular).
 
 ## 4. Perfis de agentes (o gap a resolver)
 
@@ -124,6 +117,7 @@ Cada fase = **um ciclo** (uma spec, um gate). Ordem por dependência:
 | **F14 — Fronteira interna entre os dois domínios** | `boundary.json` + `check-boundary.sh` (um domínio por arquivo · compartilhado com dono · página publicada com origem declarada). A **divisão em dois repositórios foi medida e rejeitada** (ADR 0018 supersede 0017): 20% de acoplamento substantivo, 0 arquivos do guia no instalador, 0 versões fechadas | 038, 039 (ADR 0017→0018) | ✅ |
 | **F15 — Portão dos perfis de agente** | `check-roles.sh` compara `docs/agents/README.md` com o disco nos dois sentidos, incluindo *tools* e total declarado — o último lugar do repositório que dependia de memória | 039 | ✅ |
 | **F16 — Retro com gatilho disparado** | o `check-retro.sh` foi a vermelho sozinho (4 achados, teto 4) e a retro achou que a **própria ferramenta mentia**: `retro.sh` reportava gate pendente falso desde o ciclo 011. Anti-padrões 19, 20 e 21; `Axis`/`Ablation`/`Premise-checked` obrigatórios; aposentadoria com motivo | 041 | ✅ |
+| **F17 — Conformidade executável** | omissão vira declaração: tokens `ART:`/`TAIL:` nos templates e no gerador, `docs/governance/artifacts.md` instalável, `check-conformance.sh` como resposta a "estou seguindo o Maestro?". Corolários C12/C13, anti-padrão 22 | 042 (ADR 0019) | ✅ |
 | **(contínuo) — Retrospectiva** | erro recorrente → regra versionada; **gatilho por dívida de achados** (`check-retro.sh`) desde o ciclo 034 | 017, 034 e seguintes | 🔄 |
 
 ### Gatilhos abertos (decisões adiadas, com condição de revisão)

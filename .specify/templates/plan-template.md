@@ -25,12 +25,32 @@
 
 **[No violations. | Complexity Tracking: ...]**
 
+## Artifacts of this cycle (declare all five — silence is not a decision)
+
+<!--
+  MANDATORY. Every conditional artifact is DECLARED, never merely absent. An omission
+  violates nothing visibly, which is how a plan quietly becomes a lossy copy of the method
+  (anti-pattern 22): the executor follows the plan faithfully, and the missing step produces
+  no symptom. "Does not apply, because X" is auditable; silence is not.
+
+  The token is machine-readable so the check survives translation and rewording —
+  `scripts/check-conformance.sh` reads it. Declaring `=yes` means the file MUST exist in
+  this cycle directory. What each artifact is for: `docs/governance/artifacts.md`.
+-->
+
+| Artifact | Declaration | Why |
+|---|---|---|
+| `research.md` | `ART:research=no` | [a technical unknown to resolve before deciding? if none, say so] |
+| `data-model.md` | `ART:data-model=no` | [entities and their relations — code features] |
+| `contracts/` | `ART:contracts=no` | [interfaces between parts: routes, ports, events] |
+| `checklist.md` | `ART:checklist=no` | [a quality checklist specific to this cycle] |
+| `ux-design.md` | `ART:ux-design=no` | [**touches a screen? then it is not optional** — semantic role before component] |
+
 ## How
 
 <!--
   The HOW: architecture, cutting by boundary (bounded context — which makes parallel work
-  safe), decisions (an architectural decision becomes an ADR, immutable). For CODE features,
-  also produce the data model and contracts; for docs work they do not apply.
+  safe), decisions (an architectural decision becomes an ADR, immutable).
   Infra lane: put backup, dry run and rollback HERE (the reversibility block of §7).
 -->
 

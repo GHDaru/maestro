@@ -32,6 +32,11 @@ method_block() {
   echo '  fresh context → human gate → merge`.'
   echo '- Lanes: light (the pull request is the artifact) · full (complete spec) · infra (full +'
   echo '  reversibility).'
+  echo '- Every cycle declares its conditional artifacts and carries the closing tail'
+  echo '  (`TAIL:review`, `TAIL:security`, `TAIL:gate`) in `tasks.md`, with the evidence in'
+  echo '  `qa-report.md`. Catalogue: `docs/governance/artifacts.md`.'
+  echo '- **Asked "are you following the method?" — do NOT answer from memory.** Run'
+  echo '  `scripts/check-conformance.sh <NNN>` and read it: memory reports intention, not fact.'
 }
 
 # --block: prints only the instruction for the AI (redirect it into the project CLAUDE.md)
@@ -70,7 +75,7 @@ echo "── Skills (how to do it) ──"
 copy "skills"
 
 echo "── Scripts (the ritual) ──"
-for s in new-cycle.sh promote-main.sh retro.sh record-decision.sh check-agents.sh check-roles.sh check-install.sh check-evals.sh; do
+for s in new-cycle.sh promote-main.sh retro.sh record-decision.sh check-agents.sh check-roles.sh check-install.sh check-evals.sh check-conformance.sh; do
   copy "scripts/$s"
 done
 copy "scripts/README.md"
@@ -90,6 +95,7 @@ copy "docs/governance/principles.md"
 copy "docs/governance/operating-model.md"
 copy "docs/governance/glossary.md"
 copy "docs/governance/axioms.md"
+copy "docs/governance/artifacts.md"
 copy "docs/records/README.md"
 
 if [[ "$DRY" -eq 0 ]]; then
@@ -115,6 +121,7 @@ cat <<'FIM'
   3. Open the first cycle:   scripts/new-cycle.sh 001 <slug>
   4. When promoting:         scripts/promote-main.sh
   5. In the retrospective:   scripts/retro.sh
+  6. "Am I following it?":   scripts/check-conformance.sh
 
 FIM
 echo "done."

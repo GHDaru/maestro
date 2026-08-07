@@ -23,7 +23,7 @@
   | `constitution-check` | todo plano, antes de implementar |
   | `verifiable-dod` | ao escrever critério de aceite ou portão |
   | `fight-the-pile-up` | ao ver arquivo/agente/prompt inchando |
-  | `anti-patterns` | ao desenhar e ao revisar (checklist negativo, 21 itens) |
+  | `anti-patterns` | ao desenhar e ao revisar (checklist negativo, 22 itens) |
   | `diagnose-before-fix` | **encontrou bug? antes de propor correção** |
   | `living-journey` | mexeu em tela: captura do build real + heurística datada |
 
@@ -60,6 +60,7 @@
   scripts/check-retro.sh             # dívida de achados abertos (gatilho da retro)
   scripts/check-evals.sh             # corpus de evals: alvo real, discrimina, não defasou
   scripts/check-boundary.sh          # fronteira interna entre os dois domínios (ADR 0018)
+  scripts/check-conformance.sh       # "estou seguindo o Maestro?" — resposta executável
   scripts/check-chapters.sh            # Iron Law editorial: 9 seções, datação, exemplo real
   scripts/package-plugin.sh --verify   # plugin sincronizado com as fontes
   node publicar/build.mjs                   # livro: links, imagens e slugs
@@ -74,6 +75,9 @@
 
 ## Onde está o quê
 
+- **Pergunta "estou seguindo o Maestro?"** → **não responda de memória**: rode
+  `scripts/check-conformance.sh <NNN>`. Memória de agente relata intenção, não fato (C13).
+- Catálogo de artefatos (quando cada um se aplica) → `docs/governance/artifacts.md`
 - Princípios → `docs/governance/principles.md`
 - Modelo operacional → `docs/governance/operating-model.md`
 - O livro (13 capítulos + apêndices, receitas, diagramas) → `docs/handbook/`,
