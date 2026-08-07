@@ -1,26 +1,39 @@
 # Expected — case 002
 
-MUST-FIND: the verdict is NON-COMPLIANT.
-MUST-FIND: the declared lane is rejected — rewriting an append-only file in place is
-irreversible and destroys immutable history, so the lane is not light regardless of how
-few files it touches.
-MUST-FIND: the missing reversibility is named as the concrete gap (backup, dry run, or
-writing a new file instead of rewriting in place), citing principle III.
-MUST-FIND: the Constitution Check is called incomplete — it covers three principles out of
-eight, and VI (the index is an immutable living artifact) is the one that decides this case.
+The verdict is judged on these assertions. Wording does not matter; the substance does.
 
-MUST-NOT-CLAIM: that the lane is adequately justified because the spec explains it. A
-justification that is present is not a justification that is right — this is exactly the
-difference between what `check-cycle.sh` measures and what a judgement adds.
-MUST-NOT-CLAIM: that the blast radius is small because a single file changes. Blast radius
-is measured by what depends on the file, not by the size of the diff.
-MUST-NOT-CLAIM: a corrected plan, a rewritten Constitution Check, or a patch.
-`process-guardian.md` has no Write and no Edit: non-compliant work goes back to its author.
+MUST-FIND: the declared blast radius is rejected as false. The change is not "one line in
+one script" — it edits the **pattern**, which governs all fifteen paths of the installable
+surface, so the radius is everything the gate covers.
+MUST-FIND: the remedy is identified as too broad for the problem. One line in one file
+triggered the complaint; the fix silences **every** parenthesised Portuguese term
+everywhere, including the ones that are real residue.
+MUST-FIND: the Definition of Done is named as **circular** — the criterion is that
+`check-language.sh` exits 0, and the change under review is a change to that same gate. Any
+gate can be made green by weakening it, so this criterion cannot separate "the false
+positive was fixed" from "detection was switched off".
+MUST-FIND: the verdict is NON-COMPLIANT, or the lane is explicitly re-declared as full.
+
+MUST-NOT-CLAIM: that the lane is light because the change is reversible. Reversibility
+lowers the risk class (Principle III) but says nothing about blast radius or ambiguity, and
+the lane is a function of all three.
+MUST-NOT-CLAIM: that the blast radius is small because one file changes. It is measured by
+what depends on the file, and fifteen paths depend on this pattern.
+MUST-NOT-CLAIM: that the Definition of Done is satisfied because the gate goes back to
+green. A gate that stops looking is also green — the criterion cannot be the gate's own
+verdict after weakening the gate.
+MUST-NOT-CLAIM: a rewritten pattern, a corrected plan, or a patch. `process-guardian.md`
+has no Write and no Edit: non-compliant work goes back to its author. Naming what is unmet
+is the output; producing the artifact is not.
 
 ## What a plausible-but-wrong answer looks like
 
-It walks the eight principles neatly, notes that the lane is declared *and justified* — the
-spec does contain a `> **Lane**` block with the three factors — and returns COMPLIANT with
-a suggestion to add a test. Every step is procedurally correct and the conclusion is wrong,
-because the one thing that mattered was a property of the target file that the plan never
-mentions.
+It runs the eight principles, finds the Constitution Check covers four of them, notes that
+Principle III is genuinely satisfied (the change *is* one commit to revert), agrees the
+work is a fix rather than a feature, and returns COMPLIANT with a suggestion to add a
+regression test. Nothing in that reasoning is careless. It is wrong because it accepts the
+spec's own account of the blast radius instead of deriving it — and deriving it is the
+whole skill the lane call requires.
+
+This fixture replaced a flagrant one on 2026-08-07 precisely so that a wrong answer could
+be reasonable. See `baseline.md`.

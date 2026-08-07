@@ -1,4 +1,4 @@
-# Case 002 — the process guardian facing an understated lane
+# Case 002 — the process guardian facing a borderline lane call
 
 Target: .claude/agents/process-guardian.md
 Question: Here is the header of a cycle and its plan. Run the Constitution Check and give
@@ -6,56 +6,75 @@ your COMPLIANT / NON-COMPLIANT verdict, including the declared lane.
 
 ## Why this case
 
-The lane is where the whole gate machinery is decided: it sets how much process a change
-gets, and whether reversibility blocks are required at all (corollary C6). Understating it
-is the cheapest possible mistake to make and the most expensive to discover, because the
-symptom appears only after the irreversible thing has already happened.
+The lane decides how much process a change receives (corollary C6), and understating it is
+cheap to do and expensive to discover. But it is only worth evaluating where the call is
+**hard**.
 
-It is also a judgement no `grep` can make. `check-cycle.sh` verifies that a lane is
-**declared and justified** — its own comment admits it cannot judge whether the answer is
-right. That is precisely the space this case covers.
+The first version of this fixture was a destructive in-place rewrite of a file documented as
+append-only. It was discarded on 2026-08-07 after the discrimination run: an ablated target
+rejected that lane just as firmly, reaching it from Principle III on its own. A fixture
+whose violation is flagrant tests "can you spot an obvious destructive operation", which is
+a different skill and not the one at risk.
+
+This fixture is the opposite shape. Every surface signal says **light** and each one is
+true: it is a fix, it is one line, it is one file, and it is trivially reversible. The
+mistake lives somewhere the surface does not show — and a competent reader can land on
+"light" without being careless.
 
 ## Input handed to the agent
 
 ### spec.md header (fixture)
 
 ```markdown
-# Spec 099 — clean up the decision index
+# Spec 098 — fix: language gate reports a false positive on the glossary
 
-- **Status**: Draft · **Lane**: light · **Date**: 2026-08-06
-- **Origin**: the index has duplicate lines from the early cycles.
+- **Status**: Draft · **Lane**: light · **Date**: 2026-08-07
+- **Origin**: `check-language.sh` flags `docs/governance/glossary.md`, which is English.
+  The flagged line is `| **Lane** (*raia*) | Work lane | Light / full / infra …`.
 
-> **Lane**: light. Low ambiguity (it is only removing duplicates), small blast radius
-> (one file), and it is a fix — the pull request is the artifact.
+> **Lane**: light. It is a fix, not a feature; low ambiguity (the gate is wrong and the
+> file is right); small blast radius (one line in one script); and fully reversible — the
+> pull request is the artifact.
 
 ## Functional requirements
-- **FR1**: WHEN the cleanup runs THE SYSTEM SHALL rewrite `docs/records/decisoes.jsonl`
-  with the duplicate lines removed.
+- **FR1**: WHEN the language gate runs over the installable surface THE SYSTEM SHALL NOT
+  report a Portuguese term written inside parentheses as residue.
 ```
 
 ### plan.md (fixture)
 
 ```markdown
-# Plan 099 — clean up the decision index
+# Plan 098 — fix: language gate reports a false positive on the glossary
 
 ## Constitution Check
 | Principle | Compliance |
 |---|---|
 | I. Spec-driven | spec written first |
-| IV. Test-first / verifiable DoD | line count checked after the rewrite |
-| VII. Light governance / YAGNI | small fix, no ceremony |
+| III. Reversibility / risk gates | one-line change, revert is a single commit |
+| IV. Test-first / verifiable DoD | `scripts/check-language.sh` goes back to green |
+| VII. Light governance / YAGNI | a fix; the pull request is the artifact |
 
 ## How
-- Read the index, drop lines whose `id` already appeared, write the file back in place.
-- Run it once on `dev` and commit the result.
+- Strip parenthesised segments from each line before matching the Portuguese pattern.
+- Confirm `scripts/check-language.sh` exits 0 and merge.
 ```
 
-### Repository context the agent can reach (excerpt of `docs/records/README.md`)
+### Repository context available to the agent (excerpt of `scripts/check-language.sh`)
 
-> `decisoes.jsonl` is the machine index: one JSON object per line, **append-only** — never
-> edit a past line; a correction is a new line (`status: "superada por ..."`).
+```bash
+# Installable surface: what scripts/install-maestro.sh copies into another repository.
+TARGETS=(
+  ".claude/agents"  ".claude/commands/dod.md"  ".claude/commands/eval.md"
+  "skills"  "scripts"  "evals"  "docs/governance"  "docs/records/README.md"
+  ".specify/templates/spec-template.md"   ".specify/templates/plan-template.md"
+  ".specify/templates/tasks-template.md"  ".specify/templates/qa-report-template.md"
+  ".specify/templates/adr-template.md"    ".specify/templates/ux-design-template.md"
+  ".specify/templates/journey-template.md"
+)
+PATTERN='\b(não|são|está|…|para o|para a|com o|com a|que o|que a|ção|ções)\b'
+```
 
-**Fixture note (2026-08-07):** this section replaced two sentences that stated the findings
-outright — that rewriting in place destroys history, and that the Constitution Check covers
-only three principles. A fixture that contains its own verdict tests nothing. Facts go in;
-conclusions are what the agent has to produce.
+**Fixture note (2026-08-07):** the repository context above is deliberately limited to
+facts — what the gate covers and how it matches. The script's own header also states a
+convention for how an exemption must be declared; it is withheld, so the finding has to be
+derived rather than quoted.

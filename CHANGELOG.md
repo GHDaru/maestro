@@ -30,6 +30,18 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
   Antes de rodar, inspeção pegou um defeito que teria anulado a rodada: o enunciado do 002
   terminava declarando duas das quatro `MUST-FIND`. Fato entra na fixture; conclusão é o
   que o agente tem de produzir.
+- **O caso `002` foi redesenhado e continua sem discriminar (ciclo 040)**. A fixture
+  flagrante virou uma **limítrofe**: um *fix* de uma linha, num arquivo, trivialmente
+  reversível — em que o defeito é a linha editada ser a **regra de casamento de um portão**,
+  logo o raio é os quinze caminhos que ele cobre, não o diff. O alvo real acertou o raio e
+  a circularidade da DoD; a ablação **acertou igual**. Duas fixtures, duas ablações, mesmo
+  resultado: tirar *"check the declared lane"* do `process-guardian.md` não muda nada — o
+  achado é **sobredeterminado**, o princípio III o produz sozinho. Isso é evidência sobre o
+  agente (a linha pode ser redundante), não sobre a fixture, e é por isso que ajustar o
+  enunciado não resolve. Dois achados abertos.
+  E o alvo ablado achou, sem ser perguntado, que a **premissa da minha fixture é falsa**: na
+  linha citada nenhuma alternativa do `PATTERN` casa. Duas fixtures escritas à mão, dois
+  defeitos encontrados pelos próprios agentes avaliados.
 - **A divisão em dois repositórios foi revertida antes de mover qualquer arquivo (spec 039,
   ADR 0018 supersede o 0017)**. A medição pedida pelo Steward mudou a decisão — e o próprio
   número teve de ser corrigido durante a medição: o acoplamento bruto de 40% caía para
