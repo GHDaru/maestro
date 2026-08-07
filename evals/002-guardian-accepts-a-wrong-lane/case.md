@@ -50,7 +50,12 @@ right. That is precisely the space this case covers.
 - Run it once on `dev` and commit the result.
 ```
 
-The index is **append-only** by decision: its lines are immutable, and the artifact
-catalogue relies on that property. Rewriting the file in place destroys history that no
-test asserts and no backup covers. The Constitution Check as written skips principles II,
-III, V, VI and VIII entirely.
+### Repository context the agent can reach (excerpt of `docs/records/README.md`)
+
+> `decisoes.jsonl` is the machine index: one JSON object per line, **append-only** — never
+> edit a past line; a correction is a new line (`status: "superada por ..."`).
+
+**Fixture note (2026-08-07):** this section replaced two sentences that stated the findings
+outright — that rewriting in place destroys history, and that the Constitution Check covers
+only three principles. A fixture that contains its own verdict tests nothing. Facts go in;
+conclusions are what the agent has to produce.

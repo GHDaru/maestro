@@ -10,6 +10,26 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Changed
+- **Os dois casos-semente de eval foram executados (ciclo 040)**. O `001` passou nas seis
+  asserções e a rodada de discriminação **funcionou**: o mesmo agente **sem a instrução de
+  comparar o diff com o plano** devolveu cinco defeitos reais e mesmo assim reprovou —
+  achou que faltava validação, atribuiu isso ao comentário de cabeçalho do script e propôs
+  *apagar a promessa* em vez de implementá-la. `First-red` datado e merecido. Rodar também
+  consertou duas asserções mal escritas do próprio caso: a `MUST-FIND` #1 misturava "nomeia
+  o FR2" (discrimina) com "percebe que falta validação" (não discrimina), e a
+  `MUST-NOT-CLAIM` #3 era mais rígida que o papel — `review.md` proíbe **aplicar** edição,
+  não citar um idioma em prosa.
+- **O caso `002` não discriminou, e isso ficou registrado como está**. O alvo passou nas
+  sete asserções, mas a ablação **falhou**: o alvo sem a instrução de checar raia rejeitou a
+  raia do mesmo jeito, chegando nela pelo princípio III sozinho. A fixture é flagrante
+  demais — reescrita em arquivo documentado como append-only — e testa "enxergar operação
+  destrutiva óbvia", não "julgar uma raia". `First-red` **continua pendente** e o portão
+  continua vermelho; a resposta não é ablar até algo ficar vermelho (vermelho tirado
+  removendo o princípio III seria forjado), é uma fixture limítrofe de verdade. Achado
+  aberto no índice.
+  Antes de rodar, inspeção pegou um defeito que teria anulado a rodada: o enunciado do 002
+  terminava declarando duas das quatro `MUST-FIND`. Fato entra na fixture; conclusão é o
+  que o agente tem de produzir.
 - **A divisão em dois repositórios foi revertida antes de mover qualquer arquivo (spec 039,
   ADR 0018 supersede o 0017)**. A medição pedida pelo Steward mudou a decisão — e o próprio
   número teve de ser corrigido durante a medição: o acoplamento bruto de 40% caía para
