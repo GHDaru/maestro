@@ -23,7 +23,7 @@
   | `constitution-check` | todo plano, antes de implementar |
   | `verifiable-dod` | ao escrever critério de aceite ou portão |
   | `fight-the-pile-up` | ao ver arquivo/agente/prompt inchando |
-  | `anti-patterns` | ao desenhar e ao revisar (checklist negativo, 18 itens) |
+  | `anti-patterns` | ao desenhar e ao revisar (checklist negativo, 21 itens) |
   | `diagnose-before-fix` | **encontrou bug? antes de propor correção** |
   | `living-journey` | mexeu em tela: captura do build real + heurística datada |
 
@@ -59,7 +59,7 @@
   scripts/check-links.sh             # todo link relativo do repositório resolve
   scripts/check-retro.sh             # dívida de achados abertos (gatilho da retro)
   scripts/check-evals.sh             # corpus de evals: alvo real, discrimina, não defasou
-  scripts/check-boundary.sh          # fronteira dos dois repositórios decidível (ADR 0017)
+  scripts/check-boundary.sh          # fronteira interna entre os dois domínios (ADR 0018)
   scripts/check-chapters.sh            # Iron Law editorial: 9 seções, datação, exemplo real
   scripts/package-plugin.sh --verify   # plugin sincronizado com as fontes
   node publicar/build.mjs                   # livro: links, imagens e slugs

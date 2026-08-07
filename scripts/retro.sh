@@ -20,15 +20,31 @@ done
 
 # 2. Gates: pending items from the qa reports crossed with the record (ADR 0009 —
 #    the index docs/records/decisoes.jsonl is the source of truth for gate state).
+#
+#    This block lied for twenty-nine cycles. It matched ids shaped `gate-<cycle>-*`, which
+#    only seven early gates ever used: since ADR 0009 automated the record, promote-main.sh
+#    writes `gate-main-<sha>`. Every cycle from 011 on was therefore reported PENDING
+#    forever — a check measuring a *format* instead of the fact (anti-pattern 13), inside
+#    the very tool that feeds the retrospective. Found by the retrospective of cycle 041.
+#
+#    The fact, now: a cycle is promoted when a commit citing it sits on the main line.
 echo ""
 echo "── Gates (qa-report × record) ──"
+MAIN="${MAESTRO_MAIN_BRANCH:-main}"
+# Captured ONCE, never piped into `grep -q`: under `set -o pipefail`, grep -q exits at the
+# first match, git log takes SIGPIPE, and the whole pipeline reports failure — so the test
+# silently reads as "no match". That bug already killed check-cycle.sh once; second time
+# here. See anti-pattern 21.
+SUBJECTS="$(git log "$MAIN" --format=%s 2>/dev/null || true)"
 found=0
 for f in $(grep -rlE "Pendência de gate|Pending gate" specs/*/qa-report.md 2>/dev/null); do  # PT-DATA (older cycles)
   cycle=$(dirname "$f" | xargs basename | cut -d- -f1)
   pending=$(sed -nE '/Pendência de gate|Pending gate/,$p' "$f" | grep -m1 "^- " | sed 's/^- //' || true)  # PT-DATA
   [[ -n "$pending" ]] || continue
   if grep -q "\"gate-$cycle" docs/records/decisoes.jsonl 2>/dev/null; then
-    echo "  $(dirname "$f" | xargs basename): ✅ closed in the record (gate-$cycle-*)"
+    echo "  $(dirname "$f" | xargs basename): ✅ closed in the record (legacy id gate-$cycle-*)"
+  elif grep -qiE "spec[ .]?$cycle\b" <<<"$SUBJECTS"; then
+    echo "  $(dirname "$f" | xargs basename): ✅ on the main line (a commit cites spec $cycle)"
   else
     echo "  $(dirname "$f" | xargs basename): ⏳ PENDING — $pending"
     found=1

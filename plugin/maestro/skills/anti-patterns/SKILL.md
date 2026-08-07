@@ -106,6 +106,31 @@ through speculation.
     the pages that get published, because that is where the silent breakage hides.
     *(cycle 034, from the finding of cycle 033.)*
 
+19. **An evaluation case proved by nobody failing it** — a case the target passes looks like
+    evidence and is not: it may be measuring a capability the target cannot lose. Case 002
+    was written twice, and both times an **ablated** target — the same agent minus the
+    instruction the case existed to test — passed identically. The finding was
+    over-determined: another principle produced it without the instruction. **Antidote**: a
+    case declares the **axis** it separates, and a pass counts only once an ablation on that
+    axis has been seen failing. No ablation, no baseline.
+    *(cycle 041, from the finding of cycle 040.)*
+
+20. **A fixture that carries its own verdict, or whose premise was never checked** — the
+    input handed to the target is not neutral. One version of case 002 ended by stating two
+    of its own four required findings in prose; its replacement asserted that a gate flags a
+    line the gate's pattern does not match. Both defects were found by the agents under
+    evaluation, not by the author. **Antidote**: facts go into a fixture, conclusions come
+    out of the target — and before any run, reproduce the premise. A fixture whose symptom
+    does not reproduce tests the author's imagination. *(cycle 041, from cycle 040.)*
+
+21. **`grep -q` ending a pipe under `pipefail`** — `grep -q` exits at the first match, the
+    upstream command takes SIGPIPE, and `set -o pipefail` turns a successful match into a
+    failed pipeline. The condition then reads as "no match", silently and always. It killed
+    `check-cycle.sh` once, and `retro.sh` a second time — where it reported every cycle from
+    011 on as an open gate, for twenty-nine cycles. **Antidote**: capture once into a
+    variable and match against that (`grep -q … <<<"$var"`); never end a pipe in `grep -q`
+    inside a condition. *(cycle 041 — the second occurrence is what made it a rule.)*
+
 ## How to use it
 
 - **Designing**: walk the catalogue as a negative checklist (is any item present?).

@@ -45,6 +45,21 @@ would be a check measuring the text instead of the fact.
 {"id":"retro-034-fecha-027","fecha":"achado-027-retro-sem-gatilho","data":"2026-08-03","titulo":"Closed: check-retro.sh …","status":"fechada por retro-034","registro":"specs/034-…/qa-report.md","ciclo":"034"}
 ```
 
+### A finding found and fixed inside the same cycle
+
+It gets **one** line, with status `fechada no mesmo ciclo` and **no `fecha` field**. There is
+nothing to close: no line was ever open.
+
+```json
+{"id":"achado-041-retro-mentindo","data":"2026-08-07","titulo":"Found and fixed here: retro.sh …","status":"fechada no mesmo ciclo","registro":"specs/041-…/qa-report.md","ciclo":"041"}
+```
+
+This form exists because its absence produced the same defect twice. With no shape for
+"found and fixed here", the improvisation was a line whose `fecha` pointed at its own `id` —
+a self-closure of a finding that was never open, which the index then had to correct with a
+further line. Cycles 039 and 041, the second written while retrospecting the first. A gap in
+a protocol is not a lapse of attention: it is a shape the protocol failed to offer.
+
 ## How to record
 
 ```bash

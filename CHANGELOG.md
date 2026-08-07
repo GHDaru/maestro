@@ -10,6 +10,27 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Changed
+- **Retro executada pelo gatilho, não pela memória (spec 041)**. O `check-retro.sh` foi a
+  vermelho sozinho — `✗ 4 open findings (limit 4)` — sete ciclos depois de ganhar gatilho.
+  E a retro achou um quinto achado que ninguém tinha registrado: **a própria ferramenta da
+  retro mentia**. O `retro.sh` casava ids no formato `gate-NNN-*`, que só **sete** gates
+  usaram; desde o ADR 0009 o `promote-main.sh` grava `gate-main-<sha>`, e são **33**. Todo
+  ciclo de 011 em diante era reportado como gate pendente — por 29 ciclos, dentro do
+  instrumento que alimenta a cerimônia. A correção **quebrou na primeira tentativa** pelo
+  mesmo motivo que já matara o `check-cycle.sh`: `grep -q` no fim de um pipe sob `pipefail`.
+  Segunda ocorrência ⇒ virou regra.
+  Três anti-padrões novos: **19** (caso de eval que ninguém reprova — pode estar medindo
+  capacidade que o alvo não perde), **20** (fixture que carrega o próprio veredito ou cuja
+  premissa não foi conferida) e **21** (`grep -q` encerrando pipe sob `pipefail`).
+  Os achados viraram **forma, não conselho**: `Axis:` obrigatório no `case.md`, `Ablation:`
+  e `Premise-checked:` obrigatórios na linha de base, pré-voo e ablação obrigatórios no
+  `/eval`. O caso 002 foi **aposentado com motivo** — e a aposentadoria é desenhada contra o
+  abuso: exige `Retired-because:`, é impressa em toda execução e contada à parte, então o
+  verde diz "um provado, um aposentado", nunca "dois casos bons".
+  O índice ganhou a forma que faltava para **achado encontrado e corrigido no mesmo ciclo**:
+  o `fecha` auto-referente apareceu duas vezes (039 e 041, a segunda enquanto se
+  retrospectava a primeira) porque o protocolo não oferecia essa forma. Dívida de retro em
+  **zero**.
 - **Os dois casos-semente de eval foram executados (ciclo 040)**. O `001` passou nas seis
   asserções e a rodada de discriminação **funcionou**: o mesmo agente **sem a instrução de
   comparar o diff com o plano** devolveu cinco defeitos reais e mesmo assim reprovou —

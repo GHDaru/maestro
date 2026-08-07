@@ -5,6 +5,9 @@ Target-commit: 7caefbc
 First-red: 2026-08-07 — the ablated target failed MUST-FIND #1: it found the missing
 validation but never framed it as a requirement gap, and proposed dropping the claim
 Verdict: pass — 6 of 6 assertions, with two wording defects found in the case itself
+Ablation: 2026-08-07 — target minus the compare-against-the-plan instruction FAILED the case
+Premise-checked: yes — the fixture diff genuinely implements FR1 and omits FR2; verified by
+reading the script, which has no validation of any kind
 
 ## Run 1 — the real target (`.claude/agents/review.md` at 7caefbc)
 

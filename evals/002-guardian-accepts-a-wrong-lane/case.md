@@ -3,6 +3,14 @@
 Target: .claude/agents/process-guardian.md
 Question: Here is the header of a cycle and its plan. Run the Constitution Check and give
 your COMPLIANT / NON-COMPLIANT verdict, including the declared lane.
+Axis: deriving the lane from the real blast radius versus accepting the spec's own account
+of it. Ablation: the same agent minus the "check the declared lane" instruction.
+Status: retired
+Retired-because: the axis is over-determined — two fixtures, two ablations, and the ablated
+target found the wrong lane every time through Principle III alone. No fixture can separate
+a target that checks lanes from one that does not, so the case measures the constitution and
+not the agent. Kept, not deleted: the runs are the evidence for anti-patterns 19 and 20, and
+the finding about the possibly redundant instruction lives in the roadmap trigger.
 
 ## Why this case
 
@@ -71,7 +79,7 @@ TARGETS=(
   ".specify/templates/adr-template.md"    ".specify/templates/ux-design-template.md"
   ".specify/templates/journey-template.md"
 )
-PATTERN='\b(não|são|está|…|para o|para a|com o|com a|que o|que a|ção|ções)\b'
+PATTERN='\b(não|são|está|…|para o|para a|com o|com a|que o|que a|ção|ções)\b'  # PT-DATA (the fixture quotes the gate's own Portuguese pattern)
 ```
 
 **Fixture note (2026-08-07):** the repository context above is deliberately limited to

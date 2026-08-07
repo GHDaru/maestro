@@ -12,9 +12,10 @@
 # a gate everybody must be able to run cannot depend on an interface key.
 #
 # Anatomy of a case, under evals/<NNN-slug>/:
-#   case.md      Target: <path that exists>   Question: <what the agent is asked>
+#   case.md      Target: · Question: · Axis: (the capability the case separates)
+#                optional: Status: retired + Retired-because:
 #   expect.md    >=1 "MUST-FIND:"  and  >=1 "MUST-NOT-CLAIM:"
-#   baseline.md  Date: · Target-commit: · First-red: · Verdict:
+#   baseline.md  Date: · Target-commit: · First-red: · Verdict: · Ablation: · Premise-checked:
 #
 # Exit 0 only when every case passes every condition.
 set -euo pipefail
@@ -25,6 +26,7 @@ cd "$ROOT"
 fail=0
 pending=0
 cases=0
+retired=0
 
 note() { printf '  %s\n' "$1"; }
 bad()  { printf '  ✗ %s\n' "$1"; fail=1; }
@@ -49,6 +51,20 @@ for dir in evals/*/; do
   done
   [[ $missing -eq 0 ]] || continue
 
+  # ---- 1b. retired cases are visible, never silent ------------------------
+  # A case proved non-discriminating is retired, not deleted: the learning is the point.
+  # Retirement is declared and carries its reason, so it cannot be used to hide a red.
+  if grep -q '^Status: retired' "$dir/case.md"; then
+    reason="$(grep -m1 '^Retired-because:' "$dir/case.md" | sed 's/^Retired-because:[[:space:]]*//' || true)"
+    if [[ -z "$reason" ]]; then
+      bad "retired with no 'Retired-because:' — retirement without a reason is deletion"
+    else
+      note "RETIRED — $reason"
+      retired=$((retired + 1))
+    fi
+    continue
+  fi
+
   # ---- 2. the target exists ----------------------------------------------
   target="$(grep -m1 '^Target:' "$dir/case.md" 2>/dev/null | sed 's/^Target:[[:space:]]*//' || true)"
   if [[ -z "$target" ]]; then
@@ -65,6 +81,13 @@ for dir in evals/*/; do
     bad "case.md has no 'Question:' line — the agent must be asked something specific"
   fi
 
+  # The axis is the capability the case claims to separate. Without it there is nothing to
+  # ablate, and a pass proves only that the target is competent — not that the case measures
+  # anything (anti-pattern 19).
+  if ! grep -q '^Axis:' "$dir/case.md"; then
+    bad "case.md has no 'Axis:' line — a case with no axis has nothing to ablate"
+  fi
+
   # ---- 3. the assertions discriminate ------------------------------------
   # A case that only asks "did it find something?" passes on any verbose answer.
   # The negative side is what separates a right answer from a plausible one.
@@ -79,7 +102,10 @@ for dir in evals/*/; do
   [[ "$n_find" -ge 1 && "$n_not" -ge 1 ]] && note "assertions: ${n_find} must-find / ${n_not} must-not-claim"
 
   # ---- 4. the baseline is honest and fresh --------------------------------
-  for field in Date Target-commit First-red Verdict; do
+  # Ablation and Premise-checked are required because both were learned the hard way:
+  # a case nobody failed proves nothing (19), and a fixture whose symptom does not
+  # reproduce tests the author rather than the target (20).
+  for field in Date Target-commit First-red Verdict Ablation Premise-checked; do
     grep -q "^${field}:" "$dir/baseline.md" || bad "baseline.md has no '${field}:' line"
   done
 
@@ -110,7 +136,7 @@ for dir in evals/*/; do
 done
 
 echo "──"
-echo "cases: ${cases} · pending baselines: ${pending}"
+echo "cases: ${cases} · retired: ${retired} · pending baselines: ${pending}"
 
 if [[ $fail -ne 0 ]]; then
   echo "✗ evaluation corpus is not healthy (see above)."

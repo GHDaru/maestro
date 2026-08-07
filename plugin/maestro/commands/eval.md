@@ -6,10 +6,17 @@ Run the evaluation case named in the argument (a directory under `evals/`) and *
 what happened**. The deterministic health of the corpus is `scripts/check-evals.sh`; this
 command is the part that needs a model in the loop.
 
-## Before anything
+## Before anything — two pre-flight checks, in this order
 
-Run `scripts/check-evals.sh` and read the line for this case. If it is structurally broken,
-fix the case first — evaluating against loose assertions produces a green that means nothing.
+1. Run `scripts/check-evals.sh` and read the line for this case. If it is structurally
+   broken, fix the case first — evaluating against loose assertions produces a green that
+   means nothing.
+2. **Reproduce the premise.** The fixture claims a symptom; confirm the symptom actually
+   occurs from the inputs shown. A fixture whose premise does not hold tests the author's
+   imagination, not the target — and two of the first fixtures written here failed this,
+   both caught by the agents under evaluation rather than by their author (anti-pattern 20).
+   Also read `case.md` for leaked conclusions: if the prose already states what the target is
+   supposed to find, the run proves nothing. Record the outcome in `Premise-checked:`.
 
 ## Running it
 
@@ -23,6 +30,23 @@ fix the case first — evaluating against loose assertions produces a green that
 3. **Read `expect.md` only after the answer exists.** Judge assertion by assertion:
    - every `MUST-FIND:` — is that substance present? Wording does not matter, substance does.
    - every `MUST-NOT-CLAIM:` — did the answer assert it anyway? One of these is a fail.
+
+## Then ablate — this is not optional
+
+A run where the target does well proves nothing on its own: the case may be measuring a
+capability the target cannot lose. Run the case a second time against an **ablated target**
+— the same instruction with the specific bullet the case's `Axis:` names removed, and
+nothing else changed.
+
+- The ablated target **fails** the case → the case discriminates on its declared axis.
+  That failure is the `First-red`, and it is earned rather than staged.
+- The ablated target **passes** → the case does not measure the target. Do not adjust the
+  fixture until something goes red; that is fishing. Either the axis is over-determined
+  (another rule produces the finding anyway) and the case should be **retired** with its
+  reason, or the axis is wrong and needs rechoosing. Case 002 was retired exactly this way,
+  after two fixtures and two ablations (anti-pattern 19).
+
+Record the outcome in `Ablation:` either way.
 
 ## Recording it
 

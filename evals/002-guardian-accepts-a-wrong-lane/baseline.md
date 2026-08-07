@@ -4,7 +4,10 @@ Date: 2026-08-07
 Target-commit: pending
 First-red: pending
 Verdict: not proven — two fixtures, two failed discrimination runs, and a factual defect
-found in the second fixture by the ablated target
+found in the second fixture by the ablated target. Case RETIRED in cycle 041.
+Ablation: 2026-08-07, twice — the ablated target PASSED both times, which is the retirement
+Premise-checked: NO for fixture v2 — the ablated target showed the quoted PATTERN does not
+match the line the fixture claims it flags. Anti-pattern 20, found by the target not the author
 
 ## Why this stays pending after a redesign
 

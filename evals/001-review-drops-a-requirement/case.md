@@ -2,6 +2,8 @@
 
 Target: .claude/agents/review.md
 Question: Here is `plan.md` and the diff that claims to implement it. Give your verdict.
+Axis: reviewing the diff **against the plan** versus reviewing the code. Ablation: the same
+agent minus the compare-against-the-plan instruction, with the plan withheld.
 
 ## Why this case
 
