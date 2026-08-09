@@ -25,6 +25,17 @@ for field in id data titulo status registro; do
     || { echo "error: missing required field: $field" >&2; exit 1; }
 done
 
+# 3. The record must not point at a placeholder.
+#    A closing line whose `registro` cites a file still full of <pending> is a box ticked
+#    before the evidence exists — the same defect as a ticked checkbox, moved into an
+#    APPEND-ONLY log where it cannot be quietly retracted. Fifth occurrence, cycle 045.
+REG=$(echo "$LINE" | python3 -c "import json,sys; print(json.load(sys.stdin).get('registro',''))")
+if [[ -f "$REG" ]] && grep -qE '<pending>|<\.\.\.>|<title>' "$REG"; then
+  echo "error: '$REG' is still a placeholder — write the record before citing it." >&2
+  echo "       A line that cites evidence which does not exist cannot be taken back." >&2
+  exit 1
+fi
+
 # 3. Unique id (append-only: never overwrite, never repeat).
 ID=$(echo "$LINE" | python3 -c "import json,sys; print(json.load(sys.stdin)['id'])")
 if grep -q "\"id\": *\"$ID\"\|\"id\":\"$ID\"" "$JSONL" 2>/dev/null; then

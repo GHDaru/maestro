@@ -1,5 +1,8 @@
 # Maestro
 
+> **v0.1.0** (2026-08-09) — primeira linha de base. O que ela é e o que ela
+> reconhecidamente **não** tem está na nota de release do [CHANGELOG](CHANGELOG.md).
+>
 > **Metodologia de engenharia de software com 1 humano regendo N agentes de IA.**
 > Um humano rege · muitos agentes executam · a spec é a partitura · os gates, o compasso.
 

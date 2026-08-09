@@ -34,6 +34,8 @@ cd "$ROOT"
 # Retroactivity turns a gate into noise: the rule applies from the cycle that introduced it.
 # The debt of older cycles is declared, not erased (same precedent as check-cycle.sh).
 FLOOR="${MAESTRO_MIN_CYCLE_CONFORMANCE:-42}"
+# The no-checkbox rule starts at 045 (cycle that introduced it); older cycles keep theirs.
+CRIT_FLOOR="${MAESTRO_MIN_CYCLE_CRITERIA:-45}"
 ONLY="${1:-}"
 
 ARTIFACTS=(research data-model contracts checklist ux-design)
@@ -85,6 +87,30 @@ for d in specs/[0-9][0-9][0-9]-*/; do
     bad "Constitution Check has ${rows} of ${principles} principles — a partial check is not a check"
   else
     ok "Constitution Check complete (${rows}/${principles})"
+  fi
+
+  # ---- 2b. the spec states criteria; the qa-report says whether they held ---
+  # A checkbox in the spec duplicates a function the qa-report already owns, and a box
+  # ticked before the work exists turns the criterion into a plan. Four occurrences across
+  # cycles 042-044, in two different tokens, by the same author. The form is the fix.
+  # -E for portability: `\|` alternation in a BRE is a GNU extension, and on BSD sed the
+  # range would never open — the gate would go green on every spec, forever, on a laptop.
+  crit="$(sed -nE '/^## (Critérios de aceite|Acceptance criteria)/,/^## /p' "$d/spec.md" || true)"  # PT-DATA (older cycles)
+  if [[ -z "$crit" ]]; then
+    # A gate that cannot tell "clean" from "did not look" is the failure this repository has
+    # already named twice (corollary C5, anti-pattern 16). Not finding the section is a
+    # finding, never a pass.
+    bad "spec.md has no acceptance-criteria section the gate can locate — rename it to '## Acceptance criteria' or '## Critérios de aceite'"
+  else
+    # The WHOLE family of checkbox spellings: -, *, +, any indentation, [ ] or [x] or [X].
+    boxes="$(grep -cE '^[[:space:]]*[-*+] \[' <<<"$crit" || true)"
+    if [[ "$((10#$n))" -lt "$((10#$CRIT_FLOOR))" ]]; then
+      note "acceptance-criteria checkboxes: not checked below cycle ${CRIT_FLOOR}"
+    elif [[ "$boxes" -gt 0 ]]; then
+      bad "spec.md has ${boxes} checkbox(es) in the acceptance criteria — the spec states what must hold; the qa report says whether it did"
+    else
+      ok "acceptance criteria located and stated without checkboxes"
+    fi
   fi
 
   # ---- 3. every conditional artifact is DECLARED, never merely absent ------

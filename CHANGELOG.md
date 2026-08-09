@@ -9,7 +9,56 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 
 ## [Unreleased]
 
+## [0.1.0] — 2026-08-09
+
+**A primeira linha de base.** Até aqui o Maestro era sempre "o que estiver no `main` hoje":
+o cabeçalho deste arquivo declarava versionamento semântico (*Semantic Versioning*, SemVer)
+desde o ciclo 001 e havia **zero** versões fechadas e **zero** tags em 44 ciclos. Esta é a
+versão em que "instalei o Maestro" passa a significar alguma coisa.
+
+**O que ela é.** Um método instalável em três camadas (script, plugin, catálogo de skills),
+com treze agentes, seis skills, uma constituição de oito princípios, uma camada de derivação
+(cinco axiomas, sete teoremas, treze corolários), vinte e dois anti-padrões vindos de
+retrospectivas reais, **onze portões executáveis** — oito deles bloqueando na integração
+contínua desde o ciclo 043, ao lado do `package-plugin --verify` e do build do livro — e um corpus de avaliação com **um caso provado por
+ablação**.
+
+**O que ela reconhecidamente não tem**, porque versão que só lista conquistas é publicidade:
+
+- o **serviço do companion** nunca foi publicado (fase F6, marcada ✅ no roadmap com a
+  ressalva "falta publicar o serviço", desde o ciclo 015) — o
+  widget existe, o backend depende de hospedagem, chave e banco;
+- o corpus de evals tem **um** caso provado e **um aposentado** sem substituto: a cobertura
+  é declarada, não estimada;
+- cada portão tem um **piso de ciclo** e os ciclos anteriores carregam dívida declarada —
+  35 dos 40 primeiros `tasks.md` não têm a cauda que o template sempre carregou;
+- quatro das sete classes de risco do modelo **nunca ocorreram aqui**, então o gate
+  proporcional é teoria para elas;
+- as onze subseções desta versão acumularam repetição em 44 ciclos de append e não foram
+  reorganizadas — edição em massa junto de corte de versão é o anti-padrão 18;
+- as datas dos ciclos 040–044 foram gravadas como 2026-08-07 e o dia era outro: erro meu,
+  repetido, corrigido a partir desta linha e não reescrito para trás.
+
+**Como ela é verificada.** Os onze portões precisam estar verdes para a promoção acontecer:
+o `promote-main.sh` recusa promover enquanto a conformidade estiver vermelha. E os quatro
+últimos ciclos passaram por revisão independente em contexto fresco, que **reprovou todos os
+quatro** e mudou o desenho de três — inclusive este, cujo portão novo cobria uma forma de
+caixa e deixava quatro passarem.
+
 ### Changed
+- **Os critérios de aceite da spec perdem a caixa de marcação (spec 045)**. Marcar caixa
+  antes de a evidência existir aconteceu **quatro vezes** entre os ciclos 042 e 044, em dois
+  tokens diferentes, com o mesmo autor e a mesma intenção — e instruir já tinha sido tentado
+  no 043, falhando no 044. Então a forma mudou em vez da instrução: a spec **declara
+  critérios**, o `qa-report` diz **se valeram**, e uma caixa duplica a função do relatório
+  (princípio VI). `check-conformance.sh` reprova caixa nos critérios de qualquer spec ≥045,
+  cobrindo a família inteira de grafias (`-`, `*`, `+`, indentada, `[x]` ou `[X]`) e
+  **falhando quando não encontra a seção** — um portão que não distingue "limpo" de "não
+  olhei" é a falha que este repositório já nomeou duas vezes.
+  Na revisão apareceu a **quinta** ocorrência, agora num log append-only: duas linhas do
+  índice de decisões citavam um `qa-report.md` ainda em branco. O `record-decision.sh` passa
+  a **recusar** uma linha cujo `registro` aponte para arquivo com placeholder — uma linha que
+  cita evidência inexistente não pode ser retirada depois.
 - **O `/speckit.plan` passa a deferir à tabela de declaração (spec 044)**. Fecha o
   `achado-042-speckit-plan-contraditorio`: quem instalava o Maestro recebia **duas ordens
   contraditórias** — o `plan-template.md` mandando *declarar* os cinco artefatos

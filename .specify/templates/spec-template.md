@@ -36,9 +36,16 @@ the plan). The journey(s) served, if any.]
     output, or an exit code.
   - If you cannot answer "which command proves this?", the criterion is still vague — rewrite it.
   - Forbidden: gameable numeric targets ("coverage ≥ X%"), "it is clear", "it works well".
+
+  NO CHECKBOXES HERE, ON PURPOSE. This section states what MUST HOLD; whether it held is
+  recorded in `qa-report.md`, which is the artifact that owns that question. A checkbox
+  invites ticking, and a box ticked before the work exists turns the criterion into a plan —
+  four times in cycles 042 to 044, in two different tokens, by the same author with the same
+  good intention. A form the method failed to offer is not a lapse of attention
+  (Principle VI: never duplicate a function already served).
 -->
-- [ ] WHEN [condition] THE SYSTEM SHALL [observable behaviour].
-- [ ] `[command]` → [expected: empty | = N | exit 0].
+- WHEN [condition] THE SYSTEM SHALL [observable behaviour].
+- `[command]` → [expected: empty | = N | exit 0].
 
 ## Clarify
 

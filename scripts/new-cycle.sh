@@ -47,7 +47,8 @@ write_if_absent "$DIR/spec.md" <<EOF
 - <...>
 
 ## Acceptance criteria (DoD)
-- [ ] <verifiable check — see the verifiable-dod skill>
+<!-- No checkboxes: this states what must hold; whether it held is the qa-report's job. -->
+- <verifiable criterion — see the verifiable-dod skill>
 
 ## Clarify
 1. <ambiguity to resolve before the plan>
