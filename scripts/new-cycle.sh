@@ -4,7 +4,7 @@
 # filled in and an empty Constitution Check to complete. Never overwrites a cycle.
 # This skeleton is the MINIMUM shortcut; the full reference (with guidance) lives in
 # the vendored templates under .specify/templates/ — if they diverge, they win
-# (.specify/UPSTREAM.md, rule 2).
+# (.specify/UPSTREAM.md, rule 4).
 #
 # Usage:  scripts/new-cycle.sh <NNN> <slug>
 #         scripts/new-cycle.sh 007 vendor-spec-kit

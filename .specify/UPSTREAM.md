@@ -21,6 +21,7 @@
 | `templates/checklist-template.md` | upstream 0.4.3 | Verbatim (pouco uso; adaptar quando doer) |
 | `templates/constitution-template.md` | upstream 0.4.3 | Verbatim (nossa constituição já existe em `.specify/memory/`) |
 | `templates/agent-file-template.md` | upstream 0.4.3 | Verbatim |
+| `.claude/commands/speckit.plan.md` | upstream 0.4.3 | **Adaptado** (ciclo 044): as fases 0 e 1 passam a **deferir à tabela de declaração** do plano (`ART:<artefato>=yes\|no`) em vez de gerar `research.md`, `data-model.md` e `contracts/` incondicionalmente; `quickstart.md` **não** é produzido |
 | demais `.claude/commands/speckit.*` | upstream 0.4.3 | Verbatim (leem os templates adaptados — herdam o método por eles) |
 | `scripts/bash/` | upstream 0.4.3 | Verbatim |
 
@@ -28,6 +29,19 @@
 
 1. **Sync deliberada**: novidade do upstream/fork só entra por **spec** (nunca
    reinstalar por cima — apagaria as adaptações). Compare, escolha, adapte, registre aqui.
-2. **Hierarquia de scaffolds**: estes templates são a **referência completa** (é o que os
+2. **Divergência declarada, nunca silenciosa**: quando uma peça vendorizada contradiz o
+   método, a contradição é resolvida **por spec** e a peça muda de estado nesta tabela.
+   Precedente e motivo: até o ciclo 044 o `/speckit.plan` mandava gerar quatro artefatos
+   incondicionalmente enquanto o `plan-template.md` mandava declará-los — quem instalava o
+   Maestro recebia as duas ordens e nenhuma explicação de qual vencia. Divergir sem
+   registrar é o que transforma vendorizar em bifurcar.
+
+3. **`quickstart.md` não é produzido no Maestro**: a função "como alguém experimenta isto" é
+   servida pelo documento de jornada (`templates/journey-template.md`) e pelas receitas.
+   Princípio VI proíbe duplicar função já servida. Nota precisa: o `speckit.tasks` e o
+   `speckit.implement` ainda **leem** o arquivo se ele existir (`IF EXISTS`), o que é
+   inofensivo e não foi tocado — a divergência é sobre **produzir**, não sobre ler.
+
+4. **Hierarquia de scaffolds**: estes templates são a **referência completa** (é o que os
    comandos `/speckit.*` leem); o esqueleto do `scripts/new-cycle.sh` é o atalho mínimo
    derivado. Se divergirem, **os templates mandam** — atualize o script.

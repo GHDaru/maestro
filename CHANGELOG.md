@@ -9,7 +9,22 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 
 ## [Unreleased]
 
-### Added
+### Changed
+- **O `/speckit.plan` passa a deferir à tabela de declaração (spec 044)**. Fecha o
+  `achado-042-speckit-plan-contraditorio`: quem instalava o Maestro recebia **duas ordens
+  contraditórias** — o `plan-template.md` mandando *declarar* os cinco artefatos
+  condicionais e o comando vendorizado mandando *gerar* quatro deles incondicionalmente,
+  sem nada dizendo qual vencia. As fases 0 e 1 agora produzem **apenas** o declarado `=yes`,
+  e o `quickstart.md` sai por princípio VI (a função "como alguém experimenta isto" já é
+  servida pela jornada e pelas receitas). `UPSTREAM.md` move `speckit.plan.md` de *Verbatim*
+  para **Adaptado** e ganha a regra **"divergência declarada, nunca silenciosa"** — divergir
+  sem registrar é o que transforma vendorizar em bifurcar.
+  **A revisão independente reprovou** ("do not merge as-is") com seis lacunas, e a
+  bloqueante estava **fora do diff**: `plugin/maestro/` é build commitado e continuava
+  distribuindo o texto contraditório — reprovando o portão bloqueante da CI escrito uma hora
+  antes, no ciclo 043. Três outras eram **da mesma classe que o ciclo combatia**, agora
+  dentro do remédio: um portão novo que engolia o passo sem token, uma linha upstream
+  competindo com a tabela, e a fase 0 com a ordem antes da ressalva.
 - **Os onze portões entram na integração contínua (spec 043)**. Fecha o
   `achado-042-portoes-fora-da-ci`, levantado pela revisão independente do ciclo anterior: a
   CI rodava **um** job (o do `CHANGELOG`) e os outros dez dependiam de alguém lembrar — o

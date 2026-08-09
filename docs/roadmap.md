@@ -4,7 +4,7 @@
 > skills, workflows, scripts). Também serve de **orientação**: se você está perdido, comece
 > por aqui. Documento vivo — atualizado a cada fase.
 >
-> **Status**: Ativo · **Atualizado**: 2026-08-07 (ciclo 043) · **Regra**: este mapa é
+> **Status**: Ativo · **Atualizado**: 2026-08-07 (ciclo 044) · **Regra**: este mapa é
 > artefato vivo — todo ciclo concluído atualiza a tabela de fases **no mesmo PR**
 > (anti-padrão 15: artefato de planejamento que congela).
 
@@ -119,6 +119,7 @@ Cada fase = **um ciclo** (uma spec, um gate). Ordem por dependência:
 | **F16 — Retro com gatilho disparado** | o `check-retro.sh` foi a vermelho sozinho (4 achados, teto 4) e a retro achou que a **própria ferramenta mentia**: `retro.sh` reportava gate pendente falso desde o ciclo 011. Anti-padrões 19, 20 e 21; `Axis`/`Ablation`/`Premise-checked` obrigatórios; aposentadoria com motivo | 041 | ✅ |
 | **F17 — Conformidade executável** | omissão vira declaração: tokens `ART:`/`TAIL:` nos templates e no gerador, `docs/governance/artifacts.md` instalável, `check-conformance.sh` como resposta a "estou seguindo o Maestro?". Corolários C12/C13, anti-padrão 22 | 042 (ADR 0019) | ✅ |
 | **F18 — Portões na integração contínua** | job `gates` com 8 estruturais + plugin + build bloqueantes; `check-cycle`/`check-retro`/`check-conformance` consultivos; conformidade aplicada no `promote-main.sh`. Privilégio mínimo, sem segredo | 043 | ✅ |
+| **F19 — Proveniência sem contradição** | `/speckit.plan` defere à tabela de declaração; `quickstart.md` fora por princípio VI; `UPSTREAM.md` com a regra "divergência declarada, nunca silenciosa" | 044 | ✅ |
 | **(contínuo) — Retrospectiva** | erro recorrente → regra versionada; **gatilho por dívida de achados** (`check-retro.sh`) desde o ciclo 034 | 017, 034 e seguintes | 🔄 |
 
 ### Gatilhos abertos (decisões adiadas, com condição de revisão)
