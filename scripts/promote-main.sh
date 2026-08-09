@@ -29,7 +29,23 @@ if [[ "$AHEAD" -eq 0 ]]; then
   exit 1
 fi
 
-# 3. Show what goes to main.
+# 3. Conformance is enforced HERE, not in continuous integration.
+#    A cycle's qa-report.md is a placeholder from new-cycle.sh until the cycle ends, so a
+#    blocking conformance gate in CI would be red for the whole life of every branch — and
+#    a gate that is always red is one people learn to scroll past. Promotion is the moment
+#    a cycle is actually finished, so it is the moment the claim has to hold (cycle 043).
+if [[ -x scripts/check-conformance.sh ]]; then
+  if ! scripts/check-conformance.sh; then
+    echo "" >&2
+    echo "aborted: conformance is red — a cycle is being promoted with its method missing" >&2
+    echo "         from its own artifacts. Fix it above, or promote by hand if you have" >&2
+    echo "         decided the debt is acceptable and recorded why." >&2
+    exit 1
+  fi
+  echo ""
+fi
+
+# 4. Show what goes to main.
 echo "going to '$MAIN' ($AHEAD commit(s) from '$DEV'):"
 git --no-pager log --oneline "$MAIN".."$DEV"
 echo

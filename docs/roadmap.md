@@ -4,7 +4,7 @@
 > skills, workflows, scripts). Também serve de **orientação**: se você está perdido, comece
 > por aqui. Documento vivo — atualizado a cada fase.
 >
-> **Status**: Ativo · **Atualizado**: 2026-08-07 (ciclo 042) · **Regra**: este mapa é
+> **Status**: Ativo · **Atualizado**: 2026-08-07 (ciclo 043) · **Regra**: este mapa é
 > artefato vivo — todo ciclo concluído atualiza a tabela de fases **no mesmo PR**
 > (anti-padrão 15: artefato de planejamento que congela).
 
@@ -118,6 +118,7 @@ Cada fase = **um ciclo** (uma spec, um gate). Ordem por dependência:
 | **F15 — Portão dos perfis de agente** | `check-roles.sh` compara `docs/agents/README.md` com o disco nos dois sentidos, incluindo *tools* e total declarado — o último lugar do repositório que dependia de memória | 039 | ✅ |
 | **F16 — Retro com gatilho disparado** | o `check-retro.sh` foi a vermelho sozinho (4 achados, teto 4) e a retro achou que a **própria ferramenta mentia**: `retro.sh` reportava gate pendente falso desde o ciclo 011. Anti-padrões 19, 20 e 21; `Axis`/`Ablation`/`Premise-checked` obrigatórios; aposentadoria com motivo | 041 | ✅ |
 | **F17 — Conformidade executável** | omissão vira declaração: tokens `ART:`/`TAIL:` nos templates e no gerador, `docs/governance/artifacts.md` instalável, `check-conformance.sh` como resposta a "estou seguindo o Maestro?". Corolários C12/C13, anti-padrão 22 | 042 (ADR 0019) | ✅ |
+| **F18 — Portões na integração contínua** | job `gates` com 8 estruturais + plugin + build bloqueantes; `check-cycle`/`check-retro`/`check-conformance` consultivos; conformidade aplicada no `promote-main.sh`. Privilégio mínimo, sem segredo | 043 | ✅ |
 | **(contínuo) — Retrospectiva** | erro recorrente → regra versionada; **gatilho por dívida de achados** (`check-retro.sh`) desde o ciclo 034 | 017, 034 e seguintes | 🔄 |
 
 ### Gatilhos abertos (decisões adiadas, com condição de revisão)
@@ -127,6 +128,8 @@ Cada fase = **um ciclo** (uma spec, um gate). Ordem por dependência:
 | **Upstream: objeto `outcome` + skill de corte + `check-outcomes.sh`** (pesquisa do ciclo 036) | primeira intenção grande **real** que não caiba em um ciclo — ou 1º projeto com usuários externos |
 | **Divisão em dois repositórios** (medida e rejeitada no ciclo 039, ADR 0018) | o guia ganhar **ciclo de vida próprio** (versão que não corresponde a uma do método) · aparecer quem contribua **só** com o livro · alguém instalar o método e reclamar do peso (6,5 MB para usar 846 KB) ou do ruído |
 | **Remover a linha "check the declared lane" do `process-guardian.md`** (ciclo 041) | um **terceiro** dado mostrando que o princípio III produz o achado sozinho. Duas ablações não bastam para mexer num agente |
+| **Proteção de branch no GitHub** (exigir o job `gates` verde para permitir merge) — ciclo 043 | decisão do Steward: enquanto não for ligada, o job avisa mas não trava ninguém |
+| **Fixar as *actions* por SHA em vez de tag maior** (ciclo 043) | quando um segredo entrar neste workflow, ou a permissão do token deixar de ser somente-leitura |
 | **Cobertura de evals além dos dois casos-semente** (ciclo 037) | um agente que **regrediu** — cada regressão observada ganha caso, e a cobertura cresce por dor, não por meta |
 | **Progressive disclosure** de contexto nas skills (leitura do artigo, ciclo 037) | orçamento de contexto do instalado passar de ~600 linhas (hoje: 419 nas seis skills) |
 | **PRP** (contexto de codebase na spec) | 1º ciclo regendo **código de produto** |

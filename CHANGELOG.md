@@ -10,6 +10,26 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Os onze portões entram na integração contínua (spec 043)**. Fecha o
+  `achado-042-portoes-fora-da-ci`, levantado pela revisão independente do ciclo anterior: a
+  CI rodava **um** job (o do `CHANGELOG`) e os outros dez dependiam de alguém lembrar — o
+  corolário C13 aplicado ao próprio enforcement. Entra o job `gates`: oito portões
+  estruturais mais `package-plugin --verify` e o build do livro, **bloqueantes**; e
+  `check-cycle`, `check-retro` e `check-conformance` **consultivos**, porque os três ficam
+  vermelhos por razões legítimas enquanto há trabalho em voo. O job **consome** os scripts
+  em vez de reimplementar a lógica em YAML, que é onde ela apodreceria fora de vista.
+  **A revisão independente reprovou de novo** ("do not merge as-is") e o achado que mais
+  valeu foi de desenho: `check-conformance` estava bloqueante, e o `new-cycle.sh` gera o
+  `qa-report.md` como placeholder **por desenho** — logo a CI ficaria vermelha da primeira à
+  última linha de qualquer branch, e portão sempre vermelho é portão que se aprende a
+  ignorar. Conformidade passou a ser aplicada **onde um ciclo de fato termina**: o
+  `promote-main.sh` agora **recusa promover** enquanto ela estiver vermelha.
+  Segurança conferida e não dispensada: `pull_request` (não `pull_request_target`), nenhum
+  segredo, `permissions: contents: read`, SHA da base por `env`, `npm ci --ignore-scripts`,
+  `concurrency` e `timeout-minutes`. Riscos residuais declarados no relatório: *actions* por
+  tag maior e não por SHA, e `push: ["**"]` executando scripts do repositório.
+  E o `grep -q` no fim de pipe do job de `CHANGELOG` foi endurecido — era a forma exata do
+  anti-padrão 21 que escrevemos hoje.
 - **Conformidade executável: a cauda sobrevive ao artefato (spec 042, ADR 0019)**. Origem:
   uma agente companheira noutro repositório, perguntada se tinha seguido o Maestro,
   respondeu honestamente que **em parte** — o `plan.md` dela parava em "docs e fitness

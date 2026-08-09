@@ -36,6 +36,11 @@
   drove faithfully to a pull request with no independent review and no security pass.
   Faithful obedience to a lossy source (corollary C12, anti-pattern 22).
 
+  TICK THESE ONLY WHILE WRITING THE EVIDENCE, never before. Ticking a tail box in advance —
+  "I am about to do this" — is how cycles 042 and 043 both reached review with `[x]` beside
+  a qa-report.md that was still an empty skeleton. The box records what happened; it is not
+  a plan (anti-pattern 22).
+
   Do NOT delete a line to say it does not apply — write `n/a: <reason>` on it instead. An
   absent step is invisible; a declared exception is auditable. `scripts/check-conformance.sh`
   reads these tokens, and for every step that is not `n/a` it requires the evidence to be in
