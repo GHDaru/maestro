@@ -77,7 +77,8 @@ jobs:
         run: |
           fail=0
           for s in check-agents check-roles check-install check-language \
-                   check-links check-evals check-boundary check-chapters; do
+                   check-links check-evals check-boundary check-chapters \
+                   check-licensing; do
             echo "── $s ──"
             scripts/"$s".sh || { echo "::error::$s failed"; fail=1; }
           done

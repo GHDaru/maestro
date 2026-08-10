@@ -35,6 +35,12 @@ build() {  # $1 = output directory
 }
 JSON
   cp README.md "$out/README.md" 2>/dev/null || true
+  # The plugin is the SECOND redistribution channel (the installer is the first), and it
+  # ships ten speckit commands derived from github/spec-kit. A manifest field saying "MIT"
+  # with no text anywhere in the package is exactly the "claim is not a licence" defect
+  # cycle 046 opened by accusing. `--verify` diffs the rebuild, so this stays true for free.
+  cp LICENSE "$out/LICENSE"
+  cp THIRD-PARTY-NOTICES.md "$out/THIRD-PARTY-NOTICES.md"
 }
 
 if [[ "$MODE" == "--verify" || "$MODE" == "--verificar" ]]; then

@@ -20,6 +20,8 @@
         "docs/agents/",
         "docs/roadmap.md",
         "CHANGELOG.md",
+        "LICENSE",
+        "THIRD-PARTY-NOTICES.md",
         "CLAUDE.md",
         "AGENTS.md",
         "README.md",

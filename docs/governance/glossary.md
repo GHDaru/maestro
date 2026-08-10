@@ -11,6 +11,7 @@
 | **API** | *Application Programming Interface* | Integration contract between systems. | — |
 | **ABAC** | *Attribute-Based Access Control* | Attribute-based authorization — decided **outside** the model. | Ch. 1 · 10 |
 | **RBAC** | *Role-Based Access Control* | Role-based authorization. | Ch. 10 |
+| **BMAD** | *BMAD-METHOD* (`bmad-code-org`) | Agentic spec-driven framework, ~22 agents in per-phase teams. Evaluated and **rejected** (cycle 007): a whole competing methodology would create a second source of truth. | ADR 0008 |
 | **BDD** | *Behavior-Driven Development* | Tests written in behaviour/business language. | Ch. 9 |
 | **Bounded context** | Bounded context (DDD) | The **seam** along which work is cut for safe parallelism. | Ch. 4 · 5 |
 | **C4** | Modelo C4 (*Context, Container, Component, Code*) | Architecture diagrams at four levels. | Ch. 8 (not adopted for now) |
@@ -21,6 +22,7 @@
 | **DoR** | *Definition of Ready* | Criteria for "ready to start" (a spec executable without guessing). | Ch. 9 |
 | **DORA** | *DevOps Research and Assessment* | Programme and four delivery-performance metrics. | Ch. 2 |
 | **DX** | *Developer Experience* | Developer experience. | Ch. 2 |
+| **EARS** | *Easy Approach to Requirements Syntax* | `WHEN ‹condition› THE SYSTEM SHALL ‹observable behaviour›` — a requirement that becomes a test almost 1:1. Absorbed from Kiro (cycle 007); lives in `verifiable-dod` and the spec template. | ADR 0008 |
 | **Eval** (*evaluation*) | Judgement baseline | Fixed input + assertions that discriminate + a dated observation, for output that cannot be compared by equality. **Not** a test (equality) and **not** a benchmark (models against each other). | `evals/` · ADR 0016 |
 | **Fitness function** | Architecture test | Checks dependency rules in continuous integration. | Ch. 9 |
 | **Forcing function** | Mechanism that forces | What **fails loudly** when an artifact is not kept up to date. | Ch. 8 |
@@ -40,6 +42,7 @@
 | **ReBAC** | *Relationship-Based Access Control* | Relationship-based authorization. | Ch. 1 |
 | **RFC** | *Request for Comments* | Design proposal for discussion (not adopted standalone — the ADR covers it). | Ch. 8 |
 | **ROI** | *Return on Investment* | Return on investment — Maestro's executive thesis. | — |
+| **SBOM** | *Software Bill of Materials* | Inventory of what composes a shipped artifact — dependencies, versions, licences. Named in cycle 046 as **theatre here**: in an agentic system the payload is the prose, so a fully-markdown MIT file can still instruct harm. | Cycle 046 |
 | **SDD** | *Spec-Driven Development* | Spec-driven development. | Ch. 3 |
 | **SDET** | *Software Development Engineer in Test* | Test engineer. | Ch. 6 |
 | **SM** | *Scrum Master* | Scrum role — cut in Maestro (ceremony theatre). | Ch. 6 · 7 |

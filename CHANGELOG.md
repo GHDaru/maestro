@@ -9,6 +9,68 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 
 ## [Unreleased]
 
+### Adicionado
+- **ADR 0020 — MIT, e a atribuição viaja com a cópia** — registra a escolha e o que ela
+  custa: Apache-2.0 foi considerada e recusada, e a **ausência de concessão de patente é
+  consequência aceita, não esquecida** (ciclo 046).
+- **`LICENSE` (MIT, Copyright (c) 2026 GHDaru)** — por 45 ciclos o Maestro recusou uma
+  coleção de terceiros **por licença** enquanto não tinha a sua. Repositório sem licença não
+  é neutro: é *todos os direitos reservados*, mais restritivo que a licença recusada
+  (ciclo 046).
+- **`THIRD-PARTY-NOTICES.md`** — atribui `github/spec-kit` (speckit 0.4.3, fork
+  `GHDaru/spec-kit @ 0117a7b`, MIT, *Copyright GitHub, Inc.*), separando o que é **verbatim**
+  do que foi **modificado**, e declarando o que é ideia citada e não redistribuída (EARS) e o
+  que é dependência apenas de build (ciclo 046).
+- **`scripts/check-licensing.sh`** (12º portão) — cinco invariantes: o `LICENSE` existe · o
+  que o manifesto do plugin declara é o que o `LICENSE` diz · **todo** upstream nomeado em
+  `.specify/UPSTREAM.md` está atribuído, e **cada projeto atribuído nomeia o seu próprio
+  titular** · o instalador leva os dois arquivos · o plugin empacotado também. Entrada
+  ausente é falha, nunca aprovação. Visto acusar em **dez mutações** que quebram o
+  repositório de verdade (ciclo 046).
+
+### Corrigido
+- **O plugin era o segundo canal de redistribuição e saía nu.** `plugin/maestro/` empacota
+  dez comandos `speckit.*` derivados do `github/spec-kit` e não continha texto de licença
+  nenhum — só o campo `"license": "MIT"` no manifesto, que é exatamente a "alegação sem
+  texto" que este ciclo abriu acusando. O ADR 0020 nomeia os dois canais no Contexto e a
+  primeira versão corrigia só um. `package-plugin.sh` passa a empacotar os dois arquivos
+  (achado da revisão independente, ciclo 046).
+- **Três vacuidades no portão novo**, cada uma demonstrada por uma mutação que deixava o
+  repositório quebrado e o portão verde: a checagem de copyright casava com a **própria
+  prosa** do arquivo; o nome do upstream estava **hard-coded**, então um upstream novo entrava
+  em silêncio e renomear o existente fazia o laço rodar zero vezes ainda dizendo "attributed";
+  e a checagem do instalador casava com um **comentário**, num bloco sem `else` que dava
+  exit 0 se o instalador fosse apagado (achados da revisão independente, ciclo 046).
+- **`THIRD-PARTY-NOTICES.md` afirmava que o aviso de permissão estava "reproduzido"** sob
+  `github/spec-kit` quando não estava, e seus links relativos quebravam **no destino
+  instalado** (`docs/governance/LICENSE` não existe; o arquivo chama-se `MAESTRO-LICENSE`).
+  O aviso passa a ser reproduzido por inteiro e os caminhos deixam de ser links (ciclo 046).
+- **`obra/superpowers` (MIT, Copyright (c) 2025 Jesse Vincent) passa a ser atribuído.**
+  `skills/diagnose-before-fix`, redistribuída pelos dois canais, declara "Superpowers,
+  adapted" e reimplementa a técnica — mas duas linhas curtas são próximas do original.
+  Errar para o lado da atribuição custa um parágrafo; errar para o outro custa a obrigação
+  (ciclo 046).
+
+### Modificado
+- **`scripts/install-maestro.sh`** — a obrigação do MIT viaja com a cópia: `LICENSE` →
+  `docs/governance/MAESTRO-LICENSE` e `THIRD-PARTY-NOTICES.md` →
+  `docs/governance/MAESTRO-THIRD-PARTY-NOTICES.md`. **Renomeados de propósito**: um `LICENSE`
+  solto na raiz alheia afirmaria que o projeto de destino inteiro é MIT do Maestro, o que é
+  falso (ciclo 046).
+- **`docs/governance/glossary.md`** — EARS, BMAD e SBOM, os três usados em documentos nossos
+  sem nunca terem sido registrados (ciclo 046).
+- **`scripts/check-language.sh`** — `LICENSE` e `THIRD-PARTY-NOTICES.md` entram na superfície
+  instalável guardada pelo portão: viraram superfície neste ciclo e nada os mantinha em
+  inglês (ciclo 046).
+- **`boundary.json`** — `LICENSE` e `THIRD-PARTY-NOTICES.md` declarados no domínio `toolkit`
+  (ciclo 046).
+- **`docs/adr/README.md`** — o índice tinha congelado: faltavam os ADRs **0018 e 0019** e o
+  0017 aparecia como "Aceito" tendo sido superado. Corrigido junto (anti-padrão 15:
+  artefato de planejamento que congela) (ciclo 046).
+- **`.github/workflows/ci.yml`** — `check-licensing` entra no job `gates` como bloqueante:
+  são **doze portões**, **nove** bloqueando na integração contínua. Portão que só roda quando
+  alguém lembra não é *forcing function* (ciclo 046).
+
 ## [0.1.0] — 2026-08-09
 
 **A primeira linha de base.** Até aqui o Maestro era sempre "o que estiver no `main` hoje":

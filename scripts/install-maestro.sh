@@ -68,6 +68,24 @@ copy() {  # $1 = relative path (file or directory)
   fi
 }
 
+# The MIT obligation travels with the copy. Renamed on purpose: dropping a bare LICENSE in
+# someone else's repository root would assert that THEIR whole project is MIT-Maestro, which
+# is false. These two files describe only the Maestro material installed here.
+copy_as() {  # $1 = source, $2 = destination path inside the target
+  local src="$SOURCE/$1" dst="$TARGET/$2"
+  [[ -e "$src" ]] || { echo "  ⚠ missing in the source: $1"; return; }
+  if [[ -e "$dst" && "$FORCE" -ne 1 ]]; then echo "  = exists (kept): $2"; return; fi
+  if [[ "$DRY" -eq 1 ]]; then
+    echo "  + would copy: $1 -> $2"
+  else
+    mkdir -p "$(dirname "$dst")"; cp "$src" "$dst"; echo "  + installed: $2"
+  fi
+}
+
+echo "── Licence and attribution (travels with the copy) ──"
+copy_as "LICENSE" "docs/governance/MAESTRO-LICENSE"
+copy_as "THIRD-PARTY-NOTICES.md" "docs/governance/MAESTRO-THIRD-PARTY-NOTICES.md"
+
 echo "── Agents (who does what) ──"
 copy ".claude/agents"
 

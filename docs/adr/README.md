@@ -19,7 +19,10 @@ consequências → fontes.
 | 0014 | [Inglês como idioma do método instalável](0014-ingles-no-instalavel.md) | Aceito |
 | 0015 | [Axiomas, teoremas e corolários como camada de derivação](0015-axiomas-teoremas-corolarios.md) | Aceito |
 | 0016 | [Evals como critério para saída não-determinística](0016-evals-para-saida-nao-deterministica.md) | Aceito |
-| 0017 | [Divisão em dois repositórios: toolkit e guia](0017-divisao-em-dois-repositorios.md) | Aceito |
+| 0017 | [Divisão em dois repositórios: toolkit e guia](0017-divisao-em-dois-repositorios.md) | **Superado pelo 0018** |
+| 0018 | [Fronteira interna em vez de divisão em dois repositórios](0018-fronteira-interna-em-vez-de-divisao.md) | Aceito |
+| 0019 | [Conformidade executável e catálogo de artefatos](0019-conformidade-executavel-e-catalogo-de-artefatos.md) | Aceito |
+| 0020 | [MIT, e a atribuição viaja com a cópia](0020-licenca-mit-e-atribuicao-que-viaja.md) | Aceito |
 
 > Índice consultável por máquina (append-only): [`../records/decisoes.jsonl`](../records/decisoes.jsonl) — ver [protocolo](../records/README.md).
 
