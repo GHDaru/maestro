@@ -4,7 +4,7 @@
 > skills, workflows, scripts). Também serve de **orientação**: se você está perdido, comece
 > por aqui. Documento vivo — atualizado a cada fase.
 >
-> **Status**: Ativo · **Versão**: **v0.1.0** (2026-08-09) · **Atualizado**: ciclo 046 · **Regra**: este mapa é
+> **Status**: Ativo · **Versão**: **v0.1.0** (2026-08-09) · **Atualizado**: ciclo 047 · **Regra**: este mapa é
 > artefato vivo — todo ciclo concluído atualiza a tabela de fases **no mesmo PR**
 > (anti-padrão 15: artefato de planejamento que congela).
 
@@ -122,9 +122,14 @@ Cada fase = **um ciclo** (uma spec, um gate). Ordem por dependência:
 | **F19 — Proveniência sem contradição** | `/speckit.plan` defere à tabela de declaração; `quickstart.md` fora por princípio VI; `UPSTREAM.md` com a regra "divergência declarada, nunca silenciosa" | 044 | ✅ |
 | **F20 — v0.1.0** | critérios de aceite sem caixa (a quarta ocorrência vira forma) + primeira versão fechada, com os limites conhecidos declarados na nota de release | 045 | ✅ |
 | **F21 — Licença e atribuição** | `LICENSE` (MIT) + `THIRD-PARTY-NOTICES.md` atribuindo `github/spec-kit` com titular, versão e commit do fork, verbatim separado de modificado; `check-licensing.sh` (manifesto × licença · upstream × atribuição · o aviso viaja junto); instalador leva os dois **renomeados**. Achado do painel: recusávamos licença alheia sem ter a nossa | 046 (ADR 0020) | ✅ |
+| **F22 — Catálogo do ecossistema** | julgamento de terceiros com a **ideia** como unidade e **momento separado de estado**: 30 cards imutáveis, 18 fontes com licença, índice append-only, sete dimensões (duas reprovam sozinhas), template de avaliação instalável e `check-ecosystem.sh`. Achou, na primeira execução, duas absorções que nunca chegaram ao disco | 047 | ✅ |
 | **(contínuo) — Retrospectiva** | erro recorrente → regra versionada; **gatilho por dívida de achados** (`check-retro.sh`) desde o ciclo 034 | 017, 034 e seguintes | 🔄 |
 
 ### Gatilhos abertos (decisões adiadas, com condição de revisão)
+
+> Os gatilhos sobre **trabalho de terceiros** não estão aqui: vivem no
+> [catálogo do ecossistema](ecosystem/README.md), onde `scripts/check-ecosystem.sh` recusa
+> um `observar` sem gatilho. Esta tabela é para o que é nosso.
 
 | Item | Gatilho para reavaliar |
 |---|---|

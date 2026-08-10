@@ -1,5 +1,10 @@
 # Pesquisa — o upstream: decompor um projeto grande em objetos executáveis
 
+> **Migrado para o catálogo (ciclo 047).** O julgamento por **ideia** e o veredito
+> **corrente** vivem agora em [`docs/ecosystem/`](../ecosystem/README.md) — fontes com licença, um card
+> datado por ideia e o estado em índice append-only. Este documento fica como está: é
+> a observação daquele momento, e o catálogo não reescreve história.
+
 > **Pergunta**: existe método (e skills prontas) para ir de uma **intenção grande** até o
 > conjunto de specs que o Maestro sabe executar? O que adotar, o que absorver, o que
 > descartar?

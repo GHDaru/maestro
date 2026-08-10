@@ -51,7 +51,7 @@ jobs:
             exit 1
           fi
 
-  # The eleven fitness functions used to run only when an agent chose to run them — which
+  # The fitness functions used to run only when an agent chose to run them — which
   # is the memory the method spent cycle 042 trying to replace (corollary C13). Here they
   # run on every push and every pull request, with no key and no per-run cost.
   gates:
@@ -78,7 +78,7 @@ jobs:
           fail=0
           for s in check-agents check-roles check-install check-language \
                    check-links check-evals check-boundary check-chapters \
-                   check-licensing; do
+                   check-licensing check-ecosystem; do
             echo "── $s ──"
             scripts/"$s".sh || { echo "::error::$s failed"; fail=1; }
           done

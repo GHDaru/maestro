@@ -33,6 +33,7 @@ TARGETS=(
   ".specify/templates/adr-template.md"
   ".specify/templates/ux-design-template.md"
   ".specify/templates/journey-template.md"
+  ".specify/templates/evaluation-template.md"
   # Became installable surface in cycle 046: both travel with every copy and are packaged
   # into the plugin. They were English already — the gap was that nothing kept them so.
   "LICENSE"

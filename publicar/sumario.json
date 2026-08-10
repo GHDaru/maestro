@@ -227,6 +227,11 @@
           "teaser": "O índice de decisões legível por máquina."
         },
         {
+          "arquivo": "docs/ecosystem/README.md",
+          "titulo": "Catálogo do ecossistema",
+          "teaser": "O que já olhamos do trabalho dos outros e o que decidimos sobre cada ideia — com a fonte, a licença, as sete dimensões e o portão que verifica se ainda é verdade."
+        },
+        {
           "arquivo": "docs/handbook/apendice-a-maestro-02.md",
           "titulo": "Apêndice A — maestro-02",
           "teaser": "Memória, auditoria, waves, anti-padrões."

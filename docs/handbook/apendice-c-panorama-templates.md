@@ -1,5 +1,10 @@
 # Apêndice C — Panorama exploratório: templates e frameworks do ecossistema
 
+> **Migrado para o catálogo (ciclo 047).** O julgamento por **ideia** e o veredito
+> **corrente** vivem agora em [`docs/ecosystem/`](../ecosystem/README.md) — fontes com licença, um card
+> datado por ideia e o estado em índice append-only. Este documento fica como está: é
+> a observação daquele momento, e o catálogo não reescreve história.
+
 > **Data da pesquisa**: 2026-08-01 · **Natureza**: exploratória (varredura + triagem),
 > diferente dos apêndices A/B (hands-on). Alimenta o **funil de avaliação**:
 > exploratório → gatilho → estudo hands-on → absorção por gate.

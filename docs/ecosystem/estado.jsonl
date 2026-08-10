@@ -1,0 +1,51 @@
+{"ideia": "raia-leve-delta", "estado": "absorver", "data": "2026-07-29", "destino": "docs/governance/operating-model.md", "gatilho": "", "ciclo": "005", "prova": "the pull request is the artifact"}
+{"ideia": "ears", "estado": "absorver", "data": "2026-07-30", "destino": "skills/verifiable-dod/SKILL.md", "gatilho": "", "ciclo": "007", "prova": "EARS"}
+{"ideia": "ide-proprietaria-spec-first", "estado": "descartar", "data": "2026-07-30", "destino": "", "gatilho": "", "ciclo": "007"}
+{"ideia": "adocao-integral-de-metodologia", "estado": "descartar", "data": "2026-07-30", "destino": "", "gatilho": "", "ciclo": "007"}
+{"ideia": "grafo-de-dependencias", "estado": "observar", "data": "2026-07-30", "destino": "", "gatilho": "um ciclo com mais de 20 tasks paralelas, ou varios projetos simultaneos, e a ordenacao manual doer", "ciclo": "007"}
+{"ideia": "spec-executavel", "estado": "observar", "data": "2026-07-30", "destino": "", "gatilho": "a ferramenta amadurecer e existir caso publico de producao que possamos ler", "ciclo": "007"}
+{"ideia": "baixa-cerimonia", "estado": "observar", "data": "2026-07-30", "destino": "", "gatilho": "raia leve ja cobre; nenhuma lacuna hoje (ADR 0008 item 3)", "ciclo": "007"}
+{"ideia": "registro-jsonl", "estado": "absorver", "data": "2026-07-31", "destino": "docs/records/README.md", "gatilho": "", "ciclo": "008", "prova": "one JSON object per line"}
+{"ideia": "retro-executavel", "estado": "absorver", "data": "2026-07-31", "destino": "scripts/retro.sh", "gatilho": "", "ciclo": "008", "prova": "pre-computes the retrospective material"}
+{"ideia": "catalogo-anti-padroes", "estado": "absorver", "data": "2026-07-31", "destino": "skills/anti-patterns/SKILL.md", "gatilho": "", "ciclo": "008", "prova": "Iron Law"}
+{"ideia": "gates-em-nivel-de-task", "estado": "absorver", "data": "2026-07-31", "destino": "docs/handbook/10-gates-classes-de-risco.md", "gatilho": "", "ciclo": "008", "prova": "Fases com gate valem em qualquer granularidade"}
+{"ideia": "economia-de-contexto-medida", "estado": "absorver", "data": "2026-07-31", "destino": "docs/handbook/04-fluxo-agentic-contexto.md", "gatilho": "", "ciclo": "008", "prova": "Economia medida, não afirmada"}
+{"ideia": "trilha-com-custo", "estado": "observar", "data": "2026-07-31", "destino": "", "gatilho": "alguem precisar responder quanto custou este ciclo com numero, e nao com estimativa", "ciclo": "008"}
+{"ideia": "iron-law", "estado": "absorver", "data": "2026-07-31", "destino": "skills/anti-patterns/SKILL.md", "gatilho": "", "ciclo": "011", "prova": "Iron Law"}
+{"ideia": "tdd-para-skills", "estado": "absorver", "data": "2026-07-31", "destino": ".claude/agents/skill-author.md", "gatilho": "", "ciclo": "011", "prova": "pressure scenario"}
+{"ideia": "root-cause-antes-do-fix", "estado": "absorver", "data": "2026-07-31", "destino": "skills/diagnose-before-fix/SKILL.md", "gatilho": "", "ciclo": "011", "prova": "NO FIX WITHOUT A ROOT-CAUSE INVESTIGATION FIRST"}
+{"ideia": "review-por-task", "estado": "absorver", "data": "2026-07-31", "destino": "docs/agents/comunicacao.md", "gatilho": "", "ciclo": "011", "prova": "Checkpoint por task"}
+{"ideia": "assuma-zero-contexto", "estado": "absorver", "data": "2026-07-31", "destino": ".specify/templates/tasks-template.md", "gatilho": "", "ciclo": "011", "prova": "ZERO CONTEXT"}
+{"ideia": "bootstrap-de-enforcement", "estado": "absorver", "data": "2026-07-31", "destino": "CLAUDE.md", "gatilho": "", "ciclo": "011", "prova": "Skills primeiro"}
+{"ideia": "hard-gate-universal", "estado": "descartar", "data": "2026-07-31", "destino": "", "gatilho": "", "ciclo": "011"}
+{"ideia": "rastreabilidade-via-issues", "estado": "observar", "data": "2026-08-01", "destino": "", "gatilho": "projeto com mais de um desenvolvedor humano, usando issues como coordenacao real", "ciclo": "012"}
+{"ideia": "contexto-na-spec", "estado": "observar", "data": "2026-08-01", "destino": "", "gatilho": "primeiro ciclo em que o Maestro reger codigo de producao, e nao o proprio repositorio", "ciclo": "012"}
+{"ideia": "memoria-persistente-de-sessao", "estado": "observar", "data": "2026-08-01", "destino": "", "gatilho": "sessoes de varios dias sobre a mesma intencao comecarem a doer, com perda de contexto medida", "ciclo": "012"}
+{"ideia": "frota-de-agentes", "estado": "observar", "data": "2026-08-01", "destino": "", "gatilho": "⛔ por ora; reavaliar se houver frota real (apendice C)", "ciclo": "012"}
+{"ideia": "scaffolding-de-contexto", "estado": "observar", "data": "2026-08-01", "destino": "", "gatilho": "triagem 👁 no apendice C", "ciclo": "012"}
+{"ideia": "fluxo-spec-em-comandos", "estado": "observar", "data": "2026-08-01", "destino": "", "gatilho": "valida as raias (apendice C)", "ciclo": "012"}
+{"ideia": "skills-de-gestao-de-produto", "estado": "observar", "data": "2026-08-06", "destino": "", "gatilho": "observar e citar: licenca CC BY-NC-SA impede levar para o pacote MIT", "ciclo": "036"}
+{"ideia": "decomposicao-tres-passadas", "estado": "absorver", "data": "2026-08-06", "destino": "", "gatilho": "primeira intencao grande real que nao caiba em um ciclo", "ciclo": "036"}
+{"ideia": "worktree-por-task", "estado": "absorver", "data": "2026-07-30", "destino": "scripts/", "gatilho": "", "ciclo": "007"}
+{"ideia": "standards-por-camada", "estado": "absorver", "data": "2026-07-30", "destino": "docs/standards/", "gatilho": "", "ciclo": "007"}
+{"ideia": "worktree-por-task", "estado": "observar", "data": "2026-08-10", "destino": "", "gatilho": "dois ou mais agentes escrevendo no mesmo repositorio ao mesmo tempo, com conflito observado", "ciclo": "047"}
+{"ideia": "standards-por-camada", "estado": "observar", "data": "2026-08-10", "destino": "", "gatilho": "primeiro onboarding do metodo em codebase legado grande, com deriva de padrao observada", "ciclo": "047"}
+{"ideia": "baixa-cerimonia", "estado": "descartar", "data": "2026-08-10", "destino": "", "gatilho": "", "nota": "reclassificado no ciclo 047: observar exige gatilho, e nao ha condicao futura que faria adotar um segundo motor de fluxo para funcao ja servida", "ciclo": "047"}
+{"ideia": "fluxo-spec-em-comandos", "estado": "descartar", "data": "2026-08-10", "destino": "", "gatilho": "", "nota": "reclassificado no ciclo 047: mesma razao — observar sem gatilho e esquecer com cerimonia", "ciclo": "047"}
+{"ideia": "scaffolding-de-contexto", "estado": "descartar", "data": "2026-08-10", "destino": "", "gatilho": "", "nota": "reclassificado no ciclo 047: funcao ja servida pela instrucao gerada do disco (ADR 0013), e sem gatilho possivel", "ciclo": "047"}
+{"ideia": "skills-de-gestao-de-produto", "estado": "descartar", "data": "2026-08-10", "destino": "", "gatilho": "", "nota": "reclassificado no ciclo 047: a licenca reprova sozinha e nao ha gatilho que a mude; citar segue permitido e e o que fazemos", "ciclo": "047"}
+{"ideia": "decomposicao-tres-passadas", "estado": "observar", "data": "2026-08-10", "destino": "", "gatilho": "primeira intencao grande real que nao caiba em um ciclo", "nota": "reclassificado no ciclo 047: registrado como absorver, nunca chegou ao disco — e o destino era condicional", "ciclo": "047"}
+{"ideia": "frota-de-agentes", "estado": "observar", "data": "2026-08-10", "destino": "", "gatilho": "existir trabalho paralelo real que a atencao de um humano consiga governar", "nota": "reclassificado no ciclo 047: descartar sem gatilho escondia que a condicao de reabertura existe e e conhecida", "ciclo": "047"}
+{"ideia":"spec-kit","estado":"adotar","data":"2026-07-28","destino":".specify/UPSTREAM.md","gatilho":"","prova":"spec-kit","ciclo":"005"}
+{"ideia":"workflow-de-comandos-generico","estado":"descartar","data":"2026-08-01","destino":"","gatilho":"","ciclo":"012"}
+{"ideia":"padroes-de-fatiamento","estado":"absorver","data":"2026-08-06","destino":"","gatilho":"","ciclo":"036"}
+{"ideia":"fatia-vertical-invest","estado":"absorver","data":"2026-08-06","destino":"","gatilho":"","ciclo":"036"}
+{"ideia":"contrato-por-fatia","estado":"absorver","data":"2026-08-06","destino":"","gatilho":"","ciclo":"036"}
+{"ideia":"formato-mission-roadmap-techstack","estado":"absorver","data":"2026-08-06","destino":"docs/roadmap.md","gatilho":"","prova":"| Fase | Entrega | Spec | Status |","ciclo":"036"}
+{"ideia":"decompose-feature-em-issues","estado":"descartar","data":"2026-08-06","destino":"","gatilho":"","ciclo":"036"}
+{"ideia":"tecnicas-de-descoberta","estado":"observar","data":"2026-08-06","destino":"","gatilho":"entrar quando houver produto com usuarios externos; hoje o Steward e o usuario","ciclo":"036"}
+{"ideia":"piramide-prd-epico-historia","estado":"descartar","data":"2026-08-06","destino":"","gatilho":"","ciclo":"036"}
+{"ideia":"plataforma-gerenciada-de-agentes","estado":"observar","data":"2026-08-01","destino":"","gatilho":"ida a nuvem gerenciada","ciclo":"012"}
+{"ideia":"padroes-de-fatiamento","estado":"observar","data":"2026-08-10","destino":"","gatilho":"primeira intencao grande real que nao caiba em um ciclo","nota":"reclassificado no ciclo 047: registrado como absorver com destino numa skill que nunca foi escrita","ciclo":"047"}
+{"ideia":"fatia-vertical-invest","estado":"observar","data":"2026-08-10","destino":"","gatilho":"primeira intencao grande real que nao caiba em um ciclo","nota":"reclassificado no ciclo 047: a lei nao tem skill onde morar","ciclo":"047"}
+{"ideia":"contrato-por-fatia","estado":"observar","data":"2026-08-10","destino":"","gatilho":"dois ou mais agentes trabalhando em fatias da mesma intencao ao mesmo tempo","nota":"reclassificado no ciclo 047: campo obrigatorio que nenhum template ganhou","ciclo":"047"}

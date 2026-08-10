@@ -1,5 +1,10 @@
 # Avaliação do ecossistema SDD — Superpowers, BMAD, Kiro, Taskmaster, Agent OS e afins
 
+> **Migrado para o catálogo (ciclo 047).** O julgamento por **ideia** e o veredito
+> **corrente** vivem agora em [`docs/ecosystem/`](../ecosystem/README.md) — fontes com licença, um card
+> datado por ideia e o estado em índice append-only. Este documento fica como está: é
+> a observação daquele momento, e o catálogo não reescreve história.
+
 > Ficha de pesquisa (papel `research-curator`) · Ciclo: spec 007 · Data: 2026-07-30
 > Pergunta: **que ferramentas/metodologias de Spec-Driven Development e toolkits de agentes
 > existem além do Spec Kit (adotado) e OpenSpec (descartado, ADR 0005), e o que o Maestro

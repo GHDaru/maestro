@@ -1,5 +1,10 @@
 # Apêndice B — Estudo hands-on do Superpowers
 
+> **Migrado para o catálogo (ciclo 047).** O julgamento por **ideia** e o veredito
+> **corrente** vivem agora em [`docs/ecosystem/`](../ecosystem/README.md) — fontes com licença, um card
+> datado por ideia e o estado em índice append-only. Este documento fica como está: é
+> a observação daquele momento, e o catálogo não reescreve história.
+
 > **Data do estudo**: 2026-07-31 · **Fonte**: [`GHDaru/superpowers`](https://github.com/GHDaru/superpowers)
 > (fork de `obra/superpowers` — Jesse Vincent; commit `44c9b2d`, v6.2.0, MIT)
 > **Pergunta**: o que o líder do ecossistema de skills (~93k stars) faz que o Maestro

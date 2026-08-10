@@ -1,5 +1,10 @@
 # Apêndice A — Estudo do repositório `maestro-02`
 
+> **Migrado para o catálogo (ciclo 047).** O julgamento por **ideia** e o veredito
+> **corrente** vivem agora em [`docs/ecosystem/`](../ecosystem/README.md) — fontes com licença, um card
+> datado por ideia e o estado em índice append-only. Este documento fica como está: é
+> a observação daquele momento, e o catálogo não reescreve história.
+
 > **Data do estudo**: 2026-07-31 · **Fonte**: [`GHDaru/maestro-02`](https://github.com/GHDaru/maestro-02)
 > (fork de `sharpdeveye/maestro`, commit `00f9115`, v2.0.0, licença MIT)
 > **Pergunta do estudo**: o que este repositório contribui para a nossa metodologia?

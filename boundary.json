@@ -17,6 +17,7 @@
         "docs/governance/",
         "docs/adr/",
         "docs/records/",
+        "docs/ecosystem/",
         "docs/agents/",
         "docs/roadmap.md",
         "CHANGELOG.md",
@@ -53,7 +54,8 @@
       "docs/agents/",
       "docs/adr/README.md",
       "docs/records/README.md",
-      "docs/roadmap.md"
+      "docs/roadmap.md",
+      "docs/ecosystem/"
     ]
   },
   "unclassified_allowed": [

@@ -1,5 +1,10 @@
 # ADR 0008 — Avaliação do ecossistema SDD: manter Spec Kit único, absorver EARS e práticas do Superpowers
 
+> **Migrado para o catálogo (ciclo 047).** O julgamento por **ideia** e o veredito
+> **corrente** vivem agora em [`docs/ecosystem/`](../ecosystem/README.md) — fontes com licença, um card
+> datado por ideia e o estado em índice append-only. Este documento fica como está: é
+> a observação daquele momento, e o catálogo não reescreve história.
+
 - **Status**: Aceito (aprovado pelo Steward em 2026-07-31 — "pode incorporar todas as
   sugestões"; absorções materializadas na spec 008) · **Data**: 2026-07-30
 - **Ciclo**: spec 007 · **Pesquisa**: `docs/research/avaliacao-ecossistema-sdd.md`

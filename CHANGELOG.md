@@ -10,6 +10,20 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **`docs/ecosystem/` — o catálogo do ecossistema, com a IDEIA como unidade.** Trinta cards
+  imutáveis e datados (um por ideia, não por ferramenta), dezoito fontes com licença, e um
+  índice de estado append-only onde o veredito corrente é a última linha. **Momento e estado
+  passam a ser artefatos diferentes**: o card diz o que se julgou naquele dia, o índice diz o
+  que vale hoje — antes, o estado morava dentro da observação, e ou a observação virava
+  mentira ou a história era reescrita. Publicado no livro, em "Bastidores" (ciclo 047).
+- **`scripts/check-ecosystem.sh`** (13º portão, bloqueante na CI) — toda fonte com licença e
+  data · todo card com as sete dimensões · todo card com estado e todo estado com card ·
+  **`absorver`/`adotar` exigem um destino que existe, e um arquivo, não uma pasta** ·
+  `observar` exige gatilho. Doze mutações, todas acusadas (ciclo 047).
+- **`.specify/templates/evaluation-template.md`** — o template de avaliação com as **sete
+  dimensões** e o vocabulário fechado de veredito, instalável e em inglês (ADR 0014). Duas
+  dimensões reprovam sozinhas — licença incompatível e conflito insanável de princípio —, e
+  por isso **não há nota agregada**: uma média esconderia qual dimensão decidiu (ciclo 047).
 - **ADR 0020 — MIT, e a atribuição viaja com a cópia** — registra a escolha e o que ela
   custa: Apache-2.0 foi considerada e recusada, e a **ausência de concessão de patente é
   consequência aceita, não esquecida** (ciclo 046).
@@ -29,6 +43,12 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
   repositório de verdade (ciclo 046).
 
 ### Corrigido
+- **Cinco ideias estavam registradas como absorvidas com destino condicional, e nenhuma
+  chegou a um arquivo**: worktree por task, standards por camada, padrões de fatiamento,
+  fatia vertical e contrato por fatia. Os destinos vinham escritos como "quando houver dor
+  real" sob um cabeçalho de absorção — o que as torna `observar` com gatilho. Todas voltaram
+  ao estado honesto em linha nova, datada de 2026-08-10, sem reescrever o registro original
+  (ciclo 047).
 - **O plugin era o segundo canal de redistribuição e saía nu.** `plugin/maestro/` empacota
   dez comandos `speckit.*` derivados do `github/spec-kit` e não continha texto de licença
   nenhum — só o campo `"license": "MIT"` no manifesto, que é exatamente a "alegação sem

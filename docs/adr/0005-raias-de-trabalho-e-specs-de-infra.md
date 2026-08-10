@@ -1,5 +1,10 @@
 # ADR 0005 — Raias de trabalho (leve/plena/infra) e specs de infra com gates de reversibilidade
 
+> **Migrado para o catálogo (ciclo 047).** O julgamento por **ideia** e o veredito
+> **corrente** vivem agora em [`docs/ecosystem/`](../ecosystem/README.md) — fontes com licença, um card
+> datado por ideia e o estado em índice append-only. Este documento fica como está: é
+> a observação daquele momento, e o catálogo não reescreve história.
+
 - **Status**: Aceito
 - **Data**: 2026-07-22
 - **Relacionado**: `docs/governance/operating-model.md` (v1.1.0); ADR 0004;
