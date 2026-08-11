@@ -140,6 +140,122 @@ else
   done
 fi
 
+# ---- 4. UPGRADING an existing installation -------------------------------------
+# The empty-directory path was the only one ever tested, and it hid a defect that reached a
+# release note: `copy()` skipped any destination that already existed, and a directory always
+# exists after the first install — so re-running the installer delivered NOTHING. The
+# documented escape hatch was worse: `cp -r src dst` with dst an existing directory nests it
+# (.claude/agents/agents), so `--force` corrupted the layout it was meant to repair.
+#
+# What an upgrade must do, and what this checks:
+#   a) a file the project never touched, carrying an OLD version, is refreshed;
+#   b) a file the project MODIFIED is kept, and the new version offered beside it;
+#   c) a file the method no longer ships, still untouched, is removed;
+#   d) no directory is ever nested inside itself.
+echo "── Upgrading an existing installation ──"
+UP_T="$TMP/upgrade"
+mkdir -p "$UP_T"
+scripts/install-maestro.sh "$UP_T" >/dev/null 2>&1
+MAN="$UP_T/.maestro/manifest.tsv"
+if [[ ! -f "$MAN" ]]; then
+  bad "the installation records no manifest ($MAN) — without it an upgrade cannot tell an old file from an edited one"
+else
+  OLDF="skills/anti-patterns/SKILL.md"          # untouched by the project, but an old version
+  MINE="skills/diagnose-before-fix/SKILL.md"    # edited by the project
+  GONE="docs/governance/removed-upstream.md"    # shipped once, not shipped any more
+  printf 'OLD CONTENT\n' > "$UP_T/$OLDF"
+  python3 - "$MAN" "$OLDF" "$UP_T/$OLDF" <<'PYX'
+import hashlib, sys, pathlib
+man, rel, path = sys.argv[1], sys.argv[2], sys.argv[3]
+h = hashlib.sha256(open(path,'rb').read()).hexdigest()
+lines = [l for l in open(man, encoding='utf-8').read().splitlines() if l.split('\t')[-1] != rel]
+lines.append(f"{h}\t{rel}")
+open(man,'w',encoding='utf-8').write("\n".join(lines)+"\n")
+PYX
+  printf '\nEDITED BY THE PROJECT\n' >> "$UP_T/$MINE"
+  mkdir -p "$(dirname "$UP_T/$GONE")"; printf 'no longer shipped\n' > "$UP_T/$GONE"
+  python3 - "$MAN" "$GONE" "$UP_T/$GONE" <<'PYX'
+import hashlib, sys
+man, rel, path = sys.argv[1], sys.argv[2], sys.argv[3]
+h = hashlib.sha256(open(path,'rb').read()).hexdigest()
+open(man,'a',encoding='utf-8').write(f"{h}\t{rel}\n")
+PYX
+
+  scripts/install-maestro.sh "$UP_T" >"$TMP/upgrade.log" 2>&1 || true
+
+  if cmp -s "$UP_T/$OLDF" "$ROOT/$OLDF"; then
+    ok "an untouched file carrying an old version is refreshed"
+  else
+    bad "re-running the installer did NOT refresh ${OLDF} — an upgrade that delivers nothing is not an upgrade"
+  fi
+  if grep -q 'EDITED BY THE PROJECT' "$UP_T/$MINE"; then
+    ok "a file the project modified is kept"
+  else
+    bad "re-running the installer overwrote ${MINE}, which the project had modified"
+  fi
+  if [[ -f "$UP_T/${MINE}.maestro-new" ]]; then
+    ok "the new version is offered beside the modified file"
+  else
+    bad "the project's modified ${MINE} was kept, but the new version was not offered beside it"
+  fi
+  if [[ ! -e "$UP_T/$GONE" ]]; then
+    ok "a file the method no longer ships, still untouched, is removed"
+  else
+    bad "${GONE} is no longer shipped and survived the upgrade — the installation accumulates what the method dropped"
+  fi
+  # A file the PROJECT owns that happens to be byte-identical to ours must never be adopted
+  # as ours — because what we adopt, we later delete. Found by the review of this cycle.
+  MINE_OWN="docs/governance/artifacts.md"
+  if grep -qF "	${MINE_OWN}" "$MAN"; then
+    : # it is genuinely ours here; the case below uses a path we do NOT ship
+  fi
+  OWN_T="$TMP/own"; mkdir -p "$OWN_T/skills/verifiable-dod"
+  cp "$ROOT/skills/verifiable-dod/SKILL.md" "$OWN_T/skills/verifiable-dod/SKILL.md"
+  scripts/install-maestro.sh "$OWN_T" >/dev/null 2>&1
+  if grep -qF "	skills/verifiable-dod/SKILL.md" "$OWN_T/.maestro/manifest.tsv"; then
+    bad "a file the project already had, identical to ours, was claimed in the manifest — what we claim, we later delete"
+  else
+    ok "a file the project already had is not claimed as ours"
+  fi
+
+  # --dry-run must write NOTHING, including when combined with --force. Reading only $2 made
+  # `--force --dry-run` mean FORCE=1 DRY=0: the brake ignored and the destructive flag kept.
+  DRY_T="$TMP/dryrun"; mkdir -p "$DRY_T"
+  scripts/install-maestro.sh "$DRY_T" >/dev/null 2>&1
+  printf '\nEDITED BY THE PROJECT\n' >> "$DRY_T/$MINE"
+  before="$(cd "$DRY_T" && find . -type f -exec sha256sum {} + | sort | sha256sum)"
+  scripts/install-maestro.sh "$DRY_T" --force --dry-run >/dev/null 2>&1 || true
+  after="$(cd "$DRY_T" && find . -type f -exec sha256sum {} + | sort | sha256sum)"
+  if [[ "$before" == "$after" ]]; then
+    ok "--force --dry-run writes nothing"
+  else
+    bad "--force --dry-run modified the target — the brake was ignored and the destructive flag kept"
+  fi
+
+  # --force is the documented escape hatch and was never exercised: it must overwrite in
+  # place, keep the project's version beside it, and never nest a directory.
+  scripts/install-maestro.sh "$DRY_T" --force >/dev/null 2>&1
+  if cmp -s "$DRY_T/$MINE" "$ROOT/$MINE"; then
+    ok "--force takes the method's version"
+  else
+    bad "--force did not overwrite ${MINE}"
+  fi
+  if [[ -f "$DRY_T/${MINE}.maestro-old" ]]; then
+    ok "--force saves the project's version as .maestro-old"
+  else
+    bad "--force overwrote the project's version of ${MINE} with no copy kept"
+  fi
+  fnested="$(cd "$DRY_T" && find . -type d -regextype posix-extended -regex '.*/([^/]+)/\1' 2>/dev/null | head -3 || true)"
+  [[ -z "$fnested" ]] && ok "--force nests no directory" || bad "--force nested a directory: ${fnested}"
+
+  nested="$(cd "$UP_T" && find . -type d -regextype posix-extended -regex '.*/([^/]+)/\1' 2>/dev/null | head -3 || true)"
+  if [[ -z "$nested" ]]; then
+    ok "no directory nested inside itself"
+  else
+    bad "the upgrade nested a directory inside itself: ${nested}"
+  fi
+fi
+
 echo "──"
 if [[ $fail -ne 0 ]]; then
   echo "✗ the installed copy is not coherent: it ships something that points at nothing."

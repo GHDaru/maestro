@@ -4,7 +4,7 @@
 > skills, workflows, scripts). Também serve de **orientação**: se você está perdido, comece
 > por aqui. Documento vivo — atualizado a cada fase.
 >
-> **Status**: Ativo · **Versão**: **v0.2.0** (2026-08-11) · **Atualizado**: ciclo 050 · **Regra**: este mapa é
+> **Status**: Ativo · **Versão**: **v0.2.0** (2026-08-11) · **Atualizado**: ciclo 051 · **Regra**: este mapa é
 > artefato vivo — todo ciclo concluído atualiza a tabela de fases **no mesmo PR**
 > (anti-padrão 15: artefato de planejamento que congela).
 
@@ -129,6 +129,7 @@ Cada fase = **um ciclo** (uma spec, um gate). Ordem por dependência:
 | **F23 — A instalação que funciona onde ela cai** | `check-installed.sh` instala num diretório vazio e exercita o resultado: todo portão enviado roda verde lá, todo caminho citado existe lá. Nove citações quebradas corrigidas, constituição unificada, `check-retro` que morria em silêncio, dois portões que chegavam vermelhos. Origem: relato de quem instalou o método noutro repositório | 048 | ✅ |
 | **F24 — O índice de decisões com portão** | `check-adr.sh`: uma linha por ADR, todo link real, e o status comparado por **estado** (vocabulário fechado, sinônimos mapeados). Fecha o achado do 046 — índice congelado desde o 0017, com uma decisão revertida lendo-se como corrente — e foi visto acusar aquele defeito por mutação | 049 | ✅ |
 | **F25 — v0.2.0** | segunda versão fechada: dezesseis portões, treze bloqueantes, e a nota de release declarando o que a versão **não** tem — inclusive que a tag da v0.1.0 nunca chegou ao GitHub. `check-version.sh` impede que a versão seja afirmada de dois jeitos ao mesmo tempo | 050 | ✅ |
+| **F26 — O instalador que atualiza** | manifesto com hash por arquivo escrito: atualiza o que é nosso e está inalterado, mantém o que o projeto modificou (com `.maestro-new` ao lado), remove o que o método deixou de enviar. `--force` guarda `.maestro-old`; travessia de caminho recusada. Dez asserções novas no portão da cópia instalada | 051 | ✅ |
 | **(contínuo) — Retrospectiva** | erro recorrente → regra versionada; **gatilho por dívida de achados** (`check-retro.sh`) desde o ciclo 034 | 017, 034 e seguintes | 🔄 |
 
 ### Gatilhos abertos (decisões adiadas, com condição de revisão)

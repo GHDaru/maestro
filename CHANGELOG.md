@@ -9,6 +9,29 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 
 ## [Unreleased]
 
+### Corrigido
+- **O instalador passa a atualizar uma instalação existente.** Ele pulava qualquer destino
+  que já existisse — e um diretório sempre existe depois da primeira instalação —, então
+  **reinstalar não entregava nada**; e `--force`, a saída documentada na v0.2.0, rodava
+  `cp -r` sobre diretório existente e **aninhava** (`.claude/agents/agents`). Agora há um
+  **manifesto** (`.maestro/manifest.tsv`, hash por arquivo escrito) que torna três estados
+  distinguíveis: arquivo nosso e inalterado → **atualizado**; arquivo que o projeto modificou
+  → **mantido**, com a versão nova ao lado como `.maestro-new`; arquivo que o método deixou
+  de enviar → **removido**, só enquanto inalterado. Fecha `achado-050-upgrade-sem-force-nao-entrega`
+  (ciclo 051).
+- **O instalador reivindicava como seu um arquivo que nunca escreveu — e o apagava.** O
+  caminho era gravado no manifesto **antes** de qualquer decisão, então um arquivo que o
+  projeto já tinha e que fosse byte-idêntico ao nosso (quem rodou `specify init` por conta
+  própria tem exatamente isso) virava nosso em silêncio, e a poda o removia no release
+  seguinte. Reivindicar passou a ser consequência de **escrever** (achado da revisão
+  independente, ciclo 051).
+- **`--force --dry-run` ignorava o freio e destruía.** As flags eram lidas só de `$2`, então
+  a combinação virava `FORCE=1 DRY=0` — no único script que apaga arquivo em repositório
+  alheio. Agora qualquer flag, em qualquer ordem; `--force` guarda a sua versão como
+  `.maestro-old`; e a poda **recusa** caminho de manifesto com `..` ou `/` inicial, que
+  chegou a apagar arquivo fora do alvo na revisão (ciclo 051).
+
+
 ## [0.2.0] — 2026-08-11
 
 **A versão em que o método passou a ser verificado onde ele cai.** A v0.1.0 provou que
