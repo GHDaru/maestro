@@ -9,7 +9,7 @@ Run and report the result of each item:
 
 1. **Tests and build** of the project at hand, including the fitness functions.
 2. **Method fitness functions**: `scripts/check-agents.sh`, `scripts/check-roles.sh`,
-   `scripts/check-install.sh` (and `scripts/check-chapters.sh` when the book changed).
+   `scripts/check-install.sh` — and every other `scripts/check-*.sh` this repository has.
 3. **Secrets**: confirm that no secret or token was committed in the diff.
 4. **Traceability** (§9): confirm the link `spec NNN ↔ pull request ↔ tests ↔ journey`.
 5. **Changelog**: confirm an entry under `[Unreleased]` in `CHANGELOG.md` (or a light-lane

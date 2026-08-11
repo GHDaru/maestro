@@ -22,7 +22,15 @@ MAX_AGE="${MAESTRO_MAX_FINDING_AGE:-6}"   # in cycles
 
 [[ -f "$INDEX" ]] || { echo "✗ decision index missing: $INDEX" >&2; exit 1; }
 
-CURRENT_CYCLE=$(ls -d specs/[0-9][0-9][0-9]-*/ 2>/dev/null | tail -1 | sed 's|specs/||; s|-.*||' | sed 's/^0*//')
+# A glob, not `ls` in a pipe: with no specs/ directory `ls` exits 2, pipefail propagates it,
+# and `set -e` killed this script SILENTLY — exit 2, no output. Invisible here, where specs
+# always exist; fatal on a fresh installation, which is where cycle 048 found it.
+# Anti-pattern 21, third occurrence.
+shopt -s nullglob; _cycles=(specs/[0-9][0-9][0-9]-*/); shopt -u nullglob
+CURRENT_CYCLE=0
+if [[ ${#_cycles[@]} -gt 0 ]]; then
+  CURRENT_CYCLE="$(basename "${_cycles[${#_cycles[@]}-1]}" | cut -d- -f1 | sed 's/^0*//')"
+fi
 CURRENT_CYCLE="${CURRENT_CYCLE:-0}"
 
 python3 - "$INDEX" "$MAX_OPEN" "$MAX_AGE" "$CURRENT_CYCLE" <<'PY'

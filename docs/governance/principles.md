@@ -7,7 +7,8 @@
 > **Version**: 1.3.0 · **Ratified**: 2026-07-22 · **Amended**: 2026-08-03 (ADR 0015 —
 > axioms, theorems and corollaries as the derivation layer)
 >
-> New to Maestro? Start with [Comece por aqui](../comece-por-aqui.md) (Portuguese).
+> New to Maestro? Start with "Comece por aqui", in the Maestro repository (Portuguese —
+> the book does not travel with the installation; only this English surface does).
 > Acronyms: [glossary](glossary.md). Assumed truths: [axioms](axioms.md) (ADR 0015).
 
 Maestro is the method of **one human conducting many AI agents**: the specification is the

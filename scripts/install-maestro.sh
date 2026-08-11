@@ -93,7 +93,7 @@ echo "── Skills (how to do it) ──"
 copy "skills"
 
 echo "── Scripts (the ritual) ──"
-for s in new-cycle.sh promote-main.sh retro.sh record-decision.sh check-agents.sh check-roles.sh check-install.sh check-evals.sh check-conformance.sh check-ecosystem.sh; do
+for s in new-cycle.sh promote-main.sh retro.sh record-decision.sh check-agents.sh check-roles.sh check-install.sh check-evals.sh check-conformance.sh check-ecosystem.sh check-retro.sh check-links.sh; do
   copy "scripts/$s"
 done
 copy "scripts/README.md"
@@ -107,6 +107,11 @@ echo "── Commands and templates (the spec-driven engine) ──"
 copy ".claude/commands"
 copy ".specify/templates"
 copy ".specify/UPSTREAM.md"
+# The /speckit.* commands we ship CALL these; shipping the commands without them was the
+# defect of cycle 048 — a thing that points at something we do not send. The notices file
+# already declared this directory as redistributed, so sending it also makes that true.
+copy ".specify/scripts"
+copy ".specify/init-options.json"
 
 echo "── Governance (the source of truth) ──"
 copy "docs/governance/principles.md"

@@ -4,7 +4,7 @@
 > skills, workflows, scripts). Também serve de **orientação**: se você está perdido, comece
 > por aqui. Documento vivo — atualizado a cada fase.
 >
-> **Status**: Ativo · **Versão**: **v0.1.0** (2026-08-09) · **Atualizado**: ciclo 047 · **Regra**: este mapa é
+> **Status**: Ativo · **Versão**: **v0.1.0** (2026-08-09) · **Atualizado**: ciclo 048 · **Regra**: este mapa é
 > artefato vivo — todo ciclo concluído atualiza a tabela de fases **no mesmo PR**
 > (anti-padrão 15: artefato de planejamento que congela).
 
@@ -87,11 +87,14 @@ skills/  workflows/  scripts/   ➕ o toolkit (a construir)
 > Regra (YAGNI): trazemos **conceito/contrato adaptado**, não cópia em bloco. Cada item
 > entra por uma spec, não ad-hoc.
 
-**Ecossistema avaliado** (resposta canônica a "isso foi avaliado?"): Spec Kit ✅ adotado ·
-OpenSpec ❌ (ADR 0005) · Superpowers/BMAD/Kiro/Taskmaster/Agent OS/GSD/Tessl → ficha
-[`research/avaliacao-ecossistema-sdd.md`](research/avaliacao-ecossistema-sdd.md) + decisão
-[`adr/0008`](adr/0008-avaliacao-ecossistema-sdd.md) (ciclo 007). Ideias absorvidas: **EARS**
-(critério de aceite) e **worktree/rigor mandatório** (Superpowers), com destino nomeado.
+**Ecossistema avaliado** (resposta canônica a "isso foi avaliado?"): o
+[**catálogo do ecossistema**](ecosystem/README.md) — 40 ideias, 23 fontes com licença, o
+veredito corrente em índice append-only e `check-ecosystem.sh` conferindo que toda absorção
+aponta para um arquivo que a contém (ciclo 047). As fichas antigas continuam onde estavam,
+como observação datada. **Atenção ao que mudou**: `worktree por task` **não** foi absorvido —
+constava como tal com destino condicional e nunca chegou ao disco; hoje é `observar` com
+gatilho. Absorvidas de fato e provadas por arquivo: **EARS** e o **rigor mandatório**
+(Iron Law).
 
 ## 7. As fases (o plano de trabalho)
 
@@ -123,6 +126,7 @@ Cada fase = **um ciclo** (uma spec, um gate). Ordem por dependência:
 | **F20 — v0.1.0** | critérios de aceite sem caixa (a quarta ocorrência vira forma) + primeira versão fechada, com os limites conhecidos declarados na nota de release | 045 | ✅ |
 | **F21 — Licença e atribuição** | `LICENSE` (MIT) + `THIRD-PARTY-NOTICES.md` atribuindo `github/spec-kit` com titular, versão e commit do fork, verbatim separado de modificado; `check-licensing.sh` (manifesto × licença · upstream × atribuição · o aviso viaja junto); instalador leva os dois **renomeados**. Achado do painel: recusávamos licença alheia sem ter a nossa | 046 (ADR 0020) | ✅ |
 | **F22 — Catálogo do ecossistema** | julgamento de terceiros com a **ideia** como unidade e **momento separado de estado**: 30 cards imutáveis, 18 fontes com licença, índice append-only, sete dimensões (duas reprovam sozinhas), template de avaliação instalável e `check-ecosystem.sh`. Achou, na primeira execução, duas absorções que nunca chegaram ao disco | 047 | ✅ |
+| **F23 — A instalação que funciona onde ela cai** | `check-installed.sh` instala num diretório vazio e exercita o resultado: todo portão enviado roda verde lá, todo caminho citado existe lá. Nove citações quebradas corrigidas, constituição unificada, `check-retro` que morria em silêncio, dois portões que chegavam vermelhos. Origem: relato de quem instalou o método noutro repositório | 048 | ✅ |
 | **(contínuo) — Retrospectiva** | erro recorrente → regra versionada; **gatilho por dívida de achados** (`check-retro.sh`) desde o ciclo 034 | 017, 034 e seguintes | 🔄 |
 
 ### Gatilhos abertos (decisões adiadas, com condição de revisão)

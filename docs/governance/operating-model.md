@@ -5,10 +5,11 @@
 > cadence) and WHAT is produced (deliverables and artifacts, each with its gate).
 >
 > **Status**: Active · **Version**: 1.4.0 · **Date**: 2026-08-02 ·
-> **Decisions**: `docs/adr/0004-modelo-operacional.md`,
-> `docs/adr/0005-raias-de-trabalho-e-specs-de-infra.md`,
-> `docs/adr/0006-enforcement-dod-changelog.md`,
-> `docs/adr/0014-ingles-no-instalavel.md`
+> **Decisions**: ADR 0004 (operating model), ADR 0005 (lanes and infra specs),
+> ADR 0006 (DoD and changelog enforcement) and ADR 0014 (English in the installable
+> surface) — all in the Maestro repository, under its own `docs/adr/`. This file is
+> installed elsewhere, where those records do not travel: the book is Portuguese by
+> decision, and only the English surface is shipped.
 > · Acronyms: [glossary](glossary.md).
 
 ## 1. Purpose and scope

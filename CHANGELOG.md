@@ -10,6 +10,11 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **`scripts/check-installed.sh`** (14º portão, bloqueante na CI) — **instala o método num
+  diretório vazio e exercita o resultado**: todo portão enviado roda lá e sai verde, e todo
+  caminho que um arquivo instalado nomeia existe lá. Os treze portões anteriores mediam o
+  repositório de **origem**, onde o alvo por acaso existe; ninguém nunca tinha rodado a cópia
+  instalada — que é exatamente onde o anti-padrão 22 vive (ciclo 048).
 - **`docs/ecosystem/` — o catálogo do ecossistema, com a IDEIA como unidade.** Trinta cards
   imutáveis e datados (um por ideia, não por ferramenta), dezoito fontes com licença, e um
   índice de estado append-only onde o veredito corrente é a última linha. **Momento e estado
@@ -43,6 +48,32 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
   repositório de verdade (ciclo 046).
 
 ### Corrigido
+- **Enviávamos coisas que apontavam para o que não enviávamos.** Dois defeitos relatados por
+  quem instalou o método noutro repositório — `check-roles.sh` lendo `docs/agents/README.md`,
+  que não viaja, e os comandos `/speckit.*` apontando para `.specify/memory/constitution.md`,
+  que a instalação nunca cria — e **mais sete** da mesma forma, achados pelo portão novo.
+  Cada um recebeu a menor correção que o torna verdadeiro: enviado, ou deixado de citar
+  (ciclo 048).
+- **Uma constituição só.** As 8 citações dos comandos vendorizados passam a apontar para
+  `docs/governance/principles.md`; o resumo derivado em `.specify/memory/constitution.md`
+  foi **apagado** — duas constituições é o anti-padrão 22 dentro do repositório que o nomeou.
+  Divergência declarada em `.specify/UPSTREAM.md`, com token `UP:state=verbatim|adapted`
+  (ciclo 048).
+- **`/speckit.constitution` mandava sobrescrever a constituição real tratando-a como
+  template.** O reapontamento acima moveu instruções destrutivas do upstream — "este arquivo
+  é um TEMPLATE", "escreva de volta (overwrite)" — de um resumo de 27 linhas para a **única
+  fonte de verdade**, instalada em repositórios de terceiros. O comando passa a mandar
+  **emendar no lugar, nunca regenerar**. Achado da revisão independente (ciclo 048).
+- **`check-retro.sh` morria em silêncio numa instalação nova** — `exit 2`, zero bytes de
+  saída: `ls` sem match falha sob `pipefail` e `set -e` matava o script. Invisível aqui,
+  onde `specs/` sempre existe. Anti-padrão 21, terceira ocorrência (ciclo 048).
+- **Dois portões chegavam vermelhos em toda instalação nova.** `check-roles.sh` e
+  `check-conformance.sh` agora **dizem** quando não têm o que medir — e só saem verdes quando
+  a ausência é legítima: o primeiro consulta o `boundary.json`, o segundo distingue "nenhum
+  ciclo" de "ciclos fora do alcance do piso". Portão que chega vermelho ensina quem instalou
+  o método a ignorar vermelho (ciclo 048).
+- **`check-links.sh` passa a ser instalado**, e com ele some a classe inteira de link
+  relativo quebrado no destino — sete deles existiam (ciclo 048).
 - **Cinco ideias estavam registradas como absorvidas com destino condicional, e nenhuma
   chegou a um arquivo**: worktree por task, standards por camada, padrões de fatiamento,
   fatia vertical e contrato por fatia. Os destinos vinham escritos como "quando houver dor

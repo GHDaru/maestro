@@ -192,7 +192,15 @@ done
 
 echo "──"
 if [[ "$checked" -eq 0 ]]; then
-  # Exiting 0 here turned the floor knob into an off switch with a success code.
+  # A project with NO cycle at all has nothing to be non-conformant about — it just installed
+  # the method. That is different from "there are cycles and none is in range", which is the
+  # floor knob being used as an off switch with a success code (the reason this block exists).
+  # Both are said out loud; only the second is a failure. (cycle 048)
+  shopt -s nullglob; all=(specs/[0-9][0-9][0-9]-*/); shopt -u nullglob
+  if [[ ${#all[@]} -eq 0 && -z "$ONLY" ]]; then
+    echo "· no cycle in this repository yet — nothing to check. Open one: scripts/new-cycle.sh 001 <slug>"
+    exit 0
+  fi
   echo "✗ no cycle in range (floor ${FLOOR}${ONLY:+, filter ${ONLY}}) — the gate checked nothing."
   exit 1
 fi

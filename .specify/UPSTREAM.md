@@ -14,16 +14,33 @@
 
 | Peça | Origem | Estado |
 |---|---|---|
-| `templates/spec-template.md` | upstream 0.4.3 | **Adaptado** (ciclo 009): PT, Raia, EARS, Fora de escopo, Clarify, gates — formato provado nos ciclos 003–008 |
-| `templates/plan-template.md` | upstream 0.4.3 | **Adaptado** (009): Constitution Check I–VIII nomeado, Como por fronteira, Verificação executável |
-| `templates/tasks-template.md` | upstream 0.4.3 | **Adaptado** (009): verificação primeiro, doc viva no mesmo PR, gate humano + registro automático |
-| `.claude/commands/speckit.converge.md` | fork `0117a7b` | **Adaptado** (009): sem extension hooks (YAGNI); anexa, nunca reescreve |
-| `templates/checklist-template.md` | upstream 0.4.3 | Verbatim (pouco uso; adaptar quando doer) |
-| `templates/constitution-template.md` | upstream 0.4.3 | Verbatim (nossa constituição já existe em `.specify/memory/`) |
-| `templates/agent-file-template.md` | upstream 0.4.3 | Verbatim |
-| `.claude/commands/speckit.plan.md` | upstream 0.4.3 | **Adaptado** (ciclo 044): as fases 0 e 1 passam a **deferir à tabela de declaração** do plano (`ART:<artefato>=yes\|no`) em vez de gerar `research.md`, `data-model.md` e `contracts/` incondicionalmente; `quickstart.md` **não** é produzido |
-| demais `.claude/commands/speckit.*` | upstream 0.4.3 | Verbatim (leem os templates adaptados — herdam o método por eles) |
-| `scripts/bash/` | upstream 0.4.3 | Verbatim |
+| `templates/spec-template.md` | upstream 0.4.3 | **Adaptado** (ciclo 009): PT, Raia, EARS, Fora de escopo, Clarify, gates — formato provado nos ciclos 003–008 · `UP:state=adapted` |
+| `templates/plan-template.md` | upstream 0.4.3 | **Adaptado** (009): Constitution Check I–VIII nomeado, Como por fronteira, Verificação executável · `UP:state=adapted` |
+| `templates/tasks-template.md` | upstream 0.4.3 | **Adaptado** (009): verificação primeiro, doc viva no mesmo PR, gate humano + registro automático · `UP:state=adapted` |
+| `.claude/commands/speckit.converge.md` | fork `0117a7b` | **Adaptado** (009): sem extension hooks (YAGNI); anexa, nunca reescreve · `UP:state=adapted` |
+| `templates/checklist-template.md` | upstream 0.4.3 | Verbatim (pouco uso; adaptar quando doer) · `UP:state=verbatim` |
+| `templates/constitution-template.md` | upstream 0.4.3 | Verbatim, **não usado** (ciclo 048): o Maestro tem uma constituição só, `docs/governance/principles.md`. Preenchê-lo criaria a segunda · `UP:state=verbatim` |
+| `templates/agent-file-template.md` | upstream 0.4.3 | Verbatim · `UP:state=verbatim` |
+| `.claude/commands/speckit.plan.md` | upstream 0.4.3 | **Adaptado** (044 e 048): as fases 0 e 1 passam a **deferir à tabela de declaração** do plano (`ART:<artefato>=yes\|no`) em vez de gerar `research.md`, `data-model.md` e `contracts/` incondicionalmente; `quickstart.md` **não** é produzido; no 048 a citação da constituição foi reapontada · `UP:state=adapted` |
+| `.claude/commands/speckit.constitution.md` · `speckit.analyze.md` | upstream 0.4.3 | **Adaptado** (ciclo 048): as 8 citações da constituição do upstream (sob o diretório de memória dele) passam a apontar para `docs/governance/principles.md`. O caminho do upstream **nunca existia numa instalação**, e mantê-lo criaria uma segunda constituição (anti-padrão 22) · `UP:state=adapted` |
+| `.claude/commands/speckit.specify.md` · `speckit.tasks.md` · `speckit.implement.md` · `speckit.clarify.md` · `speckit.checklist.md` · `speckit.taskstoissues.md` | upstream 0.4.3 | Verbatim (leem os templates adaptados — herdam o método por eles) · `UP:state=verbatim` |
+| `.specify/scripts/bash/` | upstream 0.4.3 | Verbatim · `UP:state=verbatim` |
+
+> **`UP:state=verbatim|adapted`** — token legível por máquina em cada linha, lido pelo portão
+> da cópia instalada (no repositório do Maestro). A coluna em prosa é para quem lê; o token é para o portão,
+> pela mesma razão do `fecha`, do `PT-DATA` e dos `ART:`/`TAIL:`: renomear a coluna para
+> "Ajustado" mudaria silenciosamente o comportamento do portão (achado da revisão do 048).
+
+> **`UP:optional-path=<caminho>`** — caminho que o CLI do speckit cria **se** o projeto o
+> usar, e que o Maestro deliberadamente não usa. Declarado aqui, um por linha, para que o
+> portão da cópia instalada não o cobre e para que a exceção fique **visível** em vez de
+> escondida numa heurística:
+>
+> - `UP:optional-path=.specify/extensions.yml` — extension hooks. Fora desde o ciclo 009
+>   (YAGNI, mesma decisão do `speckit.converge.md`). As citações permanecem nos comandos
+>   porque são honestas: o próprio texto diz "se não existir, pule em silêncio". Enfraquecê-las
+>   para calar o portão seria trocar uma instrução acionável por prosa vaga — foi o que a
+>   revisão do 048 pegou.
 
 ## Regras
 

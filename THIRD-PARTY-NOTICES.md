@@ -3,7 +3,7 @@
 Maestro is distributed under the MIT License, whose full text is in `LICENSE` — installed as
 `docs/governance/MAESTRO-LICENSE` when the method is copied into another repository, and as
 `LICENSE` inside the plugin package. Maestro also **redistributes** material from the
-projects below: `scripts/install-maestro.sh` copies it into other repositories, and
+projects below: the Maestro installer copies it into other repositories, and
 `plugin/maestro/` ships it as a plugin. MIT is permissive but has exactly one obligation, and
 this file is how Maestro meets it — the copyright notice and the permission notice travel
 with the copies.
@@ -30,8 +30,9 @@ the **lineage**.
 | Path | State |
 |---|---|
 | `.specify/templates/spec-template.md` · `plan-template.md` · `tasks-template.md` | **Modified** by Maestro (cycles 009, 042, 045) |
-| `.claude/commands/speckit.plan.md` | **Modified** by Maestro (cycle 044) |
+| `.claude/commands/speckit.plan.md` | **Modified** by Maestro (cycles 044, 048) |
 | `.claude/commands/speckit.converge.md` | **Modified** by Maestro (cycle 009), from the `GHDaru/spec-kit` fork |
+| `.claude/commands/speckit.constitution.md` · `speckit.analyze.md` | **Modified** by Maestro (cycle 048) |
 | `.claude/commands/speckit.*.md` (remaining) | Verbatim |
 | `.specify/templates/checklist-template.md` · `constitution-template.md` · `agent-file-template.md` | Verbatim |
 | `.specify/scripts/bash/` | Verbatim |

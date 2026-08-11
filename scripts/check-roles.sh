@@ -79,8 +79,22 @@ echo ""
 echo "── Agent profile index (docs/agents/README.md) × agents on disk ──"
 INDEX="docs/agents/README.md"
 if [[ ! -f "$INDEX" ]]; then
-  echo "  ✗ profile index missing: $INDEX" >&2
-  fail=$((fail + 1))
+  # A project that installed Maestro received the agents but NOT this index: it is the
+  # book's, written in Portuguese, and the installable surface is English (ADR 0014). Absent
+  # is therefore legitimate THERE — and said out loud, never in silence.
+  #
+  # …but not HERE. A repository that declares the index in boundary.json owns one, and its
+  # deletion is a defect, not a fresh start. Same guard, same reason, same words as
+  # check-ecosystem.sh: the escape hatch for new projects must not become an escape hatch
+  # for everyone (cycle 047's lesson, re-applied after the review of 048 found it undone).
+  if [[ -f boundary.json ]] && grep -qF '"docs/agents/"' boundary.json; then
+    echo "  ✗ $INDEX is declared in boundary.json and does not exist — this repository owns a" >&2
+    echo "    profile index; deleting it is not the same as never having had one." >&2
+    fail=$((fail + 1))
+  else
+    echo "  · no profile index at $INDEX — the agents are installed; the catalogue of them is"
+    echo "    the book's, and does not travel. Nothing to compare."
+  fi
 else
   # every agent linked from the index, as a bare slug
   documented=$(grep -oE '\.\./\.\./\.claude/agents/[a-z-]+\.md' "$INDEX" | sed 's|.*/||; s|\.md$||' | sort -u)
