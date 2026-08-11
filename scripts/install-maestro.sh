@@ -93,7 +93,7 @@ echo "── Skills (how to do it) ──"
 copy "skills"
 
 echo "── Scripts (the ritual) ──"
-for s in new-cycle.sh promote-main.sh retro.sh record-decision.sh check-agents.sh check-roles.sh check-install.sh check-evals.sh check-conformance.sh check-ecosystem.sh check-retro.sh check-links.sh; do
+for s in new-cycle.sh promote-main.sh retro.sh record-decision.sh check-agents.sh check-roles.sh check-install.sh check-evals.sh check-conformance.sh check-ecosystem.sh check-retro.sh check-links.sh check-adr.sh; do
   copy "scripts/$s"
 done
 copy "scripts/README.md"

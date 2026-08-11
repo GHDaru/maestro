@@ -34,6 +34,7 @@ TARGETS=(
   ".specify/templates/ux-design-template.md"
   ".specify/templates/journey-template.md"
   ".specify/templates/evaluation-template.md"
+  ".specify/templates/adr-index-template.md"
   # Added to the installable surface in cycle 048 (the /speckit.* commands call them).
   ".specify/scripts"
   # Became installable surface in cycle 046: both travel with every copy and are packaged

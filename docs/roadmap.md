@@ -4,7 +4,7 @@
 > skills, workflows, scripts). Também serve de **orientação**: se você está perdido, comece
 > por aqui. Documento vivo — atualizado a cada fase.
 >
-> **Status**: Ativo · **Versão**: **v0.1.0** (2026-08-09) · **Atualizado**: ciclo 048 · **Regra**: este mapa é
+> **Status**: Ativo · **Versão**: **v0.1.0** (2026-08-09) · **Atualizado**: ciclo 049 · **Regra**: este mapa é
 > artefato vivo — todo ciclo concluído atualiza a tabela de fases **no mesmo PR**
 > (anti-padrão 15: artefato de planejamento que congela).
 
@@ -127,6 +127,7 @@ Cada fase = **um ciclo** (uma spec, um gate). Ordem por dependência:
 | **F21 — Licença e atribuição** | `LICENSE` (MIT) + `THIRD-PARTY-NOTICES.md` atribuindo `github/spec-kit` com titular, versão e commit do fork, verbatim separado de modificado; `check-licensing.sh` (manifesto × licença · upstream × atribuição · o aviso viaja junto); instalador leva os dois **renomeados**. Achado do painel: recusávamos licença alheia sem ter a nossa | 046 (ADR 0020) | ✅ |
 | **F22 — Catálogo do ecossistema** | julgamento de terceiros com a **ideia** como unidade e **momento separado de estado**: 30 cards imutáveis, 18 fontes com licença, índice append-only, sete dimensões (duas reprovam sozinhas), template de avaliação instalável e `check-ecosystem.sh`. Achou, na primeira execução, duas absorções que nunca chegaram ao disco | 047 | ✅ |
 | **F23 — A instalação que funciona onde ela cai** | `check-installed.sh` instala num diretório vazio e exercita o resultado: todo portão enviado roda verde lá, todo caminho citado existe lá. Nove citações quebradas corrigidas, constituição unificada, `check-retro` que morria em silêncio, dois portões que chegavam vermelhos. Origem: relato de quem instalou o método noutro repositório | 048 | ✅ |
+| **F24 — O índice de decisões com portão** | `check-adr.sh`: uma linha por ADR, todo link real, e o status comparado por **estado** (vocabulário fechado, sinônimos mapeados). Fecha o achado do 046 — índice congelado desde o 0017, com uma decisão revertida lendo-se como corrente — e foi visto acusar aquele defeito por mutação | 049 | ✅ |
 | **(contínuo) — Retrospectiva** | erro recorrente → regra versionada; **gatilho por dívida de achados** (`check-retro.sh`) desde o ciclo 034 | 017, 034 e seguintes | 🔄 |
 
 ### Gatilhos abertos (decisões adiadas, com condição de revisão)

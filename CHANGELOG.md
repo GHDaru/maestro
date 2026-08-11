@@ -10,6 +10,16 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **`scripts/check-adr.sh`** (15º portão, bloqueante na CI, **instalado**) — o índice de
+  decisões passa a ter portão: todo ADR com **exatamente uma** linha de tabela, todo link
+  apontando para arquivo real, e o **status comparado por estado** entre o índice e o corpo do
+  ADR, num vocabulário fechado de quatro que mapeia sinônimos nas duas línguas. Fecha o
+  achado do ciclo 046, e foi visto acusar aquele defeito exato — índice sem 0018/0019 e 0017
+  como "Aceito" — reconstruído por mutação. Um índice que lista uma decisão **revertida como
+  corrente** não é incompleto: é errado, e quem o consulta decide por ele (ciclo 049).
+- **`.specify/templates/adr-index-template.md`** — o formato do índice como contrato
+  explícito, citado na mensagem de falha do portão: o primeiro ADR de um projeto instalado
+  tinha portão vermelho e nenhuma receita (ciclo 049).
 - **`scripts/check-installed.sh`** (14º portão, bloqueante na CI) — **instala o método num
   diretório vazio e exercita o resultado**: todo portão enviado roda lá e sai verde, e todo
   caminho que um arquivo instalado nomeia existe lá. Os treze portões anteriores mediam o
