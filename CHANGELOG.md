@@ -9,7 +9,77 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 
 ## [Unreleased]
 
+## [0.2.0] — 2026-08-11
+
+**A versão em que o método passou a ser verificado onde ele cai.** A v0.1.0 provou que
+"instalei o Maestro" significava alguma coisa; esta prova que a coisa **funciona no destino** —
+e nasceu de um relato de quem instalou o método noutro repositório e bateu em duas paredes.
+
+**O que ela é.** **Dezesseis** portões executáveis (eram onze na v0.1.0), **treze bloqueando**
+na integração contínua ao lado do `package-plugin --verify` e do build do livro, e três
+consultivos por desenho. Os cinco novos são de espécies que faltavam:
+
+- **licença e atribuição** (`check-licensing`) — o repositório recusava licença de terceiro
+  sem ter a sua; agora carrega MIT com titular, atribui `github/spec-kit` e `obra/superpowers`
+  com o aviso de permissão reproduzido, e a obrigação viaja pelos **dois** canais de
+  redistribuição, instalador e plugin;
+- **catálogo do ecossistema** (`check-ecosystem`) — 40 ideias e 23 fontes, com a **ideia**
+  como unidade e o **momento separado do estado**: o card é imutável e datado, o veredito
+  corrente é a última linha de um índice append-only, e absorver exige um destino que é
+  arquivo **e** uma prova literal encontrada dentro dele;
+- **a cópia instalada** (`check-installed`) — instala num diretório vazio e exercita o
+  resultado: todo portão enviado roda verde lá, e todo caminho que um arquivo instalado
+  nomeia existe lá;
+- **o índice de decisões** (`check-adr`) — uma linha por ADR, todo link real, e o status
+  comparado por **estado** entre o índice e o corpo do ADR.
+
+- **a versão** (`check-version`) — o quinto, escrito neste próprio corte: a versão era
+  declarada em quatro lugares e nada garantia que concordassem.
+
+Mais uma **constituição só**: a cópia com perda em `.specify/memory/` foi apagada, com a
+divergência frente ao upstream declarada por token.
+
+**O que ela reconhecidamente não tem**, porque versão que só lista conquistas é publicidade:
+
+- o **serviço do companion** segue sem publicar (F6, desde o ciclo 015) — o widget existe, o
+  backend depende de hospedagem, chave e banco;
+- **a tag `v0.1.0` nunca chegou ao GitHub**: o push de tag recebe 403 do proxy de saída deste
+  ambiente (push de branch passa). A versão anterior existe no CHANGELOG e não existe como
+  tag pública — e esta só existirá quando alguém com rede liberada a criar;
+- o corpus de **evals** continua com **um** caso provado por ablação e um aposentado sem
+  substituto: a cobertura é declarada, não estimada;
+- o portão de **conformidade** tem piso de ciclo (42) e os ciclos anteriores carregam dívida
+  declarada — 35 dos 40 primeiros `tasks.md` nunca tiveram a cauda de fechamento;
+- quatro das sete classes de risco **nunca ocorreram aqui**, então o gate proporcional
+  segue sendo teoria para elas;
+- **seis** ideias do catálogo constam como `observar` porque nunca foram absorvidas, apesar
+  de registradas como absorvidas desde os ciclos 007 e 036 — entre elas as três de
+  fatiamento, e a skill que as receberia continua não existindo;
+- **atualizar uma instalação existente não entrega as correções**: o `install-maestro.sh`
+  pula destino que já existe, e `.claude/commands` é copiado como diretório. Quem instalou a
+  v0.1.0 e rodar o instalador sem `--force` **fica com o `/speckit.constitution` antigo** —
+  aquele que manda sobrescrever a constituição. A compatibilidade para trás desta versão é
+  verdadeira em parte porque o upgrade, sem `--force`, não faz nada;
+- o objeto `outcome` e a skill de corte (pesquisa do ciclo 036) seguem como gatilho aberto no
+  roadmap, esperando a primeira intenção grande que não caiba em um ciclo.
+
+**Como ela é verificada.** Os treze portões bloqueantes rodam em toda PR e todo push; o
+`promote-main.sh` recusa promover enquanto a conformidade estiver vermelha. E o que mais
+importa nesta versão: **a revisão independente em contexto fresco reprovou os quatro ciclos
+que a compõem** — 046, 047, 048 e 049 —, cada vez achando defeito que o executor não via.
+Duas das reprovações foram graves e não são detalhe: numa, um comando instalável passou a
+mandar **sobrescrever a constituição ratificada** tratando-a como template; noutra, seis
+vereditos do catálogo foram **retrodatados**, na spec que existe para impedir exatamente
+isso. As duas foram corrigidas antes de qualquer promoção, e estão escritas nos relatórios.
+A cauda de fechamento deixou de ser norma e passou a ser forma.
+
+
 ### Adicionado
+- **`scripts/check-version.sh`** (16º portão, bloqueante na CI, **não** instalado) — a versão
+  era declarada em quatro lugares e nada garantia que concordassem. O portão lê a linha que
+  **declara** a versão em cada um, nunca a primeira string com cara de versão do arquivo, e
+  confere a ordem dos cabeçalhos do CHANGELOG, porque "mais nova" ali é posicional
+  (ciclo 050).
 - **`scripts/check-adr.sh`** (15º portão, bloqueante na CI, **instalado**) — o índice de
   decisões passa a ter portão: todo ADR com **exatamente uma** linha de tabela, todo link
   apontando para arquivo real, e o **status comparado por estado** entre o índice e o corpo do

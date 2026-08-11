@@ -1,6 +1,7 @@
 # Maestro
 
-> **v0.1.0** (2026-08-09) — primeira linha de base. O que ela é e o que ela
+> **v0.2.0** (2026-08-11) — o método passa a ser verificado **onde ele cai**: dezesseis
+> portões executáveis, treze bloqueando na integração contínua. O que ela é e o que ela
 > reconhecidamente **não** tem está na nota de release do [CHANGELOG](CHANGELOG.md).
 >
 > **Metodologia de engenharia de software com 1 humano regendo N agentes de IA.**
