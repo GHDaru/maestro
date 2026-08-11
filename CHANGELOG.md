@@ -10,6 +10,11 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Corrigido
+- **Symlink no alvo deixa de ser porta de saída.** Um link dentro do repositório de destino
+  fazia o `cp` escrever **fora** dele, e — desde que o ciclo 051 deu ao instalador o poder de
+  remover — a poda apagaria fora também. O instalador passa a **recusar** escrever e remover
+  quando o destino, ou qualquer diretório acima dele, é um link; a recusa é nomeada e contada
+  no resumo. Fecha `achado-051-symlink-de-diretorio-no-alvo` (ciclo 052).
 - **O instalador passa a atualizar uma instalação existente.** Ele pulava qualquer destino
   que já existisse — e um diretório sempre existe depois da primeira instalação —, então
   **reinstalar não entregava nada**; e `--force`, a saída documentada na v0.2.0, rodava

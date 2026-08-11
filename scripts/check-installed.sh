@@ -248,6 +248,24 @@ PYX
   fnested="$(cd "$DRY_T" && find . -type d -regextype posix-extended -regex '.*/([^/]+)/\1' 2>/dev/null | head -3 || true)"
   [[ -z "$fnested" ]] && ok "--force nests no directory" || bad "--force nested a directory: ${fnested}"
 
+  # A symlink in the target is a door out of it: `cp` writes through it and, since cycle 051,
+  # the prune loop would REMOVE through it. Nothing may be written or deleted through a link.
+  SYM_T="$TMP/symlink"; OUT_T="$TMP/outside"
+  mkdir -p "$SYM_T" "$OUT_T"
+  printf 'a file that belongs to nobody here\n' > "$OUT_T/secret.md"
+  ln -s "$OUT_T" "$SYM_T/skills"
+  scripts/install-maestro.sh "$SYM_T" >"$TMP/sym.log" 2>&1 || true
+  if [[ -f "$OUT_T/secret.md" ]] && [[ "$(find "$OUT_T" -type f | wc -l)" -eq 1 ]]; then
+    ok "nothing is written through a symlink that leads outside the target"
+  else
+    bad "the installer wrote through a symlink and reached outside the target directory"
+  fi
+  if grep -q 'refused' "$TMP/sym.log"; then
+    ok "the refusal is named, not silent"
+  else
+    bad "the installer skipped a symlinked path without saying so"
+  fi
+
   nested="$(cd "$UP_T" && find . -type d -regextype posix-extended -regex '.*/([^/]+)/\1' 2>/dev/null | head -3 || true)"
   if [[ -z "$nested" ]]; then
     ok "no directory nested inside itself"

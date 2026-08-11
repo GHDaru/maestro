@@ -117,7 +117,25 @@ fi
 
 hash_of() { sha256sum "$1" 2>/dev/null | cut -d' ' -f1; }
 
-n_new=0; n_upd=0; n_same=0; n_kept=0; n_gone=0
+# A symlink in the target is a door out of it. `cp` writes THROUGH a symlinked file, and a
+# symlinked DIRECTORY makes every path under it land somewhere else entirely — so the prune
+# loop would delete outside the repository it was pointed at. Inherited from `cp -r`, and it
+# grew teeth in cycle 051 when this script gained the power to remove. Nothing is written or
+# removed through a link: refused, named, and the run continues (cycle 052).
+escapes_via_symlink() {  # $1 = relative path; 0 = it or a parent is a symlink
+  local rel="$1" cur="$TARGET"
+  [[ -L "$TARGET/$rel" ]] && return 0
+  local IFS=/ part
+  for part in $rel; do
+    [[ -n "$part" ]] || continue
+    cur="$cur/$part"
+    [[ "$cur" == "$TARGET/$rel" ]] && break
+    [[ -L "$cur" ]] && return 0
+  done
+  return 1
+}
+
+n_new=0; n_upd=0; n_same=0; n_kept=0; n_gone=0; n_refused=0
 
 # The manifest must record what WE wrote — nothing else. The first version stamped every
 # path it looked at, so a file the project already had, byte-identical to ours (a project
@@ -125,6 +143,10 @@ n_new=0; n_upd=0; n_same=0; n_kept=0; n_gone=0
 # — and the prune loop later DELETED it. Claiming is now a consequence of writing.
 install_file() {  # $1 = source file, $2 = relative destination
   local src="$1" rel="$2" dst="$TARGET/$2" hs hd
+  if escapes_via_symlink "$rel"; then
+    echo "  ! refused (a symlink on this path leads outside the target): $rel" >&2
+    n_refused=$((n_refused+1)); return
+  fi
   hs="$(hash_of "$src")"
   if [[ ! -e "$dst" ]]; then
     [[ "$DRY" -eq 1 ]] && { echo "  + would install: $rel"; NOW["$rel"]="$hs"; return; }
@@ -228,6 +250,10 @@ for rel in "${!PREV[@]}"; do
   [[ -n "${NOW[$rel]:-}" ]] && continue
   dst="$TARGET/$rel"
   [[ -e "$dst" ]] || continue
+  if escapes_via_symlink "$rel"; then
+    echo "  ! not removed (a symlink on this path leads outside the target): $rel" >&2
+    n_refused=$((n_refused+1)); continue
+  fi
   if [[ "$(hash_of "$dst")" == "${PREV[$rel]}" ]]; then
     [[ "$DRY" -eq 1 ]] && { echo "  - would remove (no longer shipped): $rel"; continue; }
     rm -f "$dst"; n_gone=$((n_gone+1)); echo "  - removed (no longer shipped): $rel"
@@ -248,7 +274,7 @@ fi
 if true; then
   echo
   echo "── Summary ──"
-  echo "  installed ${n_new} · updated ${n_upd} · already current ${n_same} · kept because you modified them ${n_kept} · removed ${n_gone}"
+  echo "  installed ${n_new} · updated ${n_upd} · already current ${n_same} · kept because you modified them ${n_kept} · removed ${n_gone} · refused ${n_refused}"
   [[ "$n_kept" -gt 0 ]] && echo "  (each kept file has the new version beside it as *.maestro-new — diff and merge at will)"
   if [[ "$FIRST_UPGRADE" -eq 1 ]]; then
     echo
