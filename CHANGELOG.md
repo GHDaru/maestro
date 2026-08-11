@@ -10,6 +10,15 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Added
+- **Cauda Maestro — revisão adversarial em contexto fresco (ADR 0012)**: formaliza o fecho ritual
+  de toda fatia de risco, absorvido do programa `ghdaru` (dezenas de rounds em Épico 1/R, specs
+  029–032 e o fechamento do Nível 2 APH). Antes de todo merge, **dois revisores em contexto FRESCO**
+  (subagentes sem o histórico da implementação) — correção e segurança — rodam **instruídos a
+  refutar**, com achados classificados (BLOCKER/IMPORTANT/MINOR/NIT) + cenário concreto; só entra o
+  que sobrevive; então CI verde e squash-merge. Escala com o risco (Princípio III). A mesma técnica
+  vira **painel de especialistas** para planejamento de épico (parecer paralelo → síntese humana →
+  roadmap). Três decisões novas no cap. 13 (15 Cauda Maestro, 16 fatia reversível atrás de flag,
+  17 painel de especialistas) e ADR 0012.
 - **Livro em cinco trilhas (spec 014)**: navegação por tipo de texto (Diátaxis) — A Jornada
   (tutorial), Os Capítulos (explicação), Receitas (como-fazer), Referência e Bastidores —
   cada trilha com tipo e descrição na barra lateral e no sumário; **cadência educacional**

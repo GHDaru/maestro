@@ -1,6 +1,6 @@
 # 13 — Decisões de engenharia de software (por que o Maestro é assim)
 
-> **Capturado em** 2026-08 · última revisão 2026-08-01 · ciclo 013
+> **Capturado em** 2026-08 · última revisão 2026-08-11 · ciclos 013 + absorção do programa `ghdaru`
 > *Capítulo-piloto do novo padrão editorial ([guia](../livro/guia-editorial.md)).*
 
 ## 1. Objetivos
@@ -54,6 +54,9 @@ imutável, com contexto, alternativas, decisão e consequências. Este capítulo
 | 12 | Sintaxe EARS nos critérios de aceite | 2026-07-31 | ADR 0008 |
 | 13 | Vendorização (templates como fonte nossa) | 2026-07-31 | ciclo 009 |
 | 14 | Iron Laws (enforcement linguístico nas skills) | 2026-07-31 | ciclo 011 |
+| 15 | Cauda Maestro — revisão adversarial em contexto fresco antes do merge | 2026-08-11 | ADR 0012 |
+| 16 | Fatia reversível atrás de flag (off por padrão, promovida quando exercitada) | 2026-08-11 | Princípio III |
+| 17 | Painel de especialistas em contexto fresco para planejamento de épico | 2026-08-11 | ADR 0012 |
 
 ## 5. Fundamentos — decisão por decisão
 
@@ -176,6 +179,41 @@ imutável, com contexto, alternativas, decisão e consequências. Este capítulo
   bloqueadas.
 - **O que provoca**: ✅ compliance alto sem supervisão; ⚠️ rigidez — por isso a lei é
   **estreita** (uma regra por skill), e a exceção é decisão humana registrada.
+
+### 5.15 Cauda Maestro — revisão adversarial em contexto fresco
+
+- **Por quê**: quem escreveu a fatia é o pior revisor dela — herda o contexto que a justifica e
+  é cego às mesmas suposições que geraram o bug. Revisão **na mesma conversa** concorda. E "verde
+  local ≠ certo global": o CI não pega o esquecido nem o furo de segurança.
+- **O que faz**: antes de todo merge de risco, dois revisores rodam em **contexto fresco**
+  (subagentes, sem o histórico da implementação) — um de **correção**, um de **segurança** —,
+  cada um instruído a **refutar**, não aprovar. Achados classificados (BLOCKER/IMPORTANT/MINOR/
+  NIT) com cenário concreto; só entra o que sobrevive; então CI verde e squash-merge.
+- **O que provoca**: ✅ a cegueira do autor é quebrada por construção, e segurança vira gate
+  datado (mesmo o parecer "neutro" é evidência); ⚠️ custo de tokens — por isso **escala com o
+  risco** (Princípio III): fatia trivial não paga dois revisores.
+
+### 5.16 Fatia reversível atrás de flag
+
+- **Por quê**: reversibilidade (decisão 7) diz "engenheire o desfazer". A forma mais barata de
+  desfazer uma capacidade nova e incerta é **nunca ligá-la em produção por padrão**.
+- **O que faz**: a capacidade nova entra **completa e testada**, mas atrás de uma *feature flag*
+  **off por padrão**; com a flag desligada, o comportamento é **idêntico ao legado** (teste prova
+  isso). É promovida a padrão só quando exercitada em laboratório.
+- **O que provoca**: ✅ código no `main`, revisado e coberto, sem risco de ativação — o rollback é
+  um toggle, não um `revert`; ⚠️ acúmulo de flags — exige poda (decisão 10): flag que virou padrão
+  ou morreu deve sair.
+
+### 5.17 Painel de especialistas em contexto fresco (planejamento)
+
+- **Por quê**: a Cauda (decisão 15) prova revisão fresca **a jusante** (antes do merge). O mesmo
+  remédio serve **a montante**: antes de abrir um épico grande, uma única cabeça enviesa o plano.
+- **O que faz**: N especialistas independentes (ex.: protocolo, arquitetura/status, UX) dão
+  **parecer paralelo** em contexto fresco; a **síntese humana** vira o roadmap por épicos. Decisão
+  de prioridade nasce de vozes que não se contaminaram.
+- **O que provoca**: ✅ prioridade fundamentada em múltiplas lentes, não em palpite; ⚠️ custo e
+  risco de "parecer de fachada" — mitigado exigindo de cada um recomendação **acionável** e o
+  desacordo explícito, não consenso morno.
 
 ## 6. ⭐ Na prática — o ciclo real
 
