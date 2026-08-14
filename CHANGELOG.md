@@ -10,6 +10,15 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **O livro passa a publicar material** (ciclo 054). `publicar/sumario.json` ganhou
+  `materiais`: página HTML autocontida que o livro **publica e indexa** sem renderizar no
+  próprio molde — uma apresentação de tela cheia não cabe no miolo de uma página. O caderno
+  de desenvolvimento entra por aí e aparece no sumário, com volta para o livro injetada na
+  publicação (o arquivo de origem não é tocado). Quatro reprovações novas, todas provadas por
+  mutação: material ausente do disco, material colidindo com página gerada, com a **capa** ou
+  com o **sumário**, e material do domínio `toolkit` publicado sem ser declarado
+  compartilhado — este último exigiu ensinar o `check-boundary.sh` a ler o canal novo, que
+  nasceu sem guarda e foi pego pela revisão independente antes de sair.
 - **Duas peças de apresentação** (ciclo 053). `docs/diagramas/06-fluxo-v5-proposta.md` —
   o ciclo redesenhado na forma de um fluxo externo de 13 passos, **rotulado proposta e não
   vigente** (quem descreve o processo em vigor continua sendo a peça 05), marcando passo a

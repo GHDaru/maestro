@@ -253,5 +253,12 @@
         }
       ]
     }
+  ],
+  "materiais": [
+    {
+      "arquivo": "docs/handbook/apresentacao-desenvolvimento-maestro.html",
+      "titulo": "Caderno de desenvolvimento",
+      "teaser": "18 slides: o ciclo do ponto de vista de quem executa — raia, artefatos, comandos, portões, gate humano."
+    }
   ]
 }

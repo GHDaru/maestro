@@ -101,7 +101,13 @@ except FileNotFoundError:
     print("  ✗ publicar/sumario.json missing")
     sys.exit(1)
 
-pages = [i["arquivo"] for p in sumario["partes"] for i in p["itens"]]
+# `materiais` (cycle 054) is a SECOND publication channel into the reader-facing site.
+# It was invisible to this gate for exactly one cycle, and in that window a toolkit-owned
+# file declared as material was published while this script reported all clear — the very
+# failure it exists to prevent, arriving through the door it was not watching. A gate that
+# reads one of two channels cannot tell "nothing leaked" from "I did not look".
+pages = [i["arquivo"] for p in sumario["partes"] for i in p["itens"]] \
+      + [m["arquivo"] for m in sumario.get("materiais", [])]
 homeless = []
 for page in pages:
     o = owner(page)

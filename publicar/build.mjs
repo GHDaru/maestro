@@ -19,6 +19,15 @@ const COMPANION_URL = process.env.MAESTRO_COMPANION_URL || "";
 
 const sumario = JSON.parse(readFileSync(resolve(AQUI, "sumario.json"), "utf8"));
 const itens = sumario.partes.flatMap((p) => p.itens.map((i) => ({ ...i, parte: p.nome })));
+
+// MATERIAL (ciclo 054): página HTML autocontida que o livro publica e indexa, mas não
+// renderiza no próprio molde — uma apresentação de tela cheia não cabe dentro do miolo de
+// uma página. O arquivo de origem NÃO é alterado: o livro continua sendo adapter de uma
+// fonte só, e a volta para o sumário é injetada na publicação.
+const materiais = (sumario.materiais || []).map((m) => ({
+  ...m,
+  slug: basename(m.arquivo).replace(/\.html?$/i, "").toLowerCase(),
+}));
 // Slug do caminho (não só do nome): README.md/index.md usam o diretório pai, para que
 // docs/handbook/README.md e docs/receitas/README.md não colidam em "readme.html".
 const slugDe = (arq) => {
@@ -30,18 +39,44 @@ const slugDe = (arq) => {
 itens.forEach((i) => (i.slug = slugDe(i.arquivo)));
 
 // Fitness function: dois itens com o mesmo slug se sobrescreveriam em silêncio.
-const vistos = new Map();
+// Material disputa o MESMO espaço de nomes em site/, então entra no mesmo mapa — senão a
+// checagem valeria para metade das páginas e a outra metade sumiria calada.
+// `index` (capa, mantida à mão) e `sumario` (gerado no fim) NUNCA foram itens, então nunca
+// entraram aqui. Com material eles passaram a ser alcançáveis — um material chamado
+// `index.html` sobrescrevia a capa versionada com o build verde, e um `sumario.html` era
+// escrito e depois sobrescrito, publicado só na contagem. Achado da revisão do ciclo 054:
+// o mapa de colisão tem de conter TODA página que existe em site/, não só as declaradas.
+const vistos = new Map([
+  ["index", "site/index.html (a capa, mantida à mão)"],
+  ["sumario", "site/sumario.html (gerado pelo motor)"],
+]);
 const colisoes = [];
-for (const i of itens) {
+for (const i of [...itens, ...materiais]) {
   if (vistos.has(i.slug)) colisoes.push(`${i.slug}.html  ←  ${vistos.get(i.slug)}  +  ${i.arquivo}`);
   else vistos.set(i.slug, i.arquivo);
 }
 if (colisoes.length) {
   console.error(`✗ ${colisoes.length} colisão(ões) de slug (uma página sobrescreveria a outra):`);
   colisoes.forEach((c) => console.error("   " + c));
+  console.error("   → renomeie o arquivo de origem: o nome do arquivo é o nome da página no site.");
   process.exit(1);
 }
+
+// Material declarado e ausente do disco FALHA o build. Publicar 38 páginas e omitir a
+// única que não existe é indistinguível de publicar tudo — entrada faltando é reprovação,
+// nunca silêncio (anti-padrão 16).
+const ausentes = materiais.filter((m) => !existsSync(resolve(RAIZ, m.arquivo)));
+if (ausentes.length) {
+  console.error(`✗ ${ausentes.length} material declarado em sumario.json e ausente do disco:`);
+  ausentes.forEach((m) => console.error(`   ${m.arquivo}  (declarado como "${m.titulo}")`));
+  console.error("   → corrija o caminho em publicar/sumario.json, ou remova a declaração.");
+  process.exit(1);
+}
+
 const publicados = new Set(itens.map((i) => i.slug));
+// Caminho de origem -> página publicada, para que um link do livro para o material aponte
+// para dentro do livro em vez de escapar para o GitHub (onde HTML aparece como fonte).
+const materialPorCaminho = new Map(materiais.map((m) => [m.arquivo, m.slug]));
 
 const md = new MarkdownIt({ html: true, linkify: false, typographer: false }).use(anchor, {
   permalink: anchor.permalink.ariaHidden({ symbol: "#", placement: "after" }),
@@ -56,6 +91,7 @@ function resolverHref(href, srcDir) {
   // resolve o caminho relativo à origem antes de derivar o slug (READMEs de pastas
   // diferentes têm slugs diferentes — ver slugDe).
   const rel = path.posix.normalize(path.posix.join(srcDir || ".", alvo)).replace(/^(\.\.\/)+/, "");
+  if (materialPorCaminho.has(rel)) return materialPorCaminho.get(rel) + ".html" + anc;
   const slug = slugDe(rel);
   return /\.md$/i.test(alvo) && publicados.has(slug) ? slug + ".html" + anc : GITHUB_BASE + rel + anc;
 }
@@ -164,6 +200,40 @@ for (let k = 0; k < itens.length; k++) {
   gerados++;
 }
 
+// Material: publicado do arquivo de ORIGEM, envolvido num documento mínimo. O fragmento
+// traz o próprio <style>/<script> e não é tocado — a única coisa injetada é a volta para o
+// livro, porque quem chega aqui pelo sumário precisa de caminho de volta (FR5).
+for (const m of materiais) {
+  const fonte = readFileSync(resolve(RAIZ, m.arquivo), "utf8");
+  // O nome do material tem UMA fonte: o `titulo` do sumario.json. Ler também o <title> do
+  // arquivo dava duas, já divergentes na primeira tentativa — cartão dizendo uma coisa e
+  // aba do navegador dizendo outra, sem nada para notar (achado da revisão do ciclo 054).
+  writeFileSync(
+    resolve(SAIDA, `${m.slug}.html`),
+    `<!doctype html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${m.titulo} · ${sumario.titulo}</title>
+<meta name="description" content="${(m.teaser || sumario.subtitulo).replace(/"/g, "&quot;")}">
+<style>
+  /* Chrome próprio do material: ele NÃO carrega assets/estilo.css — é autocontido por
+     definição —, então o estilo da volta vive aqui. Sem opacidade: 12px a .55 dava 3.8:1
+     no tema claro, abaixo de AA (achado da revisão do ciclo 054). */
+  .volta-ao-livro { position: fixed; left: 16px; top: 14px; z-index: 60; font: 500 12px/1
+    ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .08em; text-decoration: none;
+    color: currentColor; padding: 7px 11px; border: 1px solid currentColor; border-radius: 8px;
+    background: transparent; }
+  .volta-ao-livro:hover { text-decoration: underline; }
+  @media print { .volta-ao-livro { display: none; } }
+</style>
+</head><body>
+<a class="volta-ao-livro" href="sumario.html">↩ livro</a>
+${fonte}
+</body></html>`
+  );
+  gerados++;
+}
+
 // sumario.html — o livro em cinco trilhas + a cadência educacional.
 const cartao = (i) => `<a class="s-card" href="${slugDe(i.arquivo)}.html"><span class="s-ct">${i.titulo}</span>${i.teaser ? `<span class="s-cd">${i.teaser}</span>` : ""}</a>`;
 const cardCadencia = (c) =>
@@ -180,11 +250,22 @@ const corpoSumario =
         (p.descricao ? `<p class="s-desc">${p.descricao}</p>` : "") +
         `<div class="s-grid">${p.itens.map(cartao).join("")}</div>`
     )
-    .join("");
+    .join("") +
+  (materiais.length
+    ? `<div class="s-parte">Material<em class="s-tipo">apresentação</em></div>` +
+      `<p class="s-desc">Peças de tela cheia — abrem fora do molde do livro, com volta para cá.</p>` +
+      `<div class="s-grid">${materiais
+        .map((m) => `<a class="s-card" href="${m.slug}.html"><span class="s-ct">${m.titulo}</span>${m.teaser ? `<span class="s-cd">${m.teaser}</span>` : ""}</a>`)
+        .join("")}</div>`
+    : "");
 writeFileSync(resolve(SAIDA, "sumario.html"), pagina({ tituloPagina: "Sumário", corpo: corpoSumario, atual: "sumario", prev: null, next: itens[0], ehSumario: true }));
 
 // Portão de qualidade: link interno .html quebrado FALHA o build (e o CI).
-const paginas = new Set(itens.map((i) => `${i.slug}.html`).concat("index.html", "sumario.html"));
+const paginas = new Set(
+  itens.map((i) => `${i.slug}.html`)
+    .concat(materiais.map((m) => `${m.slug}.html`))   // material É página do livro (FR2)
+    .concat("index.html", "sumario.html")
+);
 const quebrados = [];
 for (const f of readdirSync(SAIDA)) {
   if (!f.endsWith(".html")) continue;
@@ -207,5 +288,11 @@ for (const f of readdirSync(SAIDA)) {
     }
   }
 }
-if (quebrados.length) { console.error(`✗ ${quebrados.length} link(s) interno(s) quebrado(s):`); quebrados.forEach((q) => console.error("   " + q)); process.exit(1); }
+if (quebrados.length) {
+  console.error(`✗ ${quebrados.length} link(s) interno(s) quebrado(s):`);
+  quebrados.forEach((q) => console.error("   " + q));
+  console.error("   → publique o alvo (item em `partes` ou entrada em `materiais` no");
+  console.error("     publicar/sumario.json), ou aponte o link para outro lugar.");
+  process.exit(1);
+}
 console.log(`✓ Site gerado: ${gerados} páginas + sumário em site/ (links internos OK)`);
