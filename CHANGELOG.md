@@ -9,6 +9,18 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 
 ## [Unreleased]
 
+### Adicionado
+- **Duas peças de apresentação** (ciclo 053). `docs/diagramas/06-fluxo-v5-proposta.md` —
+  o ciclo redesenhado na forma de um fluxo externo de 13 passos, **rotulado proposta e não
+  vigente** (quem descreve o processo em vigor continua sendo a peça 05), marcando passo a
+  passo o que já existe e nomeando as três lacunas com a evidência de cada uma: o roadmap é
+  uma fila, mas sem dono por item nem elo com o ciclo que de fato abre; não há rede de
+  proteção antes de tocar código existente (nenhuma skill, template ou comando fala em teste
+  de caracterização); e o fecho do ciclo não tem número, por escolha registrada. E `docs/handbook/apresentacao-desenvolvimento-maestro.html` — o caderno de
+  **desenvolvimento**, que percorre o ciclo do ponto de vista de quem executa (raia, os
+  quatro artefatos, os 12 comandos, os 16 portões, a revisão independente, o gate humano),
+  ao lado da apresentação executiva e do caderno técnico que já existiam.
+
 ### Corrigido
 - **Symlink no alvo deixa de ser porta de saída.** Um link dentro do repositório de destino
   fazia o `cp` escrever **fora** dele, e — desde que o ciclo 051 deu ao instalador o poder de

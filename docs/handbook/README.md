@@ -69,3 +69,5 @@ capítulo **13** foi o piloto e o **01** o primeiro migrado; os demais seguem um
 - 📄 **PDF completo** (livro A4, capa + 12 capítulos): [`maestro-handbook.pdf`](maestro-handbook.pdf)
 - 🎼 Apresentação **executiva** (HTML): [`apresentacao-executiva-maestro.html`](apresentacao-executiva-maestro.html)
 - 📐 Caderno **técnico** (HTML): [`apresentacao-tecnica-maestro.html`](apresentacao-tecnica-maestro.html)
+- 🛠️ Caderno de **desenvolvimento** (HTML): [`apresentacao-desenvolvimento-maestro.html`](apresentacao-desenvolvimento-maestro.html)
+  — o ciclo do ponto de vista de quem executa: raia, artefatos, comandos, portões, gate humano.

@@ -1,0 +1,514 @@
+<title>Maestro — Caderno de Desenvolvimento</title>
+<style>
+  :root {
+    --bg: #eceef4; --bg-2: #ffffff; --panel: #f4f5f9;
+    --text: #141728; --muted: #565d74; --faint: #8a90a4;
+    --accent: #9c6f22; --accent-2: #b98a34;
+    --line: rgba(20,23,40,0.12); --staff: rgba(20,23,40,0.14);
+    --code-bg: #f5f3ec; --code-fg: #4a3a12;
+    --shadow: 0 1px 0 rgba(20,23,40,.04), 0 20px 46px -30px rgba(20,23,40,.5);
+    --font-display: Georgia, 'Times New Roman', serif;
+    --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: ui-monospace, 'SF Mono', 'Menlo', 'Cascadia Code', Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg: #0d1023; --bg-2: #141833; --panel: #12162e;
+      --text: #edeef5; --muted: #a3aabf; --faint: #767d95;
+      --accent: #e6c375; --accent-2: #d6b25f;
+      --line: rgba(230,195,117,0.16); --staff: rgba(230,195,117,0.20);
+      --code-bg: #0a0d1e; --code-fg: #e6c375;
+      --shadow: 0 1px 0 rgba(255,255,255,.03), 0 28px 56px -30px rgba(0,0,0,.7); }
+  }
+  :root[data-theme="dark"] { --bg: #0d1023; --bg-2: #141833; --panel: #12162e;
+    --text: #edeef5; --muted: #a3aabf; --faint: #767d95; --accent: #e6c375; --accent-2: #d6b25f;
+    --line: rgba(230,195,117,0.16); --staff: rgba(230,195,117,0.20); --code-bg: #0a0d1e; --code-fg: #e6c375;
+    --shadow: 0 1px 0 rgba(255,255,255,.03), 0 28px 56px -30px rgba(0,0,0,.7); }
+  :root[data-theme="light"] { --bg: #eceef4; --bg-2: #ffffff; --panel: #f4f5f9;
+    --text: #141728; --muted: #565d74; --faint: #8a90a4; --accent: #9c6f22; --accent-2: #b98a34;
+    --line: rgba(20,23,40,0.12); --staff: rgba(20,23,40,0.14); --code-bg: #f5f3ec; --code-fg: #4a3a12;
+    --shadow: 0 1px 0 rgba(20,23,40,.04), 0 20px 46px -30px rgba(20,23,40,.5); }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  .deck { height: 100%; overflow-y: scroll; scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+  .slide { min-height: 100%; scroll-snap-align: start; display: flex; flex-direction: column; justify-content: center;
+    padding: clamp(24px, 5vw, 76px); border-bottom: 1px solid var(--line); }
+  .wrap { width: min(1120px, 100%); margin: 0 auto; }
+
+  .eyebrow { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--accent); font-weight: 600; display: inline-flex; align-items: center; gap: 12px; margin: 0 0 16px; }
+  .eyebrow::before { content: ""; width: 24px; height: 1px; background: var(--accent); opacity: .8; }
+
+  h1.title { font-family: var(--font-display); font-weight: 700; font-size: clamp(52px, 11vw, 132px); line-height: .92;
+    letter-spacing: -.02em; margin: 0; text-wrap: balance; }
+  h2 { font-family: var(--font-display); font-weight: 700; font-size: clamp(26px, 4vw, 46px); line-height: 1.05;
+    letter-spacing: -.015em; margin: 0 0 20px; text-wrap: balance; }
+  .cover .sub { font-size: clamp(19px, 2.6vw, 30px); color: var(--text); margin: 22px 0 0; font-weight: 500; }
+  .cover .score { font-family: var(--font-display); font-style: italic; color: var(--muted); font-size: clamp(15px, 1.9vw, 21px); margin: 12px 0 0; }
+  .cover .foot { margin-top: 34px; font-family: var(--font-mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
+  p { margin: 0; }
+  .lead { font-size: clamp(17px, 2.1vw, 22px); line-height: 1.5; color: var(--muted); max-width: 48ch; }
+  .lead strong { color: var(--text); font-weight: 600; }
+
+  /* two-column: definitions + a card of literal text (file, command, output) */
+  .tech { display: grid; grid-template-columns: 1.02fr .98fr; gap: clamp(20px, 4vw, 48px); align-items: start; margin-top: 4px; }
+  dl.def { margin: 0; display: flex; flex-direction: column; gap: 15px; }
+  dl.def dt { font-family: var(--font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin-bottom: 3px; }
+  dl.def dd { margin: 0; font-size: clamp(15px, 1.7vw, 17.5px); line-height: 1.48; color: var(--text); }
+  dl.def dd b { font-weight: 600; } dl.def dd span { color: var(--muted); }
+
+  .speccard { background: var(--code-bg); border: 1px solid var(--line); border-radius: 12px; padding: 20px 20px 18px;
+    box-shadow: var(--shadow); font-family: var(--font-mono); }
+  .speccard .lbl { font-size: 10.5px; letter-spacing: .18em; text-transform: uppercase; color: var(--faint); margin-bottom: 12px; }
+  .speccard pre { margin: 0; white-space: pre-wrap; font-size: 13px; line-height: 1.7; color: var(--code-fg); }
+  .speccard .k { color: var(--accent); }
+  .speccard .c { color: var(--faint); }
+
+  .cols3 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 6px; }
+  .cols3.three { grid-template-columns: repeat(3, 1fr); }
+  .doc { border: 1px solid var(--line); border-radius: 12px; padding: 18px; background: var(--bg-2); box-shadow: var(--shadow); }
+  .doc h4 { font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin: 0 0 8px; }
+  .doc p { font-size: 13.5px; line-height: 1.45; color: var(--muted); }
+  .doc p b { color: var(--text); font-weight: 600; }
+  .flow { margin-top: 26px; font-family: var(--font-mono); font-size: clamp(12px, 1.5vw, 15px); color: var(--muted);
+    line-height: 1.8; letter-spacing: .01em; }
+  .flow b { color: var(--accent); }
+
+  /* gate grid: the sixteen executables, blocking ones marked */
+  .gates { display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px; margin-top: 8px; }
+  .gate { border: 1px solid var(--line); border-radius: 9px; padding: 11px 12px; background: var(--bg-2); }
+  .gate code { font-family: var(--font-mono); font-size: 12px; color: var(--text); display: block; margin-bottom: 4px; }
+  .gate small { font-size: 11.5px; line-height: 1.35; color: var(--muted); display: block; }
+  .gate.adv { border-style: dashed; opacity: .82; }
+  .gate.adv code { color: var(--muted); }
+  .keyline { margin-top: 18px; font-size: 14px; color: var(--muted); }
+  .keyline b { color: var(--accent); font-weight: 600; }
+
+  table.mini { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: clamp(13px, 1.5vw, 15.5px); }
+  table.mini th { text-align: left; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--faint); font-weight: 600; padding: 0 12px 9px 0; border-bottom: 1px solid var(--line); }
+  table.mini td { padding: 10px 12px 10px 0; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--muted); line-height: 1.45; }
+  table.mini td:first-child { color: var(--text); font-family: var(--font-mono); font-size: 13px; white-space: nowrap; }
+  table.mini td b { color: var(--text); font-weight: 600; }
+  table.mini tr:last-child td { border-bottom: none; }
+
+  .rail { position: fixed; right: 20px; top: 50%; transform: translateY(-50%); z-index: 40; display: flex; flex-direction: column; gap: 9px; }
+  .rail button { all: unset; width: 8px; height: 8px; border-radius: 50%; cursor: pointer; background: var(--line); transition: transform .25s, background .25s; }
+  .rail button:hover { background: var(--accent-2); }
+  .rail button[aria-current="true"] { background: var(--accent); transform: scale(1.55); }
+  .rail button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .hud { position: fixed; left: 20px; bottom: 18px; z-index: 40; font-family: var(--font-mono); font-size: 12px; letter-spacing: .12em; color: var(--faint); }
+  .hud b { color: var(--accent); }
+  .themebtn { position: fixed; right: 18px; top: 16px; z-index: 40; all: unset; cursor: pointer; font-family: var(--font-mono);
+    font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); border: 1px solid var(--line); padding: 6px 10px; border-radius: 8px; }
+  .themebtn:hover { color: var(--accent); border-color: var(--accent); }
+  .themebtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .slide .wrap > * { opacity: 0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease; }
+  .slide.in .wrap > * { opacity: 1; transform: none; }
+  .slide.in .wrap > *:nth-child(2) { transition-delay: .05s; }
+  .slide.in .wrap > *:nth-child(3) { transition-delay: .1s; }
+
+  @media (max-width: 980px) { .gates { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 820px) { .tech, .cols3, .cols3.three { grid-template-columns: 1fr; } .rail { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .deck { scroll-behavior: auto; } .slide .wrap > * { transition: opacity .35s ease; transform: none; } }
+</style>
+
+<button class="themebtn" id="themebtn" aria-label="Alternar tema">Tema</button>
+<nav class="rail" id="rail" aria-label="Navegação"></nav>
+<div class="hud"><b id="cur">01</b> / <span id="tot">18</span></div>
+
+<main class="deck" id="deck">
+
+  <section class="slide cover" data-label="Capa">
+    <div class="wrap">
+      <div class="eyebrow">Caderno de desenvolvimento · do intento ao merge</div>
+      <h1 class="title">Maestro</h1>
+      <p class="sub">Como se desenvolve dentro do método: comandos, artefatos, portões.</p>
+      <p class="score">O executivo vê o porquê; o caderno técnico, os 12 elementos. Aqui está o dia a dia de quem escreve código.</p>
+      <p class="foot">Plataforma GHDaru Tecnologia · v0.2.0 · companion do handbook (docs/handbook)</p>
+    </div>
+  </section>
+
+  <section class="slide" data-label="O que muda">
+    <div class="wrap">
+      <div class="eyebrow">Premissa</div>
+      <h2>Quando a máquina digita, o valor migra</h2>
+      <div class="tech">
+        <dl class="def">
+          <div><dt>O que sai da sua mão</dt><dd>Digitar. O agente escreve o código — e escreve rápido, compila, passa no lint.</dd></div>
+          <div><dt>O que fica na sua mão</dt><dd>Duas coisas: <b>deixar a intenção clara</b> antes e <b>verificar o resultado</b> depois. É o gargalo real, e é humano.</dd></div>
+          <div><dt>O erro que aparece</dt><dd>Código que compila e <b>erra a intenção</b>. Nenhum teste de sintaxe pega isso: só a spec pega, porque só ela diz o que era pra ser.</dd></div>
+        </dl>
+        <div class="speccard"><div class="lbl">O princípio operacional central</div><pre><span class="k">IA</span>      explora · propõe · escreve
+<span class="k">humano</span>  especifica · decide · aprova
+<span class="k">gates</span>   testes · revisão independente
+
+<span class="c"># um rege, muitos executam</span></pre></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-label="O ciclo">
+    <div class="wrap">
+      <div class="eyebrow">Mapa</div>
+      <h2>Um ciclo, de ponta a ponta</h2>
+      <p class="lead">Todo trabalho nasce de uma <strong>intenção</strong> e morre num <strong>gate humano</strong>. Entre os dois, cada passo produz um artefato que o passo seguinte consome — e o que não é consumido não é escrito.</p>
+      <p class="flow">
+        <b>intenção</b> → escolher a <b>raia</b> → <b>spec.md</b> → <code>/speckit.clarify</code> → <b>plan.md</b> (Constitution Check) → <b>tasks.md</b><br>
+        → <b>implement</b> (contexto fresco por task) → <b>DoD</b> verde local → <b>PR</b> → <b>16 portões</b> na CI (13 bloqueiam)<br>
+        → <b>revisão independente</b> → <b>segurança</b> → <b>GATE HUMANO</b> → merge → <b>qa-report.md</b> → achados → retro
+      </p>
+      <p class="keyline">Cada seta é um artefato entregue, não uma reunião. <b>Sem daily, sem planning, sem backlog grooming</b> — as funções que essas cerimônias entregam foram para os artefatos e para os portões.</p>
+    </div>
+  </section>
+
+  <section class="slide" data-label="Raias">
+    <div class="wrap">
+      <div class="eyebrow">Passo zero · o mais barato e o mais esquecido</div>
+      <h2>Quanto processo esta mudança merece?</h2>
+      <div class="tech">
+        <dl class="def">
+          <div><dt>O eixo</dt><dd><b>Ambiguidade × raio de impacto × irreversibilidade.</b> Os três baixos: spec é teatro. Qualquer um alto: a spec se paga.</dd></div>
+          <div><dt>Regra de desempate</dt><dd>Na dúvida entre leve e plena, é <b>plena</b>. Infraestrutura e migração <b>nunca</b> são leves, mesmo parecendo pequenas.</dd></div>
+          <div><dt>O que a raia leve NÃO afrouxa</dt><dd>Revisão independente e testes. Ela dispensa os artefatos de planejamento, não o contrapeso.</dd></div>
+        </dl>
+        <div class="speccard"><div class="lbl">Três raias</div><pre><span class="k">leve</span>   bug · typo · rename · log
+       <span class="c"># o PR é o artefato</span>
+       <span class="c"># bug exige teste que reproduz</span>
+
+<span class="k">plena</span>  feature ambígua · contrato
+       <span class="c"># specs/NNN-slug/ completo</span>
+
+<span class="k">infra</span>  migração · deploy · dados
+       <span class="c"># completo + gates de reversibilidade</span></pre></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-label="spec.md">
+    <div class="wrap">
+      <div class="eyebrow">Artefato 1 de 4 · <code>/speckit.specify</code></div>
+      <h2>spec.md — a fonte de verdade</h2>
+      <div class="tech">
+        <dl class="def">
+          <div><dt>O que é</dt><dd>O <b>input que gera</b> o código, não a descrição dele. O agente refaz o código; a intenção vive aqui.</dd></div>
+          <div><dt>Como se escreve requisito</dt><dd>Formato <b>EARS</b>: <i>QUANDO ⟨gatilho⟩, O SISTEMA DEVERÁ ⟨comportamento observável⟩</i>. Sem "deve ser rápido".</dd></div>
+          <div><dt>Critério de aceite</dt><dd>Sem caixinhas. A seção diz <b>o que deve valer</b>; quem diz se valeu é o <code>qa-report.md</code>, depois, com evidência.</dd></div>
+          <div><dt>Clarify</dt><dd>Ambiguidade vira <b>pergunta explícita</b> antes do plano. Adivinhar é o defeito mais caro do ciclo.</dd></div>
+        </dl>
+        <div class="speccard"><div class="lbl">Esqueleto</div><pre><span class="c">- **Status**:</span> Draft · <span class="c">**Raia**:</span> <span class="k">plena</span> · <span class="c">**Data**</span>
+<span class="c">- **Origem**:</span> de onde veio esta demanda
+
+<span class="k">## O quê e por quê</span>
+<span class="k">## Requisitos funcionais</span>
+  FR1: QUANDO … O SISTEMA DEVERÁ …
+<span class="k">## Fora de escopo</span>
+<span class="k">## Critérios de aceite (DoD)</span>
+<span class="k">## Clarify</span></pre></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-label="plan.md">
+    <div class="wrap">
+      <div class="eyebrow">Artefato 2 de 4 · <code>/speckit.plan</code></div>
+      <h2>plan.md — onde a Constituição é conferida</h2>
+      <div class="tech">
+        <dl class="def">
+          <div><dt>Constitution Check</dt><dd>Uma linha por princípio, <b>preenchida com o caso concreto</b>. Um ✅ sem frase é ruído — a tabela existe para forçar o confronto, não para decorar.</dd></div>
+          <div><dt>Declaração de artefatos</dt><dd>Os cinco opcionais (<code>research</code>, <code>data-model</code>, <code>contracts</code>, <code>checklist</code>, <code>ux-design</code>) são declarados <b>sim ou não, com motivo</b>. Silêncio não é decisão.</dd></div>
+          <div><dt>Marcas que sobrevivem</dt><dd><code>ART:x=yes|no</code> é lido por máquina. Traduzir o texto ao redor não apaga o token — foi assim que a conformidade parou de depender de memória.</dd></div>
+        </dl>
+        <div class="speccard"><div class="lbl">Declaração dos cinco</div><pre>| research   | <span class="k">ART:research=no</span>   | motivo |
+| data-model | <span class="k">ART:data-model=no</span> | motivo |
+| contracts  | <span class="k">ART:contracts=no</span>  | motivo |
+| checklist  | <span class="k">ART:checklist=no</span>  | motivo |
+| ux-design  | <span class="k">ART:ux-design=yes</span> | motivo |
+
+<span class="c"># =yes ⇒ o arquivo TEM que existir</span>
+<span class="c"># conferido por check-conformance.sh</span></pre></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-label="tasks.md">
+    <div class="wrap">
+      <div class="eyebrow">Artefato 3 de 4 · <code>/speckit.tasks</code></div>
+      <h2>tasks.md — fatiar e a cauda obrigatória</h2>
+      <div class="tech">
+        <dl class="def">
+          <div><dt>Como fatiar</dt><dd>Pelas <b>costuras do domínio</b>, não por camada. O corte é mais traiçoeiro que a junção: fatia mal cortada volta como conflito.</dd></div>
+          <div><dt>Verificação primeiro</dt><dd><b>T0 reproduz o defeito</b> ou prova a lacuna. Escrever o teste depois é escrever o teste que passa.</dd></div>
+          <div><dt>A cauda de fechamento</dt><dd>Três linhas que <b>nunca se apagam</b>: revisão, segurança e gate. Não se aplica? Escreve-se <code>n/a: motivo</code> — apagar a linha é apagar a pergunta.</dd></div>
+          <div><dt>Quando marcar</dt><dd>Só <b>enquanto escreve a evidência</b>. A caixa registra o que aconteceu, não a intenção.</dd></div>
+        </dl>
+        <div class="speccard"><div class="lbl">A cauda</div><pre><span class="k">TAIL:review</span>
+  revisão independente, contexto fresco,
+  por quem NÃO executou
+
+<span class="k">TAIL:security</span>
+  passada proporcional à classe de risco
+
+<span class="k">TAIL:gate</span>
+  DoD verde → parecer → gate humano
+  <span class="c"># indelegável</span></pre></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-label="Implementar">
+    <div class="wrap">
+      <div class="eyebrow">Execução · <code>/speckit.implement</code></div>
+      <h2>Implementar é administrar contexto</h2>
+      <div class="tech">
+        <dl class="def">
+          <div><dt>O inimigo</dt><dd>Não é a falta de contexto, é o <b>acúmulo</b>. A janela é finita e a qualidade degrada muito antes de ela encher.</dd></div>
+          <div><dt>As quatro alavancas</dt><dd>O <b>plano comprime</b>; o <b>subagente descarrega</b> (lê numa janela que não é a sua); o <b>reset entre tarefas</b> despeja ruído; o <b>revisor fresco</b> não herda o viés de quem escreveu.</dd></div>
+          <div><dt>Autonomia</dt><dd><b>A menor que resolve.</b> Fluxo predefinido por padrão; agente autônomo só quando o corte não dá para prever.</dd></div>
+        </dl>
+        <div class="speccard"><div class="lbl">13 subagentes estreitos</div><pre>spec-agent · plan-architect · dev-implementer
+qa · review · security · tech-writer
+ux-semantics · process-guardian
+research-curator · didactics-editor
+agent-designer · skill-author
+
+<span class="c"># estreito de propósito: um papel,</span>
+<span class="c"># uma janela, um critério de sucesso</span></pre></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-label="O que a IA lê">
+    <div class="wrap">
+      <div class="eyebrow">Orientação</div>
+      <h2>O que a IA lê antes de tocar no seu código</h2>
+      <div class="cols3">
+        <div class="doc"><h4>Constituição</h4><p><b>docs/governance/principles.md</b> — os princípios inegociáveis. Alterada por emenda, nunca regenerada.</p></div>
+        <div class="doc"><h4>Modelo operacional</h4><p><b>docs/governance/operating-model.md</b> — papéis, raias, artefatos, DoD, gates. A regra vigente.</p></div>
+        <div class="doc"><h4>Skills</h4><p><b>skills/</b> — 6 disciplinas com Lei de Ferro própria: DoD verificável, diagnosticar antes de corrigir, anti-padrões, jornada viva…</p></div>
+        <div class="doc"><h4>Templates</h4><p><b>.specify/templates/</b> — 12 moldes (spec, plan, tasks, qa-report, ADR, ux-design…). Se divergirem do esqueleto que o <code>new-cycle.sh</code> gera, <b>os templates vencem</b>.</p></div>
+      </div>
+      <p class="keyline">E o <b>CLAUDE.md</b> do projeto, que aponta para tudo isso. O instalador copia os arquivos e <b>imprime</b> o bloco de método — quem acrescenta ao <code>CLAUDE.md</code> é você (<code>--block &gt;&gt; CLAUDE.md</code>). A distinção não é burocrática: <b>copiar arquivo não é instalar</b>; instalado é quando a IA sabe que deve segui-los, e o <code>check-install.sh</code> fica vermelho até que saiba.</p>
+    </div>
+  </section>
+
+  <section class="slide" data-label="Comandos">
+    <div class="wrap">
+      <div class="eyebrow">Ferramental</div>
+      <h2>Os comandos que você digita</h2>
+      <table class="mini">
+        <tr><th>Comando</th><th>O que faz</th></tr>
+        <tr><td>/speckit.specify</td><td>Escreve a <b>spec.md</b> a partir da intenção e levanta as ambiguidades.</td></tr>
+        <tr><td>/speckit.clarify</td><td>Converte cada ambiguidade em <b>pergunta respondida</b> antes do plano.</td></tr>
+        <tr><td>/speckit.plan</td><td><b>plan.md</b> com o Constitution Check e a declaração dos cinco artefatos.</td></tr>
+        <tr><td>/speckit.tasks</td><td>Fatia em tasks pelas costuras do domínio, com a cauda de fechamento.</td></tr>
+        <tr><td>/speckit.implement</td><td>Executa as tasks, passo pequeno, contexto fresco a cada uma.</td></tr>
+        <tr><td>/speckit.analyze</td><td>Confere a coerência entre spec, plano e tasks antes de implementar.</td></tr>
+        <tr><td>/speckit.checklist</td><td>Gera a lista de verificação quando o ciclo declara que precisa de uma.</td></tr>
+        <tr><td>/speckit.constitution</td><td><b>Emenda</b> a constituição no lugar — nunca regenera por cima.</td></tr>
+        <tr><td>/dod</td><td>Roda a Definition of Done verificável e <b>mostra a evidência</b> de cada item.</td></tr>
+        <tr><td>/eval</td><td>Roda as avaliações do método sobre um cenário registrado.</td></tr>
+      </table>
+      <p class="keyline">São <b>12 comandos</b> no total (dois de trilhos: <code>converge</code> e <code>taskstoissues</code>). Nenhum deles substitui a leitura — eles carregam a instrução, você carrega a decisão.</p>
+    </div>
+  </section>
+
+  <section class="slide" data-label="DoD">
+    <div class="wrap">
+      <div class="eyebrow">Qualidade · <code>/dod</code></div>
+      <h2>"Pronto" é o que uma máquina consegue conferir</h2>
+      <div class="tech">
+        <dl class="def">
+          <div><dt>A regra</dt><dd><b>Prove, não afirme.</b> Todo item de DoD mostra o comando e a saída. "Rodei os testes" não é evidência; a saída é.</dd></div>
+          <div><dt>O trabalho real</dt><dd>Converter <b>julgamento em check</b>. "Código limpo" → lint + função de aptidão. "Seguro" → varredura de segredo + revisão de injeção. "Boa UX" → tokens + heurística datada.</dd></div>
+          <div><dt>O limite declarado</dt><dd><b>Verde ≠ certo.</b> O portão não sabe se era a coisa certa a construir, nem se o todo continua coerente. Esse julgamento fica com o humano — e o método diz isso em voz alta.</dd></div>
+        </dl>
+        <div class="speccard"><div class="lbl">Julgamento → check</div><pre>"código limpo" → lint + fitness fns
+"boa UX"       → tokens + heurística
+"seguro"       → secret scan + injeção
+"rastreável"   → spec NNN ↔ PR ↔ teste
+"documentado"  → CHANGELOG na mesma PR
+
+<span class="c"># verde local ≠ certo global</span></pre></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-label="Portões">
+    <div class="wrap">
+      <div class="eyebrow">Integração contínua · 16 executáveis</div>
+      <h2>Os portões: cada um mede um fato</h2>
+      <div class="gates">
+        <div class="gate"><code>check-agents</code><small>quantos agentes, front-matter válido, e revisor/segurança/guardião <b>sem permissão de escrita</b></small></div>
+        <div class="gate"><code>check-roles</code><small>papel do modelo operacional ↔ agente no disco</small></div>
+        <div class="gate"><code>check-install</code><small>a instrução que a IA lê ainda bate com o disco</small></div>
+        <div class="gate"><code>check-installed</code><small>instala numa pasta nova e roda tudo lá dentro</small></div>
+        <div class="gate"><code>check-language</code><small>resíduo de português na superfície instalável</small></div>
+        <div class="gate"><code>check-links</code><small>todo link relativo aponta para arquivo que existe</small></div>
+        <div class="gate"><code>check-evals</code><small>caso de avaliação nomeia alvo real e discrimina</small></div>
+        <div class="gate"><code>check-boundary</code><small>todo arquivo pertence a exatamente um domínio</small></div>
+        <div class="gate"><code>check-chapters</code><small>capítulo sem objetivo, exemplo e verificação não passa</small></div>
+        <div class="gate"><code>check-licensing</code><small>licença e atribuição viajam com cada cópia</small></div>
+        <div class="gate"><code>check-ecosystem</code><small>ideia "absorvida" aponta o arquivo que prova</small></div>
+        <div class="gate"><code>check-adr</code><small>uma linha por ADR no índice, status de vocabulário fechado</small></div>
+        <div class="gate"><code>check-version</code><small>uma versão só, em todo lugar que declara uma</small></div>
+        <div class="gate adv"><code>check-cycle</code><small>consultivo: raia justificada + commit citando o ciclo</small></div>
+        <div class="gate adv"><code>check-retro</code><small>consultivo: dívida de achados dispara a retro</small></div>
+        <div class="gate adv"><code>check-conformance</code><small>consultivo na CI, <b>bloqueante para promover</b></small></div>
+      </div>
+      <p class="keyline"><b>13 bloqueiam</b> a integração; <b>3 são consultivos</b> — porque ficam vermelhos por motivo legítimo enquanto o trabalho está em curso, e <b>portão sempre vermelho é portão que se aprende a ignorar</b>. Mais o plugin em dia e o build do livro.</p>
+    </div>
+  </section>
+
+  <section class="slide" data-label="Revisão">
+    <div class="wrap">
+      <div class="eyebrow">Contrapeso · <code>TAIL:review</code></div>
+      <h2>Quem executa não é quem verifica</h2>
+      <div class="tech">
+        <dl class="def">
+          <div><dt>A regra</dt><dd>A revisão final é de um agente em <b>contexto fresco</b>, que não viu a conversa — só o diff, a spec e o plano. É o substituto do segundo par de olhos de um time.</dd></div>
+          <div><dt>Por que fresco</dt><dd>Quem escreveu carrega a justificativa de cada linha. O revisor fresco não tem a justificativa — e por isso enxerga o que ela estava escondendo.</dd></div>
+          <div><dt>Funciona?</dt><dd>Nos ciclos 046–051 deste repositório, a revisão independente <b>reprovou todos os seis</b>. Duas coisas que iam para produção: um comando que mandava sobrescrever a constituição, e um instalador que apagava arquivo de terceiro.</dd></div>
+        </dl>
+        <div class="speccard"><div class="lbl">O que o revisor recebe</div><pre>o diff · a spec · o plano
+<span class="c"># e mais nada da conversa</span>
+
+pergunta-guia:
+  <span class="k">o portão mede o FATO</span>
+  <span class="k">ou mede a FRASE?</span>
+
+<span class="c"># anti-padrão 13, o mais caro daqui</span></pre></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-label="Gate humano">
+    <div class="wrap">
+      <div class="eyebrow">O passo que não delega</div>
+      <h2>Gate humano, promoção e registro</h2>
+      <div class="tech">
+        <dl class="def">
+          <div><dt>O que o humano decide</dt><dd>A <b>política</b> e o <b>momento</b> — não cada linha. Ele aprova a spec, o plano e o merge; o resto corre dentro dos trilhos que ele definiu.</dd></div>
+          <div><dt>A promoção</dt><dd><code>scripts/promote-main.sh</code> <b>recusa promover</b> enquanto a conformidade estiver vermelha. O gate não é lembrete: é código que diz não.</dd></div>
+          <div><dt>O registro</dt><dd>Aprovou, o script grava o gate sozinho (<code>gate-main-&lt;sha&gt;</code>) no índice append-only — <b>antes</b> de mover o ramo. Ninguém precisa lembrar de registrar: <b>memória não é testemunha</b>.</dd></div>
+        </dl>
+        <div class="speccard"><div class="lbl">O fecho de um ciclo</div><pre>scripts/check-*.sh        <span class="c"># 16, verdes</span>
+scripts/promote-main.sh   <span class="c"># pergunta antes</span>
+
+<span class="c"># → recusa se conformance vermelho</span>
+<span class="c"># → grava gate-main-&lt;sha&gt; em</span>
+<span class="c">#   docs/records/decisoes.jsonl</span>
+<span class="c"># → só então move dev → main</span>
+
+<span class="c"># --yes pula a pergunta: use quando</span>
+<span class="c"># a decisão JÁ foi tomada por você</span></pre></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-label="Aprendizado">
+    <div class="wrap">
+      <div class="eyebrow">Depois do merge</div>
+      <h2>O ciclo fecha aprendendo, não celebrando</h2>
+      <div class="cols3 three">
+        <div class="doc"><h4>qa-report.md</h4><p>O veredicto <b>com evidência</b>: cada função de aptidão, o que se esperava, o que saiu. É onde a cauda (<code>review</code>, <code>security</code>, <code>gate</code>) presta contas.</p></div>
+        <div class="doc"><h4>Achados</h4><p>O que se viu e <b>não</b> se corrigiu vira achado nomeado e datado. Achado sem dono é dívida invisível; com dono, é fila.</p></div>
+        <div class="doc"><h4>Retro por dívida</h4><p>A retro <b>não é quinzenal</b>: dispara por acúmulo (≥ 4 achados abertos ou ≥ 6 ciclos). Erro vira <b>regra versionada</b>, não bilhete.</p></div>
+      </div>
+      <p class="keyline">Regra do fecho: <b>erro → regra que a máquina cobra</b>. Toda norma que dependeu de disciplina nesta base voltou a falhar — a pergunta certa depois de um erro não é "quem esqueceu", é <b>"que função de força faltava"</b>.</p>
+    </div>
+  </section>
+
+  <section class="slide" data-label="Anti-padrões">
+    <div class="wrap">
+      <div class="eyebrow">O que mais custou caro aqui</div>
+      <h2>Quatro armadilhas, todas caras, todas repetidas</h2>
+      <table class="mini">
+        <tr><th>Anti-padrão</th><th>Como aparece</th></tr>
+        <tr><td>medir a frase</td><td>O portão procura a <b>palavra</b> em vez do fato. Um <code>grep</code> pela palavra "superseded" fica verde quando alguém escreve "revogado".</td></tr>
+        <tr><td>não sabe se olhou</td><td>Portão que não distingue <b>"limpo"</b> de <b>"não procurei"</b>. Entrada vazia tem que <b>reprovar</b>, nunca passar.</td></tr>
+        <tr><td>norma sem cobrança</td><td>Regra escrita e nunca conferida. Dura enquanto a memória dura — e depois some sem barulho.</td></tr>
+        <tr><td>artefato que congela</td><td>Documento de planejamento que ninguém consome vira ficção com data. Artefato vive se <b>alguém quebra</b> quando ele envelhece.</td></tr>
+      </table>
+      <p class="keyline">O teste que separa portão de decoração: <b>mutação</b>. Quebre de propósito o que ele deveria pegar. Se continuar verde, ele nunca protegeu nada.</p>
+    </div>
+  </section>
+
+  <section class="slide" data-label="Instalar">
+    <div class="wrap">
+      <div class="eyebrow">Levar para o seu repositório</div>
+      <h2>Instalar — e instalar de novo</h2>
+      <div class="tech">
+        <dl class="def">
+          <div><dt>Um comando</dt><dd>Copia agentes, skills, scripts e templates, e <b>imprime</b> o bloco de método para você acrescentar ao <code>CLAUDE.md</code> do projeto.</dd></div>
+          <div><dt>Instalar é atualizar</dt><dd>Arquivo que o método escreveu e você não tocou é <b>renovado</b>; arquivo que você mudou é <b>mantido no lugar, com o seu nome</b> — a versão nova é que chega ao lado, como <code>*.maestro-new</code>. Nada seu é sobrescrito em silêncio.</dd></div>
+          <div><dt>Antes, veja</dt><dd><code>--dry-run</code> mostra tudo o que faria sem tocar em nada. Reversibilidade compra velocidade — inclusive aqui.</dd></div>
+        </dl>
+        <div class="speccard"><div class="lbl">Instalação</div><pre>scripts/install-maestro.sh /seu/projeto <span class="k">--dry-run</span>
+scripts/install-maestro.sh /seu/projeto
+
+<span class="c"># no seu repositório, depois de apontar</span>
+<span class="c"># o CLAUDE.md para o método:</span>
+scripts/check-install.sh   <span class="c"># a prova</span>
+
+<span class="c"># conflito? o SEU arquivo fica;</span>
+<span class="c">#   o novo chega como *.maestro-new</span></pre></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide cover" data-label="Fecho">
+    <div class="wrap">
+      <div class="eyebrow">Se você guardar só três coisas</div>
+      <h2>A spec decide, o portão cobra, o humano responde</h2>
+      <p class="lead"><strong>1.</strong> A intenção vive na spec — não no código, que o agente refaz, nem no prompt, que evapora. <strong>2.</strong> Norma que ninguém confere não existe: se importa, vira <code>check-*.sh</code>. <strong>3.</strong> Reversibilidade compra velocidade — errar barato é o que permite correr.</p>
+      <p class="foot">docs/handbook (capítulos 01–12) · docs/governance/operating-model.md · docs/receitas/abrir-um-ciclo.md</p>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  (function () {
+    var deck = document.getElementById('deck');
+    var slides = Array.prototype.slice.call(deck.querySelectorAll('.slide'));
+    var rail = document.getElementById('rail');
+    var cur = document.getElementById('cur');
+    document.getElementById('tot').textContent = String(slides.length).padStart(2, '0');
+    slides.forEach(function (s, i) {
+      var b = document.createElement('button');
+      b.setAttribute('aria-label', 'Ir para ' + (s.dataset.label || ('slide ' + (i + 1))));
+      b.addEventListener('click', function () { s.scrollIntoView({ behavior: 'smooth' }); });
+      rail.appendChild(b);
+    });
+    var dots = Array.prototype.slice.call(rail.children);
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          var i = slides.indexOf(e.target);
+          cur.textContent = String(i + 1).padStart(2, '0');
+          dots.forEach(function (d, di) { d.setAttribute('aria-current', di === i ? 'true' : 'false'); });
+        }
+      });
+    }, { root: deck, threshold: 0.5 });
+    slides.forEach(function (s) { io.observe(s); });
+    function idx() { var st = deck.scrollTop, best = 0, bd = Infinity;
+      slides.forEach(function (s, i) { var d = Math.abs(s.offsetTop - st); if (d < bd) { bd = d; best = i; } }); return best; }
+    window.addEventListener('keydown', function (e) {
+      if (['ArrowDown', 'ArrowRight', 'PageDown', ' '].indexOf(e.key) > -1) { e.preventDefault(); slides[Math.min(idx() + 1, slides.length - 1)].scrollIntoView({ behavior: 'smooth' }); }
+      else if (['ArrowUp', 'ArrowLeft', 'PageUp'].indexOf(e.key) > -1) { e.preventDefault(); slides[Math.max(idx() - 1, 0)].scrollIntoView({ behavior: 'smooth' }); }
+      else if (e.key === 'Home') { e.preventDefault(); slides[0].scrollIntoView({ behavior: 'smooth' }); }
+      else if (e.key === 'End') { e.preventDefault(); slides[slides.length - 1].scrollIntoView({ behavior: 'smooth' }); }
+    });
+    document.getElementById('themebtn').addEventListener('click', function () {
+      var root = document.documentElement;
+      var isDark = (root.getAttribute('data-theme') === 'dark') ||
+        (!root.getAttribute('data-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      root.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    });
+  })();
+</script>
