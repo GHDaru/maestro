@@ -60,6 +60,27 @@ a self-closure of a finding that was never open, which the index then had to cor
 further line. Cycles 039 and 041, the second written while retrospecting the first. A gap in
 a protocol is not a lapse of attention: it is a shape the protocol failed to offer.
 
+### A finding whose remedy became a trigger
+
+Some findings are answered by deciding **not to act yet**, under a named condition. The
+decision is complete the moment the condition is written down somewhere that will be
+consulted — an `observar` verdict in `docs/ecosystem/`, a trigger row in the roadmap. The
+finding closes **then**, with `fecha` pointing at it and the trigger quoted in the title, so
+the deferral is auditable where it lives instead of ageing here.
+
+```json
+{"id":"retro-055-fecha-047","fecha":"achado-047-…","data":"2026-08-16","titulo":"Closed: … remedy is a trigger — 'first real intention that does not fit one cycle' …","status":"fechada por retro-055","registro":"specs/055-…/qa-report.md","ciclo":"055"}
+```
+
+This shape exists because its absence made a gate lie. `achado-047` was remedied inside cycle
+047 — five ideas reclassified to `observar`, each with a trigger, all on disk — and stayed
+open anyway. Nothing in the world would close it — the trigger had not fired and might never
+— and the `fecha` mechanism was available the whole time: what was missing was the decision
+to use it, not the event. It aged to **seven cycles** and turned `check-retro.sh` red, so the debt gauge
+was measuring the **calendar**, not the debt. A finding waiting on a condition is not an open
+finding; it is a closed decision with a condition. Say which, or the gauge stops meaning
+anything. *(cycle 055.)*
+
 ## How to record
 
 ```bash

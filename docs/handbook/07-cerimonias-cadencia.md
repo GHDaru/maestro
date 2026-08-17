@@ -88,7 +88,7 @@ escalar é tornar cada gate mais barato.
 ## 6. ⭐ Na prática — o ciclo real
 
 **A retrospectiva rendeu regra, e a regra tem data.** O catálogo de anti-padrões tem hoje
-vinte e dois itens, e o arquivo mostra quando cada leva entrou:
+vinte e três itens, e o arquivo mostra quando cada leva entrou:
 
 ```
 $ git log --format="%ad %s" --date=short -- skills/anti-patterns/SKILL.md

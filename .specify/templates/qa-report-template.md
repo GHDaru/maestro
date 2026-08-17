@@ -23,6 +23,9 @@
   with the findings]
 - **TAIL:security** — [the pass that was run and its result, or the `n/a` reason mirrored
   from `tasks.md`]
+- **TAIL:mutation** — [each gate this cycle created or changed, broken on purpose: the
+  mutation, the command, and the refusal it printed. Or the `n/a` reason — but the gate
+  reads the diff, not the sentence]
 - **TAIL:gate** — [what awaits the human, or the recorded `gate-main-<sha>`]
 
 ## Requirement coverage

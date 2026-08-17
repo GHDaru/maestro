@@ -23,7 +23,7 @@
   | `constitution-check` | todo plano, antes de implementar |
   | `verifiable-dod` | ao escrever critério de aceite ou portão |
   | `fight-the-pile-up` | ao ver arquivo/agente/prompt inchando |
-  | `anti-patterns` | ao desenhar e ao revisar (checklist negativo, 22 itens) |
+  | `anti-patterns` | ao desenhar e ao revisar (checklist negativo, 23 itens) |
   | `diagnose-before-fix` | **encontrou bug? antes de propor correção** |
   | `living-journey` | mexeu em tela: captura do build real + heurística datada |
 

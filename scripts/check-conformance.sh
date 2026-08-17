@@ -21,7 +21,9 @@
 #
 #   plan.md   ART:<artifact>=yes|no   for research · data-model · contracts · checklist · ux-design
 #             declaring =yes means the file must exist in the cycle directory
-#   tasks.md  TAIL:review · TAIL:security · TAIL:gate      (present, or "n/a:" with a reason)
+#   tasks.md  TAIL:review · TAIL:security · TAIL:gate · TAIL:mutation (from cycle 055)
+#             present, or "n/a" with a reason — and TAIL:mutation's n/a is checked
+#             against the diff, never against the sentence
 #   qa-report.md   each TAIL token that is not n/a, with its evidence
 #
 # Usage:  scripts/check-conformance.sh          # every cycle from the floor onward
@@ -40,6 +42,65 @@ ONLY="${1:-}"
 
 ARTIFACTS=(research data-model contracts checklist ux-design)
 TAIL=(review security gate)
+# TAIL:mutation joins the tail from cycle 055 (the retrospective that created it). Older
+# cycles are evidence, not target — same precedent as FLOOR above.
+#
+# A knob that fails OPEN is not a knob, it is a switch: `MAESTRO_MIN_CYCLE_MUTATION=999`
+# excused every cycle and still printed the success line, and a typo (`=abc`) blew up the
+# arithmetic, dropped the step and ALSO exited 0. Both found by the independent review of
+# this cycle. It is now validated, and a floor above the newest cycle is a failure, not a
+# quiet exemption — the same protection FLOOR got in cycle 048.
+MUT_FLOOR="${MAESTRO_MIN_CYCLE_MUTATION:-55}"
+[[ "$MUT_FLOOR" =~ ^[0-9]+$ ]] || {
+  echo "✗ MAESTRO_MIN_CYCLE_MUTATION='${MUT_FLOOR}' is not a number — refusing to run with an unreadable floor." >&2
+  exit 1
+}
+
+# What counts as a gate for this rule. The first version listed only `scripts/check-*.sh`
+# and the book engine, and the review walked straight through the gap: `boundary.json`
+# (read by four checks), `publicar/sumario.json` (the DECLARED SET whose blind spot was
+# cycle 054's own defect), `package-plugin.sh --verify` and the CI workflow are all gates
+# in practice. `companion/` is excluded on purpose — it is another domain, and charging it
+# would cross the boundary this repository enforces.
+GATE_PATHS_RE='(^|/)scripts/check-[A-Za-z0-9_-]+\.sh$|(^|/)scripts/package-plugin\.sh$|(^|/)publicar/(build\.mjs|sumario\.json)$|(^|/)boundary\.json$|(^|/)\.github/workflows/[^/]+\.ya?ml$'
+GATE_PATHS_SKIP_RE='^companion/'
+
+# Did this cycle touch a gate? Answered by the FACT — the files its commits changed, plus
+# the working tree when the cycle's own artifacts are themselves uncommitted — never by
+# what the plan says it did. Reading the prose would be measuring the phrase inside the
+# gate built to stop exactly that (anti-pattern 13).
+#
+# `-i` on the subject search because check-cycle.sh accepts the citation case-insensitively:
+# a commit reading `(Spec 055)` satisfied the traceability gate and matched nothing here,
+# so the two gates disagreed about which commits belong to a cycle.
+#
+# The working tree is attributed to every cycle whose own directory is dirty, not to "the
+# newest cycle": scaffolding the NEXT cycle used to make the current one's uncommitted gate
+# change stop counting — one `new-cycle.sh` away from the dispensation.
+DIRTY_PATHS="$(git status --porcelain -uall 2>/dev/null | cut -c4- || true)"
+
+# The newest cycle on disk — used only to catch a mutation floor set above every cycle
+# there is. Kept assigned even when there is none: under `set -u` an unset name aborts the
+# script at the closing check, which is how the floor sanity block silently died the first
+# time it ran (found by the mutation this cycle mandates, on its own code).
+NEWEST_CYCLE=""
+{ shopt -s nullglob; _all=(specs/[0-9][0-9][0-9]-*/); shopt -u nullglob
+  [[ ${#_all[@]} -gt 0 ]] && NEWEST_CYCLE="$(basename "${_all[${#_all[@]}-1]}" | cut -d- -f1)"; } || true
+
+cycle_touched_a_gate() {  # $1 = NNN
+  local n="$1" files="" sha
+  while IFS= read -r sha; do
+    [[ -n "$sha" ]] || continue
+    files+="$(git show --pretty=format: --name-only "$sha" 2>/dev/null)"$'\n'
+  done < <(git log --all -i --format=%H --grep="spec ${n}" 2>/dev/null || true)
+  if grep -qE "^specs/0*${n}-" <<<"$DIRTY_PATHS"; then
+    files+="${DIRTY_PATHS}"$'\n'
+  fi
+  # Here-string, never a pipe into `grep -q`: that shape is anti-pattern 21, and it has
+  # already killed two scripts in this repository.
+  files="$(grep -vE "$GATE_PATHS_SKIP_RE" <<<"$files" || true)"
+  grep -qE "$GATE_PATHS_RE" <<<"$files"
+}
 
 fail=0
 checked=0
@@ -155,14 +216,36 @@ for d in specs/[0-9][0-9][0-9]-*/; do
   # This is the defect that broke a cycle on another repository: the tail lived in the
   # spec and in working memory, never in the checklist the executor follows — and context
   # compaction promoted the truncated version to source of truth (corollary C12).
-  for t in "${TAIL[@]}"; do
-    line="$(grep -m1 "TAIL:${t}" "$d/tasks.md" || true)"
+  tail_steps=("${TAIL[@]}")
+  [[ "$((10#$n))" -ge "$((10#$MUT_FLOOR))" ]] && tail_steps+=(mutation)
+
+  for t in "${tail_steps[@]}"; do
+    # The TAIL ROW, not the first line that happens to name the token. Unanchored, a task
+    # line that merely MENTIONS `TAIL:mutation` (this cycle's own T3 does) was matched
+    # first, and the real row — carrying the `n/a:` — was never read: the n/a refusal
+    # silently could not fire. Found by running the mutation this very cycle makes
+    # mandatory, which is the whole argument for the rule (anti-pattern 13, again).
+    line="$(grep -m1 -E "^[[:space:]]*- \[[ xX]\] \**TAIL:${t}\**" "$d/tasks.md" || true)"
     if [[ -z "$line" ]]; then
       bad "tasks.md has no TAIL:${t} — the step is not in the list the executor follows"
       continue
     fi
-    if [[ "$line" == *"n/a:"* ]]; then
-      reason="$(sed 's/.*n\/a: *//' <<<"$line" | sed 's/[`).]*$//' | cut -c1-60)"
+    # `n/a` is recognised however it is spelled and however it is separated from its
+    # reason. Matching the literal `n/a:` meant `N/A:` and `n/a — ` fell through to the
+    # evidence branch, where the sentence WAS the evidence: a capital letter bought the
+    # dispensation. Found by the review of this cycle, in the gate written to stop a gate
+    # from measuring the phrase.
+    lower="$(tr '[:upper:]' '[:lower:]' <<<"$line")"
+    if [[ "$lower" == *"n/a"* ]]; then
+      # The dispensation exists for a cycle that did not touch a gate. A cycle that DID
+      # touch one and writes n/a is declining to prove exactly what independent review
+      # found vacuous in six of the nine cycles 046-054 — so the answer comes from the
+      # diff, not from the sentence.
+      if [[ "$t" == "mutation" ]] && cycle_touched_a_gate "$n"; then
+        bad "TAIL:mutation says n/a, but this cycle changed a gate — break it on purpose and show it failing"
+        continue
+      fi
+      reason="$(sed -E 's/.*[nN]\/[aA][[:space:]]*[:—–-]*[[:space:]]*//' <<<"$line" | sed 's/[`).]*$//' | cut -c1-60)"
       if is_placeholder "$reason"; then
         bad "TAIL:${t} says n/a with a placeholder reason — write why, or do the step"
       else
@@ -174,7 +257,10 @@ for d in specs/[0-9][0-9][0-9]-*/; do
     # Presence of the token is NOT evidence: new-cycle.sh writes the tokens into every
     # generated qa-report.md, so testing for presence made the generator pre-satisfy the
     # check. What is read is what comes AFTER the token on its line.
-    ev="$(grep -m1 "TAIL:${t}" "$d/qa-report.md" || true)"
+    # Same anchoring on this side: the evidence is a BULLET that opens with the token, not
+    # any sentence that names it. Prose in a qa-report discussing `TAIL:review` used to be
+    # accepted as the evidence for it.
+    ev="$(grep -m1 -E "^[[:space:]]*[-*][[:space:]]+\**TAIL:${t}\**" "$d/qa-report.md" || true)"
     if [[ -z "$ev" ]]; then
       bad "TAIL:${t} applies but is absent from qa-report.md — a tick is not a witness"
       continue
@@ -205,6 +291,13 @@ if [[ "$checked" -eq 0 ]]; then
   exit 1
 fi
 echo "cycles checked: ${checked}"
+# The mutation floor gets the same protection FLOOR got: a floor above every cycle that
+# exists excuses the whole rule, and doing that silently with exit 0 is the off-switch
+# shape (cycle 048). Saying it out loud is the difference between a knob and a switch.
+if [[ -n "$NEWEST_CYCLE" && "$((10#$MUT_FLOOR))" -gt "$((10#$NEWEST_CYCLE))" ]]; then
+  echo "✗ mutation floor ${MUT_FLOOR} is above the newest cycle ${NEWEST_CYCLE} — TAIL:mutation was charged to nobody." >&2
+  fail=1
+fi
 if [[ $fail -ne 0 ]]; then
   echo "✗ the method did not survive into the artifacts of at least one cycle."
   exit 1

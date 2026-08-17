@@ -146,6 +146,19 @@ through speculation.
     a conditional artifact is **declared** rather than merely absent (`=yes`/`=no` with a
     reason), and a gate compares the two. *(cycle 042, from a companion repository's cycle 029.)*
 
+23. **A new door, and the old guard never told** — a cycle grants a new power or opens a new
+    channel, and the gate that watched the old one is left reading half the world. It reports
+    green, and green now means "I did not look over there". The book engine gained a second
+    publication channel and `check-boundary.sh` kept reading only the first: a toolkit-owned
+    file went out to the reader-facing site with the boundary gate saying all clear — the
+    exact failure that script exists to prevent, arriving through the door it was not
+    watching. In the same cycle the page-collision map stayed keyed on declared items only,
+    so a material named `index.html` overwrote the hand-maintained cover while the build
+    printed a success line. **Antidote**: when a change adds a way in, name every gate that
+    guards the old way and extend it in the same cycle — then prove the extension by
+    mutation. Ask it out loud: *what was this gate's world, and did it just get bigger?*
+    *(cycle 054; both found by independent review before merge.)*
+
 ## How to use it
 
 - **Designing**: walk the catalogue as a negative checklist (is any item present?).

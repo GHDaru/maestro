@@ -108,6 +108,7 @@ write_if_absent "$DIR/tasks.md" <<EOF
      check-conformance.sh requires the evidence of every non-n/a step in qa-report.md. -->
 - [ ] TAIL:review — independent review in fresh context, by whoever did not execute
 - [ ] TAIL:security — security pass proportional to the risk class
+- [ ] TAIL:mutation — every gate created or changed here, broken on purpose and seen refusing
 - [ ] TAIL:gate — DoD green -> guardian verdict -> human merge gate (not delegable)
 EOF
 
@@ -125,6 +126,7 @@ write_if_absent "$DIR/qa-report.md" <<EOF
 <!-- One entry per non-n/a TAIL token. What was OBSERVED, never the intention restated. -->
 - TAIL:review — <who reviewed, fresh context, verdict, what was done with the findings>
 - TAIL:security — <the pass and its result, or the n/a reason mirrored from tasks.md>
+- TAIL:mutation — <the gate broken on purpose, the command, the refusal it printed>
 - TAIL:gate — <what awaits the human, or the recorded gate-main-<sha>>
 
 ## Requirement coverage

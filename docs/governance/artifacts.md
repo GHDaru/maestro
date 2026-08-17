@@ -58,7 +58,7 @@ The honest note about the last one: it is the one most often skipped, because a 
 like implementation rather than design. It is also the one where skipping is most expensive,
 since a component built without its semantic role has to be rebuilt rather than adjusted.
 
-## The closing tail — three steps that are not artifacts, and are still mandatory
+## The closing tail — four steps that are not artifacts, and are still mandatory
 
 They live in `tasks.md` as tokens, and their **evidence** lives in `qa-report.md`. A ticked
 box is not a witness.
@@ -67,6 +67,7 @@ box is not a witness.
 |---|---|---|
 | `TAIL:review` | independent review in **fresh context**, by whoever did not execute (Theorem 2) | the review may be an agent; it must not be the executor |
 | `TAIL:security` | a security pass proportional to the risk class. Write `n/a:` with a real reason when there is no risk surface | — |
+| `TAIL:mutation` | every gate this cycle created or changed, **broken on purpose and seen refusing**. Write `n/a:` with a reason when the cycle touched no gate — the check reads the diff, not the sentence, and refuses the dispensation from a cycle that did (cycle 055) | — |
 | `TAIL:gate` | the **human merge gate** (Axiom A2) | yes — this one is the human's, always |
 
 To declare a tail step inapplicable, write `n/a:` and the reason **on the line**. Do not

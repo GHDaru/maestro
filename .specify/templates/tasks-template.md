@@ -52,5 +52,12 @@
 - [ ] **TAIL:security** — security pass proportional to the risk class. When the change has
   no risk surface, replace this line's tail with `n/a:` followed by the actual reason — a
   placeholder is rejected by the gate.
+- [ ] **TAIL:mutation** — every gate this cycle created or changed was **broken on purpose
+  and seen refusing**. Evidence: the mutation and its output, in `qa-report.md`. When the
+  cycle touched no gate, write `n/a:` with the reason — but the gate reads the diff, not the
+  sentence, and refuses `n/a` from a cycle that did change one. In six of the nine cycles
+  046-054 — 046, 047, 048, 049, 050 and 054 — an independent review found a gate that had
+  shipped vacuous; what separated the ones caught early was that somebody broke them and
+  looked.
 - [ ] **TAIL:gate** — DoD green → guardian verdict → **human merge gate (not delegable)**;
   promotion via `scripts/promote-main.sh` (records `gate-main-<sha>` automatically, ADR 0009).

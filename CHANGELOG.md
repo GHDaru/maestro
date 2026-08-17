@@ -10,6 +10,20 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **`TAIL:mutation`: a cauda de fechamento ganha um quarto passo** (ciclo 055, retro). Todo
+  portão criado ou alterado num ciclo tem de ser **quebrado de propósito e visto reprovar**,
+  com a mutação e a saída no `qa-report.md`. O que faz a regra ter dente: quando o ciclo
+  escreve `n/a`, o `check-conformance.sh` **não acredita na frase** — lê o diff (commits que
+  citam o ciclo, mais a árvore de trabalho enquanto ele está sendo escrito) e recusa a
+  dispensa de quem mexeu em portão. Motivo: em seis dos nove ciclos 046–054 a revisão
+  independente achou um portão que media a frase e não o fato; o anti-padrão 13 estava
+  catalogado desde muito antes, e catálogo não cobra. Vale a partir do 055; ciclo velho é
+  evidência, não alvo. Anti-padrão **23** entra no catálogo: *porta nova, e o guarda antigo
+  não foi avisado*. E `docs/records/README.md` ganha a forma **"achado cujo remédio virou
+  gatilho"**, que fechou `achado-047` depois de oito ciclos em que a dívida de retro media
+  calendário em vez de dívida.
+
+### Adicionado
 - **O livro passa a publicar material** (ciclo 054). `publicar/sumario.json` ganhou
   `materiais`: página HTML autocontida que o livro **publica e indexa** sem renderizar no
   próprio molde — uma apresentação de tela cheia não cabe no miolo de uma página. O caderno
