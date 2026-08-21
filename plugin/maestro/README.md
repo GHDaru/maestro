@@ -33,14 +33,18 @@ Há **três caminhos**, do mais completo ao mais leve. Escolha pelo que você pr
 
 ```bash
 # 1. clone o método (uma vez, em qualquer lugar)
-git clone https://github.com/GHDaru/maestro.git
+git clone https://github.com/GHDaru/maestro.git && cd maestro
 
-# 2. veja o que seria instalado, sem escrever nada
-maestro/scripts/install-maestro.sh /caminho/do/seu-projeto --dry-run
+# 2. veja quais assistentes ele sabe servir
+./bin/maestro agents
 
-# 3. instale (não sobrescreve arquivo existente; use --forcar para substituir)
-maestro/scripts/install-maestro.sh /caminho/do/seu-projeto
+# 3. instale: quatro passos, terminando por VERIFICAR
+./bin/maestro init /caminho/do/seu-projeto --ai claude
 ```
+
+Instalar é também **atualizar**: o que o método escreveu e você não tocou é renovado; o que
+você modificou é mantido, com a versão nova ao lado como `*.maestro-new`. Nada seu é
+sobrescrito em silêncio. Para ver antes sem escrever nada: `--dry-run`.
 
 Leva **tudo**: agentes, skills, scripts, comandos, templates e governança. Funciona com
 qualquer assistente que leia `CLAUDE.md`/`AGENTS.md`.
