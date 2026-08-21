@@ -10,6 +10,20 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **O agente de IA passa a ser escolha declarada** (ciclo 057), no modelo do spec-kit.
+  `--ai <id>` escolhe entre `claude`, `copilot`, `cursor-agent` e `codex`; `--ai list` mostra a
+  tabela (`scripts/install-agents.tsv`), cujos ids e arquivos de instrução foram **lidos do
+  upstream vendorizado e conferidos linha a linha**. Um id desconhecido **recusa** listando os
+  válidos, em vez de cair no padrão calado. Cada agente recebe o bloco no arquivo que ele lê, e
+  **só o Claude recebe formatos do Claude** — `.claude/agents`, `.claude/commands` e a camada de
+  hooks deixam de ser derramados onde ninguém os lê. A escolha fica gravada em
+  `.maestro/install-options.json`, e o campo `harness` registra o **fato** da instalação, não o
+  que a tabela permite. Novo `--write-block` acrescenta o bloco se não houver e **recusa se
+  houver outro**; e o `check-install.sh` passa a comparar o bloco instalado com o que o
+  instalador gera **para aquele agente** — um fato dito em dois lugares só continua igual se
+  algo comparar.
+
+### Adicionado
 - **O método passa a ser instalado com uma camada que COBRA, não só pede** (ciclo 056). O
   `install-maestro.sh` instala dois *hooks* do Claude Code: um `PreToolUse` que **bloqueia a
   chamada** de escrita sobre o que o método guarda como história — corpo de ADR já commitado,

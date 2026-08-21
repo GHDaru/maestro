@@ -347,6 +347,95 @@ sys.exit(0 if "guard-immutables" in pre and "session-state" in start else 1)' "$
   done
 fi
 
+# ── The agent table and the choice it records (cycle 057) ─────────────────────────────────
+# Nothing read the table but the installer, so its "invariants" were prose. A row with four
+# fields made an agent vanish from `--ai list` AND from `--ai <id>` with no warning, and
+# `harness=YES` was silently treated as `no`.
+echo ""
+echo "── The agent table (scripts/install-agents.tsv) ──"
+TSV="$ROOT/scripts/install-agents.tsv"
+if [[ ! -f "$TSV" ]]; then
+  bad "the agent table is missing — the installer cannot choose anything"
+else
+  tbl_err="$(python3 - "$TSV" <<'PYT'
+import sys
+seen, bad = set(), []
+for n, raw in enumerate(open(sys.argv[1], encoding="utf-8"), 1):
+    if raw.startswith("#") or not raw.strip():
+        continue
+    if "\r" in raw:
+        bad.append(f"line {n}: carries a CR — a Windows line ending silently turned 'yes' into 'yes\\r'")
+    f = raw.rstrip("\n").rstrip("\r").split("\t")
+    if len(f) != 5:
+        bad.append(f"line {n}: {len(f)} fields, expected 5 (id, name, instruction, commands, harness) — a short row makes the agent disappear from both --ai list and --ai <id>")
+        continue
+    if f[0] in seen:
+        bad.append(f"line {n}: duplicate id '{f[0]}'")
+    seen.add(f[0])
+    if f[4] not in ("yes", "no"):
+        bad.append(f"line {n}: harness='{f[4]}' is outside the closed vocabulary yes|no")
+    if not f[2]:
+        bad.append(f"line {n}: no instruction file")
+if not seen:
+    bad.append("the table has no agent at all")
+print("\n".join(bad))
+PYT
+)"
+  if [[ -n "$tbl_err" ]]; then
+    while IFS= read -r line; do [[ -n "$line" ]] && bad "$line"; done <<<"$tbl_err"
+  else
+    ok "every row has five fields, a unique id and harness in {yes,no}"
+  fi
+fi
+
+if "$ROOT/scripts/install-maestro.sh" --ai list >/dev/null 2>&1; then
+  ok "--ai list runs"
+else
+  bad "--ai list fails"
+fi
+if "$ROOT/scripts/install-maestro.sh" "$TMP/nope" --ai definitely-not-an-agent >/dev/null 2>&1; then
+  bad "an unknown --ai was accepted — a silent fallback is how somebody installs for the wrong tool"
+else
+  ok "an unknown --ai refuses instead of falling back to the default"
+fi
+
+# A non-Claude install must not carry Claude-only formats, and must say so in its own record.
+OTHER="$TMP/other"
+mkdir -p "$OTHER"
+if "$ROOT/scripts/install-maestro.sh" "$OTHER" --ai codex --write-block >"$TMP/other.log" 2>&1; then
+  [[ -e "$OTHER/.claude/agents" ]]        && bad "a codex install carries .claude/agents — a format that agent never reads"
+  [[ -e "$OTHER/.claude/commands" ]]      && bad "a codex install carries .claude/commands"
+  [[ -e "$OTHER/.claude/settings.json" ]] && bad "a codex install carries the Claude Code hook wiring"
+  [[ -e "$OTHER/.claude/agents" || -e "$OTHER/.claude/commands" || -e "$OTHER/.claude/settings.json" ]] \
+    || ok "a codex install carries no Claude-only format"
+  if grep -q '^## Method: Maestro' "$OTHER/AGENTS.md" 2>/dev/null; then
+    ok "the method block landed in the file that agent reads (AGENTS.md)"
+  else
+    bad "the method block did not land in AGENTS.md for --ai codex"
+  fi
+  if python3 -c 'import json,sys
+d=json.load(open(sys.argv[1]))
+sys.exit(0 if d.get("ai")=="codex" and d.get("harness") is False and d.get("instruction")=="AGENTS.md" else 1)' \
+      "$OTHER/.maestro/install-options.json" 2>/dev/null; then
+    ok "the choice is recorded, and harness records the fact (false)"
+  else
+    bad "install-options.json is missing, invalid, or does not record what actually happened"
+  fi
+  # Re-running must not refuse its own output. Captured ONCE and matched against the
+  # variable: `grep -q` closing a pipe makes the installer take SIGPIPE, and `pipefail` turns
+  # the early exit into a failed pipeline — the condition then reads false forever. That is
+  # anti-pattern 21, and this is its fourth appearance in this repository (written by me, in
+  # the cycle whose own gate exists to catch exactly this class).
+  rerun="$("$ROOT/scripts/install-maestro.sh" "$OTHER" --ai codex --write-block 2>&1 || true)"
+  if grep -q 'already current in' <<<"$rerun"; then
+    ok "--write-block is idempotent: it recognises the block it wrote"
+  else
+    bad "--write-block refuses its own byte-identical block on the second run"
+  fi
+else
+  bad "installing with --ai codex failed:"; sed 's/^/      /' "$TMP/other.log" >&2
+fi
+
 echo "──"
 if [[ $fail -ne 0 ]]; then
   echo "✗ the installed copy is not coherent: it ships something that points at nothing."

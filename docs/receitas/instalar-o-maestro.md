@@ -17,6 +17,49 @@
 
 > B e C **não** trazem scripts nem governança. Para o método completo, siga o caminho A.
 
+## 0. Diga qual agente você usa
+
+O instalador **não adivinha**. Antes do ciclo 057 ele copiava `.claude/*` e imprimia um bloco
+de `CLAUDE.md` fosse qual fosse a ferramenta — um método cujo instalador supunha um agente em
+silêncio. Agora o agente é **escolha declarada**, no modelo do spec-kit (que grava a escolha
+em `init-options.json` e mapeia cada agente ao seu arquivo de instrução).
+
+```bash
+scripts/install-maestro.sh --ai list
+```
+
+| `--ai` | Agente | Arquivo que ele lê | Comandos | Camada de hooks |
+|---|---|---|---|---|
+| `claude` *(padrão)* | Claude Code | `CLAUDE.md` | `.claude/commands` | **sim** |
+| `copilot` | GitHub Copilot | `.github/copilot-instructions.md` | — | não |
+| `cursor` | Cursor | `.cursor/rules/specify-rules.mdc` | — | não |
+| `generic` | Codex, Amp, opencode, Kiro… | `AGENTS.md` | — | não |
+
+Três coisas que essa tabela diz de propósito:
+
+- **`—` em comandos significa "não verificamos o formato"**, e por isso **nada** é instalado
+  ali. Derramar `.claude/commands` num repositório de Copilot seria enviar arquivo que
+  ninguém lê — a metade de despacho do anti-padrão 22.
+- **A camada de hooks é mecanismo do Claude Code.** Para os outros agentes ela não é
+  instalada, e o resumo **diz o motivo** em vez de omitir. O bloco escrito no arquivo de
+  instrução também muda: sem hooks, ele diz que a regra vale *enquanto for seguida*, em vez de
+  afirmar uma proteção que não existe ali.
+- **Um `--ai` desconhecido recusa** e lista os válidos. Nunca cai no padrão calado: é assim
+  que alguém instala para a ferramenta errada e descobre semanas depois.
+
+Só quatro agentes, e não os 27 do upstream, porque o custo de um agente não é a linha da
+tabela — é **testar** que a instalação funciona lá. Acrescentar é uma linha em
+`scripts/install-agents.tsv` mais um teste; o gatilho é alguém usar.
+
+A escolha fica gravada em `.maestro/install-options.json`, ao lado do manifesto:
+
+```json
+{"ai": "claude", "instruction": "CLAUDE.md", "harness": true, "maestro_version": "0.2.0", "installed": "2026-08-21"}
+```
+
+O campo `harness` grava o **fato** desta instalação, não o que a tabela permite: com
+`--no-hooks` num agente que os suporta, a tabela diz `yes` e o arquivo diz `false`.
+
 ## 1. Veja o que será instalado (sem escrever nada)
 
 ```bash
@@ -41,6 +84,19 @@ Ele leva cinco camadas:
 | `docs/governance/` | princípios, modelo, glossário | a **fonte de verdade** |
 
 ## 3. Aponte a IA para o método
+
+Por padrão o instalador **imprime** o bloco e você o acrescenta — o arquivo de instrução é do
+dono do repositório. Para deixar que ele escreva:
+
+```bash
+scripts/install-maestro.sh /caminho/do/seu-projeto --ai claude --write-block
+```
+
+A regra é a mesma do `settings.json`: **acrescenta se não houver** bloco do Maestro, e
+**recusa se já houver um diferente**, deixando o seu intacto e dizendo como comparar
+(`--block`). E o `check-install.sh` passa a conferir que o bloco instalado é **exatamente** o
+que o instalador gera hoje: um fato dito em dois lugares só continua igual se algo comparar.
+
 
 O bloco é **gerado das skills que existem no disco** — lista escrita à mão envelhece
 calada. Cole no `CLAUDE.md` do projeto:

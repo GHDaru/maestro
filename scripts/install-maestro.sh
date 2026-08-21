@@ -16,17 +16,64 @@ set -euo pipefail
 TARGET=""
 SOURCE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-ARG_DRY=0; ARG_FORCE=0; ARG_BLOCK=0; ARG_NO_HOOKS=0
-for a in "$@"; do
-  case "$a" in
-    --dry-run)  ARG_DRY=1 ;;
-    --force)    ARG_FORCE=1 ;;
-    --block)    ARG_BLOCK=1 ;;
-    --no-hooks) ARG_NO_HOOKS=1 ;;
-    -*)        echo "error: unknown flag '$a'" >&2; exit 2 ;;
-    *)         [[ -z "$TARGET" ]] && TARGET="$a" || { echo "error: more than one target given" >&2; exit 2; } ;;
+ARG_DRY=0; ARG_FORCE=0; ARG_BLOCK=0; ARG_NO_HOOKS=0; ARG_WRITE_BLOCK=0
+USER_NO_HOOKS=0   # did the PERSON ask, or did the agent's row decide? The reason differs.
+ARG_AI="claude"   # the historical behaviour, now SAID OUT LOUD instead of assumed
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --dry-run)     ARG_DRY=1 ;;
+    --force)       ARG_FORCE=1 ;;
+    --block)       ARG_BLOCK=1 ;;
+    --no-hooks)    ARG_NO_HOOKS=1; USER_NO_HOOKS=1 ;;
+    --write-block) ARG_WRITE_BLOCK=1 ;;
+    --ai)          shift; ARG_AI="${1:-}"
+                   [[ -n "$ARG_AI" && "$ARG_AI" != -* ]] || { echo "error: --ai needs an agent id, got '${ARG_AI:-nothing}' (try: --ai list)" >&2; exit 2; } ;;
+    --ai=*)        ARG_AI="${1#--ai=}" ;;
+    -*)            echo "error: unknown flag '$1'" >&2; exit 2 ;;
+    *)             [[ -z "$TARGET" ]] && TARGET="$1" || { echo "error: more than one target given" >&2; exit 2; } ;;
   esac
+  shift
 done
+
+# ── The agent is a DECLARED CHOICE, not an assumption ──────────────────────────────────────
+# Until cycle 057 this installer copied `.claude/*` and printed a CLAUDE.md block whatever you
+# used: a method whose installer silently assumed one tool. The upstream solved this long ago
+# — `.specify/init-options.json` records `"ai"`, and 27 agents each have their own instruction
+# file. The table below is the whole of our support, and adding an agent is a row plus a test.
+AGENTS_TSV="$SOURCE/scripts/install-agents.tsv"
+[[ -f "$AGENTS_TSV" ]] || { echo "error: the agent table is missing ($AGENTS_TSV) — nothing can be installed without it." >&2; exit 1; }
+# `\r` is stripped for the same reason the manifest reader strips it: a table saved on Windows
+# turned `yes` into `yes\r`, which silently disabled the whole enforcement layer for Claude
+# Code while the summary explained that Claude Code does not run hooks (independent review).
+agent_rows() { tr -d '\r' < "$AGENTS_TSV" | grep -v '^#'; }
+agent_row() { agent_rows | awk -F'\t' -v id="$1" 'NF>=5 && $1==id {print; exit}'; }
+agent_ids() { agent_rows | awk -F'\t' 'NF>=5 {printf "%s ", $1}'; }
+
+if [[ "$ARG_AI" == "list" ]]; then
+  # Listing is not installing. Combined with a target it printed the table and exited 0,
+  # turning an install command into a silent no-op with a success code.
+  [[ -z "$TARGET" ]] || { echo "error: --ai list only lists; drop the target, or pick an agent id." >&2; exit 2; }
+  printf '%-14s %-66s %-34s %-18s %s\n' id name "instruction file" "commands" "harness"
+  agent_rows | awk -F'\t' 'NF>=5 {printf "%-14s %-66s %-34s %-18s %s\n",$1,$2,$3,$4,$5}'
+  echo
+  echo "'-' under commands means the format was not verified for that agent, so nothing is"
+  echo "installed there — shipping files nobody reads is not support."
+  exit 0
+fi
+
+AGENT_ROW="$(agent_row "$ARG_AI")"
+if [[ -z "$AGENT_ROW" ]]; then
+  # An unknown id NEVER falls back to the default: a silent default is how somebody installs
+  # for the wrong tool and finds out later.
+  echo "error: unknown agent '$ARG_AI'. Known: $(agent_ids)" >&2
+  echo "       see them with:  scripts/install-maestro.sh --ai list" >&2
+  exit 2
+fi
+AGENT_NAME="$(cut -f2 <<<"$AGENT_ROW")"
+AGENT_INSTRUCTION="$(cut -f3 <<<"$AGENT_ROW")"
+AGENT_COMMANDS="$(cut -f4 <<<"$AGENT_ROW")"
+AGENT_HARNESS="$(cut -f5 <<<"$AGENT_ROW")"
+[[ "$AGENT_HARNESS" == "yes" ]] || ARG_NO_HOOKS=1
 
 # The instruction block is GENERATED from the skills that exist on disk — a hand-written
 # list ages silently (that was the failure mode of Maestro's own repository, cycle 021).
@@ -74,10 +121,17 @@ method_block() {
   fi
 }
 
-# --block: prints only the instruction for the AI (redirect it into the project CLAUDE.md)
-if [[ "$ARG_BLOCK" -eq 1 ]]; then method_block; exit 0; fi
+# --block: prints only the instruction for the AI (redirect it into the agent's file).
+# The enforcement sentence depends on whether the harness will actually be there, so --block
+# answers for the install it describes: this agent, these flags. Without this it always
+# printed the weaker branch, and the block in a real installation never matched the generator
+# — which is precisely the drift check-install.sh now refuses (cycle 057).
+if [[ "$ARG_BLOCK" -eq 1 ]]; then
+  [[ "$AGENT_HARNESS" == "yes" && "$ARG_NO_HOOKS" -eq 0 ]] && HOOKS_ACTIVE=1 || HOOKS_ACTIVE=0
+  method_block; exit 0
+fi
 
-[[ -n "$TARGET" ]] || { echo "usage: scripts/install-maestro.sh <target> [--dry-run|--force|--block|--no-hooks]" >&2; exit 2; }
+[[ -n "$TARGET" ]] || { echo "usage: scripts/install-maestro.sh <target> [--ai <id>|list] [--dry-run|--force|--block|--no-hooks|--write-block]" >&2; exit 2; }
 [[ -d "$TARGET" ]] || { echo "error: target '$TARGET' does not exist." >&2; exit 1; }
 # Every flag, in any order and any combination. The first version read only $2, so
 # `--force --dry-run` silently became FORCE=1 DRY=0 — the destructive flag winning while the
@@ -230,7 +284,11 @@ copy_as "LICENSE" "docs/governance/MAESTRO-LICENSE"
 copy_as "THIRD-PARTY-NOTICES.md" "docs/governance/MAESTRO-THIRD-PARTY-NOTICES.md"
 
 echo "── Agents (who does what) ──"
-copy ".claude/agents"
+if [[ "$ARG_AI" == "claude" ]]; then
+  copy ".claude/agents"
+else
+  echo "  · subagent definitions: not installed — .claude/agents is a Claude Code format, and ${AGENT_NAME} does not read it"
+fi
 
 echo "── Skills (how to do it) ──"
 copy "skills"
@@ -247,14 +305,36 @@ echo "── Evaluations (the baseline for judgement) ──"
 copy "evals/README.md"
 
 echo "── Commands and templates (the spec-driven engine) ──"
-copy ".claude/commands"
+if [[ "$AGENT_COMMANDS" == "-" ]]; then
+  echo "  · commands: not installed — the format was not verified for ${AGENT_NAME}"
+elif [[ "$AGENT_COMMANDS" == ".claude/commands" ]]; then
+  copy ".claude/commands"
+else
+  # find -type f, never a glob: a glob hands DIRECTORIES to copy_as, hash_of fails on one,
+  # and under `set -e` + pipefail the run dies mid-install leaving NO manifest — the exact
+  # failure the manifest was built to prevent (independent review of cycle 057).
+  while IFS= read -r c; do
+    rel="${c#"$SOURCE"/.claude/commands/}"
+    copy_as ".claude/commands/$rel" "$AGENT_COMMANDS/$rel"
+  done < <(find "$SOURCE/.claude/commands" -type f | sort)
+fi
 copy ".specify/templates"
 copy ".specify/UPSTREAM.md"
 # The /speckit.* commands we ship CALL these; shipping the commands without them was the
 # defect of cycle 048 — a thing that points at something we do not send. The notices file
 # already declared this directory as redistributed, so sending it also makes that true.
 copy ".specify/scripts"
-copy ".specify/init-options.json"
+# The upstream's options file travels because /speckit.specify reads `branch_numbering` from
+# it — but its `ai` field shipped as "claude" into every target, contradicting our own
+# .maestro/install-options.json in the same directory tree (independent review of cycle 057).
+# It is materialised with the CHOSEN agent instead of copied, so the two never disagree.
+_init_tmp="$(mktemp)"
+python3 -c 'import json,sys
+d=json.load(open(sys.argv[1])); d["ai"]=sys.argv[2]
+json.dump(d, open(sys.argv[3],"w"), indent=2, sort_keys=True); open(sys.argv[3],"a").write("\n")' \
+  "$SOURCE/.specify/init-options.json" "$ARG_AI" "$_init_tmp"
+install_file "$_init_tmp" ".specify/init-options.json"
+rm -f "$_init_tmp"
 
 echo "── Governance (the source of truth) ──"
 copy "docs/governance/principles.md"
@@ -271,17 +351,28 @@ copy "docs/records/README.md"
 # agent reconstruct it. Cycle 056 measured the gap that justifies it: NOTHING enforced any of
 # them, in the middle of this method's own governance.
 HOOKS_STATE="skipped (--no-hooks)"
+[[ "$AGENT_HARNESS" == "yes" ]] || HOOKS_STATE="not installed — hooks are a Claude Code mechanism, and ${AGENT_NAME} does not run them"
 HOOKS_ACTIVE=0
 SETTINGS_REL=".claude/settings.json"
 if [[ "$ARG_NO_HOOKS" -eq 1 ]]; then
-  # --no-hooks does NOT uninstall. The files are claimed so the prune loop leaves them alone:
+  # --no-hooks does NOT uninstall.
+  # The REASON is not the flag: when the agent's row says `no`, saying "skipped (--no-hooks)"
+  # hides the only thing the person needs to know (independent review of cycle 057). The files are claimed so the prune loop leaves them alone:
   # deleting the scripts while settings.json still names them pointed a third party's every
   # write at a missing command, and the summary called that "skipped" (independent review).
   for kept in scripts/hooks/guard-immutables.py scripts/hooks/session-state.sh; do
     [[ -e "$TARGET/$kept" ]] && NOW["$kept"]="${PREV[$kept]:-unmanaged}"
   done
-  if [[ -e "$TARGET/$SETTINGS_REL" ]]; then
-    HOOKS_STATE="left as they were (--no-hooks does not uninstall)"
+  live=0
+  [[ -f "$TARGET/$SETTINGS_REL" ]] && grep -q 'guard-immutables' "$TARGET/$SETTINGS_REL" 2>/dev/null \
+    && [[ -e "$TARGET/scripts/hooks/guard-immutables.py" ]] && live=1
+  if [[ "$USER_NO_HOOKS" -eq 1 ]]; then
+    [[ "$live" -eq 1 ]] && HOOKS_STATE="left as they were (--no-hooks does not uninstall)"
+  elif [[ "$live" -eq 1 ]]; then
+    # Honest, and it is the awkward case: a previous Claude install left the layer live in a
+    # repository now being installed for another agent. Claiming "not installed" would be
+    # false, and the person has to decide.
+    HOOKS_STATE="STILL LIVE from an earlier install — ${AGENT_NAME} does not run hooks; remove ${SETTINGS_REL} and scripts/hooks/ if you want them gone"
   fi
 else
   echo "── Harness (rules that are enforced, not remembered) ──"
@@ -369,11 +460,81 @@ if [[ "$DRY" -eq 0 ]]; then
   mv "${MANIFEST}.tmp" "$MANIFEST"
 fi
 
+# ── The choice, written down ───────────────────────────────────────────────────────────────
+# Same idea as the upstream's `.specify/init-options.json`: a project should be able to answer
+# "which agent was this installed for?" without anyone remembering. `harness` records the
+# FACT of this run, not what the table permits — with --no-hooks on an agent that supports
+# them, the table says yes and this says false. A state file that stores the intention instead
+# of the result is the lie this method has chased since cycle 042.
+OPTIONS_REL=".maestro/install-options.json"
+if [[ "$ARG_DRY" -eq 0 ]] && escapes_via_symlink "$OPTIONS_REL"; then
+  echo "  ! refused (a symlink on this path leads outside the target): $OPTIONS_REL" >&2
+  n_refused=$((n_refused+1))
+elif [[ "$ARG_DRY" -eq 0 ]]; then
+  # The FACT, not the flag: with --no-hooks over an install whose hooks are present AND wired,
+  # the layer is live, and writing `false` would assert an absence that is not true
+  # (independent review of cycle 057).
+  harness_fact=false
+  if [[ "$HOOKS_ACTIVE" -eq 1 ]]; then harness_fact=true
+  elif [[ -f "$TARGET/.claude/settings.json" && -x "$TARGET/scripts/hooks/guard-immutables.py" ]] \
+       && grep -q 'guard-immutables' "$TARGET/.claude/settings.json" 2>/dev/null; then harness_fact=true; fi
+  mkdir -p "$TARGET/.maestro" 2>/dev/null || true
+  # Built by a JSON writer, not printf: a quote or a backslash in any field produced a file
+  # that json.load refuses to read (independent review of cycle 057).
+  python3 -c 'import json,sys; json.dump(dict(zip(["ai","instruction","harness","maestro_version","installed"],[sys.argv[1],sys.argv[2],sys.argv[3]=="true",sys.argv[4],sys.argv[5]])), sys.stdout); print()' \
+    "$ARG_AI" "$AGENT_INSTRUCTION" "$harness_fact" "$(sed -n '/^## \[Unreleased\]/,$p' "$SOURCE/CHANGELOG.md" | grep -m1 -oE '^## \[[0-9]+\.[0-9]+\.[0-9]+\]' | tr -d '#[] ' || echo unknown)" "$(date +%Y-%m-%d)" \
+    > "$TARGET/$OPTIONS_REL" 2>/dev/null || echo "  ! could not write $OPTIONS_REL" >&2
+fi
+
+# ── --write-block: append if absent, REFUSE if a different one is already there ─────────────
+# The instruction file belongs to the project, so the default stays "print it". When asked to
+# write, the rule is the one settings.json got in cycle 056: add what is missing, never
+# replace what somebody else put there.
+# The block runs from its heading to the next `## ` heading, with trailing blanks stripped.
+# The sed range that did this before never terminated when the block was last in the file, so
+# `sed '$d'` ate the block's own last line and the "already current" branch was unreachable:
+# the installer refused its own byte-identical output on every re-run (independent review).
+extract_block() {  # $1 = file; prints the installed block, or fails
+  awk 'BEGIN{inside=0;done=0;n=0}
+       !inside && $0=="## Method: Maestro" {inside=1; buf[n++]=$0; next}
+       inside && !done && /^## / {done=1}
+       inside && !done {buf[n++]=$0}
+       END{ if(!inside) exit 1
+            while(n>0 && buf[n-1] ~ /^[ \t]*$/) n--
+            for(i=0;i<n;i++) print buf[i] }' "$1"
+}
+
+BLOCK_STATE="printed only (use --write-block to append it)"
+if [[ "$ARG_WRITE_BLOCK" -eq 1 ]] && escapes_via_symlink "$AGENT_INSTRUCTION"; then
+  echo "  ! refused (a symlink on this path leads outside the target): $AGENT_INSTRUCTION" >&2
+  n_refused=$((n_refused+1)); BLOCK_STATE="refused (symlink)"
+elif [[ "$ARG_WRITE_BLOCK" -eq 1 ]]; then
+  dst="$TARGET/$AGENT_INSTRUCTION"
+  if grep -q '^## Method: Maestro' "$dst" 2>/dev/null; then
+    if diff -q <(method_block) <(extract_block "$dst") >/dev/null 2>&1; then
+      BLOCK_STATE="already current in ${AGENT_INSTRUCTION}"
+    else
+      echo "  ! refused: ${AGENT_INSTRUCTION} already carries a DIFFERENT Maestro block — yours stays." >&2
+      echo "    Compare with:  scripts/install-maestro.sh --block" >&2
+      n_refused=$((n_refused+1)); BLOCK_STATE="refused (a different block is already there)"
+    fi
+  elif [[ "$ARG_DRY" -eq 1 ]]; then
+    BLOCK_STATE="would be appended to ${AGENT_INSTRUCTION}"
+  else
+    mkdir -p "$(dirname "$dst")" 2>/dev/null || true
+    { echo; method_block; } >> "$dst" 2>/dev/null \
+      && BLOCK_STATE="appended to ${AGENT_INSTRUCTION}" \
+      || { echo "  ! refused: cannot write ${AGENT_INSTRUCTION}" >&2; n_refused=$((n_refused+1)); BLOCK_STATE="refused (cannot write)"; }
+  fi
+fi
+
 if true; then
   echo
   echo "── Summary ──"
   echo "  installed ${n_new} · updated ${n_upd} · already current ${n_same} · kept because you modified them ${n_kept} · removed ${n_gone} · refused ${n_refused}"
   echo "  harness (hooks that refuse before the damage): ${HOOKS_STATE}"
+  echo "  agent: ${AGENT_NAME} (--ai ${ARG_AI}) · instruction file: ${AGENT_INSTRUCTION}"
+  echo "  method block: ${BLOCK_STATE}"
   [[ "$n_kept" -gt 0 ]] && echo "  (each kept file has the new version beside it as *.maestro-new — diff and merge at will)"
   if [[ "$FIRST_UPGRADE" -eq 1 ]]; then
     echo
@@ -399,19 +560,21 @@ if true; then
   [[ -f "$TARGET/docs/records/decisoes.jsonl" ]] || { mkdir -p "$TARGET/docs/records"; : > "$TARGET/docs/records/decisoes.jsonl"; }
 fi
 
+
 echo
 echo "── Next steps (in the target project) ──"
-echo "  1. Add the block below to the project CLAUDE.md (or AGENTS.md)"
-echo "     (to paste it directly:  scripts/install-maestro.sh --block >> CLAUDE.md):"
+echo "  1. Add the block below to ${AGENT_INSTRUCTION} — the file ${AGENT_NAME} reads"
+echo "     (or let the installer do it:  --ai ${ARG_AI} --write-block):"
 echo
 method_block | sed 's/^/     /'
+if [[ "$ARG_AI" == "claude" ]]; then
+  echo "     (tip: keep ONE source — \`ln -s CLAUDE.md AGENTS.md\` — so the two instructions"
+  echo "     cannot diverge.)"
+fi
 cat <<'FIM'
 
-     (tip: keep ONE source — `ln -s CLAUDE.md AGENTS.md` — so the two instructions
-     cannot diverge.)
-
   2. Prove it is installed:  scripts/check-install.sh
-     (it fails while CLAUDE.md/AGENTS.md does not point at the method: copying files is
+     (it fails while the instruction file does not point at the method: copying files is
      not installing — installed is when the AI knows it must follow them.)
   3. Open the first cycle:   scripts/new-cycle.sh 001 <slug>
   4. When promoting:         scripts/promote-main.sh

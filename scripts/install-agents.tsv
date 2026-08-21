@@ -1,0 +1,22 @@
+# Supported agents — the table IS the support. Adding one is a row plus a test, never a branch.
+#
+# `id` follows the UPSTREAM's spelling wherever the upstream has one, so the two never disagree
+# about what a thing is called: the ids below were read out of the case statement in
+# .specify/scripts/bash/update-agent-context.sh, which carries 26 of them.
+#
+# `instruction` is the file that agent reads at the start of a session. Every value here was
+# read from that same script — except where marked OURS in the comment below, and that
+# distinction matters: the first version of this table claimed all four came from upstream and
+# two did not (independent review of cycle 057).
+#
+# `commands` is where slash-command definitions go: `-` means WE HAVE NOT VERIFIED the format
+# for that agent, so nothing is installed there. Shipping files nobody reads is not support.
+#
+# `harness` says whether the agent runs Claude Code hooks. For everyone else the layer is not
+# installed, and the installer says why.
+#
+# id	name	instruction	commands	harness
+claude	Claude Code	CLAUDE.md	.claude/commands	yes
+copilot	GitHub Copilot	.github/copilot-instructions.md	-	no
+cursor-agent	Cursor	.cursor/rules/specify-rules.mdc	-	no
+codex	Codex CLI (and the AGENTS.md family: Amp, opencode, Kiro, Bob, Pi)	AGENTS.md	-	no

@@ -38,10 +38,11 @@
   `qa-report.md`. Catalogue: `docs/governance/artifacts.md`.
 - **Asked "are you following the method?" — do NOT answer from memory.** Run
   `scripts/check-conformance.sh <NNN>` and read it: memory reports intention, not fact.
-- Three artifacts are **immutable**, and a `PreToolUse` guard refuses to rewrite them:
-  the body of an existing ADR, `docs/records/decisoes.jsonl`, and the dated idea cards
-  under `docs/ecosystem/ideias/`. The route is always to APPEND — a new ADR that
-  supersedes, `scripts/record-decision.sh`, a new state line.
+- Never REWRITE what the method keeps as history: the body of a committed ADR,
+  `docs/records/decisoes.jsonl`, and the dated idea cards under `docs/ecosystem/ideias/`.
+  The route is always to APPEND — a new ADR that supersedes, `scripts/record-decision.sh`,
+  a new state line. **A `PreToolUse` guard refuses the rewrite**, so this is enforced,
+  not asked.
 
 ## Regra central
 
