@@ -274,6 +274,79 @@ PYX
   fi
 fi
 
+# ── The guard, exercised against the INSTALLED copy ───────────────────────────────────────
+# A hook that is present is not a hook that refuses. This is the assertion that keeps the
+# guard honest (cycle 056, FR6): a broken guard fails OPEN by design, so nothing else here
+# would ever notice it had stopped deciding. Both directions are checked, because a guard
+# that refuses everything is as useless as one that refuses nothing.
+GUARD="$TARGET/scripts/hooks/guard-immutables.py"
+if [[ ! -x "$GUARD" ]]; then
+  bad "the harness guard was not installed (scripts/hooks/guard-immutables.py)"
+else
+  ask() {  # $1 = file_path presented to the guard; echoes the guard's stdout
+    printf '{"hook_event_name":"PreToolUse","tool_name":"Edit","cwd":"%s","tool_input":{"file_path":"%s"}}' \
+      "$TARGET" "$1" | python3 "$GUARD" 2>/dev/null || true
+  }
+  # Refuses: the three artifacts the method declares immutable. Each needs a file that
+  # EXISTS, because "already there" is what separates rewriting from authoring.
+  mkdir -p "$TARGET/docs/adr" "$TARGET/docs/ecosystem/ideias" "$TARGET/docs/records"
+  : > "$TARGET/docs/adr/0001-existing.md"
+  : > "$TARGET/docs/ecosystem/ideias/001-existing.md"
+  : > "$TARGET/docs/records/decisoes.jsonl"
+  # "Immutable" means IN HISTORY, not merely present: authoring an ADR takes several calls.
+  ( cd "$TARGET" && git init -q 2>/dev/null && git add -A 2>/dev/null \
+      && git -c user.email=t@t -c user.name=t commit -qm "fixture" 2>/dev/null ) || true
+  for victim in docs/records/decisoes.jsonl docs/adr/0001-existing.md docs/ecosystem/ideias/001-existing.md; do
+    verdict="$(ask "$victim")"
+    # PARSED, never grepped: the first version matched json.dump's default spacing, so a
+    # compact separator would have turned a working guard red and a red guard green
+    # (independent review of cycle 056).
+    if [[ "$(python3 -c 'import json,sys
+try: d=json.loads(sys.stdin.read() or "{}")
+except Exception: print("parse-error"); raise SystemExit
+print(d.get("hookSpecificOutput",{}).get("permissionDecision","allow"))' <<<"$verdict")" == "deny" ]]; then
+      ok "the guard refuses to rewrite ${victim}"
+    else
+      bad "the guard let ${victim} through — the method calls it immutable and nothing stops it"
+    fi
+  done
+  # The WIRING, not just the script. Deleting .claude/settings.json or session-state.sh left
+  # every gate green: a guard nobody calls was passing the gate that exists to prove it is
+  # called (independent review of cycle 056). Presence is not enforcement, and the file that
+  # turns presence into enforcement is the settings file.
+  SET="$TARGET/.claude/settings.json"
+  if [[ ! -f "$SET" ]]; then
+    bad "the harness is not wired: .claude/settings.json was not installed"
+  elif ! python3 -c 'import json,sys
+d=json.load(open(sys.argv[1]))
+h=d.get("hooks",{})
+pre=json.dumps(h.get("PreToolUse",[]))
+start=json.dumps(h.get("SessionStart",[]))
+sys.exit(0 if "guard-immutables" in pre and "session-state" in start else 1)' "$SET" 2>/dev/null; then
+    bad ".claude/settings.json does not wire both hooks (PreToolUse guard and SessionStart state)"
+  else
+    ok "the harness is wired: settings.json names the guard and the state hook"
+  fi
+  STATE_HOOK="$TARGET/scripts/hooks/session-state.sh"
+  if [[ ! -x "$STATE_HOOK" ]]; then
+    bad "the SessionStart hook was not installed, or is not executable (FR3)"
+  elif ! (cd "$TARGET" && ./scripts/hooks/session-state.sh >/dev/null 2>&1); then
+    bad "the SessionStart hook fails to run in the installed copy"
+  else
+    ok "the SessionStart hook runs where it lands"
+  fi
+
+  # Allows: ordinary work, and a NEW ADR — which is the route every refusal above points at.
+  for allowed in specs/001-x/spec.md docs/adr/0099-brand-new.md; do
+    verdict="$(ask "$allowed")"
+    if [[ -z "$verdict" ]]; then
+      ok "the guard stays out of the way for ${allowed}"
+    else
+      bad "the guard blocked ${allowed} — a guard that refuses everything protects nothing"
+    fi
+  done
+fi
+
 echo "──"
 if [[ $fail -ne 0 ]]; then
   echo "✗ the installed copy is not coherent: it ships something that points at nothing."

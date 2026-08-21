@@ -10,6 +10,21 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **O método passa a ser instalado com uma camada que COBRA, não só pede** (ciclo 056). O
+  `install-maestro.sh` instala dois *hooks* do Claude Code: um `PreToolUse` que **bloqueia a
+  chamada** de escrita sobre o que o método guarda como história — corpo de ADR já commitado,
+  `docs/records/decisoes.jsonl` e os cards datados do ecossistema —, sempre nomeando a via
+  correta (ADR novo que supersede, `record-decision.sh`, linha nova de estado); e um
+  `SessionStart` que imprime o **estado medido** do método em vez de deixar o agente
+  reconstruí-lo de memória. Motivo: o Maestro declarava esses artefatos imutáveis e
+  **nenhum portão verificava imutabilidade** — a regra vivia só na prosa. O `settings.json` de
+  quem instala **nunca é sobrescrito** (quatro estados, três deles recusa), há `--no-hooks`, e
+  o resumo declara o que foi feito. O bloco escrito no `CLAUDE.md` do destino só afirma a
+  proteção **quando ela está instalada**. E o Maestro passou a ser instalado nele mesmo: este
+  repositório carrega o bloco gerado, com `@`-import da constituição (≈1.518 tokens por
+  sessão, medido).
+
+### Adicionado
 - **`TAIL:mutation`: a cauda de fechamento ganha um quarto passo** (ciclo 055, retro). Todo
   portão criado ou alterado num ciclo tem de ser **quebrado de propósito e visto reprovar**,
   com a mutação e a saída no `qa-report.md`. O que faz a regra ter dente: quando o ciclo

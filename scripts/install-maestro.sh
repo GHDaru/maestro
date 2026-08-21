@@ -16,12 +16,13 @@ set -euo pipefail
 TARGET=""
 SOURCE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-ARG_DRY=0; ARG_FORCE=0; ARG_BLOCK=0
+ARG_DRY=0; ARG_FORCE=0; ARG_BLOCK=0; ARG_NO_HOOKS=0
 for a in "$@"; do
   case "$a" in
-    --dry-run) ARG_DRY=1 ;;
-    --force)   ARG_FORCE=1 ;;
-    --block)   ARG_BLOCK=1 ;;
+    --dry-run)  ARG_DRY=1 ;;
+    --force)    ARG_FORCE=1 ;;
+    --block)    ARG_BLOCK=1 ;;
+    --no-hooks) ARG_NO_HOOKS=1 ;;
     -*)        echo "error: unknown flag '$a'" >&2; exit 2 ;;
     *)         [[ -z "$TARGET" ]] && TARGET="$a" || { echo "error: more than one target given" >&2; exit 2; } ;;
   esac
@@ -31,8 +32,14 @@ done
 # list ages silently (that was the failure mode of Maestro's own repository, cycle 021).
 method_block() {
   echo '## Method: Maestro'
-  echo '- Read `docs/governance/principles.md` (the constitution) and'
-  echo '  `docs/governance/operating-model.md` before any work.'
+  # An @-import INLINES the file into every session of this repository; a citation only asks.
+  # The constitution is imported because it is the binding text (6,072 B, ~1,518 tokens per
+  # load, measured in cycle 056). The operating model is NOT (~4,551 tokens): it is reference
+  # consulted on demand, and automatic context is a cost imposed on every session here.
+  echo '@docs/governance/principles.md'
+  echo ''
+  echo '- The constitution above is loaded automatically. Read'
+  echo '  `docs/governance/operating-model.md` before any work — it is not.'
   echo '- **Skills first**: before acting, check whether one of the skills below applies; if'
   echo '  there is a reasonable chance, follow it (each carries its Iron Law):'
   for d in "$SOURCE"/skills/*/; do
@@ -51,12 +58,26 @@ method_block() {
   echo '  `qa-report.md`. Catalogue: `docs/governance/artifacts.md`.'
   echo '- **Asked "are you following the method?" — do NOT answer from memory.** Run'
   echo '  `scripts/check-conformance.sh <NNN>` and read it: memory reports intention, not fact.'
+  # The enforcement sentence is printed ONLY when the harness is actually active. Claiming a
+  # force function that is not installed is the defect this cycle exists to fix, inverted —
+  # and every non-Claude agent, --no-hooks run and refused merge lands on that branch
+  # (independent review of cycle 056).
+  echo '- Never REWRITE what the method keeps as history: the body of a committed ADR,'
+  echo '  `docs/records/decisoes.jsonl`, and the dated idea cards under `docs/ecosystem/ideias/`.'
+  echo '  The route is always to APPEND — a new ADR that supersedes, `scripts/record-decision.sh`,'
+  if [[ "${HOOKS_ACTIVE:-0}" -eq 1 ]]; then
+    echo '  a new state line. **A `PreToolUse` guard refuses the rewrite**, so this is enforced,'
+    echo '  not asked.'
+  else
+    echo '  a new state line. **Nothing enforces this in this installation** — no guard is'
+    echo '  installed here, so it holds only while it is followed.'
+  fi
 }
 
 # --block: prints only the instruction for the AI (redirect it into the project CLAUDE.md)
 if [[ "$ARG_BLOCK" -eq 1 ]]; then method_block; exit 0; fi
 
-[[ -n "$TARGET" ]] || { echo "usage: scripts/install-maestro.sh <target> [--dry-run|--force|--block]" >&2; exit 2; }
+[[ -n "$TARGET" ]] || { echo "usage: scripts/install-maestro.sh <target> [--dry-run|--force|--block|--no-hooks]" >&2; exit 2; }
 [[ -d "$TARGET" ]] || { echo "error: target '$TARGET' does not exist." >&2; exit 1; }
 # Every flag, in any order and any combination. The first version read only $2, so
 # `--force --dry-run` silently became FORCE=1 DRY=0 — the destructive flag winning while the
@@ -243,6 +264,82 @@ copy "docs/governance/axioms.md"
 copy "docs/governance/artifacts.md"
 copy "docs/records/README.md"
 
+# ── Harness: the layer that ENFORCES instead of asking ────────────────────────────────────
+# Everything above is text an agent has to read and remember. This is the first part of the
+# method that refuses BEFORE the damage: a PreToolUse guard on the artifacts the method keeps
+# as history, and a SessionStart hook that loads the measured state instead of letting the
+# agent reconstruct it. Cycle 056 measured the gap that justifies it: NOTHING enforced any of
+# them, in the middle of this method's own governance.
+HOOKS_STATE="skipped (--no-hooks)"
+HOOKS_ACTIVE=0
+SETTINGS_REL=".claude/settings.json"
+if [[ "$ARG_NO_HOOKS" -eq 1 ]]; then
+  # --no-hooks does NOT uninstall. The files are claimed so the prune loop leaves them alone:
+  # deleting the scripts while settings.json still names them pointed a third party's every
+  # write at a missing command, and the summary called that "skipped" (independent review).
+  for kept in scripts/hooks/guard-immutables.py scripts/hooks/session-state.sh; do
+    [[ -e "$TARGET/$kept" ]] && NOW["$kept"]="${PREV[$kept]:-unmanaged}"
+  done
+  if [[ -e "$TARGET/$SETTINGS_REL" ]]; then
+    HOOKS_STATE="left as they were (--no-hooks does not uninstall)"
+  fi
+else
+  echo "── Harness (rules that are enforced, not remembered) ──"
+  # Copied file by file, not as a directory: merge-settings.py is installer-side plumbing and
+  # has no business in a target that never calls it (anti-pattern 22, the shipping half).
+  copy "scripts/hooks/guard-immutables.py"
+  copy "scripts/hooks/session-state.sh"
+
+  if escapes_via_symlink "$SETTINGS_REL"; then
+    echo "  ! refused (a symlink on this path leads outside the target): $SETTINGS_REL" >&2
+    n_refused=$((n_refused+1)); HOOKS_STATE="refused (symlink)"
+  else
+    # The verdict comes from one place, testable on its own: scripts/hooks/merge-settings.py.
+    MERGE_OUT="$(python3 "$SOURCE/scripts/hooks/merge-settings.py" "$TARGET/$SETTINGS_REL" "$SOURCE/$SETTINGS_REL" 2>/dev/null || echo "ERROR merge helper failed")"
+    MERGE_VERDICT="${MERGE_OUT%%$'\n'*}"
+    # Never a raw redirect: under `set -e` a read-only target killed the run AFTER 78 files
+    # and BEFORE the manifest, disowning the whole installation forever (independent review).
+    write_settings() {  # stdin = content; echoes ok|fail
+      local tmp="$TARGET/$SETTINGS_REL.tmp.$$"
+      mkdir -p "$TARGET/.claude" 2>/dev/null || { echo fail; return 0; }
+      if cat > "$tmp" 2>/dev/null && mv "$tmp" "$TARGET/$SETTINGS_REL" 2>/dev/null; then
+        echo ok
+      else
+        rm -f "$tmp" 2>/dev/null || true; echo fail
+      fi
+    }
+    case "$MERGE_VERDICT" in
+      CURRENT)
+        HOOKS_ACTIVE=1; HOOKS_STATE="already current"
+        echo "  = already current: $SETTINGS_REL" ;;
+      WRITE|MERGED)
+        if [[ "$ARG_DRY" -eq 1 ]]; then
+          echo "  + would install: $SETTINGS_REL"; HOOKS_ACTIVE=1; HOOKS_STATE="would be installed"
+        else
+          if [[ "$MERGE_VERDICT" == WRITE ]]; then payload="$(cat "$SOURCE/$SETTINGS_REL")"
+          else payload="${MERGE_OUT#MERGED$'\n'}"; fi
+          if [[ "$(printf '%s\n' "$payload" | write_settings)" == ok ]]; then
+            echo "  + installed: $SETTINGS_REL"
+            n_new=$((n_new+1)); HOOKS_ACTIVE=1
+            HOOKS_STATE="installed"
+            [[ "$MERGE_VERDICT" == MERGED ]] && HOOKS_STATE="added to your settings.json"
+          else
+            echo "  ! refused: cannot write $SETTINGS_REL (permissions?) — nothing changed." >&2
+            n_refused=$((n_refused+1)); HOOKS_STATE="refused (cannot write settings.json)"
+          fi
+        fi ;;
+      CONFLICT)
+        echo "  ! refused: $SETTINGS_REL already configures other hooks — yours stay, ours are not installed." >&2
+        echo "    To enable them, merge this into your settings.json:" >&2
+        python3 "$SOURCE/scripts/hooks/merge-settings.py" "$TARGET/$SETTINGS_REL" "$SOURCE/$SETTINGS_REL" --snippet 2>/dev/null | sed 's/^/      /' >&2
+        n_refused=$((n_refused+1)); HOOKS_STATE="refused (you already configure other hooks)" ;;
+      *)
+        echo "  ! refused: ${MERGE_OUT#ERROR } — $SETTINGS_REL unchanged." >&2
+        n_refused=$((n_refused+1)); HOOKS_STATE="refused (unreadable settings.json)" ;;
+    esac
+  fi
+fi
+
 # What we shipped once and ship no longer must GO — otherwise the installation accumulates
 # the method's own mistakes. `.specify/memory/constitution.md` is the case that named this:
 # it was dropped in cycle 048 and would otherwise sit there forever, telling an agent to
@@ -276,6 +373,7 @@ if true; then
   echo
   echo "── Summary ──"
   echo "  installed ${n_new} · updated ${n_upd} · already current ${n_same} · kept because you modified them ${n_kept} · removed ${n_gone} · refused ${n_refused}"
+  echo "  harness (hooks that refuse before the damage): ${HOOKS_STATE}"
   [[ "$n_kept" -gt 0 ]] && echo "  (each kept file has the new version beside it as *.maestro-new — diff and merge at will)"
   if [[ "$FIRST_UPGRADE" -eq 1 ]]; then
     echo
@@ -294,7 +392,7 @@ if true; then
   # touch, and the first version chmod'ed every .sh in the directory.
   if [[ "$DRY" -eq 0 ]]; then
     for rel in "${!NOW[@]}"; do
-      [[ "$rel" == scripts/*.sh ]] && chmod +x "$TARGET/$rel" 2>/dev/null || true
+      [[ "$rel" == scripts/*.sh || "$rel" == scripts/hooks/* ]] && chmod +x "$TARGET/$rel" 2>/dev/null || true
     done
   fi
   # the decision index starts empty in a new project (history belongs to each project)

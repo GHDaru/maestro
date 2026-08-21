@@ -9,6 +9,40 @@
 > receitas, diagramas) e este arquivo de projeto seguem em **português**. Verificação:
 > `scripts/check-language.sh`.
 
+<!-- BLOCO INSTALADO — gerado por `scripts/install-maestro.sh --block`, não editado à mão.
+     Está aqui porque o Maestro instalado no próprio Maestro é o único teste honesto do
+     instalador: se o bloco que enviamos a terceiros não serve para nós, ele não serve.
+     O `@`-import abaixo INLINA a constituição em toda sessão deste repositório — custo
+     medido: 6.072 B, ~1.518 tokens (ciclo 056). -->
+
+## Method: Maestro
+@docs/governance/principles.md
+
+- The constitution above is loaded automatically. Read
+  `docs/governance/operating-model.md` before any work — it is not.
+- **Skills first**: before acting, check whether one of the skills below applies; if
+  there is a reasonable chance, follow it (each carries its Iron Law):
+  - `anti-patterns` — Catalogue of what NOT to do when one human runs many agents — the recurring mistakes observed in our own retrospectives and in the ecosystem.
+  - `constitution-check` — Produces the Constitution Check table (Maestro Principles I–VIII) inside a plan.md, decides when a principle counts as violated and what to do with the violation.
+  - `diagnose-before-fix` — Root-cause discipline — investigate before fixing.
+  - `fight-the-pile-up` — Editorial checklist that turns a dense document (a "pile-up" — many acronyms with no dictionary, everything on one page, no narrative) into clear text without changing the technical content.
+  - `living-journey` — Living journey documentation — one document per journey, screenshots generated from the real build by a versioned script, and a dated heuristic evaluation, all in the same pull request.
+  - `verifiable-dod` — Turns vague acceptance criteria into executable fitness functions (grep, ls, tests) that a machine can verify without human judgement.
+- Flow: `spec → plan (Constitution Check) → tasks → implement → DoD → review in
+  fresh context → human gate → merge`.
+- Lanes: light (the pull request is the artifact) · full (complete spec) · infra (full +
+  reversibility).
+- Every cycle declares its conditional artifacts and carries the closing tail
+  (`TAIL:review`, `TAIL:security`, `TAIL:mutation`, `TAIL:gate`) in `tasks.md`, with
+  the evidence in
+  `qa-report.md`. Catalogue: `docs/governance/artifacts.md`.
+- **Asked "are you following the method?" — do NOT answer from memory.** Run
+  `scripts/check-conformance.sh <NNN>` and read it: memory reports intention, not fact.
+- Three artifacts are **immutable**, and a `PreToolUse` guard refuses to rewrite them:
+  the body of an existing ADR, `docs/records/decisoes.jsonl`, and the dated idea cards
+  under `docs/ecosystem/ideias/`. The route is always to APPEND — a new ADR that
+  supersedes, `scripts/record-decision.sh`, a new state line.
+
 ## Regra central
 
 - **Antes de qualquer trabalho, leia `docs/governance/principles.md`** (a

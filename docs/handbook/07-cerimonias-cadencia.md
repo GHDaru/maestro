@@ -1,6 +1,6 @@
 # 07 — Cerimônias e cadência: o que sobrevive quando o time é um
 
-> **Capturado em** 2026-08 · última revisão 2026-08-07 · ciclo 042 (revisita do 027)
+> **Capturado em** 2026-08 · última revisão 2026-08-17 · ciclo 055 (o catálogo passou a 23 itens)
 >
 > **Cerimônia é função, não reunião.** E o limite de trabalho em curso não é a capacidade
 > dos agentes — é a **atenção do humano**.
