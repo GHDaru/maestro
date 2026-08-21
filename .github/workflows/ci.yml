@@ -79,7 +79,7 @@ jobs:
           for s in check-agents check-roles check-install check-language \
                    check-links check-evals check-boundary check-chapters \
                    check-licensing check-ecosystem check-installed check-adr \
-                   check-version; do
+                   check-version check-flags; do
             echo "── $s ──"
             scripts/"$s".sh || { echo "::error::$s failed"; fail=1; }
           done

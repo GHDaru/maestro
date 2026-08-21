@@ -1,0 +1,226 @@
+#!/usr/bin/env bash
+# maestro — the front door. One verb to remember, and everything behind it already exists.
+#
+# Why it exists: until cycle 058 installing meant cloning, finding install-maestro.sh, knowing
+# that --ai list existed, knowing that --write-block existed, and remembering to run
+# check-install.sh afterwards. Six things to know before the first step. The upstream solved
+# the same problem with `specify init`; this is the same information with an order and a face.
+#
+# THIS FILE DISPATCHES, IT NEVER IMPLEMENTS. Every subcommand runs the script that already
+# owns that step. A second implementation of an existing step is anti-pattern 22 wearing a
+# different hat, and this repository has paid for that lesson more than once.
+set -euo pipefail
+
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# The user's directory, captured BEFORE moving. `cd "$HERE"` made every relative path resolve
+# against the Maestro repository: `maestro init ./my-project` from anywhere created the project
+# INSIDE the Maestro clone and printed "✓ installed and coherent" — success, in a directory
+# nobody named (independent review of cycle 058). Relative is the common shape; it must mean
+# what the person typed.
+USER_PWD="$PWD"
+cd "$HERE"
+
+resolve() {  # $1 = path as the user typed it → absolute, against THEIR cwd
+  case "$1" in /*) printf '%s\n' "$1" ;; *) printf '%s\n' "$USER_PWD/$1" ;; esac
+}
+
+version() {
+  # Captured, never a pipe ending in `grep -m1`: grep exits at the first match, sed takes
+  # SIGPIPE, and `pipefail` turns a FOUND version into a failed pipeline, so the `|| echo "?"`
+  # fired and the banner printed the version AND a "?". It only bites once the CHANGELOG grows
+  # past the pipe buffer — and this repository's forcing function adds an entry every PR.
+  # Anti-pattern 21, fifth appearance here (independent review of cycle 058).
+  local tail_text head_line
+  tail_text="$(sed -n '/^## \[Unreleased\]/,$p' CHANGELOG.md 2>/dev/null || true)"
+  head_line="$(grep -m1 -oE '^## \[[0-9]+\.[0-9]+\.[0-9]+\]' <<<"$tail_text" || true)"
+  head_line="$(tr -d '#[] ' <<<"$head_line")"
+  printf '%s\n' "${head_line:-?}"
+}
+
+banner() {
+  local v; v="$(version)"
+  cat <<BANNER
+
+   ███╗   ███╗ █████╗ ███████╗███████╗████████╗██████╗  ██████╗
+   ████╗ ████║██╔══██╗██╔════╝██╔════╝╚══██╔══╝██╔══██╗██╔═══██╗
+   ██╔████╔██║███████║█████╗  ███████╗   ██║   ██████╔╝██║   ██║
+   ██║╚██╔╝██║██╔══██║██╔══╝  ╚════██║   ██║   ██╔══██╗██║   ██║
+   ██║ ╚═╝ ██║██║  ██║███████╗███████║   ██║   ██║  ██║╚██████╔╝
+   ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝
+
+   One human conducts, many agents execute.                v${v}
+
+BANNER
+}
+
+usage() {
+  banner
+  cat <<'USAGE'
+   maestro <command>
+
+     init [<dir>]     install the method into a project, step by step
+     check [<dir>]    is the method installed and coherent there?
+     cycle <NNN> <slug>   open a new cycle (spec, plan, tasks, qa-report)
+     conformance [NNN]    "am I following the method?" — the executable answer
+     retro            pre-compute the retrospective material
+     promote          dev -> main, with the human gate
+     agents           which AI agents this installation knows how to serve
+     version          the version this copy is
+
+   `init` takes every question as a flag, so it also runs with nobody watching:
+
+     --ai <id>     which agent; refuses an id it does not know. See maestro agents
+     --yes, -y     accept the defaults for anything not declared. Without a terminal and
+                   without this, maestro refuses instead of answering for you
+     --dry-run     show what would happen and write nothing
+     --no-hooks    install without the enforcement layer
+     --force       take the method version of a file you modified, saving yours first
+     --help, -h    this text
+
+     maestro init ./my-project --ai claude --yes
+     maestro init ./my-project --ai codex --no-hooks --yes
+     maestro agents
+
+USAGE
+}
+
+# `init` asks only when somebody is there to answer. Without a terminal it uses what was
+# declared and refuses what was not — a tool that needs a human typing cannot be tested, and
+# what is not tested is not a gate (FR3).
+ASSUME_YES=0
+# A terminal to ask on. stdin is what matters — `maestro init | tee log` from a real terminal
+# still has a person there, and demanding a TTY on stdout made that case answer itself.
+interactive() { [[ -t 0 ]]; }
+
+# Without a terminal it does NOT invent consent: it uses what was declared, and refuses what
+# was not. The first version silently answered its own questions — installing for `claude`
+# when no --ai was given, and creating directories nobody approved — while the usage text
+# claimed --yes was "required when there is no terminal" (independent review of cycle 058).
+# Sets ANSWER instead of echoing: `exit` inside a `$( )` leaves the SUBSHELL, so the refusal
+# below became an empty answer and the script carried on with the wrong message and the wrong
+# exit code — found while proving the refusal actually refuses.
+ANSWER=""
+ask() {  # $1 = prompt, $2 = default, $3 = what it is asking about
+  local prompt="$1" default="$2" what="$3" reply=""
+  if ! interactive; then
+    if [[ "$ASSUME_YES" -eq 1 ]]; then ANSWER="$default"; return 0; fi
+    echo "maestro: no terminal to ask about ${what}. Declare it (${prompt}), or pass --yes to accept '${default}'." >&2
+    exit 2
+  fi
+  read -r -p "   ${prompt} [${default}]: " reply </dev/tty 2>/dev/null || reply=""
+  ANSWER="${reply:-$default}"
+}
+
+cmd_init() {
+  local target="" ai="" dry=0 extra=()
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --ai)        shift
+                   # `--ai` as the last argument used to shift past the end, and `set -e`
+                   # killed the script with NO output at all.
+                   [[ $# -gt 0 && "$1" != -* ]] || { echo "maestro init: --ai needs an agent id (see: maestro agents)" >&2; exit 2; }
+                   ai="$1" ;;
+      --ai=*)      ai="${1#--ai=}" ;;
+      --yes|-y)    ASSUME_YES=1 ;;
+      --dry-run)   dry=1; extra+=("$1") ;;
+      --no-hooks|--force) extra+=("$1") ;;
+      -*)          echo "maestro init: unknown flag '$1'" >&2; exit 2 ;;
+      *)           # The script it fronts refuses a second target; wrapping it must not be laxer.
+                   [[ -z "$target" ]] || { echo "maestro init: more than one target given ('$target' and '$1')" >&2; exit 2; }
+                   target="$1" ;;
+    esac
+    shift
+  done
+
+  banner
+  echo "   Step 1 of 4 — which agent will read this project?"
+  echo
+  scripts/install-maestro.sh --ai list | sed 's/^/   /'
+  echo
+  if [[ -z "$ai" ]]; then ask "agent" "claude" "which agent"; ai="$ANSWER"; fi
+  # Validated BEFORE anything is created: the first version made the directory in step 2 and
+  # only learned the agent was unknown in step 3, leaving a directory behind after refusing
+  # (independent review of cycle 058).
+  scripts/install-maestro.sh --ai "$ai" --block >/dev/null
+
+  echo
+  echo "   Step 2 of 4 — where does it go?"
+  if [[ -z "$target" ]]; then ask "project directory" "." "where it goes"; target="$ANSWER"; fi
+  target="$(resolve "$target")"
+  # Installing the method into the method is never what somebody meant by `init`.
+  if [[ "$(cd "$target" 2>/dev/null && pwd || echo "$target")" == "$HERE" ]]; then
+    echo "maestro init: that is the Maestro repository itself. Name the project you want to install INTO." >&2
+    exit 2
+  fi
+  if [[ -e "$target" && ! -d "$target" ]]; then
+    echo "maestro init: '$target' exists and is not a directory." >&2; exit 2
+  fi
+  if [[ ! -d "$target" ]]; then
+    ask "create '$target'?" "y" "creating the directory"
+    if [[ "$ANSWER" == "y" ]]; then
+      mkdir -p "$target"
+    else
+      echo "   nothing done." >&2; exit 1
+    fi
+  fi
+
+  echo
+  echo "   Step 3 of 4 — installing"
+  echo
+  # --write-block: the block goes into the file that agent reads. It appends when absent and
+  # refuses when a different one is there; it never overwrites (cycle 057).
+  # `"${extra[@]:-}"` expands to ONE EMPTY ARGUMENT when the array is empty, which the
+  # installer then read as a second target ("error: more than one target given"). The `+`
+  # form expands to nothing at all — the difference between "no flags" and "an empty flag".
+  scripts/install-maestro.sh "$target" --ai "$ai" --write-block ${extra[@]+"${extra[@]}"}
+
+  if [[ "$dry" -eq 1 ]]; then
+    cat <<'DRY'
+
+   (--dry-run: nothing was written, so there is nothing to verify.)
+
+DRY
+    return 0
+  fi
+
+  echo
+  echo "   Step 4 of 4 — proving it, instead of claiming it"
+  echo
+  if ( cd "$target" && ./scripts/check-install.sh ) ; then
+    echo
+    echo "   ✓ installed and coherent."
+  else
+    echo
+    echo "   ✗ files are there, but the project is NOT installed yet — read the failures above." >&2
+    echo "     Copying files is not installing: installed is when the AI knows it must follow them." >&2
+    exit 1
+  fi
+
+  cat <<NEXT
+
+   Next:
+     maestro cycle 001 <slug>     open your first cycle
+     maestro conformance          ask the repository, not your memory
+
+NEXT
+}
+
+case "${1:-}" in
+  init)        shift; cmd_init "$@" ;;
+  check)       shift
+               # Resolved against the USER's directory and NAMED: `cd "$HERE"` made a bare
+               # `maestro check` measure the Maestro repo and report a green that belonged to
+               # somebody else (independent review of cycle 058).
+               _t="$(resolve "${1:-.}")"
+               [[ -d "$_t" ]] || { echo "maestro check: '$_t' is not a directory." >&2; exit 2; }
+               echo "── checking: $_t ──"
+               ( cd "$_t" && ./scripts/check-install.sh ) ;;
+  cycle)       shift; scripts/new-cycle.sh "$@" ;;
+  conformance) shift; scripts/check-conformance.sh "$@" ;;
+  retro)       shift; scripts/retro.sh "$@" ;;
+  promote)     shift; scripts/promote-main.sh "$@" ;;
+  agents)      shift; scripts/install-maestro.sh --ai list ;;
+  version)     version ;;
+  ""|-h|--help|help) usage ;;
+  *)           echo "maestro: unknown command '$1'" >&2; echo >&2; usage >&2; exit 2 ;;
+esac

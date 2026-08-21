@@ -101,7 +101,18 @@
       <p class="sub">Um humano rege. Muitos agentes executam.</p>
       <p class="score">A spec é a partitura · os gates, o compasso · o ROI, a plateia.</p>
       <div class="staff"></div>
-      <p style="margin-top:28px"><a href="sumario.html" style="display:inline-block;font-family:var(--fm);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--bg);background:var(--accent);padding:13px 22px;border-radius:10px;text-decoration:none">Entrar no livro →</a></p>
+      <p style="margin-top:28px;display:flex;flex-wrap:wrap;gap:12px"><a href="sumario.html" style="display:inline-block;font-family:var(--fm);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--bg);background:var(--accent);padding:13px 22px;border-radius:10px;text-decoration:none">Entrar no livro →</a><a href="instalar-o-maestro.html" style="display:inline-block;font-family:var(--fm);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);border:1px solid var(--accent);padding:12px 22px;border-radius:10px;text-decoration:none">Instalar agora →</a></p>
+
+      <!-- A porta rápida (ciclo 058). Quem já está convencido não precisa da trilha de um dia:
+           até aqui, chegar à instalação eram QUATRO cliques, pelo caminho que se anuncia como
+           "~1 dia". O livro existe para convencer; isto existe para quem já foi. -->
+      <div style="margin-top:34px;border:1px solid var(--line);border-radius:12px;padding:18px 20px;max-width:44rem">
+        <div class="eyebrow" style="margin:0 0 10px">Três comandos</div>
+        <pre style="margin:0;overflow-x:auto;font-family:var(--fm);font-size:13px;line-height:1.9"><code>git clone https://github.com/GHDaru/maestro.git &amp;&amp; cd maestro
+./bin/maestro agents          <span style="opacity:.6"># qual IA vai ler o seu projeto</span>
+./bin/maestro init ../seu-projeto --ai claude</code></pre>
+        <p style="margin:12px 0 0;font-size:14px;color:var(--muted)">O <code>init</code> conduz os quatro passos e <b>termina verificando</b> — instalar sem provar não conta. Detalhe: <a href="instalar-o-maestro.html">a receita</a>.</p>
+      </div>
     </section>
 
     <section id="dor">

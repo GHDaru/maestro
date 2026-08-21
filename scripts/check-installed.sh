@@ -436,6 +436,39 @@ else
   bad "installing with --ai codex failed:"; sed 's/^/      /' "$TMP/other.log" >&2
 fi
 
+# ── The front door, driven with nobody watching (cycle 058) ───────────────────────────────
+# `init` must be runnable without a human: a command that only works while somebody types
+# cannot be tested, and what is not tested is not a gate (FR3). This runs it exactly the way
+# CI would — no TTY, every answer as a flag.
+echo ""
+echo "── The front door (bin/maestro) ──"
+if [[ ! -x "$ROOT/bin/maestro" ]]; then
+  bad "bin/maestro is missing or not executable — the front door does not open"
+else
+  if "$ROOT/bin/maestro" >/dev/null 2>&1; then ok "maestro with no argument prints what it can do"
+  else bad "maestro with no argument fails"; fi
+
+  FRONT="$TMP/front"; mkdir -p "$FRONT"
+  if "$ROOT/bin/maestro" init "$FRONT" --ai claude --yes >"$TMP/front.log" 2>&1 </dev/null; then
+    ok "maestro init runs to the end with no terminal and no questions"
+    grep -q 'installed and coherent' "$TMP/front.log" \
+      && ok "maestro init ends by PROVING, not by claiming" \
+      || bad "maestro init did not run the verification at the end (FR5)"
+  else
+    bad "maestro init failed without a terminal:"; sed 's/^/      /' "$TMP/front.log" >&2
+  fi
+
+  # An unknown agent must stop it before anything is written.
+  EMPTY="$TMP/front-bad"; mkdir -p "$EMPTY"
+  if "$ROOT/bin/maestro" init "$EMPTY" --ai not-an-agent --yes >/dev/null 2>&1 </dev/null; then
+    bad "maestro init accepted an unknown agent"
+  elif [[ -z "$(ls -A "$EMPTY" 2>/dev/null)" ]]; then
+    ok "an unknown agent stops init before anything is written"
+  else
+    bad "an unknown agent refused, but files were already written"
+  fi
+fi
+
 echo "──"
 if [[ $fail -ne 0 ]]; then
   echo "✗ the installed copy is not coherent: it ships something that points at nothing."

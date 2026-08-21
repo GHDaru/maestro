@@ -10,6 +10,22 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **`maestro init`: o método ganha porta de entrada** (ciclo 058). `bin/maestro` é um
+  despachante — `init`, `check`, `cycle`, `conformance`, `retro`, `promote`, `agents`,
+  `version` —, e **nenhum subcomando reimplementa** passo que já existe. `maestro init` conduz
+  quatro passos (agente, destino, instalação, **verificação**) com banner que carrega a versão
+  lida do `CHANGELOG`, e **termina provando**: roda o `check-install.sh` dentro do alvo e sai
+  diferente de zero se falhar. Toda pergunta é também flag, então roda em CI; sem terminal e
+  sem `--yes` ele **recusa** em vez de responder por você. A capa do site ganhou "Instalar
+  agora" — antes eram quatro cliques, pela trilha que se anuncia como "um dia".
+- **17º portão: `check-flags.sh`** — as flags que o parser aceita e as que a documentação
+  promete são o mesmo conjunto. Ele nasceu acusando: `--forcar` na receita **e no README**
+  (flag que nunca existiu), o "não sobrescreve" desatualizado desde o ciclo 051, e o
+  `# Usage` do instalador sem `--ai`, `--no-hooks` e `--write-block`, dois ciclos depois de
+  eles existirem. Texto de referência é conferido nos dois sentidos; prosa, no sentido de que
+  toda flag citada existe.
+
+### Adicionado
 - **O agente de IA passa a ser escolha declarada** (ciclo 057), no modelo do spec-kit.
   `--ai <id>` escolhe entre `claude`, `copilot`, `cursor-agent` e `codex`; `--ai list` mostra a
   tabela (`scripts/install-agents.tsv`), cujos ids e arquivos de instrução foram **lidos do

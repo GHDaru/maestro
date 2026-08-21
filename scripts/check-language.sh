@@ -18,6 +18,9 @@ set -euo pipefail
 
 # Installable surface: what scripts/install-maestro.sh copies into another repository.
 TARGETS=(
+  # The front door is method surface even though it does not travel into targets: it is the
+  # first English anyone reads (cycle 058).
+  "bin"
   ".claude/agents"
   ".claude/commands/dod.md"
   ".claude/commands/eval.md"

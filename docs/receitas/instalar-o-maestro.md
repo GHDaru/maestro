@@ -17,6 +17,24 @@
 
 > B e C **não** trazem scripts nem governança. Para o método completo, siga o caminho A.
 
+## O caminho curto: `maestro init`
+
+```bash
+git clone https://github.com/GHDaru/maestro.git && cd maestro
+./bin/maestro agents                              # quais IAs ele sabe servir
+./bin/maestro init /caminho/do/seu-projeto --ai claude
+```
+
+`init` conduz os quatro passos — agente, destino, instalação, **verificação** — e **sai
+diferente de zero se a verificação falhar**. Instalar sem provar não conta.
+
+Toda pergunta também é flag (`--ai`, `--yes`, `--dry-run`, `--no-hooks`, `--force`), então ele
+roda em CI sem ninguém digitando. Sem terminal e sem `--yes`, ele **recusa** em vez de
+responder por você.
+
+O resto desta receita é o caminho longo — os mesmos passos, um comando por vez, para quem quer
+ver o que acontece em cada um.
+
 ## 0. Diga qual agente você usa
 
 O instalador **não adivinha**. Antes do ciclo 057 ele copiava `.claude/*` e imprimia um bloco
@@ -72,7 +90,10 @@ scripts/install-maestro.sh /caminho/do/seu-projeto --dry-run
 scripts/install-maestro.sh /caminho/do/seu-projeto
 ```
 
-O script **não sobrescreve** arquivos existentes (use `--forcar` se quiser substituir).
+**Instalar é também atualizar.** O que o método escreveu e você não tocou é renovado; o que
+você modificou é **mantido**, com a versão nova ao lado como `*.maestro-new`; o que o método
+deixou de enviar é removido só enquanto continuar intacto. Nada seu é sobrescrito em silêncio —
+`--force` existe para forçar, e mesmo ele salva a sua versão como `*.maestro-old` antes.
 Ele leva cinco camadas:
 
 | Camada | O que vai | Para quê |

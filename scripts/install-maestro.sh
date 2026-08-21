@@ -3,9 +3,16 @@
 # another repository, so the AI follows the method there.
 #
 # Usage (from inside the Maestro repository):
-#   scripts/install-maestro.sh /path/to/project           # installs
-#   scripts/install-maestro.sh /path/to/project --dry-run # shows what it would do
-#   scripts/install-maestro.sh --block                    # prints the CLAUDE.md block
+#   scripts/install-maestro.sh /path/to/project               # installs, for --ai claude
+#   scripts/install-maestro.sh /path/to/project --dry-run     # shows what it would do
+#   scripts/install-maestro.sh --ai list                      # which agents it can serve
+#   scripts/install-maestro.sh <dir> --ai codex               # install for another agent
+#   scripts/install-maestro.sh <dir> --write-block            # also write the method block
+#   scripts/install-maestro.sh <dir> --no-hooks               # skip the enforcement layer
+#   scripts/install-maestro.sh <dir> --force                  # take our version (saves theirs)
+#   scripts/install-maestro.sh --block                        # print the block and stop
+#
+# Easier: `bin/maestro init <dir> --ai <id>` walks the same steps and verifies at the end.
 #
 # Installing is also UPGRADING. A file we wrote and you never touched is refreshed; a file
 # you modified is kept, with the new version beside it as *.maestro-new; a file the method
@@ -557,7 +564,11 @@ if true; then
     done
   fi
   # the decision index starts empty in a new project (history belongs to each project)
-  [[ -f "$TARGET/docs/records/decisoes.jsonl" ]] || { mkdir -p "$TARGET/docs/records"; : > "$TARGET/docs/records/decisoes.jsonl"; }
+  # Not on a dry run: `--dry-run` is documented as writing nothing, and this line was the one
+  # exception — outside the guard since before cycle 057, and the reason `find` on a dry-run
+  # target came back with one file (independent review of cycle 058).
+  [[ "$ARG_DRY" -eq 1 ]] || [[ -f "$TARGET/docs/records/decisoes.jsonl" ]] \
+    || { mkdir -p "$TARGET/docs/records"; : > "$TARGET/docs/records/decisoes.jsonl"; }
 fi
 
 
