@@ -20,6 +20,52 @@ prática consolidada em `ghdaru` e `flowbuilder`; ver `docs/adr/0007`).
 
 ---
 
+## Se você é uma IA e acabou de abrir este repositório
+
+Leia isto antes de escrever qualquer coisa. Não é o método — é como se comportar **aqui**.
+
+**1. Não responda "estou seguindo o método?" de memória.** Rode e leia:
+
+```bash
+scripts/check-conformance.sh          # os artefatos de cada ciclo, com evidência
+scripts/check-retro.sh                # dívida de achados aberta
+```
+
+Memória de agente relata **intenção**, não fato.
+
+**2. Leia, nesta ordem, antes de agir:**
+
+| Arquivo | O que é |
+|---|---|
+| [`CLAUDE.md`](CLAUDE.md) | a instrução vigente deste repositório — a sua |
+| [`docs/governance/principles.md`](docs/governance/principles.md) | a constituição: oito princípios inegociáveis |
+| [`docs/governance/operating-model.md`](docs/governance/operating-model.md) | a regra do dia a dia: raias, artefatos, portões |
+| [`skills/anti-patterns/SKILL.md`](skills/anti-patterns/SKILL.md) | 23 erros já cometidos aqui, cada um com o ciclo de origem |
+
+**3. Três coisas nunca são reescritas** — e um hook `PreToolUse` **recusa** a chamada, não
+apenas pede:
+
+- o corpo de um ADR já commitado → a correção é um **ADR novo** que o supersede
+- `docs/records/decisoes.jsonl` → só cresce, por `scripts/record-decision.sh`
+- `docs/ecosystem/ideias/*.md` → observação **datada**; o veredito de hoje é linha nova em
+  `docs/ecosystem/estado.jsonl`
+
+**4. Todo trabalho nasce de um ciclo**, e a raia decide quanto processo ele merece:
+
+```bash
+scripts/new-cycle.sh NNN <slug>       # spec.md, plan.md, tasks.md, qa-report.md
+```
+
+O `plan.md` declara os artefatos condicionais (`ART:...`), o `tasks.md` carrega a cauda de
+fechamento (`TAIL:review`, `TAIL:security`, `TAIL:mutation`, `TAIL:gate`), e a **evidência**
+de cada passo vai no `qa-report.md`. Caixa marcada não é testemunha.
+
+**5. Se você criar ou alterar um portão, quebre-o de propósito e veja reprovar.** É
+obrigatório (`TAIL:mutation`), e a razão está escrita: em seis dos nove ciclos 046–054 a
+revisão independente encontrou um portão que media a frase e não o fato.
+
+**6. Você não promove.** `dev` → `main` passa por `scripts/promote-main.sh` e por um humano.
+
 ## Instalar o Maestro no seu projeto
 
 > **Para uma IA que leu isto:** o Maestro é um método instalável, não uma biblioteca de
@@ -31,23 +77,86 @@ Há **três caminhos**, do mais completo ao mais leve. Escolha pelo que você pr
 
 ### A. Método completo (qualquer agente) — recomendado
 
+> **O clone é a ferramenta. O alvo é outro projeto.**
+> Você clona o Maestro uma vez, em qualquer lugar, e a partir dele instala o método **dentro
+> do seu projeto**. Nada é instalado na pasta do Maestro.
+
 ```bash
-# 1. clone o método (uma vez, em qualquer lugar)
-git clone https://github.com/GHDaru/maestro.git && cd maestro
+git clone https://github.com/GHDaru/maestro.git
+```
 
-# 2. veja quais assistentes ele sabe servir
-./bin/maestro agents
+Depois, **de dentro do seu projeto** — a forma do dia a dia:
 
-# 3. instale: quatro passos, terminando por VERIFICAR
-./bin/maestro init /caminho/do/seu-projeto --ai claude
+```bash
+cd /caminho/do/meu-app
+/onde/clonei/maestro/bin/maestro init .
+```
+
+Ou **de dentro do clone**, apontando para fora:
+
+```bash
+cd /onde/clonei/maestro
+./bin/maestro init /caminho/do/meu-app
+```
+
+Caminho relativo vale a partir de onde **você** está. Cansou de digitar o caminho?
+`export PATH="$PATH:/onde/clonei/maestro/bin"` e depois é só `maestro init .`.
+
+**Um comando só instala: `init`.** Ele conduz quatro passos — agente, destino, instalação e
+**verificação** — e sai com erro se a verificação falhar. Instalar sem provar não conta.
+
+Sem `--ai`, ele instala para o **Claude Code**. Para ver as outras opções antes de decidir
+(é só uma consulta, não escreve nada):
+
+```bash
+maestro agents
 ```
 
 Instalar é também **atualizar**: o que o método escreveu e você não tocou é renovado; o que
 você modificou é mantido, com a versão nova ao lado como `*.maestro-new`. Nada seu é
 sobrescrito em silêncio. Para ver antes sem escrever nada: `--dry-run`.
 
-Leva **tudo**: agentes, skills, scripts, comandos, templates e governança. Funciona com
-qualquer assistente que leia `CLAUDE.md`/`AGENTS.md`.
+#### O que aparece no seu projeto
+
+Gerado de uma instalação real com **`--ai claude`**, num projeto que só tinha `README.md`:
+**81 arquivos escritos** (82 no total, contando o seu). Com outro agente a árvore é menor —
+`--ai codex` escreve 53 e **nenhum `.claude/`**, porque aquele agente não lê esse formato.
+
+```
+meu-app/
+├── CLAUDE.md              a IA lê isto antes de trabalhar. É o que faz o método valer
+├── README.md              seu, intocado
+│
+├── .claude/               formatos do Claude Code
+│   ├── agents/            13 subagentes: spec, plan, dev, review, security, qa…
+│   ├── commands/          12 comandos: /speckit.specify, /speckit.plan, /dod, /eval…
+│   └── settings.json      liga os hooks abaixo
+│
+├── scripts/               o ritual e os portões
+│   ├── new-cycle.sh       abre um ciclo (spec, plan, tasks, qa-report)
+│   ├── promote-main.sh    dev → main, com o gate humano
+│   ├── record-decision.sh a única via de escrita no índice de decisões
+│   ├── check-*.sh         9 portões — os que fazem sentido fora daqui
+│   ├── retro.sh           pré-computa o material da retrospectiva
+│   ├── README.md          o que cada script é
+│   └── hooks/             guard-immutables.py · session-state.sh
+│
+├── skills/                6 disciplinas que a IA consulta antes de agir
+├── .specify/              12 templates (spec, plan, tasks, ADR…) + o motor spec-driven
+├── docs/governance/       a constituição, o modelo operacional, o catálogo de artefatos
+├── docs/records/          decisoes.jsonl — índice append-only, começa vazio
+├── evals/                 base para avaliar saída não-determinística
+└── .maestro/              install-options.json (qual agente) · manifest.tsv (o que ele escreveu)
+```
+
+Duas coisas mudam **comportamento** no mesmo instante: o `CLAUDE.md`, que faz a IA seguir o
+método, e o `.claude/settings.json`, que instala hooks que **recusam** reescrever o que é
+história — corpo de ADR já commitado, o índice de decisões e os cards datados. O
+`manifest.tsv` é o que torna reinstalar um **upgrade**: ele sabe o que escreveu, então
+distingue arquivo nosso de arquivo seu.
+
+Funciona com qualquer assistente que leia `CLAUDE.md`/`AGENTS.md`; os hooks são mecanismo do
+Claude Code e não são instalados para os outros — e o instalador **diz** quando não instalou.
 
 ### B. Plugin do Claude Code — instala e atualiza sozinho
 

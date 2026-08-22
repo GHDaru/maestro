@@ -10,6 +10,23 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **A capa responde "clonei, e agora?"** (ciclo 059). O README passa a dizer, antes de
+  qualquer comando, que **o clone é a ferramenta e o alvo é outro projeto**, com as duas
+  formas de apontar para fora — de dentro do seu projeto, e de dentro do clone. `agents`
+  deixou de ser "passo 2 de 3": é consulta e pode ser pulado; **só o `init` instala**. E a
+  capa mostra a **árvore que aparece no seu projeto**, gerada de uma instalação real (82
+  arquivos), dizendo o que cada camada é e quais duas coisas mudam comportamento no mesmo
+  instante. Motivo: quem conduz este repositório leu a instrução e não soube o que fazer.
+- **Um bloco endereçado a uma IA que abre o repositório** — o que ler antes de agir, o comando
+  que responde pelo estado (nunca a memória), as três coisas que um hook **recusa** reescrever,
+  como abrir um ciclo, e que promover não é dela. Ele **aponta** para o `CLAUDE.md` e para a
+  constituição em vez de repeti-los; cada arquivo e comando que cita foi conferido no disco.
+- **O portão de flags passa a conferir subcomandos.** O README podia anunciar um subcomando
+  que não existe e nada percebia — a mesma classe de mentira que o ciclo 058 fechou para flags, aberta na
+  porta que o 058 construiu. Referência nos dois sentidos, prosa no sentido de que todo
+  `maestro <cmd>` anunciado existe.
+
+### Adicionado
 - **`maestro init`: o método ganha porta de entrada** (ciclo 058). `bin/maestro` é um
   despachante — `init`, `check`, `cycle`, `conformance`, `retro`, `promote`, `agents`,
   `version` —, e **nenhum subcomando reimplementa** passo que já existe. `maestro init` conduz

@@ -119,6 +119,69 @@ for prose in docs/receitas/instalar-o-maestro.md README.md; do
   [[ -f "$prose" ]] && prose_check "${prose}" "$prose" scripts/install-maestro.sh bin/maestro
 done
 
+# ── Subcommands: the same lie, on the door cycle 058 built ────────────────────────────────
+# `check-flags` covered flags and stopped there, so the README could advertise `maestro deploy`
+# and nothing would notice — the class of defect this gate exists for, one level up (cycle 059).
+subcommands() {
+  # ONLY the dispatch `case` at the bottom — the parser inside cmd_init has its own arms
+  # (`--yes|-y)`), and stripping dashes from those invented subcommands called "yes" and "y".
+  # The `case` line is matched loosely (trailing spaces used to produce twelve false
+  # failures), and an arm is read whatever its FIRST alternative is: `""|-h|--help|help)` hid
+  # a real subcommand — `help` — which the gate then called nonexistent (independent review).
+  sed -n '/^case[[:space:]]*"\${1:-}"[[:space:]]*in[[:space:]]*$/,/^esac[[:space:]]*$/p' bin/maestro \
+    | grep -oE '^[[:space:]]*[a-z"|*_-]+\)' \
+    | tr -d ' )' \
+    | awk -F'|' '{for(i=1;i<=NF;i++) if ($i ~ /^[a-z][a-z-]*$/) print $i}' \
+    | sort -u
+}
+announced_in_usage() {
+  # The command list inside usage(): five spaces, the name, then its description.
+  # `maestro` itself is filtered: the examples at the end of usage() are indented the same
+  # way as the command list, so the tool's own name came back as a subcommand.
+  sed -n '/^usage() {/,/^}/p' bin/maestro \
+    | grep -oE '^     [a-z][a-z-]*' | grep -oE '[a-z][a-z-]*' \
+    | grep -vx 'maestro' | sort -u
+}
+announced_in_prose() {  # stdin
+  # A subcommand is ANNOUNCED where a command is WRITTEN: inside a fenced code block, or
+  # inside backticks. Anchoring on "start of line" both missed the commonest shape
+  # (`cd /x && maestro deploy`, which the README itself uses) and turned ordinary Portuguese
+  # that happens to begin a line with "maestro" into a build failure. Prose is prose; a code
+  # fence is a promise (independent review of cycle 059).
+  awk '/^```/ {inblock = !inblock; next} inblock {print}
+       !inblock { while (match($0, /`[^`]*`/)) { print substr($0, RSTART+1, RLENGTH-2); $0 = substr($0, RSTART+RLENGTH) } }' \
+    | grep -oE '(^|[^A-Za-z0-9_./-])maestro[[:space:]]+[a-z][a-z-]*' \
+    | grep -oE 'maestro[[:space:]]+[a-z][a-z-]*' | sed -E 's/^maestro[[:space:]]+//' | sort -u
+}
+
+echo ""
+echo "── Subcommands accepted × subcommands announced ──"
+if [[ ! -f bin/maestro ]]; then
+  bad "bin/maestro is missing — there is no door to compare"
+else
+  have_sub="$(subcommands || true)"
+  # Reference: its own usage text, both directions.
+  ref_sub="$(announced_in_usage || true)"
+  miss="$(comm -23 <(echo "$have_sub") <(echo "$ref_sub") || true)"
+  ghost="$(comm -13 <(echo "$have_sub") <(echo "$ref_sub") || true)"
+  while read -r c; do [[ -n "$c" ]] && bad "maestro usage: '${c}' is accepted and never announced"; done <<<"$miss"
+  while read -r c; do [[ -n "$c" ]] && bad "maestro usage: announces '${c}', which the dispatcher does not accept"; done <<<"$ghost"
+  [[ -z "$miss$ghost" ]] && ok "maestro subcommands, its own usage text: announces exactly what it accepts ($(wc -w <<<"$have_sub"))"
+
+  # Prose: one direction — everything it announces must exist.
+  # Every place that ANNOUNCES the door, including the copy shipped inside the plugin and the
+  # ADR that describes distribution. The first version watched two files, which is the very
+  # anti-pattern (23: a new door, and the old guard never told) this cycle cites.
+  for prose in README.md docs/receitas/instalar-o-maestro.md plugin/maestro/README.md \
+               docs/adr/0012-distribuicao-em-tres-camadas.md; do
+    [[ -f "$prose" ]] || continue
+    said="$(announced_in_prose <"$prose" || true)"
+    ghost="$(comm -13 <(echo "$have_sub") <(echo "$said") || true)"
+    while read -r c; do [[ -n "$c" ]] && bad "${prose}: announces 'maestro ${c}', which does not exist"; done <<<"$ghost"
+    [[ -z "$ghost" ]] && ok "${prose}: every 'maestro <cmd>' it announces exists"
+  done
+fi
+
 echo "──"
 if [[ $fail -ne 0 ]]; then
   echo "✗ the flags and the documentation disagree."

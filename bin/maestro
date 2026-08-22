@@ -11,7 +11,12 @@
 # different hat, and this repository has paid for that lesson more than once.
 set -euo pipefail
 
-HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# `readlink -f` first: putting `bin/maestro` on the PATH by SYMLINK — the common shape —
+# made HERE point at the symlink's directory, so the banner printed `v?` and the run died with
+# "scripts/install-maestro.sh: No such file or directory" AFTER looking like it had started
+# (independent review of cycle 059).
+_self="$(readlink -f "${BASH_SOURCE[0]}" 2>/dev/null || echo "${BASH_SOURCE[0]}")"
+HERE="$(cd "$(dirname "$_self")/.." && pwd)"
 # The user's directory, captured BEFORE moving. `cd "$HERE"` made every relative path resolve
 # against the Maestro repository: `maestro init ./my-project` from anywhere created the project
 # INSIDE the Maestro clone and printed "✓ installed and coherent" — success, in a directory
@@ -66,6 +71,7 @@ usage() {
      promote          dev -> main, with the human gate
      agents           which AI agents this installation knows how to serve
      version          the version this copy is
+     help             this text (also: no argument, -h, --help)
 
    `init` takes every question as a flag, so it also runs with nobody watching:
 
