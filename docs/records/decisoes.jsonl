@@ -128,3 +128,4 @@
 {"id": "gate-main-813a469", "data": "2026-08-21", "titulo": "Gate de merge: feat(instalador): harness que recusa antes do dano (spec 056)", "status": "aceita", "registro": "commit 813a469"}
 {"id": "gate-main-17d44e8", "data": "2026-08-21", "titulo": "Gate de merge: feat(instalador): o agente e escolha declarada, no modelo do spec-kit (spec 057)", "status": "aceita", "registro": "commit 17d44e8"}
 {"id": "gate-main-a8c5b4d", "data": "2026-08-21", "titulo": "Gate de merge: chore(plugin): reempacotar apos a capa mudar (spec 058)", "status": "aceita", "registro": "commit a8c5b4d"}
+{"id": "gate-main-d84d6ec", "data": "2026-08-22", "titulo": "Gate de merge: docs(porta): clonei e agora, bloco para IA e portao de subcomandos (spec 059)", "status": "aceita", "registro": "commit d84d6ec"}
