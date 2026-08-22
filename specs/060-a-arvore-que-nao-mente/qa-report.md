@@ -62,7 +62,11 @@
   lido como se fosse um id, o que fez o portão acusar *"a receita manda usar --ai --ai"*.
   Ancorar o id em letra descarta o cabeçalho e nada mais.
 
-- **TAIL:gate** — pendente. DoD verde; falta o portão humano.
+- **TAIL:gate** — DoD verde (14 portões bloqueantes, plugin em sincronia, livro gerando) →
+  parecer registrado acima, com os 20 achados e a disposição de cada um → **portão humano
+  concedido pelo Steward em 2026-08-22** ("pode promover"), com o vermelho consultivo do
+  `check-retro` posto à vista antes da decisão, não depois. Promoção por
+  `scripts/promote-main.sh --yes`, que grava `gate-main-<sha>` no índice.
 
 ## Achados abertos deste ciclo
 
