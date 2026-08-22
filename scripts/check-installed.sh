@@ -469,6 +469,129 @@ else
   fi
 fi
 
+# ── The documented tree against a REAL installation (cycle 060) ───────────────────────────
+# The recipe publishes what a project looks like after `init`. Nothing compared it with disk,
+# so on the day the installer changes what it copies the page starts lying and nobody notices —
+# the family of check-version and check-flags, with the two places being a DOCUMENT and the
+# FILESYSTEM. Both lists are derived: one parsed from the page, one listed from the install
+# this script already performs. A hand-written list here would just move the problem up a level.
+# (11) The README points at the recipe by ANCHOR, and that pointer is the whole mechanism of
+# "one source". Renaming the heading left every gate green while the link went nowhere.
+echo ""
+echo "── The README's pointer into the recipe ──"
+if [[ -f "$ROOT/README.md" && -f "$ROOT/docs/receitas/instalar-o-maestro.md" ]]; then
+  anchors_ok=1
+  while IFS= read -r a; do
+    [[ -n "$a" ]] || continue
+    # GitHub's slug: lowercase, spaces to hyphens, punctuation dropped, accents KEPT.
+    if ! python3 - "$ROOT/docs/receitas/instalar-o-maestro.md" "$a" <<'PYA'
+import re, sys, unicodedata
+target = sys.argv[2]
+for line in open(sys.argv[1], encoding="utf-8"):
+    if not line.startswith("#"):
+        continue
+    t = line.lstrip("#").strip().lower()
+    t = re.sub(r"[^\w\s-]", "", t, flags=re.UNICODE)
+    if re.sub(r"\s+", "-", t).strip("-") == target:
+        sys.exit(0)
+sys.exit(1)
+PYA
+    then
+      bad "README links to '#${a}' in the recipe, and no heading there produces that anchor"
+      anchors_ok=0
+    fi
+  done < <(grep -oE 'instalar-o-maestro\.md#[^)"'"'"' ]+' "$ROOT/README.md" | sed 's/.*#//' | sort -u)
+  [[ "$anchors_ok" -eq 1 ]] && ok "every README anchor into the recipe resolves to a heading"
+fi
+
+# The recipe publishes a table of `--ai` ids. Those ids were the ids of a first draft, and
+# the installer REFUSED them for three cycles while every gate stayed green: the person
+# following the page hit `error: unknown agent 'cursor'` at step 0 and had nowhere to go.
+# Same family as check-flags — a set the parser accepts, said in a second place — so it is
+# compared the same way, both directions, against the table the parser actually reads.
+echo ""
+echo '── The --ai ids the recipe publishes × the ids the installer accepts ──'
+RECIPE_P="$ROOT/docs/receitas/instalar-o-maestro.md"
+if [[ ! -f "$RECIPE_P" || ! -f "$ROOT/scripts/install-agents.tsv" ]]; then
+  bad "cannot compare agent ids: the recipe or install-agents.tsv is missing"
+else
+  # Only the rows of the `--ai` table: a markdown row whose first cell is a single
+  # backticked token, optionally followed by an italic note like *(padrão)*.
+  DOC_IDS="$(grep -oE '^\| `[a-z][a-z0-9-]*`' "$RECIPE_P" | sed -E 's/^\| `//; s/`$//' | sort -u || true)"
+  REAL_IDS="$(tr -d '\r' < "$ROOT/scripts/install-agents.tsv" | grep -v '^#' | cut -f1 \
+    | grep -E '^[a-z][a-z0-9-]*$' | sort -u || true)"
+  if [[ -z "$DOC_IDS" ]]; then
+    bad "no --ai table found in the recipe — the page that tells you to choose an agent lists none"
+  elif [[ -z "$REAL_IDS" ]]; then
+    bad "install-agents.tsv yielded no ids"
+  else
+    ghost="$(comm -23 <(echo "$DOC_IDS") <(echo "$REAL_IDS") || true)"
+    unlisted="$(comm -13 <(echo "$DOC_IDS") <(echo "$REAL_IDS") || true)"
+    while read -r i; do [[ -n "$i" ]] && bad "the recipe tells you to use --ai ${i}, and the installer refuses it"; done <<<"$ghost"
+    while read -r i; do [[ -n "$i" ]] && bad "the installer accepts --ai ${i}, and the recipe never lists it"; done <<<"$unlisted"
+    [[ -z "$ghost$unlisted" ]] && ok "every --ai id in the recipe is one the installer accepts, and vice versa ($(wc -w <<<"$REAL_IDS"))"
+  fi
+fi
+
+echo ""
+echo "── The documented tree × what init actually creates ──"
+RECIPE="$ROOT/docs/receitas/instalar-o-maestro.md"
+# Its own pristine fixture, measured the instant it is made. $TARGET cannot be used: the
+# guard fixture above writes docs/adr, docs/records and docs/ecosystem into it, so the
+# comparison would run against OUR OWN debris and dropping docs/ from the installer would
+# leave this gate green (independent review of cycle 060). And it is `maestro init`, not a
+# bare install-maestro.sh, because init is what the recipe's tree documents — init passes
+# --write-block, which is what puts CLAUDE.md on disk.
+TREE="$TMP/tree"; mkdir -p "$TREE"
+REAL_TREE_TOP=""; REAL_HAS_CLAUDE_MD=0; tree_fixture=0
+if "$ROOT/bin/maestro" init "$TREE" --ai claude --yes >"$TMP/tree.log" 2>&1 </dev/null; then
+  tree_fixture=1
+  REAL_TREE_TOP="$(cd "$TREE" && find . -maxdepth 1 -mindepth 1 -type d ! -name '.git' -printf '%f\n' | sort -u || true)"
+  [[ -f "$TREE/CLAUDE.md" ]] && REAL_HAS_CLAUDE_MD=1
+else
+  bad "could not build a reference installation to compare the recipe against:"
+  sed 's/^/      /' "$TMP/tree.log" >&2
+fi
+if [[ ! -f "$RECIPE" ]]; then
+  bad "the recipe is missing — there is no documented tree to compare"
+elif [[ "$tree_fixture" -eq 0 ]]; then
+  note "tree comparison skipped: the reference installation above did not build"
+else
+  # FIRST LEVEL only: lines that open with the tree's outer branch (`├──`/`└──`), taking the
+  # first path component. Reading every `name/` in the block pulled nested directories
+  # (`governance/`, `hooks/`) up to the top and reported them as documented-but-absent.
+  # Alternation, never a bracket class: `[├└]` is a set of BYTES to grep, not a set of
+  # characters, so it silently matched nothing and the gate reported "no tree found".
+  # `[a-zA-Z._-]` dropped any name with a DIGIT, so a documented `evals2/` that no install
+  # creates was invisible and the gate certified it (independent review of cycle 060).
+  DOC_DIRS="$(grep -oE '^(├|└)── [A-Za-z0-9._-]+/' "$RECIPE" \
+    | sed -E 's/^(├|└)── //; s|/$||' | sort -u || true)"
+  # First level only: the manifest is the file-by-file record, not this page.
+  REAL_DIRS="$REAL_TREE_TOP"
+  if [[ -z "$DOC_DIRS" ]]; then
+    bad "no tree found in the recipe — the page that documents the installation documents nothing"
+  else
+    missing_doc="$(comm -13 <(echo "$DOC_DIRS") <(echo "$REAL_DIRS") || true)"
+    ghost_doc="$(comm -23 <(echo "$DOC_DIRS") <(echo "$REAL_DIRS") || true)"
+    while read -r d; do [[ -n "$d" ]] && bad "the installation creates '${d}/' and the recipe never mentions it"; done <<<"$missing_doc"
+    while read -r d; do [[ -n "$d" ]] && bad "the recipe documents '${d}/', which the installation does not create"; done <<<"$ghost_doc"
+    [[ -z "$missing_doc$ghost_doc" ]] && ok "the recipe's tree matches a real installation ($(wc -w <<<"$REAL_DIRS") directories)"
+  fi
+  # Measured from the init fixture above, never from $TARGET: this script writes CLAUDE.md
+  # into $TARGET itself, so `[[ -f ... ]]` was always true there and the assertion could
+  # never fail (independent review of cycle 060).
+  doc_has_claude=0; grep -q '^├── CLAUDE.md' "$RECIPE" && doc_has_claude=1
+  if [[ "$doc_has_claude" -eq 1 && "$REAL_HAS_CLAUDE_MD" -eq 1 ]]; then
+    ok "CLAUDE.md is documented and created"
+  elif [[ "$doc_has_claude" -eq 0 && "$REAL_HAS_CLAUDE_MD" -eq 0 ]]; then
+    ok "CLAUDE.md is neither documented nor created — consistent"
+  elif [[ "$doc_has_claude" -eq 1 ]]; then
+    bad "the recipe documents CLAUDE.md and the installation does not create it"
+  else
+    bad "the installation creates CLAUDE.md and the recipe never mentions it"
+  fi
+fi
+
 echo "──"
 if [[ $fail -ne 0 ]]; then
   echo "✗ the installed copy is not coherent: it ships something that points at nothing."

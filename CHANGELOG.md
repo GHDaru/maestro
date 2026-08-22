@@ -10,6 +10,18 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **A árvore que a página promete passa a ser conferida contra o disco** (ciclo 060). A árvore
+  pós-instalação sai do `README.md` — que não está no livro — e passa a viver **na receita**,
+  que está; o README aponta por âncora, e um portão confere que a âncora resolve. O
+  `check-installed.sh` ganha duas comparações, ambas entre listas **derivadas**: os diretórios
+  de primeiro nível que a receita publica contra os que um `maestro init` feito na hora cria, e
+  os ids `--ai` que a receita ensina contra os que o instalador aceita. Este segundo nasceu
+  acusando: a receita mandava `--ai cursor` e `--ai generic` havia três ciclos, ids que o
+  instalador **recusa** desde o 057 — quem seguisse a página parava no passo 0. E o passo 4
+  passou a mandar `cd` para o projeto: sem isso, os quatro portões devolviam um verde do
+  repositório do método, o `cd "$HERE"` do ciclo 058 reescrito em prosa.
+
+### Adicionado
 - **A capa responde "clonei, e agora?"** (ciclo 059). O README passa a dizer, antes de
   qualquer comando, que **o clone é a ferramenta e o alvo é outro projeto**, com as duas
   formas de apontar para fora — de dentro do seu projeto, e de dentro do clone. `agents`

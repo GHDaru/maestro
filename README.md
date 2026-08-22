@@ -1,8 +1,9 @@
 # Maestro
 
-> **v0.2.0** (2026-08-11) — o método passa a ser verificado **onde ele cai**: dezesseis
-> portões executáveis, treze bloqueando na integração contínua. O que ela é e o que ela
-> reconhecidamente **não** tem está na nota de release do [CHANGELOG](CHANGELOG.md).
+> **v0.2.0** (2026-08-11) — o método passa a ser verificado **onde ele cai**. Quantos
+> portões são, quantos bloqueiam na integração contínua, e o que a versão reconhecidamente
+> **não** tem: tudo na nota de release do [CHANGELOG](CHANGELOG.md), que é onde essa
+> contagem vive. `dev` anda à frente do último corte.
 >
 > **Metodologia de engenharia de software com 1 humano regendo N agentes de IA.**
 > Um humano rege · muitos agentes executam · a spec é a partitura · os gates, o compasso.
@@ -118,42 +119,8 @@ sobrescrito em silêncio. Para ver antes sem escrever nada: `--dry-run`.
 
 #### O que aparece no seu projeto
 
-Gerado de uma instalação real com **`--ai claude`**, num projeto que só tinha `README.md`:
-**81 arquivos escritos** (82 no total, contando o seu). Com outro agente a árvore é menor —
-`--ai codex` escreve 53 e **nenhum `.claude/`**, porque aquele agente não lê esse formato.
-
-```
-meu-app/
-├── CLAUDE.md              a IA lê isto antes de trabalhar. É o que faz o método valer
-├── README.md              seu, intocado
-│
-├── .claude/               formatos do Claude Code
-│   ├── agents/            13 subagentes: spec, plan, dev, review, security, qa…
-│   ├── commands/          12 comandos: /speckit.specify, /speckit.plan, /dod, /eval…
-│   └── settings.json      liga os hooks abaixo
-│
-├── scripts/               o ritual e os portões
-│   ├── new-cycle.sh       abre um ciclo (spec, plan, tasks, qa-report)
-│   ├── promote-main.sh    dev → main, com o gate humano
-│   ├── record-decision.sh a única via de escrita no índice de decisões
-│   ├── check-*.sh         9 portões — os que fazem sentido fora daqui
-│   ├── retro.sh           pré-computa o material da retrospectiva
-│   ├── README.md          o que cada script é
-│   └── hooks/             guard-immutables.py · session-state.sh
-│
-├── skills/                6 disciplinas que a IA consulta antes de agir
-├── .specify/              12 templates (spec, plan, tasks, ADR…) + o motor spec-driven
-├── docs/governance/       a constituição, o modelo operacional, o catálogo de artefatos
-├── docs/records/          decisoes.jsonl — índice append-only, começa vazio
-├── evals/                 base para avaliar saída não-determinística
-└── .maestro/              install-options.json (qual agente) · manifest.tsv (o que ele escreveu)
-```
-
-Duas coisas mudam **comportamento** no mesmo instante: o `CLAUDE.md`, que faz a IA seguir o
-método, e o `.claude/settings.json`, que instala hooks que **recusam** reescrever o que é
-história — corpo de ADR já commitado, o índice de decisões e os cards datados. O
-`manifest.tsv` é o que torna reinstalar um **upgrade**: ele sabe o que escreveu, então
-distingue arquivo nosso de arquivo seu.
+A árvore completa, com o que cada camada é, está na receita:
+**[o que fica no seu projeto depois](docs/receitas/instalar-o-maestro.md#o-que-fica-no-seu-projeto-depois)**.
 
 Funciona com qualquer assistente que leia `CLAUDE.md`/`AGENTS.md`; os hooks são mecanismo do
 Claude Code e não são instalados para os outros — e o instalador **diz** quando não instalou.
@@ -185,7 +152,7 @@ O script leva cinco camadas e imprime, ao final, o bloco pronto para colar no
 |---|---|---|
 | 13 subagentes | `.claude/agents/` | **quem faz** cada papel (inclui UX/semântica) |
 | 6 skills | `skills/` | **como fazer** (cada uma com sua Iron Law) |
-| 6 scripts | `scripts/` | o **ritual** repetido e as verificações |
+| 13 scripts | `scripts/` | o **ritual** repetido e as verificações |
 | comandos + templates | `.claude/commands/`, `.specify/templates/` | o **motor** spec-driven |
 | governança | `docs/governance/` | a **fonte de verdade** |
 

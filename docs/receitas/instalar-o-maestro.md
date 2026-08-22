@@ -50,8 +50,8 @@ scripts/install-maestro.sh --ai list
 |---|---|---|---|---|
 | `claude` *(padrão)* | Claude Code | `CLAUDE.md` | `.claude/commands` | **sim** |
 | `copilot` | GitHub Copilot | `.github/copilot-instructions.md` | — | não |
-| `cursor` | Cursor | `.cursor/rules/specify-rules.mdc` | — | não |
-| `generic` | Codex, Amp, opencode, Kiro… | `AGENTS.md` | — | não |
+| `cursor-agent` | Cursor | `.cursor/rules/specify-rules.mdc` | — | não |
+| `codex` | Codex CLI · Amp, opencode, Kiro, Bob, Pi | `AGENTS.md` | — | não |
 
 Três coisas que essa tabela diz de propósito:
 
@@ -81,13 +81,16 @@ O campo `harness` grava o **fato** desta instalação, não o que a tabela permi
 ## 1. Veja o que será instalado (sem escrever nada)
 
 ```bash
-scripts/install-maestro.sh /caminho/do/seu-projeto --dry-run
+scripts/install-maestro.sh /caminho/do/seu-projeto --ai claude --dry-run
 ```
+
+Troque `claude` pelo id que você escolheu no passo 0. **Omitir `--ai` instala para o
+`claude`** — que é um padrão, não uma adivinhação, mas continua sendo uma escolha sua.
 
 ## 2. Instale
 
 ```bash
-scripts/install-maestro.sh /caminho/do/seu-projeto
+scripts/install-maestro.sh /caminho/do/seu-projeto --ai claude
 ```
 
 **Instalar é também atualizar.** O que o método escreveu e você não tocou é renovado; o que
@@ -100,7 +103,7 @@ Ele leva cinco camadas:
 |---|---|---|
 | `.claude/agents/` | 13 subagentes | **quem faz** cada papel |
 | `skills/` | 6 skills | **como fazer** (cada uma com sua lei) |
-| `scripts/` | 7 scripts | o **ritual** e as verificações |
+| `scripts/` | 13 scripts + `hooks/` | o **ritual** e as verificações |
 | `.claude/commands/` + `.specify/templates/` | comandos e templates | o **motor** spec-driven |
 | `docs/governance/` | princípios, modelo, glossário | a **fonte de verdade** |
 
@@ -118,7 +121,6 @@ A regra é a mesma do `settings.json`: **acrescenta se não houver** bloco do Ma
 (`--block`). E o `check-install.sh` passa a conferir que o bloco instalado é **exatamente** o
 que o instalador gera hoje: um fato dito em dois lugares só continua igual se algo comparar.
 
-
 O bloco é **gerado das skills que existem no disco** — lista escrita à mão envelhece
 calada. Cole no `CLAUDE.md` do projeto:
 
@@ -132,10 +134,20 @@ E mantenha **uma fonte só**, para as duas instruções não divergirem:
 cd /caminho/do/seu-projeto && ln -s CLAUDE.md AGENTS.md
 ```
 
+> **Se quem vai seguir isto é uma IA**, e não você: o repositório do Maestro tem uma seção
+> escrita para ela — o que ler antes de agir, o comando que responde pelo estado (nunca a
+> memória), o que um hook **recusa** reescrever, e que promover não é dela. Está no
+> [README do Maestro](https://github.com/GHDaru/maestro#se-você-é-uma-ia-e-acabou-de-abrir-este-repositório),
+> que é o arquivo que um agente abre — por isso ela mora lá e não aqui.
+
 ## 4. Prove que está instalado
 
+**Dentro do seu projeto** — não no clone do Maestro. Rodar daqui devolve um verde que é
+do repositório do método, não do seu:
+
 ```bash
-scripts/check-install.sh    # camadas + instrução da IA + skills todas visíveis
+cd /caminho/do/seu-projeto
+scripts/check-install.sh      # camadas + instrução da IA + skills todas visíveis
 scripts/check-agents.sh       # invariantes dos subagentes; exit 0 = ok
 scripts/check-roles.sh        # todo papel do modelo tem agente; exit 0 = ok
 scripts/new-cycle.sh 001 primeiro-ciclo
@@ -144,6 +156,45 @@ scripts/new-cycle.sh 001 primeiro-ciclo
 `check-install.sh` falha enquanto o `CLAUDE.md` não apontar para o método — e falha
 de novo se amanhã entrar uma skill que ninguém citou na instrução. É assim que a instalação
 continua verdadeira depois do primeiro dia.
+
+## O que fica no seu projeto depois
+
+Gerado de uma instalação real com **`--ai claude`**, num projeto que só tinha `README.md`:
+**81 arquivos escritos** (82 no total, contando o seu). Com outro agente a árvore é menor —
+`--ai codex` escreve 53 e **nenhum `.claude/`**, porque aquele agente não lê esse formato.
+
+```
+meu-app/
+├── CLAUDE.md              a IA lê isto antes de trabalhar. É o que faz o método valer
+├── README.md              seu, intocado
+│
+├── .claude/               formatos do Claude Code
+│   ├── agents/            13 subagentes: spec, plan, dev, review, security, qa…
+│   ├── commands/          12 comandos: /speckit.specify, /speckit.plan, /dod, /eval…
+│   └── settings.json      liga os hooks abaixo
+│
+├── scripts/               o ritual e os portões
+│   ├── new-cycle.sh       abre um ciclo (spec, plan, tasks, qa-report)
+│   ├── promote-main.sh    dev → main, com o gate humano
+│   ├── record-decision.sh a única via de escrita no índice de decisões
+│   ├── check-*.sh         9 portões — os que fazem sentido fora daqui
+│   ├── retro.sh           pré-computa o material da retrospectiva
+│   ├── README.md          o que cada script é
+│   └── hooks/             guard-immutables.py · session-state.sh
+│
+├── skills/                6 disciplinas que a IA consulta antes de agir
+├── .specify/              12 templates (spec, plan, tasks, ADR…) + o motor spec-driven
+├── docs/governance/       a constituição, o modelo operacional, o catálogo de artefatos
+├── docs/records/          decisoes.jsonl — índice append-only, começa vazio
+├── evals/                 base para avaliar saída não-determinística
+└── .maestro/              install-options.json (qual agente) · manifest.tsv (o que ele escreveu)
+```
+
+Duas coisas mudam **comportamento** no mesmo instante: o `CLAUDE.md`, que faz a IA seguir o
+método, e o `.claude/settings.json`, que instala hooks que **recusam** reescrever o que é
+história — corpo de ADR já commitado, o índice de decisões e os cards datados. O
+`manifest.tsv` é o que torna reinstalar um **upgrade**: ele sabe o que escreveu, então
+distingue arquivo nosso de arquivo seu.
 
 ## Pronto quando
 
