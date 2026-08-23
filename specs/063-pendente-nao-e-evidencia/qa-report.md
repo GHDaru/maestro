@@ -100,7 +100,11 @@ capítulo numerado cita (`constitution-check`, `diagnose-before-fix`, `fight-the
   por isso a regra é ancorada; e ela reprovaria quatro ciclos históricos (042–045) que
   escreveram a ausência quando ela era verdade — por isso tem piso.
 
-- **TAIL:gate** — pendente. DoD verde; falta o parecer independente e o portão humano.
+- **TAIL:gate** — DoD verde: 14 portões bloqueantes, `--ticked-only`, plugin em sincronia,
+  livro gerando, e a corrida do instalador medida em **20 de 20** instalações corretas →
+  parecer independente registrado acima, com os 18 defeitos e a disposição de cada um →
+  **portão humano concedido pelo Steward em 2026-08-23** ("promova"), depois de ler que cinco
+  dos defeitos foram introduzidos por este próprio ciclo. Promoção por `promote-main.sh --yes`.
 
 ## Dívida declarada, não apagada
 
