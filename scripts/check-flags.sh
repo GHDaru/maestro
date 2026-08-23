@@ -115,9 +115,44 @@ if [[ -f bin/maestro ]]; then
   sed -n "/^usage() {/,/^}/p" bin/maestro > "$WORK/cli"
   reference_check bin/maestro "maestro, its own usage text" "$WORK/cli"
 fi
+# The gates themselves parse flags too, and this gate covered exactly two parsers — so
+# `--ticked-only`, born in cycle 061 inside check-conformance.sh, was outside the rule whose
+# motto is "a flag that exists is documented, and a documented flag exists". It happened to be
+# coherent; coherent by accident is not covered. A new door, and the old guard never told —
+# anti-pattern 23, found by the independent review of cycles 061-062.
+for g in scripts/check-*.sh; do
+  [[ -f "$g" ]] || continue
+  grep -qE '^\s*--[a-z][a-z-]*\)' "$g" || continue     # no flag parser, nothing to compare
+  sed -n '/^# Usage/,/^set -euo/p' "$g" | sed '/^set -/d' > "$WORK/gusage"
+  [[ -s "$WORK/gusage" ]] || { bad "$(basename "$g") parses flags and has no '# Usage' header to compare them with"; continue; }
+  reference_check "$g" "$(basename "$g"), its own # Usage header" "$WORK/gusage"
+done
+
 for prose in docs/receitas/instalar-o-maestro.md README.md; do
   [[ -f "$prose" ]] && prose_check "${prose}" "$prose" scripts/install-maestro.sh bin/maestro
 done
+
+# ── The index of scripts × the scripts that exist (cycle 063) ─────────────────────────────
+# `scripts/README.md` is INSTALLED, and the recipe presents it as "what each script is". It
+# had drifted six scripts behind — check-conformance.sh among them, which the installer's own
+# closing message tells you to run. Same family as everything else here: two places stating
+# one set, with nothing comparing them.
+echo ""
+echo "── Every script is in the index that ships with it ──"
+if [[ -f scripts/README.md ]]; then
+  idx_missing=0
+  for g in scripts/*.sh; do
+    b="$(basename "$g")"
+    grep -qF "$b" scripts/README.md || { bad "scripts/README.md never mentions ${b} — the installed index is behind"; idx_missing=1; }
+  done
+  while IFS= read -r named; do
+    [[ -n "$named" ]] || continue
+    [[ -f "scripts/$named" ]] || { bad "scripts/README.md documents ${named}, which does not exist"; idx_missing=1; }
+  done < <(grep -oE '\b[a-z][a-z0-9-]*\.sh\b' scripts/README.md | sort -u)
+  [[ "$idx_missing" -eq 0 ]] && ok "the index names every script, and every script it names exists"
+else
+  bad "scripts/README.md is missing — the installed index of scripts does not exist"
+fi
 
 # ── Subcommands: the same lie, on the door cycle 058 built ────────────────────────────────
 # `check-flags` covered flags and stopped there, so the README could advertise `maestro deploy`

@@ -640,40 +640,85 @@ PYS
 fi
 
 # The pages announce COUNTS — 13 subagentes, 6 skills, 12 comandos — and nothing compared a
-# single one of them with disk. The class is not hypothetical: it is what produced the worst
-# defect of cycle 060 (three cycles of `--ai` ids the installer refused). The reference
-# installation below already contains every layer these numbers describe, so the numbers are
-# MEASURED, never listed here. What IS declared is the small, stable mapping from a Portuguese
-# noun to the directory it names — a vocabulary, not a fact. (achado-060, closed by 061.)
-count_layer() {  # $1 = layer key, $2 = install root
+# single one of them with disk. The reference installation above contains every layer these
+# numbers describe, so the numbers are MEASURED, never listed here. What IS declared is the
+# small, stable mapping from a Portuguese noun to the directory it names — a vocabulary, not
+# a fact. (achado-060, closed by 061.)
+#
+# Rewritten in cycle 063 after the independent review of 061-062 found four holes, all of the
+# same family — the gate could not tell "checked and agrees" from "did not look":
+#   (a) zero counts extracted still printed ✓. Spelling every number out in words ("treze
+#       subagentes") made all ten claims invisible and the gate certified the page.
+#   (b) `portoes` without the accent, and `PORTÕES` in caps, escaped: the alternation carried
+#       only `portões`, and `tr '[:upper:]' '[:lower:]'` is ASCII-only. Extraction moved to
+#       python, which casefolds and strips accents properly.
+#   (c) a layer present but EMPTY was skipped in silence (`!= "0"` treated 0 as "unknown").
+#       An unknown NOUN and a count of zero are now different answers.
+#   (d) a layer whose directory is absent aborted the whole page under `set -e`, because
+#       `real="$(find … | wc -l)"` is an assignment and `find` exits 1 — so a `--ai codex`
+#       target (no `.claude/`) silently killed all seven of the recipe's counts, exit 1, no
+#       name. Every arm now cannot fail.
+count_layer() {  # $1 = layer key, $2 = install root. Prints a number, or nothing if the noun
+                 # is not a layer this method installs (which the caller treats as a FAILURE).
+  local r="$2" out=""
   case "$1" in
-    agentes|subagentes) find "$2/.claude/agents" -maxdepth 1 -name '*.md' 2>/dev/null | wc -l ;;
-    skills)             find "$2/skills" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | wc -l ;;
-    scripts)            find "$2/scripts" -maxdepth 1 -name '*.sh' 2>/dev/null | wc -l ;;
-    comandos)           find "$2/.claude/commands" -maxdepth 1 -type f 2>/dev/null | wc -l ;;
-    templates)          find "$2/.specify/templates" -type f 2>/dev/null | wc -l ;;
-    "portões"|portoes)  find "$2/scripts" -maxdepth 1 -name 'check-*.sh' 2>/dev/null | wc -l ;;
-    *) echo "" ;;
+    agentes|subagentes) out="$( { find "$r/.claude/agents" -maxdepth 1 -name '*.md' 2>/dev/null || true; } | wc -l )" ;;
+    skills)             out="$( { find "$r/skills" -mindepth 1 -maxdepth 1 -type d 2>/dev/null || true; } | wc -l )" ;;
+    scripts)            out="$( { find "$r/scripts" -maxdepth 1 -name '*.sh' 2>/dev/null || true; } | wc -l )" ;;
+    comandos)           out="$( { find "$r/.claude/commands" -maxdepth 1 -type f 2>/dev/null || true; } | wc -l )" ;;
+    templates)          out="$( { find "$r/.specify/templates" -type f 2>/dev/null || true; } | wc -l )" ;;
+    portoes)            out="$( { find "$r/scripts" -maxdepth 1 -name 'check-*.sh' 2>/dev/null || true; } | wc -l )" ;;
+    arquivos)           out="$( { find "$r" -type f -not -path '*/.git/*' 2>/dev/null || true; } | wc -l )" ;;
+    *) return 0 ;;
   esac
+  printf '%s' "${out// /}"
 }
 
-check_counts_in() {  # $1 = page, $2 = install root
-  local page="$2" file="$1" line num noun real
-  # `75+ agentes` is a claim about OTHER tools, not about this installation, and a markdown
-  # a markdown list marker (`6. ` opening a numbered item) is not a count either. Requiring
-  # the noun to follow
-  # the number directly, and refusing a trailing `+`, drops both without a special case.
+# Extraction in python, not grep: it casefolds and strips accents, so `portões`, `portoes` and
+# `PORTÕES` are one noun. A number followed by `+` is a claim about OTHER tools (`75+ agentes`)
+# and a markdown list marker (`6. Você…`) is not a count — both are excluded by requiring the
+# noun to follow the number directly with a single space.
+extract_counts() {  # $1 = page
+  python3 - "$1" <<'PYX'
+import re, sys, unicodedata
+NOUNS = {"subagentes","agentes","skills","scripts","comandos","templates","portoes","arquivos"}
+def fold(w):
+    w = unicodedata.normalize("NFD", w)
+    return "".join(c for c in w if unicodedata.category(c) != "Mn").casefold()
+text = open(sys.argv[1], encoding="utf-8").read()
+seen = set()
+for m in re.finditer(r"(?<![\w.+])(\d+) ([A-Za-zÀ-ÿ]+)\b", text):
+    n, noun = m.group(1), fold(m.group(2))
+    if noun in NOUNS and text[m.end(1)] == " ":
+        seen.add((int(n), noun))
+for n, noun in sorted(seen):
+    print(f"{n}|{noun}")
+PYX
+}
+
+check_counts_in() {  # $1 = page file, $2 = install root
+  local file="$1" root="$2" line num noun real checked=0
   while IFS= read -r line; do
+    [[ -n "$line" ]] || continue
     num="${line%%|*}"; noun="${line#*|}"
-    real="$(count_layer "$noun" "$page" | tr -d ' ')"
-    [[ -n "$real" && "$real" != "0" ]] || continue
+    real="$(count_layer "$noun" "$root")"
+    if [[ -z "$real" ]]; then
+      bad "$(basename "$file") counts '${noun}', which this gate cannot measure — teach count_layer or stop claiming it"
+      continue
+    fi
+    checked=$((checked + 1))
     if [[ "$num" -ne "$real" ]]; then
       bad "$(basename "$file") says ${num} ${noun}, and a real installation has ${real}"
     else
       note "${num} ${noun} — checked against the installation"
     fi
-  done < <(grep -oiE '\b[0-9]+ (subagentes|agentes|skills|scripts|comandos|templates|portões)\b' "$file" \
-             | grep -vE '\+ ' | sed -E 's/^([0-9]+) (.*)$/\1|\2/' | tr '[:upper:]' '[:lower:]' | sort -u)
+  done < <(extract_counts "$file")
+  # A page that yields NO count is the "did not look" case, and it used to print success.
+  # These two pages exist to tell you what lands in your project; a silent zero means either
+  # the page stopped saying so or the extractor stopped seeing it. Both are failures.
+  if [[ "$checked" -eq 0 ]]; then
+    bad "$(basename "$file") announces no count this gate can read — either the page stopped saying what it installs, or the reader broke"
+  fi
 }
 
 echo ""
@@ -683,7 +728,8 @@ if [[ "$tree_fixture" -eq 0 ]]; then
 else
   before=$fail
   for page in "$ROOT/README.md" "$ROOT/docs/receitas/instalar-o-maestro.md"; do
-    [[ -f "$page" ]] && check_counts_in "$page" "$TREE"
+    [[ -f "$page" ]] || { bad "$(basename "$page") is missing — a page that announces counts cannot be compared"; continue; }
+    check_counts_in "$page" "$TREE"
   done
   [[ "$fail" -eq "$before" ]] && ok "every announced count matches the installation"
 fi

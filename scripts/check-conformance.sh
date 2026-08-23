@@ -72,6 +72,14 @@ TAIL=(review security gate)
 # arithmetic, dropped the step and ALSO exited 0. Both found by the independent review of
 # this cycle. It is now validated, and a floor above the newest cycle is a failure, not a
 # quiet exemption — the same protection FLOOR got in cycle 048.
+# The declared-absence half of is_placeholder starts at 061 (the cycle whose promotion
+# exposed it). Validated like MUT_FLOOR below: a floor that fails OPEN is not a knob.
+ABSENCE_FLOOR="${MAESTRO_MIN_CYCLE_ABSENCE:-61}"
+[[ "$ABSENCE_FLOOR" =~ ^[0-9]+$ ]] || {
+  echo "✗ MAESTRO_MIN_CYCLE_ABSENCE='${ABSENCE_FLOOR}' is not a number — refusing to run with an unreadable floor." >&2
+  exit 1
+}
+
 MUT_FLOOR="${MAESTRO_MIN_CYCLE_MUTATION:-55}"
 [[ "$MUT_FLOOR" =~ ^[0-9]+$ ]] || {
   echo "✗ MAESTRO_MIN_CYCLE_MUTATION='${MUT_FLOOR}' is not a number — refusing to run with an unreadable floor." >&2
@@ -105,6 +113,8 @@ DIRTY_PATHS="$(git status --porcelain -uall 2>/dev/null | cut -c4- || true)"
 # there is. Kept assigned even when there is none: under `set -u` an unset name aborts the
 # script at the closing check, which is how the floor sanity block silently died the first
 # time it ran (found by the mutation this cycle mandates, on its own code).
+gate_claimed=0
+gate_claimed_by=""
 NEWEST_CYCLE=""
 { shopt -s nullglob; _all=(specs/[0-9][0-9][0-9]-*/); shopt -u nullglob
   [[ ${#_all[@]} -gt 0 ]] && NEWEST_CYCLE="$(basename "${_all[${#_all[@]}-1]}" | cut -d- -f1)"; } || true
@@ -114,7 +124,12 @@ cycle_touched_a_gate() {  # $1 = NNN
   while IFS= read -r sha; do
     [[ -n "$sha" ]] || continue
     files+="$(git show --pretty=format: --name-only "$sha" 2>/dev/null)"$'\n'
-  done < <(git log --all -i --format=%H --grep="spec ${n}" 2>/dev/null || true)
+  # `spec NNN` OR `ciclo NNN` OR `cycle NNN`. Matching only "spec" left the dispensation
+  # buyable by writing the OTHER word this repository uses for the same thing: no commit of
+  # cycle 061 says "spec 061" — they all say "ciclo 061" — so the cycle that changed FIVE
+  # gates could have written `TAIL:mutation — n/a` and passed. Found by the independent
+  # review of 061-062, in the function whose own comment brags about closing this hole.
+  done < <(git log --all -i --format=%H --grep="spec ${n}" --grep="ciclo ${n}" --grep="cycle ${n}" 2>/dev/null || true)
   if grep -qE "^specs/0*${n}-" <<<"$DIRTY_PATHS"; then
     files+="${DIRTY_PATHS}"$'\n'
   fi
@@ -132,9 +147,34 @@ checked=0
 # rejected. The first version of this gate knew only about <...>, which let a freshly
 # generated skeleton pass entirely green: zero work, exit 0. Found by the independent
 # review of this very cycle.
-is_placeholder() {  # $1 = candidate text
+# is_placeholder(): text that is NOT evidence. Two shapes, and the second one cost two cycles.
+#
+#   (a) the generated skeleton — empty, or carrying a `<marker>` / `[marker]`;
+#   (b) DECLARED ABSENCE — a sentence whose content is "this was not done". Two such lines
+#       `pendente.` and its explicit-negation cousin were both stamped `✓ TAIL:review
+#       evidence:` by this gate in cycles 061 and 062, and both were promoted. It recognised
+#       the shape the generator writes and nothing else, so any human sentence passed —
+#       including the confession that the step never ran. Anti-pattern 13 inside its own gate.
+#
+# The vocabulary is CLOSED and read from the START of the evidence only. A legitimate sentence
+# that merely contains the word must keep passing: cycle 060's own TAIL:gate evidence carries
+# "pendente" mid-sentence. Anchoring is the whole mechanism — the same lesson as the TAIL row
+# in cycle 055, where an unanchored grep matched the wrong line.
+# The vocabulary is DATA, not prose: this gate reads qa-reports, and the book side of this
+# repository is written in Portuguese by decision (ADR 0014). Both languages, one list.
+DECLARED_ABSENCE='pendente|pendentes|a fazer|aguardando|nao executad[ao]|não executad[ao]|nao rodou|não rodou|em aberto|todo|tbd|a definir|n/d|pending|not run|not executed|to do'   # PT-DATA (evidence is read in both languages)
+is_placeholder() {  # $1 = candidate text, $2 = cycle number (optional)
   local t="${1//[\`|*_ ]/}"
-  [[ -z "$t" || "$t" == *"<"* || "$t" == *"["* ]]
+  [[ -z "$t" || "$t" == *"<"* || "$t" == *"["* ]] && return 0
+  # (b) applies from the cycle that introduced it. Cycles 042-045 wrote
+  # a declared-absence sentence in TAIL:gate when it WAS true, and were promoted
+  # afterwards; failing them today would make the gate noise. Same precedent as FLOOR,
+  # CRIT_FLOOR and MUT_FLOOR — the debt of older cycles is declared, not erased.
+  [[ -n "${2:-}" && "$((10#$2))" -lt "$((10#$ABSENCE_FLOOR))" ]] && return 1
+  # Strip only leading markup/space, then read the OPENING of the sentence.
+  local head; head="$(sed -E 's/^[[:space:]*_`—–:-]+//' <<<"$1" | tr '[:upper:]' '[:lower:]')"
+  head="${head//[\`*_]/}"
+  grep -qiE "^(${DECLARED_ABSENCE})\b" <<<"$head"
 }
 
 ok()   { printf '    ✓ %s\n' "$1"; }
@@ -162,9 +202,16 @@ for d in specs/[0-9][0-9][0-9]-*/; do
   echo "• $(basename "$d")"
 
   # ---- 1. the four artifacts of a cycle exist ------------------------------
+  # A cycle between /speckit.specify and /speckit.tasks has spec.md and nothing else — the
+  # spec-kit flow this repository documents creates them one at a time. Under --ticked-only
+  # that is work in progress, not a violation: `new-cycle.sh` writing all four at once was
+  # the only reason this never showed, and the mode's own promise ("a cycle with nothing
+  # ticked passes") was false for anyone following the other documented path.
+  # Found by the independent review of cycles 061-062 — in the gate written to avoid exactly
+  # the always-red shape it had.
   incomplete=0
   for f in spec.md plan.md tasks.md qa-report.md; do
-    [[ -f "$d$f" ]] || { bad "missing $f"; incomplete=1; }
+    [[ -f "$d$f" ]] || { soft "missing $f"; incomplete=1; }
   done
   [[ $incomplete -eq 0 ]] || continue
 
@@ -244,6 +291,11 @@ for d in specs/[0-9][0-9][0-9]-*/; do
   # This is the defect that broke a cycle on another repository: the tail lived in the
   # spec and in working memory, never in the checklist the executor follows — and context
   # compaction promoted the truncated version to source of truth (corollary C12).
+  # Recorded per cycle, so scaffolding a newer one cannot make an older claim stop counting.
+  if grep -qE "^[[:space:]]*- \[[xX]\] \**TAIL:gate" "$d/tasks.md" 2>/dev/null; then
+    gate_claimed=$((gate_claimed + 1)); gate_claimed_by="$n"   # newest claimer wins the label
+  fi
+
   tail_steps=("${TAIL[@]}")
   [[ "$((10#$n))" -ge "$((10#$MUT_FLOOR))" ]] && tail_steps+=(mutation)
 
@@ -255,7 +307,11 @@ for d in specs/[0-9][0-9][0-9]-*/; do
     # mandatory, which is the whole argument for the rule (anti-pattern 13, again).
     line="$(grep -m1 -E "^[[:space:]]*- \[[ xX]\] \**TAIL:${t}\**" "$d/tasks.md" || true)"
     if [[ -z "$line" ]]; then
-      soft "tasks.md has no TAIL:${t} — the step is not in the list the executor follows"
+      # NOT soft. The template says `never delete`, and under --ticked-only a deleted row used
+      # to be a dot: four `sed -i /TAIL:/d` silenced the blocking gate completely. Removing the
+      # question is not the same as leaving it unanswered — an absent row is the one shape that
+      # cannot be work in progress, because `new-cycle.sh` writes all four rows on day one.
+      bad "tasks.md has no TAIL:${t} — the row was deleted, and the template says never delete"
       continue
     fi
     # An UNTICKED box is a step not yet done, which is what an open cycle looks like. In
@@ -282,7 +338,7 @@ for d in specs/[0-9][0-9][0-9]-*/; do
         continue
       fi
       reason="$(sed -E 's/.*[nN]\/[aA][[:space:]]*[:—–-]*[[:space:]]*//' <<<"$line" | sed 's/[`).]*$//' | cut -c1-60)"
-      if is_placeholder "$reason"; then
+      if is_placeholder "$reason" "$n"; then
         bad "TAIL:${t} says n/a with a placeholder reason — write why, or do the step"
       else
         note "TAIL:${t} not applicable — ${reason}"
@@ -304,7 +360,7 @@ for d in specs/[0-9][0-9][0-9]-*/; do
     # Strip ONLY the separator (spaces, dashes, em dash, colon) — stripping every
     # non-alphanumeric ate the leading "<" of the placeholder and blinded the test.
     ev="$(sed -E "s/.*TAIL:${t}//; s/^[[:space:]*_—–:-]*//" <<<"$ev")"
-    if is_placeholder "$ev"; then
+    if is_placeholder "$ev" "$n"; then
       bad "TAIL:${t} in qa-report.md is still the placeholder — nobody wrote what happened"
     else
       ok "TAIL:${t} evidence: $(cut -c1-58 <<<"$ev")"
@@ -318,19 +374,27 @@ done
 # It never reached main, because ci.yml already runs `--verify`; what it cost was four rounds
 # of human review. This is not that step duplicated. CI catches it at PUSH time; this catches
 # it at CLAIM time, which is the moment the false sentence gets written into the qa-report.
-if [[ "$TICKED_ONLY" -eq 1 && -n "$NEWEST_CYCLE" && -z "$ONLY" ]]; then
-  newest_dir="$(echo specs/${NEWEST_CYCLE}-*/)"
-  if [[ -d "$newest_dir" ]] \
-     && grep -qE "^[[:space:]]*- \[[xX]\] \**TAIL:gate" "$newest_dir/tasks.md" 2>/dev/null; then
-    echo ""
-    echo "── TAIL:gate is ticked on ${NEWEST_CYCLE}: the battery it claims must actually pass ──"
-    if [[ -x scripts/package-plugin.sh ]]; then
-      if scripts/package-plugin.sh --verify >/dev/null 2>&1; then
-        ok "plugin in sync with its sources"
-      else
-        bad "TAIL:gate says the battery passed, and package-plugin.sh --verify disagrees — repackage"
-      fi
+#
+# It used to look only at $NEWEST_CYCLE, and that was the exact hole cycle_touched_a_gate's own
+# comment brags about closing: opening the next cycle with new-cycle.sh made the claim of the
+# previous one stop being charged — one scaffold away from the dispensation. And `-z "$ONLY"`
+# switched it off for a single-cycle run too. The plugin is ONE state for the whole repository,
+# so the question is not "which cycle claimed it": if any cycle in range ticked TAIL:gate, the
+# battery that claim names must actually pass. (Independent review of cycles 061-062.)
+if [[ "$TICKED_ONLY" -eq 1 && "$gate_claimed" -gt 0 ]]; then
+  echo ""
+  echo "── TAIL:gate is ticked on ${gate_claimed_by} (${gate_claimed} cycle(s) claim it): the battery must actually pass ──"
+  if [[ -x scripts/package-plugin.sh ]]; then
+    if scripts/package-plugin.sh --verify >/dev/null 2>&1; then
+      ok "plugin in sync with its sources"
+    else
+      bad "TAIL:gate says the battery passed, and package-plugin.sh --verify disagrees — repackage"
     fi
+  else
+    # An installed copy does not carry package-plugin.sh. Saying so is the difference between
+    # "checked and clean" and "did not look" — the silence here was the same failure shape
+    # this whole cycle is about.
+    note "package-plugin.sh is not here (installed copy?) — the plugin half of the claim was not checked"
   fi
 fi
 
@@ -354,6 +418,10 @@ echo "cycles checked: ${checked}"
 # shape (cycle 048). Saying it out loud is the difference between a knob and a switch.
 if [[ -n "$NEWEST_CYCLE" && "$((10#$MUT_FLOOR))" -gt "$((10#$NEWEST_CYCLE))" ]]; then
   echo "✗ mutation floor ${MUT_FLOOR} is above the newest cycle ${NEWEST_CYCLE} — TAIL:mutation was charged to nobody." >&2
+  fail=1
+fi
+if [[ -n "$NEWEST_CYCLE" && "$((10#$ABSENCE_FLOOR))" -gt "$((10#$NEWEST_CYCLE))" ]]; then
+  echo "✗ declared-absence floor ${ABSENCE_FLOOR} is above the newest cycle ${NEWEST_CYCLE} — 'pendente' would pass as evidence everywhere." >&2
   fail=1
 fi
 if [[ $fail -ne 0 ]]; then

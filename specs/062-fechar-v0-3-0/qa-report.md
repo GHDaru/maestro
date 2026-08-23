@@ -38,11 +38,33 @@ próprio lançamento: medir a frase ("cortamos a v0.3.0") em vez do fato (o que 
 
 ## Closing tail — the evidence
 
-- **TAIL:review** — **não executada**. A revisão independente em contexto fresco rodou em
-  todos os ciclos 053–060 e **reprovou em todos**, com 19–20 achados por ciclo. Nestes dois
-  ela não rodou: esta sessão está configurada para não abrir subagente sem pedido explícito do
-  Steward. Isso está registrado aqui em vez de comprado com um `n/a`, porque estes ciclos
-  **mexeram em portão** — que é exatamente o caso em que a dispensa não existe.
+- **TAIL:review** — revisão independente em contexto fresco, **rodada depois da promoção**
+  (o Steward autorizou o subagente em 2026-08-23) e registrada aqui porque o artefato é vivo, e
+  porque o portão do ciclo 063 passou a recusar "não executada" como evidência.
+  **REPROVOU: 18 achados** cobrindo os ciclos 061 e 062, o nono parecer seguido a reprovar. Os
+  deste ciclo que mais importam:
+
+  1. **O corte da v0.3.0 quebrou o `install-options.json` — e deixou um portão BLOQUEANTE
+     vermelho ao acaso em `dev` e em `main`.** `install-maestro.sh:492` lia a versão com
+     `sed … | grep -m1 … | tr`: `grep -m1` fecha o pipe na primeira casa, o `sed` morre de
+     SIGPIPE sob `pipefail`, e o `|| echo unknown` acrescentava uma **segunda linha** a um valor
+     já correto — `"maestro_version": "0.3.0\nunknown"`. Latente por onze ciclos porque o
+     primeiro cabeçalho lançado ficava a 10 KiB, dentro do buffer de 64 KiB do pipe; o corte da
+     v0.3.0 o moveu para 17 bytes e deixou 74 KiB atrás. Medido: **3 em 10** instalações.
+     Anti-padrão 21, **sétima** ocorrência. Reproduzido e corrigido no 063.
+  2. **A tag `v0.3.0` aponta para um CHANGELOG que não é mais a nota da v0.3.0**: os dois
+     commits seguintes reescreveram o bloco "o que ela NÃO tem", e a tag carrega a redação
+     antiga. Publicá-la mostraria a nota superada.
+  3. **As duas contagens de arquivos da receita estão erradas em um**: são **80** escritos
+     (não 81), **81** no total (não 82), e **52** no codex (não 53) — e `arquivos` nem está no
+     vocabulário do portão de contagens, sendo a afirmação mais literal da página.
+  4. **A regra nova do CHANGELOG está vacuosa hoje**: com `[Unreleased]` vazio, o awk não vê
+     seção nenhuma e imprime `✓`. Toda vez que uma versão é cortada, a regra volta a proteger
+     nada — e não distingue "limpo" de "não olhei".
+  5. **A dívida declarada tem contagem errada em três lugares**: a v0.1.0 repete `### Changed`
+     **quatro** vezes, não duas, e `### Added` também quatro, sem menção.
+
+  Todos aplicados ou registrados no ciclo **063**.
 
 - **TAIL:security** — classe de risco **média por um item só**: a tag é o único artefato deste
   ciclo destinado a sair do repositório, e ela **não saiu**. O resto é texto. O portão novo lê

@@ -38,11 +38,33 @@ apenas por mutação prova que sabe reprovar; nada nele prova que sabe **passar*
 
 ## Closing tail — the evidence
 
-- **TAIL:review** — **não executada**. A revisão independente em contexto fresco rodou em
-  todos os ciclos 053–060 e **reprovou em todos**, com 19–20 achados por ciclo. Nestes dois
-  ela não rodou: esta sessão está configurada para não abrir subagente sem pedido explícito do
-  Steward. Isso está registrado aqui em vez de comprado com um `n/a`, porque estes ciclos
-  **mexeram em portão** — que é exatamente o caso em que a dispensa não existe.
+- **TAIL:review** — revisão independente em contexto fresco, **rodada depois da promoção**
+  (o Steward autorizou o subagente em 2026-08-23) e registrada aqui porque o artefato é vivo, e
+  porque o portão do ciclo 063 passou a recusar "não executada" como evidência.
+  **REPROVOU: 18 achados** cobrindo os ciclos 061 e 062, o nono parecer seguido a reprovar. Os
+  deste ciclo que mais importam:
+
+  1. **`--ticked-only` *era* o portão sempre-vermelho que ele existe para evitar.** A seção que
+     exige os quatro artefatos continuou `bad`, e ela roda **antes** de qualquer verificação de
+     tique — então um ciclo entre `/speckit.specify` e `/speckit.tasks`, que tem só `spec.md`,
+     bloqueava a CI sem ter afirmado nada. O `new-cycle.sh` mascarou isso escrevendo os quatro
+     esqueletos de uma vez; o fluxo speckit que o próprio repositório documenta, não.
+  2. **A dispensa de `TAIL:mutation` estava aberta para este ciclo.** `cycle_touched_a_gate`
+     procura `--grep="spec NNN"`, e **nenhum** commit do 061 diz "spec 061" — todos dizem
+     "ciclo 061". O ciclo que alterou cinco portões podia ter escrito `n/a` e passado. Provado
+     pela revisão com a mutação. É divergência de **palavra**, não de caixa, e o comentário da
+     função se gabava de ter fechado exatamente esse buraco.
+  3. **O `achado-055` foi declarado fechado e não estava.** Corrigi `.claude/agents/plan-architect.md`,
+     que o portão lê, e deixei a promessa em `docs/agents/perfis.md` e no `04-sipoc.md`, que ele
+     não lê — `docs/` só embarca `governance/` e `records/`. O caminho inexistente continuava
+     nomeado. A linha de fechamento no índice afirmava o contrário.
+  4. **O portão de contagens não distingue "confere" de "não olhei"**: zero contagens extraídas
+     imprime `✓`, camada vazia é pulada em silêncio, e camada ausente aborta a página inteira
+     sob `set -e` sem nomear nada.
+  5. **Apagar a linha `TAIL:` era mais barato que mentir nela** — quatro `sed -i /TAIL:/d`
+     silenciavam a metade bloqueante.
+
+  Todos aplicados ou registrados no ciclo **063**.
 
 - **TAIL:security** — classe de risco **baixa**: portões que leem arquivos do próprio
   repositório e uma instalação em `mktemp -d` com `trap … EXIT`, já existente. Nada abre rede,
@@ -68,7 +90,7 @@ apenas por mutação prova que sabe reprovar; nada nele prova que sabe **passar*
 ## Dívida declarada, não apagada
 
 - As seções já **lançadas** do CHANGELOG carregam a mesma repetição que o FR6 fecha (a v0.1.0
-  repete `### Changed` duas vezes). Ficam como estão: entrada de changelog lançada é registro
+  repete `### Changed` **quatro** vezes e `### Added` outras quatro). Ficam como estão: entrada de changelog lançada é registro
   histórico, e retroatividade transforma portão em ruído — mesmo precedente dos pisos do
   `check-cycle.sh` e do `check-conformance.sh`. O escopo está escrito no portão.
 - O `--ticked-only` não cobre `check-cycle` nem `check-retro`, que continuam consultivos pelas

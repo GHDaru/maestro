@@ -15,7 +15,8 @@ base de código e sistema existente · catálogo de agentes, skills, templates.
 ## I · Inputs (Entradas)
 
 Brief/intenção + apetite · critérios de negócio/jornada · Princípios I–VII (Constitution
-Check) · linguagem ubíqua/contexto de domínio · specs vizinhas, ADRs e padrões anteriores ·
+Check) · contexto de domínio (e a linguagem ubíqua **se o projeto mantiver uma** — o método
+não entrega nenhuma) · specs vizinhas, ADRs e padrões anteriores ·
 classe de risco da mudança (define a **raia**).
 
 ## P · Process (Processo — o ciclo)

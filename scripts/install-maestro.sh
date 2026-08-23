@@ -486,10 +486,26 @@ elif [[ "$ARG_DRY" -eq 0 ]]; then
   elif [[ -f "$TARGET/.claude/settings.json" && -x "$TARGET/scripts/hooks/guard-immutables.py" ]] \
        && grep -q 'guard-immutables' "$TARGET/.claude/settings.json" 2>/dev/null; then harness_fact=true; fi
   mkdir -p "$TARGET/.maestro" 2>/dev/null || true
+  # Read with awk, which opens the file itself — NOT `sed … | grep -m1 …`. `grep -m1` closes
+  # the pipe on its first match; under `pipefail` the upstream `sed` then dies of SIGPIPE and
+  # the whole substitution reports 141, so the `|| echo unknown` fired and appended a SECOND
+  # line to a value that was already correct: `"maestro_version": "0.3.0\nunknown"`.
+  # It was latent for eleven cycles because the first released heading sat 10 KiB into the
+  # CHANGELOG, inside the 64 KiB pipe buffer, so sed never blocked. The v0.3.0 cut moved that
+  # heading to 17 bytes in and left 74 KiB behind it — and the race turned real: 3 in 10 full
+  # installs, ~27% in isolation, which made the BLOCKING check-installed.sh red at random on
+  # dev and main. Anti-pattern 21, seventh occurrence, found by the review of cycles 061-062.
+  # The result is validated too: a shape this file cannot use becomes `unknown`, never garbage.
+  maestro_version="$(awk '
+    /^## \[Unreleased\]/ { seen = 1 }
+    seen && match($0, /^## \[[0-9]+\.[0-9]+\.[0-9]+\]/) {
+      print substr($0, RSTART + 4, RLENGTH - 5); exit
+    }' "$SOURCE/CHANGELOG.md" 2>/dev/null || true)"
+  [[ "$maestro_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || maestro_version=unknown
   # Built by a JSON writer, not printf: a quote or a backslash in any field produced a file
   # that json.load refuses to read (independent review of cycle 057).
   python3 -c 'import json,sys; json.dump(dict(zip(["ai","instruction","harness","maestro_version","installed"],[sys.argv[1],sys.argv[2],sys.argv[3]=="true",sys.argv[4],sys.argv[5]])), sys.stdout); print()' \
-    "$ARG_AI" "$AGENT_INSTRUCTION" "$harness_fact" "$(sed -n '/^## \[Unreleased\]/,$p' "$SOURCE/CHANGELOG.md" | grep -m1 -oE '^## \[[0-9]+\.[0-9]+\.[0-9]+\]' | tr -d '#[] ' || echo unknown)" "$(date +%Y-%m-%d)" \
+    "$ARG_AI" "$AGENT_INSTRUCTION" "$harness_fact" "$maestro_version" "$(date +%Y-%m-%d)" \
     > "$TARGET/$OPTIONS_REL" 2>/dev/null || echo "  ! could not write $OPTIONS_REL" >&2
 fi
 

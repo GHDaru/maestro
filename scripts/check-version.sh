@@ -34,7 +34,15 @@ echo "── One version, in every place that states one ──"
 # The newest released version is the first `## [X.Y.Z]` heading BELOW `## [Unreleased]`.
 # Reading the first one anywhere let a `## [0.3.0] — planejada` written under [Unreleased] be
 # adopted as released: the first version excluded the LABEL, not the region.
-RELEASED="$(sed -n '/^## \[Unreleased\]/,$p' CHANGELOG.md | grep -m1 -oE '^## \[[0-9]+\.[0-9]+\.[0-9]+\]' | tr -d '#[] ' || true)"
+# awk, which opens the file itself — not `sed … | grep -m1 …`. That pipeline escaped by
+# luck here (`|| true` discards the SIGPIPE status and `tr` had already printed), while the
+# identical one in install-maestro.sh appended a second line to the value. Luck is not a
+# design: anti-pattern 21, seventh occurrence, review of cycles 061-062.
+RELEASED="$(awk '
+  /^## \[Unreleased\]/ { seen = 1 }
+  seen && match($0, /^## \[[0-9]+\.[0-9]+\.[0-9]+\]/) {
+    print substr($0, RSTART + 4, RLENGTH - 5); exit
+  }' CHANGELOG.md 2>/dev/null || true)"
 if [[ -z "$RELEASED" ]]; then
   bad "CHANGELOG.md has no released version heading (## [X.Y.Z]) below [Unreleased] — only [Unreleased] is not a version"
   echo "──"; echo "✗ cannot determine the version."; exit 1
@@ -94,28 +102,52 @@ claims "plugin/maestro/README.md"  "the packaged plugin"   '^> \*\*v[0-9]'
 # leaves the version cut to merge them by hand at the worst possible moment. Nothing read the
 # structure of this file, only the fact that it had changed (achado-060, closed by 061).
 #
-# Scope: [Unreleased] ONLY. It is the section still being written, and the one that
-# accumulates — a cycle per bullet. The released sections below carry the same debt (v0.1.0
-# repeats `### Changed` twice), and it stays declared rather than erased: a released changelog
-# entry is a historical record, and retroactivity turns a gate into noise (same precedent as
-# the FLOOR knobs in check-cycle.sh and check-conformance.sh). A version cut renames
-# [Unreleased] to [X.Y.Z], so what this checks while it is being written is what ships.
+# Scope: [Unreleased] AND the newest RELEASED version. The first version of this rule looked
+# only at [Unreleased] — which is EMPTY the moment a version is cut, so the awk saw no section
+# at all and printed success. Every cut turned the rule back into protection of nothing, and it
+# could not tell "one section per type" from "did not look" (anti-pattern 16). The newest
+# released block is included because a cut renames [Unreleased] into it: checking both means
+# the rule survives the rename instead of switching off at it.
+#
+# Older released blocks stay out, and their debt stays DECLARED: v0.1.0 repeats `### Changed`
+# four times and `### Added` four times. Rewriting a released changelog entry is rewriting a
+# historical record, and retroactivity turns a gate into noise (same precedent as the FLOOR
+# knobs). The count is stated here because the cycle-061 note said "twice" and it is four —
+# a declared debt with the wrong number is still a wrong number.
+#
+# The type is read against a CLOSED vocabulary, not as a free string: `### Adicionado (ciclo
+# 062)` and `### adicionado` used to count as different types, so the rule was defeated by
+# renaming. Keep a Changelog has six types; this file uses them in both languages.
 echo ""
-echo "── One section per type inside [Unreleased] ──"
-dup="$(awk '
-  /^## \[Unreleased\]/ { version = $0; delete seen; next }
-  /^## \[/ { version = ""; next }
+echo "── One section per type, in [Unreleased] and in the newest release ──"
+struct="$(awk '
+  BEGIN {
+    split("added adicionado changed alterado modificado deprecated depreciado " \
+          "removed removido fixed corrigido security seguranca segurança", v, " ")
+    for (i in v) known[v[i]] = 1
+  }
+  function fold(t) { gsub(/^[ \t]+|[ \t]+$/, "", t); return tolower(t) }
+  /^## \[Unreleased\]/ { inscope = 1; blocks++; version = "[Unreleased]"; delete seen; next }
+  /^## \[[0-9]+\.[0-9]+\.[0-9]+\]/ {
+    # The newest released heading is the FIRST one after [Unreleased]; everything below it
+    # is history and is deliberately not scoped.
+    if (releases++ == 0) { inscope = 1; blocks++; version = $0; delete seen }
+    else inscope = 0
+    next
+  }
   /^### / {
-    if (version == "") next
-    t = $0; sub(/^### +/, "", t); sub(/[ \t]+$/, "", t)
+    if (!inscope) next
+    t = $0; sub(/^### +/, "", t); t = fold(t)
+    if (!(t in known)) { printf "%s carries \"### %s\", which is not a Keep a Changelog type\n", version, t; next }
     if (t in seen) printf "%s repeats \"### %s\" (first at line %d, again at line %d)\n", version, t, seen[t], NR
     else seen[t] = NR
   }
+  END { if (blocks == 0) print "no [Unreleased] and no released version found — the file this gate reads has neither" }
 ' CHANGELOG.md || true)"
-if [[ -n "$dup" ]]; then
-  while IFS= read -r d; do [[ -n "$d" ]] && bad "$d"; done <<<"$dup"
+if [[ -n "$struct" ]]; then
+  while IFS= read -r d; do [[ -n "$d" ]] && bad "$d"; done <<<"$struct"
 else
-  ok "no version repeats a section type"
+  ok "[Unreleased] and the newest release each state a type once"
 fi
 
 echo "──"

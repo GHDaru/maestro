@@ -61,8 +61,10 @@ regra "se marcou, prove" — enquanto o `check-conformance` completo, o `check-c
   de propósito, e não mais.
 - **Nenhuma linguagem ubíqua é entregue.** Vocabulário de domínio pertence ao domínio; o método
   diz o que fazer quando ela não existe, e não finge tê-la (ciclo 061).
-- **As seções já lançadas do CHANGELOG carregam repetição de tipo** (a v0.1.0 repete
-  `### Changed`). Fica declarada: entrada lançada é registro histórico.
+- **As seções já lançadas do CHANGELOG carregam repetição de tipo**: a v0.1.0 repete
+  `### Changed` **quatro** vezes e `### Added` outras quatro. Fica declarada, com o número
+  certo: entrada de changelog lançada é registro histórico, e o portão do ciclo 063 cobre
+  `[Unreleased]` **e** a versão recém-lançada, não as anteriores.
 
 **Como ela é verificada.** Os quatorze portões bloqueantes e a metade bloqueante da
 conformidade rodam em toda PR e todo push, ao lado do `package-plugin --verify` e do build do
@@ -79,10 +81,11 @@ de decisões.
   `check-conformance.sh` completo continua consultivo pela razão que sempre teve. `TAIL:gate`
   marcado passa também a cobrar `package-plugin.sh --verify` **no ato da afirmação** — a CI já
   cobrava no push; o que faltava era cobrar na hora de escrever a frase.
-- **As contagens que as páginas afirmam passam a ser conferidas com o disco.** README e receita
-  anunciam 13 subagentes, 6 skills, 12 comandos, 12 templates, 9 portões — e nada comparava
-  nenhum deles. Dez afirmações agora medidas contra a instalação de referência que o
-  `check-installed.sh` já faz. É a classe que produziu o pior defeito do ciclo 060.
+- **As contagens que as páginas afirmam passam a ser conferidas com o disco.** O README anuncia
+  13 subagentes, 6 skills e 13 scripts; a receita anuncia essas e mais comandos, templates,
+  portões e arquivos escritos — e nada comparava nenhuma delas. Onze afirmações agora medidas
+  contra a instalação de referência que o `check-installed.sh` já faz. É a classe que produziu
+  o pior defeito do ciclo 060.
 - **O `check-version.sh` passa a ler a estrutura do CHANGELOG**, não só a versão: uma seção por
   tipo dentro de `[Unreleased]`, que acumulara **quatro** `### Adicionado`, uma por ciclo.
 
@@ -189,6 +192,15 @@ de decisões.
   ao lado da apresentação executiva e do caderno técnico que já existiam.
 
 ### Corrigido
+- **A leitura da versão no instalador era uma corrida — e o corte da v0.3.0 a acordou**
+  (ciclo 063). `install-maestro.sh` lia a versão com `sed … | grep -m1 … | tr`: `grep -m1`
+  fecha o pipe na primeira casa, o `sed` morre de SIGPIPE sob `pipefail`, e o `|| echo unknown`
+  acrescentava uma **segunda linha** a um valor já correto — `"maestro_version": "0.3.0\nunknown"`.
+  Latente por onze ciclos porque o primeiro cabeçalho lançado ficava dentro do buffer de 64 KiB
+  do pipe; o corte moveu esse cabeçalho para 17 bytes e deixou 74 KiB atrás dele. Medido em
+  **1 a 3 de cada 10** instalações, o que deixava o `check-installed.sh` — **bloqueante** —
+  vermelho ao acaso em `dev` e em `main`. Passa a ler com `awk`, que abre o arquivo, e a
+  **validar a forma** do resultado. Anti-padrão 21, sétima ocorrência.
 
 - **Symlink no alvo deixa de ser porta de saída.** Um link dentro do repositório de destino
   fazia o `cp` escrever **fora** dele, e — desde que o ciclo 051 deu ao instalador o poder de

@@ -49,11 +49,16 @@ echo "── Traceability: every commit ahead of '$BASE' cites its cycle ──"
 if git rev-parse --verify --quiet "$BASE" >/dev/null; then
   while IFS= read -r subject; do
     [[ -n "$subject" ]] || continue
-    if echo "$subject" | grep -qiE 'spec [0-9]{3}|ADR [0-9]{4}|chore\(records\)'; then
+    # A here-string, never `echo … | grep -q`: `grep -q` exits on its first match and closes
+    # the pipe, so under `pipefail` the upstream dies of SIGPIPE — anti-pattern 21, sixth
+    # occurrence in this repository, in the gate the cycle-062 report wrote about without
+    # noticing. And the vocabulary is BOTH words: this repository writes "ciclo NNN" as often
+    # as "spec NNN", and only one of them counted.
+    if grep -qiE 'spec [0-9]{3}|ciclo [0-9]{3}|cycle [0-9]{3}|ADR [0-9]{4}|chore\(records\)' <<<"$subject"; then
       echo "  ok: $subject"
     else
       echo "  ✗ commit without a cycle citation: $subject" >&2
-      echo "      (use 'spec NNN' or 'ADR NNNN' in the subject — the traceability link is not a habit, it is a gate)" >&2
+      echo "      (use 'spec NNN', 'ciclo NNN' or 'ADR NNNN' in the subject — the traceability link is not a habit, it is a gate)" >&2
       fail=$((fail + 1))
     fi
   done < <(git log --format=%s "$BASE"..HEAD 2>/dev/null)

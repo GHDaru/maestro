@@ -48,9 +48,10 @@
 ### Plan / Arquiteto
 - **Escopo**: `plan.md` (como), decisões arquiteturais, ADRs, Constitution Check; em feature de
   código também `data-model.md`/`contracts/`.
-- **Produz**: `plan.md`, ADR. **Consome**: `spec.md`, princípios — e a linguagem ubíqua
-  **se ela existir** no projeto (`docs/governance/ubiquitous-language.md`); se não existir e o
-  domínio pedir nomes, o plano propõe criá-la em vez de apontar para o vazio.
+- **Produz**: `plan.md`, ADR. **Consome**: `spec.md`, princípios — e a linguagem ubíqua do
+  projeto **se ele mantiver uma**. O Maestro não entrega nenhuma: vocabulário de domínio
+  pertence ao domínio, não ao método. Se o trabalho tem domínio que peça nomes e o projeto não
+  tem esse documento, o plano diz isso e propõe criá-lo, nomeando onde vai morar.
 - **Tools**: Read, Write, Grep, Glob, WebFetch. **Contexto**: a spec + arquitetura vigente.
 - **Handoff**: → Tasks/Dev.
 
