@@ -38,7 +38,11 @@ próprio lançamento: medir a frase ("cortamos a v0.3.0") em vez do fato (o que 
 
 ## Closing tail — the evidence
 
-- **TAIL:review** — pendente.
+- **TAIL:review** — **não executada**. A revisão independente em contexto fresco rodou em
+  todos os ciclos 053–060 e **reprovou em todos**, com 19–20 achados por ciclo. Nestes dois
+  ela não rodou: esta sessão está configurada para não abrir subagente sem pedido explícito do
+  Steward. Isso está registrado aqui em vez de comprado com um `n/a`, porque estes ciclos
+  **mexeram em portão** — que é exatamente o caso em que a dispensa não existe.
 
 - **TAIL:security** — classe de risco **média por um item só**: a tag é o único artefato deste
   ciclo destinado a sair do repositório, e ela **não saiu**. O resto é texto. O portão novo lê
@@ -52,9 +56,22 @@ próprio lançamento: medir a frase ("cortamos a v0.3.0") em vez do fato (o que 
   uma versão errada no CHANGELOG derruba os três lugares de uma vez, que é o comportamento
   correto e não estava provado.
 
-- **TAIL:gate** — pendente. DoD verde; falta o parecer independente e o portão humano.
+- **TAIL:gate** — DoD verde (14 portões bloqueantes, `--ticked-only`, plugin em sincronia,
+  livro gerando) → **portão humano concedido pelo Steward em 2026-08-22** ("mande para main"),
+  com a ausência da revisão independente dita antes da decisão, não depois.
 
 ## Dívida declarada, não apagada
+
+- **A revisão independente não rodou nos ciclos 061 e 062.** Rodou em 053–060 e reprovou nos
+  oito, com 19–20 achados por ciclo. Estes dois criaram ou alteraram **seis** portões
+  (`check-conformance --ticked-only`, `check-chapters`, duas comparações novas no
+  `check-installed`, `check-version`, e o portão do `install-options.json`) e cada um deles foi
+  provado por mutação **e** contraprova — mas mutação é prova de que o portão sabe reprovar, não
+  de que ele mede a coisa certa. Foi disso que a revisão viveu nos oito ciclos anteriores.
+- **O `check-conformance.sh` aceitou "pendente." como evidência** de `TAIL:review` e
+  `TAIL:gate`, e imprimiu `✓` para as duas — anti-padrão 13 dentro do portão que existe para
+  pegá-lo. Registrado como `achado-062-pendente-passa-por-evidencia`. Este ciclo escreveu a
+  verdade no lugar da palavra em vez de aproveitar o verde.
 
 - **As tags não existem no remoto** — nem v0.1.0, nem v0.2.0, nem v0.3.0. Registrado como
   achado no índice, com o comando exato e a razão pela qual precisa da máquina do Steward.

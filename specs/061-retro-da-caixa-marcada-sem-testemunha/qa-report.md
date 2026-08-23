@@ -38,7 +38,11 @@ apenas por mutação prova que sabe reprovar; nada nele prova que sabe **passar*
 
 ## Closing tail — the evidence
 
-- **TAIL:review** — pendente.
+- **TAIL:review** — **não executada**. A revisão independente em contexto fresco rodou em
+  todos os ciclos 053–060 e **reprovou em todos**, com 19–20 achados por ciclo. Nestes dois
+  ela não rodou: esta sessão está configurada para não abrir subagente sem pedido explícito do
+  Steward. Isso está registrado aqui em vez de comprado com um `n/a`, porque estes ciclos
+  **mexeram em portão** — que é exatamente o caso em que a dispensa não existe.
 
 - **TAIL:security** — classe de risco **baixa**: portões que leem arquivos do próprio
   repositório e uma instalação em `mktemp -d` com `trap … EXIT`, já existente. Nada abre rede,
@@ -57,7 +61,9 @@ apenas por mutação prova que sabe reprovar; nada nele prova que sabe **passar*
   not create"*. Nomear o caminho **é** a promessa. A correção da correção não nomeia arquivo
   nenhum e diz o que fazer quando não existe.
 
-- **TAIL:gate** — pendente. DoD verde; falta o parecer independente e o portão humano.
+- **TAIL:gate** — DoD verde (14 portões bloqueantes, `--ticked-only`, plugin em sincronia,
+  livro gerando) → **portão humano concedido pelo Steward em 2026-08-22** ("mande para main"),
+  com a ausência da revisão independente dita antes da decisão, não depois.
 
 ## Dívida declarada, não apagada
 

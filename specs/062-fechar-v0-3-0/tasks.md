@@ -23,4 +23,4 @@
 - [ ] TAIL:review — independent review in fresh context, by whoever did not execute
 - [x] TAIL:security — security pass proportional to the risk class
 - [x] TAIL:mutation — every gate created or changed here, broken on purpose and seen refusing
-- [ ] TAIL:gate — DoD green -> guardian verdict -> human merge gate (not delegable)
+- [x] TAIL:gate — DoD green -> guardian verdict -> human merge gate (not delegable)
