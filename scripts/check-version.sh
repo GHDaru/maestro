@@ -89,6 +89,35 @@ claims "plugin/maestro/README.md"  "the packaged plugin"   '^> \*\*v[0-9]'
 # asked why the same directory shows 1.3.0 and v0.2.0. Written down so the next reader does
 # not have to ask, and so that making them one axis stays a decision, not an accident.
 
+# Keep a Changelog puts ONE section per type inside a version. [Unreleased] had accumulated
+# FOUR `### Adicionado`, one per cycle — which turns a release note into a ship's log, and
+# leaves the version cut to merge them by hand at the worst possible moment. Nothing read the
+# structure of this file, only the fact that it had changed (achado-060, closed by 061).
+#
+# Scope: [Unreleased] ONLY. It is the section still being written, and the one that
+# accumulates — a cycle per bullet. The released sections below carry the same debt (v0.1.0
+# repeats `### Changed` twice), and it stays declared rather than erased: a released changelog
+# entry is a historical record, and retroactivity turns a gate into noise (same precedent as
+# the FLOOR knobs in check-cycle.sh and check-conformance.sh). A version cut renames
+# [Unreleased] to [X.Y.Z], so what this checks while it is being written is what ships.
+echo ""
+echo "── One section per type inside [Unreleased] ──"
+dup="$(awk '
+  /^## \[Unreleased\]/ { version = $0; delete seen; next }
+  /^## \[/ { version = ""; next }
+  /^### / {
+    if (version == "") next
+    t = $0; sub(/^### +/, "", t); sub(/[ \t]+$/, "", t)
+    if (t in seen) printf "%s repeats \"### %s\" (first at line %d, again at line %d)\n", version, t, seen[t], NR
+    else seen[t] = NR
+  }
+' CHANGELOG.md || true)"
+if [[ -n "$dup" ]]; then
+  while IFS= read -r d; do [[ -n "$d" ]] && bad "$d"; done <<<"$dup"
+else
+  ok "no version repeats a section type"
+fi
+
 echo "──"
 if [[ $fail -ne 0 ]]; then
   echo "✗ the version is stated more than once, and not the same way."

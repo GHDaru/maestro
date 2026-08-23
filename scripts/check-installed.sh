@@ -592,6 +592,55 @@ else
   fi
 fi
 
+# The pages announce COUNTS — 13 subagentes, 6 skills, 12 comandos — and nothing compared a
+# single one of them with disk. The class is not hypothetical: it is what produced the worst
+# defect of cycle 060 (three cycles of `--ai` ids the installer refused). The reference
+# installation below already contains every layer these numbers describe, so the numbers are
+# MEASURED, never listed here. What IS declared is the small, stable mapping from a Portuguese
+# noun to the directory it names — a vocabulary, not a fact. (achado-060, closed by 061.)
+count_layer() {  # $1 = layer key, $2 = install root
+  case "$1" in
+    agentes|subagentes) find "$2/.claude/agents" -maxdepth 1 -name '*.md' 2>/dev/null | wc -l ;;
+    skills)             find "$2/skills" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | wc -l ;;
+    scripts)            find "$2/scripts" -maxdepth 1 -name '*.sh' 2>/dev/null | wc -l ;;
+    comandos)           find "$2/.claude/commands" -maxdepth 1 -type f 2>/dev/null | wc -l ;;
+    templates)          find "$2/.specify/templates" -type f 2>/dev/null | wc -l ;;
+    "portões"|portoes)  find "$2/scripts" -maxdepth 1 -name 'check-*.sh' 2>/dev/null | wc -l ;;
+    *) echo "" ;;
+  esac
+}
+
+check_counts_in() {  # $1 = page, $2 = install root
+  local page="$2" file="$1" line num noun real
+  # `75+ agentes` is a claim about OTHER tools, not about this installation, and a markdown
+  # a markdown list marker (`6. ` opening a numbered item) is not a count either. Requiring
+  # the noun to follow
+  # the number directly, and refusing a trailing `+`, drops both without a special case.
+  while IFS= read -r line; do
+    num="${line%%|*}"; noun="${line#*|}"
+    real="$(count_layer "$noun" "$page" | tr -d ' ')"
+    [[ -n "$real" && "$real" != "0" ]] || continue
+    if [[ "$num" -ne "$real" ]]; then
+      bad "$(basename "$file") says ${num} ${noun}, and a real installation has ${real}"
+    else
+      note "${num} ${noun} — checked against the installation"
+    fi
+  done < <(grep -oiE '\b[0-9]+ (subagentes|agentes|skills|scripts|comandos|templates|portões)\b' "$file" \
+             | grep -vE '\+ ' | sed -E 's/^([0-9]+) (.*)$/\1|\2/' | tr '[:upper:]' '[:lower:]' | sort -u)
+}
+
+echo ""
+echo "── The counts the pages announce × a real installation ──"
+if [[ "$tree_fixture" -eq 0 ]]; then
+  note "count comparison skipped: the reference installation did not build"
+else
+  before=$fail
+  for page in "$ROOT/README.md" "$ROOT/docs/receitas/instalar-o-maestro.md"; do
+    [[ -f "$page" ]] && check_counts_in "$page" "$TREE"
+  done
+  [[ "$fail" -eq "$before" ]] && ok "every announced count matches the installation"
+fi
+
 echo "──"
 if [[ $fail -ne 0 ]]; then
   echo "✗ the installed copy is not coherent: it ships something that points at nothing."

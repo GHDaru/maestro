@@ -48,7 +48,9 @@
 ### Plan / Arquiteto
 - **Escopo**: `plan.md` (como), decisões arquiteturais, ADRs, Constitution Check; em feature de
   código também `data-model.md`/`contracts/`.
-- **Produz**: `plan.md`, ADR. **Consome**: `spec.md`, princípios, linguagem ubíqua.
+- **Produz**: `plan.md`, ADR. **Consome**: `spec.md`, princípios — e a linguagem ubíqua
+  **se ela existir** no projeto (`docs/governance/ubiquitous-language.md`); se não existir e o
+  domínio pedir nomes, o plano propõe criá-la em vez de apontar para o vazio.
 - **Tools**: Read, Write, Grep, Glob, WebFetch. **Contexto**: a spec + arquitetura vigente.
 - **Handoff**: → Tasks/Dev.
 

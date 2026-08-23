@@ -85,6 +85,14 @@ jobs:
           done
           exit "$fail"
 
+      # The HALF of conformance that can block without ever being red on work in progress:
+      # a ticked TAIL box must have its evidence in qa-report.md. Nothing ticked, nothing
+      # owed — so an open cycle passes. It exists because the boxes were ticked with no
+      # qa-report in FOUR consecutive cycles (057-060) and only human review caught it.
+      # The FULL check-conformance.sh stays advisory below, for the reason stated there.
+      - name: A ticked box has its evidence (blocking)
+        run: scripts/check-conformance.sh --ticked-only
+
       - name: Plugin in sync with its sources (blocking)
         run: scripts/package-plugin.sh --verify
 

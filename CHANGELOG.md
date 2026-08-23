@@ -10,6 +10,21 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **A caixa marcada passa a ter testemunha** (ciclo 061, retrospectiva). Em **quatro ciclos
+  seguidos** — 057, 058, 059, 060 — as quatro caixas `TAIL` foram marcadas sem `qa-report.md`
+  existir, e só a revisão humana pegou. `check-conformance.sh --ticked-only` fecha a metade da
+  regra que **pode** bloquear sem nunca ficar vermelha em trabalho em curso: se você marcou, a
+  evidência tem de existir; se não marcou, não deve nada. Entra na CI como bloqueante, e o
+  `check-conformance.sh` completo continua consultivo pela razão que sempre teve. `TAIL:gate`
+  marcado passa também a cobrar `package-plugin.sh --verify` **no ato da afirmação** — a CI já
+  cobrava no push; o que faltava era cobrar na hora de escrever a frase.
+- **As contagens que as páginas afirmam passam a ser conferidas com o disco.** README e receita
+  anunciam 13 subagentes, 6 skills, 12 comandos, 12 templates, 9 portões — e nada comparava
+  nenhum deles. Dez afirmações agora medidas contra a instalação de referência que o
+  `check-installed.sh` já faz. É a classe que produziu o pior defeito do ciclo 060.
+- **O `check-version.sh` passa a ler a estrutura do CHANGELOG**, não só a versão: uma seção por
+  tipo dentro de `[Unreleased]`, que acumulara **quatro** `### Adicionado`, uma por ciclo.
+
 - **A árvore que a página promete passa a ser conferida contra o disco** (ciclo 060). A árvore
   pós-instalação sai do `README.md` — que não está no livro — e passa a viver **na receita**,
   que está; o README aponta por âncora, e um portão confere que a âncora resolve. O
@@ -21,7 +36,6 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
   passou a mandar `cd` para o projeto: sem isso, os quatro portões devolviam um verde do
   repositório do método, o `cd "$HERE"` do ciclo 058 reescrito em prosa.
 
-### Adicionado
 - **A capa responde "clonei, e agora?"** (ciclo 059). O README passa a dizer, antes de
   qualquer comando, que **o clone é a ferramenta e o alvo é outro projeto**, com as duas
   formas de apontar para fora — de dentro do seu projeto, e de dentro do clone. `agents`
@@ -38,7 +52,6 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
   porta que o 058 construiu. Referência nos dois sentidos, prosa no sentido de que todo
   `maestro <cmd>` anunciado existe.
 
-### Adicionado
 - **`maestro init`: o método ganha porta de entrada** (ciclo 058). `bin/maestro` é um
   despachante — `init`, `check`, `cycle`, `conformance`, `retro`, `promote`, `agents`,
   `version` —, e **nenhum subcomando reimplementa** passo que já existe. `maestro init` conduz
@@ -54,7 +67,6 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
   eles existirem. Texto de referência é conferido nos dois sentidos; prosa, no sentido de que
   toda flag citada existe.
 
-### Adicionado
 - **O agente de IA passa a ser escolha declarada** (ciclo 057), no modelo do spec-kit.
   `--ai <id>` escolhe entre `claude`, `copilot`, `cursor-agent` e `codex`; `--ai list` mostra a
   tabela (`scripts/install-agents.tsv`), cujos ids e arquivos de instrução foram **lidos do
@@ -68,7 +80,6 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
   instalador gera **para aquele agente** — um fato dito em dois lugares só continua igual se
   algo comparar.
 
-### Adicionado
 - **O método passa a ser instalado com uma camada que COBRA, não só pede** (ciclo 056). O
   `install-maestro.sh` instala dois *hooks* do Claude Code: um `PreToolUse` que **bloqueia a
   chamada** de escrita sobre o que o método guarda como história — corpo de ADR já commitado,
@@ -83,7 +94,6 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
   repositório carrega o bloco gerado, com `@`-import da constituição (≈1.518 tokens por
   sessão, medido).
 
-### Adicionado
 - **`TAIL:mutation`: a cauda de fechamento ganha um quarto passo** (ciclo 055, retro). Todo
   portão criado ou alterado num ciclo tem de ser **quebrado de propósito e visto reprovar**,
   com a mutação e a saída no `qa-report.md`. O que faz a regra ter dente: quando o ciclo
@@ -97,7 +107,6 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
   gatilho"**, que fechou `achado-047` depois de oito ciclos em que a dívida de retro media
   calendário em vez de dívida.
 
-### Adicionado
 - **O livro passa a publicar material** (ciclo 054). `publicar/sumario.json` ganhou
   `materiais`: página HTML autocontida que o livro **publica e indexa** sem renderizar no
   próprio molde — uma apresentação de tela cheia não cabe no miolo de uma página. O caderno
@@ -119,6 +128,7 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
   ao lado da apresentação executiva e do caderno técnico que já existiam.
 
 ### Corrigido
+
 - **Symlink no alvo deixa de ser porta de saída.** Um link dentro do repositório de destino
   fazia o `cp` escrever **fora** dele, e — desde que o ciclo 051 deu ao instalador o poder de
   remover — a poda apagaria fora também. O instalador passa a **recusar** escrever e remover
@@ -144,7 +154,6 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
   alheio. Agora qualquer flag, em qualquer ordem; `--force` guarda a sua versão como
   `.maestro-old`; e a poda **recusa** caminho de manifesto com `..` ou `/` inicial, que
   chegou a apagar arquivo fora do alvo na revisão (ciclo 051).
-
 
 ## [0.2.0] — 2026-08-11
 

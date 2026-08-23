@@ -60,7 +60,15 @@ echo ""
 echo "── Skill freshness × chapter that teaches it ──"
 for d in skills/*/; do
   skill="$(basename "$d")"
-  skill_date=$(git log -1 --format=%ad --date=short -- "$d/SKILL.md" 2>/dev/null || true)
+  # A COMMIT date only exists after the cycle closes, so the cycle that outdates a chapter
+  # passed green and left the red for the NEXT one — it happened between 055 and 056, and the
+  # gate was structurally incapable of firing inside the cycle that caused it
+  # (achado-056, closed by cycle 061). An uncommitted change is a change made TODAY.
+  if [[ -n "$(git status --porcelain -- "$d/SKILL.md" 2>/dev/null)" ]]; then
+    skill_date="$(date +%F)"
+  else
+    skill_date=$(git log -1 --format=%ad --date=short -- "$d/SKILL.md" 2>/dev/null || true)
+  fi
   [[ -n "$skill_date" ]] || continue
   for f in "$DIR"/[0-9][0-9]-*.md; do
     grep -q "$skill" "$f" 2>/dev/null || continue

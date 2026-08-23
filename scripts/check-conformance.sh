@@ -26,8 +26,22 @@
 #             against the diff, never against the sentence
 #   qa-report.md   each TAIL token that is not n/a, with its evidence
 #
-# Usage:  scripts/check-conformance.sh          # every cycle from the floor onward
-#         scripts/check-conformance.sh 042      # one cycle, verbose
+# Usage:  scripts/check-conformance.sh                # every cycle from the floor onward
+#         scripts/check-conformance.sh 042            # one cycle, verbose
+#         scripts/check-conformance.sh --ticked-only  # the half that can BLOCK (cycle 061)
+#
+# Why --ticked-only exists. This gate is advisory by design, and the reason is good: an open
+# cycle carries unticked TAIL boxes and a placeholder qa-report.md, so a blocking version
+# would be red for the whole life of every branch — and a gate that is always red is one
+# people learn to scroll past (cycle 043). The cost of that was measured: in FOUR consecutive
+# cycles (057, 058, 059, 060) the four boxes were ticked with no qa-report.md in existence,
+# and only the human review caught it. Four times is not inattention; it is that nothing
+# charges for it.
+#
+# But half of the rule is checkable at any moment and never red on work in progress: IF YOU
+# TICKED IT, THE EVIDENCE MUST EXIST. A cycle with nothing ticked passes. A cycle that ticked
+# and can show it passes. Only a claim without backing fails — anti-pattern 13 read backwards:
+# instead of measuring the phrase, measure whether the phrase has anything under it.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -38,7 +52,15 @@ cd "$ROOT"
 FLOOR="${MAESTRO_MIN_CYCLE_CONFORMANCE:-42}"
 # The no-checkbox rule starts at 045 (cycle that introduced it); older cycles keep theirs.
 CRIT_FLOOR="${MAESTRO_MIN_CYCLE_CRITERIA:-45}"
-ONLY="${1:-}"
+TICKED_ONLY=0
+ONLY=""
+for arg in "$@"; do
+  case "$arg" in
+    --ticked-only) TICKED_ONLY=1 ;;
+    -*) echo "usage: check-conformance.sh [--ticked-only] [NNN]" >&2; exit 2 ;;
+    *)  ONLY="$arg" ;;
+  esac
+done
 
 ARTIFACTS=(research data-model contracts checklist ux-design)
 TAIL=(review security gate)
@@ -118,6 +140,12 @@ is_placeholder() {  # $1 = candidate text
 ok()   { printf '    ✓ %s\n' "$1"; }
 bad()  { printf '    ✗ %s\n' "$1"; fail=1; }
 note() { printf '    · %s\n' "$1"; }
+# soft(): a rule that is true of a FINISHED cycle but not of one in progress. In the default
+# (advisory) run it fails like any other; under --ticked-only it is reported and does NOT
+# fail, because that mode blocks on exactly one thing — a tick with nothing under it. A
+# freshly generated cycle fails every one of these (the skeleton declares ART:*=no with no
+# reason), so leaving them hard would rebuild the always-red gate the mode exists to avoid.
+soft() { if [[ "${TICKED_ONLY:-0}" -eq 1 ]]; then printf '    · %s\n' "$1"; else bad "$1"; fi; }
 
 echo "── Conformance: did the method survive into the artifacts? ──"
 echo "   (floor: cycle ${FLOOR}; older cycles carry declared debt — see the roadmap)"
@@ -145,7 +173,7 @@ for d in specs/[0-9][0-9][0-9]-*/; do
   rows="$(grep -cE '^\| *[IVX]+\. ' "$d/plan.md" || true)"
   principles="$(grep -cE '^### [IVX]+\. ' docs/governance/principles.md || true)"
   if [[ "$rows" -ne "$principles" ]]; then
-    bad "Constitution Check has ${rows} of ${principles} principles — a partial check is not a check"
+    soft "Constitution Check has ${rows} of ${principles} principles — a partial check is not a check"
   else
     ok "Constitution Check complete (${rows}/${principles})"
   fi
@@ -161,14 +189,14 @@ for d in specs/[0-9][0-9][0-9]-*/; do
     # A gate that cannot tell "clean" from "did not look" is the failure this repository has
     # already named twice (corollary C5, anti-pattern 16). Not finding the section is a
     # finding, never a pass.
-    bad "spec.md has no acceptance-criteria section the gate can locate — rename it to '## Acceptance criteria' or '## Critérios de aceite'"
+    soft "spec.md has no acceptance-criteria section the gate can locate — rename it to '## Acceptance criteria' or '## Critérios de aceite'"
   else
     # The WHOLE family of checkbox spellings: -, *, +, any indentation, [ ] or [x] or [X].
     boxes="$(grep -cE '^[[:space:]]*[-*+] \[' <<<"$crit" || true)"
     if [[ "$((10#$n))" -lt "$((10#$CRIT_FLOOR))" ]]; then
       note "acceptance-criteria checkboxes: not checked below cycle ${CRIT_FLOOR}"
     elif [[ "$boxes" -gt 0 ]]; then
-      bad "spec.md has ${boxes} checkbox(es) in the acceptance criteria — the spec states what must hold; the qa report says whether it did"
+      soft "spec.md has ${boxes} checkbox(es) in the acceptance criteria — the spec states what must hold; the qa report says whether it did"
     else
       ok "acceptance criteria located and stated without checkboxes"
     fi
@@ -187,14 +215,14 @@ for d in specs/[0-9][0-9][0-9]-*/; do
     fi
     value="$(sed -E "s/.*ART:${a}=([A-Za-z]*).*/\1/" <<<"$line")"
     if [[ "$value" != "yes" && "$value" != "no" ]]; then
-      bad "${a}: ART:${a}=${value:-<empty>} — the only declarations are yes and no"
+      soft "${a}: ART:${a}=${value:-<empty>} — the only declarations are yes and no"
       art_bad=1; continue
     fi
     # The reason is what makes a `no` a decision instead of a shrug. Five copied
     # placeholders were a conformant plan until the review of cycle 042 said so.
     reason="$(sed -E "s/.*ART:${a}=[A-Za-z]*//" <<<"$line" | tr -d '|')"
     if is_placeholder "$reason"; then
-      bad "${a}: declared ART:${a}=${value} with no reason — a declaration without a why is silence"
+      soft "${a}: declared ART:${a}=${value} with no reason — a declaration without a why is silence"
       art_bad=1; continue
     fi
     if [[ "$value" == "yes" ]]; then
@@ -202,12 +230,12 @@ for d in specs/[0-9][0-9][0-9]-*/; do
       if [[ -e "$d${a}.md" || -e "$d${a}" ]]; then
         ok "${a}: declared and present"
       else
-        bad "${a}: declared ART:${a}=yes but no ${a}.md in the cycle"; art_bad=1
+        soft "${a}: declared ART:${a}=yes but no ${a}.md in the cycle"; art_bad=1
       fi
     fi
   done
   if [[ ${#missing_decl[@]} -gt 0 ]]; then
-    bad "artifacts never declared (neither yes nor no): ${missing_decl[*]}"
+    soft "artifacts never declared (neither yes nor no): ${missing_decl[*]}"
   elif [[ "$art_bad" -eq 0 ]]; then
     ok "all ${#ARTIFACTS[@]} conditional artifacts declared with a reason"
   fi
@@ -227,7 +255,15 @@ for d in specs/[0-9][0-9][0-9]-*/; do
     # mandatory, which is the whole argument for the rule (anti-pattern 13, again).
     line="$(grep -m1 -E "^[[:space:]]*- \[[ xX]\] \**TAIL:${t}\**" "$d/tasks.md" || true)"
     if [[ -z "$line" ]]; then
-      bad "tasks.md has no TAIL:${t} — the step is not in the list the executor follows"
+      soft "tasks.md has no TAIL:${t} — the step is not in the list the executor follows"
+      continue
+    fi
+    # An UNTICKED box is a step not yet done, which is what an open cycle looks like. In
+    # --ticked-only mode that is not a violation and must not be one, or the blocking gate
+    # becomes the always-red gate this mode exists to avoid.
+    ticked=0; [[ "$line" =~ ^[[:space:]]*-[[:space:]]\[[xX]\] ]] && ticked=1
+    if [[ "$TICKED_ONLY" -eq 1 && "$ticked" -eq 0 ]]; then
+      note "TAIL:${t} not ticked yet — nothing claimed, nothing owed"
       continue
     fi
     # `n/a` is recognised however it is spelled and however it is separated from its
@@ -275,6 +311,28 @@ for d in specs/[0-9][0-9][0-9]-*/; do
     fi
   done
 done
+
+# ---- 6. TAIL:gate ticked is the claim "the battery passed" (cycle 061) ------
+# The plugin fell out of sync in FOUR consecutive cycles — 057, 058, 059, 060 — always the
+# same way: the cycle edited a file that package-plugin.sh packages, and nobody repackaged.
+# It never reached main, because ci.yml already runs `--verify`; what it cost was four rounds
+# of human review. This is not that step duplicated. CI catches it at PUSH time; this catches
+# it at CLAIM time, which is the moment the false sentence gets written into the qa-report.
+if [[ "$TICKED_ONLY" -eq 1 && -n "$NEWEST_CYCLE" && -z "$ONLY" ]]; then
+  newest_dir="$(echo specs/${NEWEST_CYCLE}-*/)"
+  if [[ -d "$newest_dir" ]] \
+     && grep -qE "^[[:space:]]*- \[[xX]\] \**TAIL:gate" "$newest_dir/tasks.md" 2>/dev/null; then
+    echo ""
+    echo "── TAIL:gate is ticked on ${NEWEST_CYCLE}: the battery it claims must actually pass ──"
+    if [[ -x scripts/package-plugin.sh ]]; then
+      if scripts/package-plugin.sh --verify >/dev/null 2>&1; then
+        ok "plugin in sync with its sources"
+      else
+        bad "TAIL:gate says the battery passed, and package-plugin.sh --verify disagrees — repackage"
+      fi
+    fi
+  fi
+fi
 
 echo "──"
 if [[ "$checked" -eq 0 ]]; then
