@@ -45,9 +45,14 @@ regra "se marcou, prove" — enquanto o `check-conformance` completo, o `check-c
 
 **O que ela reconhecidamente NÃO tem.**
 
-- **As tags continuam sem publicar.** A da v0.1.0 nunca chegou ao GitHub, a da v0.2.0 também
-  não, e o estado da `v0.3.0` está registrado no `qa-report` do ciclo 062 — o que foi
-  **verificado** com `git ls-remote`, não o que se esperava.
+- **Nenhuma tag existe no repositório remoto — nem esta.** Verificado, não presumido:
+  `git ls-remote --tags origin` devolve **vazio**, o que vale para a v0.1.0, a v0.2.0 e a
+  v0.3.0. A tag `v0.3.0` foi criada **localmente** (anotada, sobre o commit do corte); as
+  quatro tentativas de publicá-la morreram em `send-pack: unexpected disconnect`, porque o
+  ambiente onde este corte foi feito passa o git por um proxy que não relaia ref de tag. Ela
+  precisa ser empurrada de uma máquina com acesso direto:
+  `git push origin v0.1.0 v0.2.0 v0.3.0`. Até lá, **a versão está no CHANGELOG e não no
+  GitHub Releases** — e dizer o contrário seria exatamente o defeito que este método persegue.
 - **Quatro agentes, não os 27 do upstream.** O custo de um agente não é a linha na tabela, é
   **testar** que a instalação funciona lá. Acrescentar é uma linha em `install-agents.tsv`
   mais um teste; o gatilho é alguém usar.
