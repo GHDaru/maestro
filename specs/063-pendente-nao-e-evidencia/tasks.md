@@ -29,11 +29,23 @@
 - [x] T12 — a tag `v0.3.0` removida localmente; recriada sobre a nota corrigida. (achado 12)
 - [x] T13 — o achado 11 **rejeitado com medição**, e o motivo registrado no `qa-report`.
 
+- [x] T14 — **segundo parecer** (revisão independente do próprio 063): 18 defeitos, **5
+      introduzidos por mim neste ciclo**. Todos tratados; ver `qa-report.md`.
+- [x] T15 — a regressão que eu criei: `soft` + `continue` fez `rm qa-report.md` pular o ciclo
+      inteiro no modo bloqueante. Fechada com a asserção "caixa marcada sem qa-report".
+- [x] T16 — `is_placeholder` redesenhado: piso de tamanho **medido** (40, com 65 sendo a menor
+      evidência legítima e 20 a maior falsa) mais vocabulário — o vocabulário sozinho era
+      contornável de cinco jeitos e **reprovava a verdade**.
+- [x] T17 — `¹ não viaja` do índice de scripts passa a ser comparado com a instalação real;
+      três scripts estavam marcados errado.
+- [x] T18 — as quatro ocorrências vivas do anti-padrão 21 (`retro.sh`, `package-plugin.sh`,
+      `check-licensing.sh`, `check-chapters.sh`) fechadas com `awk`/here-string.
+
 ## Closing tail — MANDATORY, one line each, never delete
 <!-- TICK ONLY WHILE WRITING THE EVIDENCE, never in advance: the box records what happened.
      Do not delete a line to say it does not apply: write `n/a: <reason>` on it.
      check-conformance.sh requires the evidence of every non-n/a step in qa-report.md. -->
-- [ ] TAIL:review — independent review in fresh context, by whoever did not execute
+- [x] TAIL:review — independent review in fresh context, by whoever did not execute
 - [x] TAIL:security — security pass proportional to the risk class
 - [x] TAIL:mutation — every gate created or changed here, broken on purpose and seen refusing
 - [ ] TAIL:gate — DoD green -> guardian verdict -> human merge gate (not delegable)

@@ -60,7 +60,7 @@ echo ""
 echo "── Skill freshness × chapter that teaches it ──"
 # A skill NO chapter cites was skipped in total silence — and "no chapter teaches it" is the
 # worst case this rule exists for, not the clean one. Reported by name from cycle 063 on
-# (independent review of 061-062). It is a note, not a failure: three skills are uncovered
+# (independent review of 061-062). It is a note, not a failure: four skills are uncovered
 # today, and turning that red is an editorial decision this cycle did not take. Declared debt,
 # never silence — the difference between "checked and clean" and "did not look".
 uncovered=()
@@ -84,7 +84,10 @@ for d in skills/*/; do
   [[ -n "$skill_date" ]] || continue
   for f in "$DIR"/[0-9][0-9]-*.md; do
     grep -q "$skill" "$f" 2>/dev/null || continue
-    chapter_date=$(grep -oE 'última revisão [0-9]{4}-[0-9]{2}-[0-9]{2}' "$f" | head -1 | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}' || true)
+    # A SIGPIPE here would blank the date and make a chapter that HAS one be reported as
+    # "carries no 'última revisão' date" — a false negative feeding the message added just
+    # above, in this same cycle (anti-pattern 21).
+    chapter_date=$(awk 'match($0, /última revisão [0-9]{4}-[0-9]{2}-[0-9]{2}/) { d = substr($0, RSTART, RLENGTH); sub(/.*revisão /, "", d); print d; exit }' "$f" || true)
     # A chapter with no "última revisão" was skipped without a word, so removing the date
     # bought the dispensation from this rule. It is now said out loud.
     [[ -n "$chapter_date" ]] || { echo "  · $(basename "$f") cites '$skill' and carries no 'última revisão' date — not comparable"; continue; }

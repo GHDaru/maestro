@@ -39,7 +39,10 @@ SUBJECTS="$(git log "$MAIN" --format=%s 2>/dev/null || true)"
 found=0
 for f in $(grep -rlE "Pendência de gate|Pending gate" specs/*/qa-report.md 2>/dev/null); do  # PT-DATA (older cycles)
   cycle=$(dirname "$f" | xargs basename | cut -d- -f1)
-  pending=$(sed -nE '/Pendência de gate|Pending gate/,$p' "$f" | grep -m1 "^- " | sed 's/^- //' || true)  # PT-DATA
+  # awk, not `sed | grep -m1 | sed`: `grep -m1` closes the pipe on its first match and the
+  # upstream dies of SIGPIPE under `pipefail`, so `|| true` silently produced an EMPTY pending
+  # gate — the field simply vanished from the retrospective material (anti-pattern 21).
+  pending=$(awk '/Pendência de gate|Pending gate/{s=1} s && /^- /{sub(/^- /,""); print; exit}' "$f" || true)  # PT-DATA
   [[ -n "$pending" ]] || continue
   if grep -q "\"gate-$cycle" docs/records/decisoes.jsonl 2>/dev/null; then
     echo "  $(dirname "$f" | xargs basename): ✅ closed in the record (legacy id gate-$cycle-*)"

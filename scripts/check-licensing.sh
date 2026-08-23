@@ -42,7 +42,8 @@ else
     bad "$MANIFEST declares no licence while shipping the method"
   # -F: the manifest value is data, not a pattern. A metacharacter in that field would
   # otherwise be interpreted as a regex and could match a licence we do not carry.
-  elif [[ -f LICENSE ]] && head -1 LICENSE | grep -qiF -- "$CLAIMED"; then
+  # `head -1 | grep -q` is the anti-pattern-21 shape twice over; a here-string has no pipe.
+  elif [[ -f LICENSE ]] && grep -qiF -- "$CLAIMED" <<<"$(head -1 LICENSE)"; then
     ok "plugin manifest claims ${CLAIMED} and LICENSE says so"
   else
     bad "plugin manifest claims '${CLAIMED}' and LICENSE does not say so — a claim is not a licence"

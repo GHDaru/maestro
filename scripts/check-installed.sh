@@ -676,8 +676,11 @@ count_layer() {  # $1 = layer key, $2 = install root. Prints a number, or nothin
 
 # Extraction in python, not grep: it casefolds and strips accents, so `portões`, `portoes` and
 # `PORTÕES` are one noun. A number followed by `+` is a claim about OTHER tools (`75+ agentes`)
-# and a markdown list marker (`6. Você…`) is not a count — both are excluded by requiring the
-# noun to follow the number directly with a single space.
+# `75+ agentes` (a claim about OTHER tools) and a markdown list marker are both excluded by the
+# LOOKBEHIND `(?<![\w.+])`, which refuses a number preceded by a word character, a dot or a
+# plus. An earlier comment credited that to a `text[m.end(1)] == " "` test, which the regex
+# already guarantees — the guard was dead code and the explanation was wrong about its own
+# mechanism (independent review of cycle 063).
 extract_counts() {  # $1 = page
   python3 - "$1" <<'PYX'
 import re, sys, unicodedata
@@ -687,10 +690,23 @@ def fold(w):
     return "".join(c for c in w if unicodedata.category(c) != "Mn").casefold()
 text = open(sys.argv[1], encoding="utf-8").read()
 seen = set()
-for m in re.finditer(r"(?<![\w.+])(\d+) ([A-Za-zÀ-ÿ]+)\b", text):
-    n, noun = m.group(1), fold(m.group(2))
-    if noun in NOUNS and text[m.end(1)] == " ":
-        seen.add((int(n), noun))
+# A count is a claim about THIS installation only where the page frames it as one: inside a
+# markdown TABLE row, or inside the fenced tree block. Free prose is where a page legitimately
+# says "na v0.1.0 eram apenas 2 skills" — charging that turned a blocking gate red on a true
+# sentence (independent review of cycle 063). The frame is structural, never a keyword.
+lines = text.split("\n")
+fenced, scope = False, []
+for ln in lines:
+    if ln.lstrip().startswith("```"):
+        fenced = not fenced
+        continue
+    if fenced or ln.lstrip().startswith("|"):
+        scope.append(ln)
+for ln in scope:
+    for m in re.finditer(r"(?<![\w.+])(\d+) ([A-Za-zÀ-ÿ]+)\b", ln):
+        noun = fold(m.group(2))
+        if noun in NOUNS:
+            seen.add((int(m.group(1)), noun))
 for n, noun in sorted(seen):
     print(f"{n}|{noun}")
 PYX
@@ -720,6 +736,39 @@ check_counts_in() {  # $1 = page file, $2 = install root
     bad "$(basename "$file") announces no count this gate can read — either the page stopped saying what it installs, or the reader broke"
   fi
 }
+
+# `scripts/README.md` marks with `¹` the scripts that DO NOT travel with the installation, and
+# it is itself installed. Three of them travelled anyway — check-conformance.sh among them, the
+# one the installer's closing message tells you to run. The gate added in cycle 063 compared
+# NAMES and never the claim beside them: anti-pattern 13 inside the fix for anti-pattern 13
+# (independent review of cycle 063). The reference installation answers this for free.
+echo ""
+echo "── '¹ does not travel' × what the installation actually carries ──"
+if [[ "$tree_fixture" -eq 0 ]]; then
+  note "travel comparison skipped: the reference installation did not build"
+elif [[ ! -f "$ROOT/scripts/README.md" ]]; then
+  bad "scripts/README.md is missing — the claim about what travels has nowhere to live"
+else
+  travel_checked=0
+  for g in "$ROOT"/scripts/*.sh; do
+    b="$(basename "$g")"
+    grep -qF "$b" "$ROOT/scripts/README.md" || continue      # absence is check-flags' job
+    travel_checked=$((travel_checked + 1))
+    marked_absent=0
+    grep -qE "\`${b}\` ¹" "$ROOT/scripts/README.md" && marked_absent=1
+    installed=0; [[ -f "$TREE/scripts/$b" ]] && installed=1
+    if [[ "$marked_absent" -eq 1 && "$installed" -eq 1 ]]; then
+      bad "scripts/README.md marks ${b} as '¹ does not travel', and the installation carries it"
+    elif [[ "$marked_absent" -eq 0 && "$installed" -eq 0 ]]; then
+      bad "scripts/README.md lists ${b} without '¹', and the installation does not carry it"
+    fi
+  done
+  if [[ "$travel_checked" -eq 0 ]]; then
+    bad "no script in scripts/README.md could be compared — the index or the reader broke"
+  else
+    ok "every script's '¹' claim matches the installation (${travel_checked} compared)"
+  fi
+fi
 
 echo ""
 echo "── The counts the pages announce × a real installation ──"

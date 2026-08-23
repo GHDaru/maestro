@@ -9,6 +9,28 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 
 ## [Unreleased]
 
+### Corrigido
+- **Nove defeitos no que o ciclo 062 e o 063 acabaram de escrever** (ciclo 063, segundo
+  parecer). O `--ticked-only` **era** o portão sempre-vermelho que existe para evitar, e a
+  primeira correção abriu um buraco mais barato que o que fechou: `rm qa-report.md` fazia o
+  modo bloqueante pular o ciclo inteiro e sair `0` com as quatro caixas marcadas. A regra que
+  recusa "pendente" era contornável com `ainda não executada`, `(pendente)` e `NÃO EXECUTADA`,
+  e ao mesmo tempo **reprovava a verdade** (`Todo o repositório foi varrido…`) — agora tem um
+  piso de tamanho **medido** (65 caracteres é a menor evidência legítima do repositório; 20 é
+  a maior falsa) que não depende de palavra nenhuma. O índice de scripts marcava três scripts
+  como "não viajam" e eles viajam. E o portão de contagens cobrava qualquer `<número>
+  <substantivo>` da prosa, então uma frase histórica verdadeira o deixava vermelho.
+
+- **A leitura da versão no instalador era uma corrida — e o corte da v0.3.0 a acordou**
+  (ciclo 063). `install-maestro.sh` lia a versão com `sed … | grep -m1 … | tr`: `grep -m1`
+  fecha o pipe na primeira casa, o `sed` morre de SIGPIPE sob `pipefail`, e o `|| echo unknown`
+  acrescentava uma **segunda linha** a um valor já correto — `"maestro_version": "0.3.0\nunknown"`.
+  Latente por onze ciclos porque o primeiro cabeçalho lançado ficava dentro do buffer de 64 KiB
+  do pipe; o corte moveu esse cabeçalho para 17 bytes e deixou 74 KiB atrás dele. Medido em
+  **1 a 3 de cada 10** instalações, o que deixava o `check-installed.sh` — **bloqueante** —
+  vermelho ao acaso em `dev` e em `main`. Passa a ler com `awk`, que abre o arquivo, e a
+  **validar a forma** do resultado. Anti-padrão 21, sétima ocorrência.
+
 ## [0.3.0] — 2026-08-22
 
 **A versão em que o método ganhou porta de entrada — e em que instalar passou a ser
@@ -192,16 +214,6 @@ de decisões.
   ao lado da apresentação executiva e do caderno técnico que já existiam.
 
 ### Corrigido
-- **A leitura da versão no instalador era uma corrida — e o corte da v0.3.0 a acordou**
-  (ciclo 063). `install-maestro.sh` lia a versão com `sed … | grep -m1 … | tr`: `grep -m1`
-  fecha o pipe na primeira casa, o `sed` morre de SIGPIPE sob `pipefail`, e o `|| echo unknown`
-  acrescentava uma **segunda linha** a um valor já correto — `"maestro_version": "0.3.0\nunknown"`.
-  Latente por onze ciclos porque o primeiro cabeçalho lançado ficava dentro do buffer de 64 KiB
-  do pipe; o corte moveu esse cabeçalho para 17 bytes e deixou 74 KiB atrás dele. Medido em
-  **1 a 3 de cada 10** instalações, o que deixava o `check-installed.sh` — **bloqueante** —
-  vermelho ao acaso em `dev` e em `main`. Passa a ler com `awk`, que abre o arquivo, e a
-  **validar a forma** do resultado. Anti-padrão 21, sétima ocorrência.
-
 - **Symlink no alvo deixa de ser porta de saída.** Um link dentro do repositório de destino
   fazia o `cp` escrever **fora** dele, e — desde que o ciclo 051 deu ao instalador o poder de
   remover — a poda apagaria fora também. O instalador passa a **recusar** escrever e remover

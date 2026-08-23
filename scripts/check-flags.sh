@@ -38,6 +38,20 @@ parser_flags() {  # $1 = script
     | grep -oE '\-{1,2}[A-Za-z0-9][A-Za-z0-9_-]*' | sort -u
 }
 
+# Any flag a script ACCEPTS, however it tests for it: a `case` arm (parser_flags) or a literal
+# comparison such as `[[ "$MODE" == "--verificar" ]]`. The second form is how package-plugin.sh
+# reads its only flag, and a detector that knew only `case` skipped that script entirely.
+parser_flags_any() {  # $1 = script
+  { parser_flags "$1"
+    # Code lines only. Reading comments too made this function find the flag names quoted in
+    # its OWN explanation and report check-flags.sh as a parser — a gate accusing itself of
+    # what it was written to detect.
+    grep -vE '^[[:space:]]*#' "$1" \
+      | grep -oE '==[[:space:]]*"--[A-Za-z][A-Za-z0-9_-]*"' 2>/dev/null \
+      | grep -oE -- '--[A-Za-z][A-Za-z0-9_-]*' || true
+  } | sort -u
+}
+
 # Flags the prose promises, inside a given range of a file.
 # Flags that belong to OTHER commands quoted in our documentation. A prose document cannot be
 # parsed for "which command does this flag belong to", so the exception is DECLARED here — one
@@ -69,10 +83,18 @@ documented_flags() {  # stdin = text
 # Splitting them is not a weakening: the first version demanded both directions everywhere,
 # which forced either a bloated front page or an exception list nobody would maintain.
 
-reference_check() {  # $1 = script, $2 = human name, $3 = its reference text
-  local script="$1" name="$2" doc="$3" have want missing extra
+# Same comparison, reading every shape a script uses to accept a flag (see parser_flags_any).
+gate_reference_check() { _reference_check any "$@"; }
+reference_check()      { _reference_check case "$@"; }
+_reference_check() {  # $1 = reader, $2 = script, $3 = human name, $4 = its reference text
+  local reader="$1" script="$2" name="$3" doc="$4" have want missing extra
   [[ -f "$doc" ]] || { bad "${name}: reference text missing (${doc})"; return 0; }
-  have="$(parser_flags "$script" || true)"
+  if [[ "$reader" == "any" ]]; then have="$(parser_flags_any "$script" || true)"
+  else have="$(parser_flags "$script" || true)"; fi
+  _reference_compare "$name" "$have" "$doc"
+}
+_reference_compare() {  # $1 = name, $2 = accepted set, $3 = reference text
+  local name="$1" have="$2" doc="$3" want missing extra
   want="$(documented_flags <"$doc" || true)"
   missing="$(comm -23 <(echo "$have") <(echo "$want") || true)"
   extra="$(comm -13 <(echo "$have") <(echo "$want") || true)"
@@ -120,12 +142,30 @@ fi
 # motto is "a flag that exists is documented, and a documented flag exists". It happened to be
 # coherent; coherent by accident is not covered. A new door, and the old guard never told —
 # anti-pattern 23, found by the independent review of cycles 061-062.
-for g in scripts/check-*.sh; do
+# Every gate in scripts/, not just `check-*`: `package-plugin.sh` accepts `--verificar`, which
+# no `# Usage` mentions, and it was outside the first version of this loop. And the detector
+# now reads an ARM, alias included — `^\s*--flag)` missed `--strict|-s)` and `--ai=*)`, the very
+# shapes parser_flags() had to learn, and skipped the whole script in silence.
+for g in scripts/*.sh bin/maestro; do
   [[ -f "$g" ]] || continue
-  grep -qE '^\s*--[a-z][a-z-]*\)' "$g" || continue     # no flag parser, nothing to compare
-  sed -n '/^# Usage/,/^set -euo/p' "$g" | sed '/^set -/d' > "$WORK/gusage"
-  [[ -s "$WORK/gusage" ]] || { bad "$(basename "$g") parses flags and has no '# Usage' header to compare them with"; continue; }
-  reference_check "$g" "$(basename "$g"), its own # Usage header" "$WORK/gusage"
+  case "$g" in scripts/install-maestro.sh|bin/maestro) continue ;; esac   # covered above
+  # The detector is parser_flags() itself — the same reader used for the two parsers above.
+  # A second, weaker detector was the bug: `^\s*--flag)` saw only `case` arms, so
+  # `package-plugin.sh`, which compares with `[[ "$MODE" == "--verificar" ]]`, was skipped in
+  # silence with an undocumented flag. One reader, one answer.
+  [[ -n "$(parser_flags_any "$g")" ]] || continue
+  # The header range must CLOSE. `sed -n '/^# Usage/,/^set -euo/p'` on a script that opens with
+  # `set -eu` (no pipefail) never closes, so the whole file — parser included — became the
+  # "documentation", and an undocumented flag matched itself. Two anchors, and a range that
+  # did not close is a failure, never a pass.
+  awk '/^# Usage/{u=1} u && /^[^#]/{exit} u{print}' "$g" > "$WORK/gusage"
+  if [[ ! -s "$WORK/gusage" ]]; then
+    bad "$(basename "$g") parses flags and has no '# Usage' header to compare them with"; continue
+  fi
+  if grep -qE '^[[:space:]]*(-[a-zA-Z-]+\|)*--[a-zA-Z]' "$WORK/gusage" && grep -qE '\)[[:space:]]*(;;|$)' "$WORK/gusage"; then
+    bad "$(basename "$g"): the '# Usage' block runs into the code — the header never closed, so the parser would document itself"; continue
+  fi
+  gate_reference_check "$g" "$(basename "$g"), its own # Usage header" "$WORK/gusage"
 done
 
 for prose in docs/receitas/instalar-o-maestro.md README.md; do
@@ -145,10 +185,14 @@ if [[ -f scripts/README.md ]]; then
     b="$(basename "$g")"
     grep -qF "$b" scripts/README.md || { bad "scripts/README.md never mentions ${b} — the installed index is behind"; idx_missing=1; }
   done
+  # Only names the page presents as OURS — a backticked span or a relative link. A bare regex
+  # over the prose cobrou `ci-helper.sh` inside a URL and `configure.sh` in a sentence about
+  # autotools, turning a blocking gate red on legitimate text (review of cycle 063).
   while IFS= read -r named; do
     [[ -n "$named" ]] || continue
     [[ -f "scripts/$named" ]] || { bad "scripts/README.md documents ${named}, which does not exist"; idx_missing=1; }
-  done < <(grep -oE '\b[a-z][a-z0-9-]*\.sh\b' scripts/README.md | sort -u)
+  done < <(grep -oE '`[A-Za-z0-9][A-Za-z0-9._-]*\.sh`|\]\(\./[A-Za-z0-9][A-Za-z0-9._-]*\.sh\)' scripts/README.md \
+             | tr -d '`' | sed -E 's|^\]\(\./||; s|\)$||' | sort -u)
   [[ "$idx_missing" -eq 0 ]] && ok "the index names every script, and every script it names exists"
 else
   bad "scripts/README.md is missing — the installed index of scripts does not exist"

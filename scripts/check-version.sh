@@ -138,11 +138,20 @@ struct="$(awk '
   /^### / {
     if (!inscope) next
     t = $0; sub(/^### +/, "", t); t = fold(t)
+    sections++
     if (!(t in known)) { printf "%s carries \"### %s\", which is not a Keep a Changelog type\n", version, t; next }
     if (t in seen) printf "%s repeats \"### %s\" (first at line %d, again at line %d)\n", version, t, seen[t], NR
     else seen[t] = NR
   }
-  END { if (blocks == 0) print "no [Unreleased] and no released version found — the file this gate reads has neither" }
+  END {
+    # Counting VERSION HEADINGS was not a vacuity guard: the file always has them, so the
+    # check printed success after reading zero sections. Demoting every `###` to `####`, or
+    # deleting them, both passed. What must be non-zero is the number of SECTIONS actually
+    # read inside the scoped blocks (review of cycle 063) — the same shape check-installed.sh
+    # got right in the same cycle, and this one did not.
+    if (blocks == 0) print "no [Unreleased] and no released version found — the file this gate reads has neither"
+    else if (sections == 0) print "[Unreleased] and the newest release contain no \"### \" section at all — either the notes lost their sections, or the reader broke"
+  }
 ' CHANGELOG.md || true)"
 if [[ -n "$struct" ]]; then
   while IFS= read -r d; do [[ -n "$d" ]] && bad "$d"; done <<<"$struct"

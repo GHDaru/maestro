@@ -75,8 +75,16 @@ TAIL=(review security gate)
 # The declared-absence half of is_placeholder starts at 061 (the cycle whose promotion
 # exposed it). Validated like MUT_FLOOR below: a floor that fails OPEN is not a knob.
 ABSENCE_FLOOR="${MAESTRO_MIN_CYCLE_ABSENCE:-61}"
+ABSENCE_FLOOR_DEFAULT=61
 [[ "$ABSENCE_FLOOR" =~ ^[0-9]+$ ]] || {
   echo "✗ MAESTRO_MIN_CYCLE_ABSENCE='${ABSENCE_FLOOR}' is not a number — refusing to run with an unreadable floor." >&2
+  exit 1
+}
+# A knob that only TIGHTENS cannot be an off switch. Guarding only "above the newest cycle"
+# left `=61+n` free: setting the floor to the cycle in progress excuses every cycle already
+# written, and prints success. Raising it is now refused outright (review of cycle 063).
+[[ "$((10#$ABSENCE_FLOOR))" -le "$ABSENCE_FLOOR_DEFAULT" ]] || {
+  echo "✗ MAESTRO_MIN_CYCLE_ABSENCE=${ABSENCE_FLOOR} is above the built-in floor ${ABSENCE_FLOOR_DEFAULT} — this knob may only tighten the rule, never relax it." >&2
   exit 1
 }
 
@@ -147,34 +155,67 @@ checked=0
 # rejected. The first version of this gate knew only about <...>, which let a freshly
 # generated skeleton pass entirely green: zero work, exit 0. Found by the independent
 # review of this very cycle.
-# is_placeholder(): text that is NOT evidence. Two shapes, and the second one cost two cycles.
+# is_placeholder(): text that is NOT evidence. THREE shapes, and the last two each cost a cycle.
 #
 #   (a) the generated skeleton — empty, or carrying a `<marker>` / `[marker]`;
-#   (b) DECLARED ABSENCE — a sentence whose content is "this was not done". Two such lines
-#       `pendente.` and its explicit-negation cousin were both stamped `✓ TAIL:review
-#       evidence:` by this gate in cycles 061 and 062, and both were promoted. It recognised
-#       the shape the generator writes and nothing else, so any human sentence passed —
-#       including the confession that the step never ran. Anti-pattern 13 inside its own gate.
+#   (b) TOO SHORT TO BE EVIDENCE. Measured, not guessed: across the 54 tail evidences in this
+#       repository the shortest legitimate one is 65 characters, and every fake found so far is
+#       20 or less (`pendente.`, `(pendente)`, `NÃO EXECUTADA.`, `n/a`, `ok`). The floor sits at
+#       40 — a wide gap on both sides — and it is the half that CANNOT be reworded around. That
+#       matters: the first version of this rule was a word list, and the independent review of
+#       cycle 063 walked through it five times — with an adverb in front, with the plural, in
+#       parentheses, behind a quote marker, and in capitals;
+#   (c) DECLARED ABSENCE opening a LONGER sentence — `pendente. DoD verde; falta o parecer…`
+#       is 70 characters and is still the absence of the step.
 #
-# The vocabulary is CLOSED and read from the START of the evidence only. A legitimate sentence
-# that merely contains the word must keep passing: cycle 060's own TAIL:gate evidence carries
-# "pendente" mid-sentence. Anchoring is the whole mechanism — the same lesson as the TAIL row
-# in cycle 055, where an unanchored grep matched the wrong line.
+# What the word list also got wrong: it REFUSED the truth. `todo` was in it, and it opens an
+# ordinary Portuguese sentence meaning "the whole". A gate that rejects a true
+# statement is worse than one that accepts a false one. `todo` is gone; `to do` and `todo:`
+# stay. `em aberto`, `falta` and `faltou` went the same way: "Em aberto ficou apenas a dívida
+# editorial; a revisão rodou" opens with the phrase and reports that the step HAPPENED. The
+# short forms of all three are caught by the length floor anyway, which is the point of having
+# a rule that does not depend on wording.
+#
+# And the stripping used a bracket class holding `—` and `–` — a set of BYTES in the C locale,
+# not characters — so `• pendente` had two of its three bytes eaten and passed. That is the
+# `[├└]` defect of cycle 060, reintroduced in the cycle that quotes it. Leading markup is now
+# removed by its COMPLEMENT (`[^[:alnum:]]`), which needs no multibyte class at all, and the
+# accents are folded by ALTERNATION, never by a bracket class — so the rule no longer depends
+# on the locale either (nothing here exports LC_ALL).
+#
 # The vocabulary is DATA, not prose: this gate reads qa-reports, and the book side of this
 # repository is written in Portuguese by decision (ADR 0014). Both languages, one list.
-DECLARED_ABSENCE='pendente|pendentes|a fazer|aguardando|nao executad[ao]|não executad[ao]|nao rodou|não rodou|em aberto|todo|tbd|a definir|n/d|pending|not run|not executed|to do'   # PT-DATA (evidence is read in both languages)
-is_placeholder() {  # $1 = candidate text, $2 = cycle number (optional)
+DECLARED_ABSENCE='pendente|pendentes|pendencia|aguardando|aguarda|a fazer|por fazer|nao (foi |sera |vai )?(execut|feit|rod|realiz|hav)|sem (revisao|parecer|evidencia)|nenhuma evidencia|tbd|a definir|n/d|to do|todo:|pending|not (run|executed|done)'   # PT-DATA (evidence is read in both languages)
+EVIDENCE_MIN_CHARS=40
+
+fold_pt() {  # accents by ALTERNATION — a bracket class of multibyte chars is a byte class
+  sed -E 's/(á|à|ã|â|Á|À|Ã|Â)/a/g; s/(é|ê|É|Ê)/e/g; s/(í|Í)/i/g; s/(ó|ô|õ|Ó|Ô|Õ)/o/g; s/(ú|Ú)/u/g; s/(ç|Ç)/c/g' <<<"$1" \
+    | tr '[:upper:]' '[:lower:]'
+}
+
+# is_skeleton(): shape (a) alone. This is the right test for a SHORT, legitimate phrase — the
+# reason behind an `ART:x=no` ("Nenhuma entidade.", 17 characters) or behind an `n/a`. The
+# length floor below was measured on TAIL EVIDENCE, which is prose about what happened; using
+# it on a reason would reject every honest one. One of the three call sites also passed no
+# cycle number, so the absence rule reached every cycle ever through it, against FR3 — that
+# call site is this function now, and the floor argument stopped being optional by accident.
+is_skeleton() {  # $1 = candidate text
+  local t="${1//[\`|*_ ]/}"
+  [[ -z "$t" || "$t" == *"<"* || "$t" == *"["* ]]
+}
+
+is_placeholder() {  # $1 = candidate text, $2 = cycle number (REQUIRED)
   local t="${1//[\`|*_ ]/}"
   [[ -z "$t" || "$t" == *"<"* || "$t" == *"["* ]] && return 0
-  # (b) applies from the cycle that introduced it. Cycles 042-045 wrote
-  # a declared-absence sentence in TAIL:gate when it WAS true, and were promoted
-  # afterwards; failing them today would make the gate noise. Same precedent as FLOOR,
-  # CRIT_FLOOR and MUT_FLOOR — the debt of older cycles is declared, not erased.
-  [[ -n "${2:-}" && "$((10#$2))" -lt "$((10#$ABSENCE_FLOOR))" ]] && return 1
-  # Strip only leading markup/space, then read the OPENING of the sentence.
-  local head; head="$(sed -E 's/^[[:space:]*_`—–:-]+//' <<<"$1" | tr '[:upper:]' '[:lower:]')"
-  head="${head//[\`*_]/}"
-  grep -qiE "^(${DECLARED_ABSENCE})\b" <<<"$head"
+  [[ -n "${2:-}" ]] || { echo "✗ internal: is_placeholder called with no cycle number" >&2; return 0; }
+  # (b) and (c) apply from the cycle that introduced them. Cycles 042-045 wrote a
+  # declared-absence sentence in TAIL:gate when it WAS true, and were promoted afterwards;
+  # failing them today would make the gate noise. Same precedent as FLOOR, CRIT_FLOOR and
+  # MUT_FLOOR — the debt of older cycles is declared, not erased.
+  [[ "$((10#$2))" -lt "$((10#$ABSENCE_FLOOR))" ]] && return 1
+  local head; head="$(fold_pt "$(sed -E 's/^[^[:alnum:]]+//' <<<"$1")")"
+  [[ "${#head}" -lt "$EVIDENCE_MIN_CHARS" ]] && return 0
+  grep -qE "^(${DECLARED_ABSENCE})" <<<"$head"
 }
 
 ok()   { printf '    ✓ %s\n' "$1"; }
@@ -213,6 +254,14 @@ for d in specs/[0-9][0-9][0-9]-*/; do
   for f in spec.md plan.md tasks.md qa-report.md; do
     [[ -f "$d$f" ]] || { soft "missing $f"; incomplete=1; }
   done
+  # Softening the four artifacts opened a hole CHEAPER than the one it closed: `rm qa-report.md`
+  # made --ticked-only skip the whole cycle — tail rows, evidence, everything — and exit 0,
+  # with four boxes ticked. That is precisely the 057-060 defect this mode was built for.
+  # A ticked box is a claim; deleting the file the claim points at is not work in progress.
+  if [[ -f "$d/tasks.md" && ! -f "$d/qa-report.md" ]] \
+     && grep -qE '^[[:space:]]*- \[[xX]\] \**TAIL:' "$d/tasks.md"; then
+    bad "tasks.md ticks a TAIL box and there is no qa-report.md — deleting the record is not the same as writing it"
+  fi
   [[ $incomplete -eq 0 ]] || continue
 
   # ---- 2. the Constitution Check is complete ------------------------------
@@ -268,7 +317,7 @@ for d in specs/[0-9][0-9][0-9]-*/; do
     # The reason is what makes a `no` a decision instead of a shrug. Five copied
     # placeholders were a conformant plan until the review of cycle 042 said so.
     reason="$(sed -E "s/.*ART:${a}=[A-Za-z]*//" <<<"$line" | tr -d '|')"
-    if is_placeholder "$reason"; then
+    if is_skeleton "$reason"; then
       soft "${a}: declared ART:${a}=${value} with no reason — a declaration without a why is silence"
       art_bad=1; continue
     fi
@@ -338,7 +387,7 @@ for d in specs/[0-9][0-9][0-9]-*/; do
         continue
       fi
       reason="$(sed -E 's/.*[nN]\/[aA][[:space:]]*[:—–-]*[[:space:]]*//' <<<"$line" | sed 's/[`).]*$//' | cut -c1-60)"
-      if is_placeholder "$reason" "$n"; then
+      if is_skeleton "$reason"; then
         bad "TAIL:${t} says n/a with a placeholder reason — write why, or do the step"
       else
         note "TAIL:${t} not applicable — ${reason}"

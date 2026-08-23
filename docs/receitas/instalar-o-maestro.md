@@ -159,9 +159,12 @@ continua verdadeira depois do primeiro dia.
 
 ## O que fica no seu projeto depois
 
-Gerado de uma instalação real com **`--ai claude`**, num projeto que só tinha `README.md`:
-**81 arquivos escritos** (82 no total, contando o seu). Com outro agente a árvore é menor —
-`--ai codex` escreve 53 e **nenhum `.claude/`**, porque aquele agente não lê esse formato.
+Gerado de uma instalação real por **`maestro init --ai claude`**, num projeto que só tinha
+`README.md`: **81 arquivos escritos** (82 no total, contando o seu). O comando importa: `init`
+passa `--write-block`, e é ele que põe o `CLAUDE.md` no disco — `install-maestro.sh` sozinho
+escreve 80 e deixa o bloco para você colar. Com outro agente a árvore é menor:
+`maestro init --ai codex` escreve **53** e **nenhum `.claude/`**, porque aquele agente não lê
+esse formato.
 
 ```
 meu-app/

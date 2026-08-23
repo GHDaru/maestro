@@ -57,8 +57,35 @@ capítulo numerado cita (`constitution-check`, `diagnose-before-fix`, `fight-the
 
 ## Closing tail — the evidence
 
-- **TAIL:review** — pendente para este ciclo. Os 18 achados tratados aqui vieram da revisão
-  independente dos ciclos **061 e 062**; este ciclo ainda não passou por uma.
+- **TAIL:review** — revisão independente em contexto fresco, **do próprio ciclo 063**.
+  **REPROVOU: 18 defeitos, 5 deles introduzidos por este ciclo.** Décimo parecer seguido a
+  reprovar. Os que eu mesmo criei:
+
+  1. **Eu abri um buraco mais barato que o que fechei.** Tornar `soft` a exigência dos quatro
+     artefatos deixou o `continue` no lugar: `rm qa-report.md` fazia o modo **bloqueante**
+     pular o ciclo inteiro — cauda, evidência, tudo — e sair `0`, com as quatro caixas
+     marcadas. É exatamente o defeito 057–060 que o modo existe para pegar. Fechado com uma
+     asserção que não depende dos outros artefatos: caixa marcada + sem `qa-report` = falha.
+  2. **A regra do `pendente` era contornável de cinco jeitos** (`ainda não executada`,
+     `não executadas`, `(pendente)`, `> pendente`, `NÃO EXECUTADA`) **e reprovava a verdade**
+     (`Todo o repositório foi varrido…`). Vocabulário sozinho é a ferramenta errada. Agora há
+     um **piso de tamanho medido** — 65 caracteres é a menor evidência legítima das 54 deste
+     repositório, 20 é a maior falsa, o piso está em 40 — que não depende de palavra nenhuma.
+  3. **Reintroduzi a classe de bytes.** O `sed` de limpeza tinha `—` e `–` dentro de colchetes:
+     em locale C são seis bytes soltos, e `• pendente` perdia dois deles e passava. É o `[├└]`
+     do ciclo 060, no ciclo que o cita. Trocado pelo **complemento** `[^[:alnum:]]`, que não
+     precisa de classe multibyte, e os acentos por alternação.
+  4. **O botão do piso só travava para cima do ciclo mais novo**, então `=63` (o ciclo em
+     andamento) desculpava tudo já escrito e imprimia sucesso. Agora o botão **só aperta**.
+  5. **Um dos três chamadores não passava o número do ciclo**, então a regra era retroativa
+     por essa via, contra o FR3. Virou `is_skeleton()`, que é o teste certo para uma razão
+     curta e legítima.
+
+  E fora do que eu escrevi: o índice de scripts marcava **três** scripts como "não viajam" e
+  eles viajam; o portão de contagens cobrava qualquer `<número> <substantivo>` da prosa, então
+  uma frase histórica **verdadeira** o deixava vermelho; o guarda de vacuidade do CHANGELOG
+  contava cabeçalhos de versão em vez de seções; e sobravam **quatro** ocorrências vivas do
+  anti-padrão 21, uma delas alimentando uma mensagem que este ciclo acabara de escrever.
 
 - **TAIL:security** — classe de risco **baixa**, com um ponto que subiu e desceu: a correção do
   achado 1 mexe no que o instalador **escreve em disco de terceiro**. O valor agora é validado

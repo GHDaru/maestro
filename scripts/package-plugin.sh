@@ -22,7 +22,9 @@ build() {  # $1 = output directory
   cp -r skills "$out/skills"
   rm -f "$out/skills/README.md"   # the catalogue index is not a skill
   local version
-  version=$(grep -m1 -E '^> \*\*Version\*\*|Version\*\*:' docs/governance/principles.md 2>/dev/null | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+' | head -1)
+  # Same shape, and here WITHOUT `|| true`: a SIGPIPE would abort this script under `set -e`,
+  # and check-conformance.sh invokes it to prove the plugin claim (anti-pattern 21).
+  version=$(awk 'match($0, /^> \*\*Version\*\*|Version\*\*:/) && match($0, /[0-9]+\.[0-9]+\.[0-9]+/) { print substr($0, RSTART, RLENGTH); exit }' docs/governance/principles.md 2>/dev/null || true)
   cat > "$out/.claude-plugin/plugin.json" <<JSON
 {
   "name": "maestro",
@@ -43,7 +45,10 @@ JSON
   cp THIRD-PARTY-NOTICES.md "$out/THIRD-PARTY-NOTICES.md"
 }
 
-if [[ "$MODE" == "--verify" || "$MODE" == "--verificar" ]]; then
+# `--verificar` used to be accepted here as a Portuguese alias. It was in no `# Usage`, in no
+# page, and in no call — an undocumented flag on a surface ADR 0014 says is English. Removed in
+# cycle 063 rather than documented (independent review).
+if [[ "$MODE" == "--verify" ]]; then
   TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
   build "$TMP/maestro"
   if [[ ! -d "$TARGET" ]]; then
