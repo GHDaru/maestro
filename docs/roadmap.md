@@ -4,7 +4,7 @@
 > skills, workflows, scripts). Também serve de **orientação**: se você está perdido, comece
 > por aqui. Documento vivo — atualizado a cada fase.
 >
-> **Status**: Ativo · **Versão**: **v0.2.0** (2026-08-11) · **Atualizado**: ciclo 051 · **Regra**: este mapa é
+> **Status**: Ativo · **Versão**: **v0.3.0** (2026-08-22) · **Atualizado**: ciclo 062 · **Regra**: este mapa é
 > artefato vivo — todo ciclo concluído atualiza a tabela de fases **no mesmo PR**
 > (anti-padrão 15: artefato de planejamento que congela).
 
@@ -130,6 +130,8 @@ Cada fase = **um ciclo** (uma spec, um gate). Ordem por dependência:
 | **F24 — O índice de decisões com portão** | `check-adr.sh`: uma linha por ADR, todo link real, e o status comparado por **estado** (vocabulário fechado, sinônimos mapeados). Fecha o achado do 046 — índice congelado desde o 0017, com uma decisão revertida lendo-se como corrente — e foi visto acusar aquele defeito por mutação | 049 | ✅ |
 | **F25 — v0.2.0** | segunda versão fechada: dezesseis portões, treze bloqueantes, e a nota de release declarando o que a versão **não** tem — inclusive que a tag da v0.1.0 nunca chegou ao GitHub. `check-version.sh` impede que a versão seja afirmada de dois jeitos ao mesmo tempo | 050 | ✅ |
 | **F26 — O instalador que atualiza** | manifesto com hash por arquivo escrito: atualiza o que é nosso e está inalterado, mantém o que o projeto modificou (com `.maestro-new` ao lado), remove o que o método deixou de enviar. `--force` guarda `.maestro-old`; travessia de caminho recusada. Dez asserções novas no portão da cópia instalada | 051 | ✅ |
+| **F27 — A porta da frente** | `bin/maestro` conduz agente, destino, instalação e **verificação**, e sai diferente de zero se ela falhar; toda pergunta é também flag, então roda em CI. `--ai` torna o agente escolha declarada (quatro ids, no modelo do spec-kit), e a camada de hooks só vai para quem a lê | 056, 057, 058, 059 | ✅ |
+| **F28 — v0.3.0** | terceira versão fechada: dezessete portões, quatorze bloqueantes inteiros mais a metade bloqueante da conformidade (`--ticked-only`). A nota declara o que a versão **não** tem, e o estado da tag no remoto é o que o `git ls-remote` devolveu — não o que se esperava | 062 | ✅ |
 | **(contínuo) — Retrospectiva** | erro recorrente → regra versionada; **gatilho por dívida de achados** (`check-retro.sh`) desde o ciclo 034 | 017, 034 e seguintes | 🔄 |
 
 ### Gatilhos abertos (decisões adiadas, com condição de revisão)

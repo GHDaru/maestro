@@ -72,7 +72,7 @@ tabela — é **testar** que a instalação funciona lá. Acrescentar é uma lin
 A escolha fica gravada em `.maestro/install-options.json`, ao lado do manifesto:
 
 ```json
-{"ai": "claude", "instruction": "CLAUDE.md", "harness": true, "maestro_version": "0.2.0", "installed": "2026-08-21"}
+{"ai": "claude", "instruction": "CLAUDE.md", "harness": true, "maestro_version": "0.3.0", "installed": "2026-08-22"}
 ```
 
 O campo `harness` grava o **fato** desta instalação, não o que a tabela permite: com

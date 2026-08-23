@@ -1,9 +1,9 @@
 # Maestro
 
-> **v0.2.0** (2026-08-11) — o método passa a ser verificado **onde ele cai**. Quantos
-> portões são, quantos bloqueiam na integração contínua, e o que a versão reconhecidamente
-> **não** tem: tudo na nota de release do [CHANGELOG](CHANGELOG.md), que é onde essa
-> contagem vive. `dev` anda à frente do último corte.
+> **v0.3.0** (2026-08-22) — o método ganhou **porta de entrada**, e instalar passou a ser
+> **atualizar**. Quantos portões são, quantos bloqueiam na integração contínua, e o que a
+> versão reconhecidamente **não** tem: tudo na nota de release do
+> [CHANGELOG](CHANGELOG.md), que é onde essa contagem vive.
 >
 > **Metodologia de engenharia de software com 1 humano regendo N agentes de IA.**
 > Um humano rege · muitos agentes executam · a spec é a partitura · os gates, o compasso.

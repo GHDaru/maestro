@@ -9,6 +9,62 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 
 ## [Unreleased]
 
+## [0.3.0] — 2026-08-22
+
+**A versão em que o método ganhou porta de entrada — e em que instalar passou a ser
+atualizar.** A v0.2.0 provou que o método funciona no destino; esta trata o destino como um
+lugar onde alguém volta: reinstalar não sobrescreve o que você mexeu, o agente deixa de ser
+adivinhado, e existe um comando único que conduz do clone até a verificação.
+
+**O que ela é.** **Dezessete** portões executáveis (eram dezesseis na v0.2.0). **Quatorze
+bloqueiam** inteiros na integração contínua, ao lado do `package-plugin --verify` e do build
+do livro; um décimo quinto bloqueia **pela metade** — `check-conformance --ticked-only`, a
+regra "se marcou, prove" — enquanto o `check-conformance` completo, o `check-cycle` e o
+`check-retro` seguem consultivos por desenho. O que mudou para quem usa:
+
+- **`maestro init`** (ciclo 058) — `bin/maestro` conduz agente, destino, instalação e
+  **verificação**, e sai diferente de zero se a verificação falhar. Toda pergunta é também
+  flag, então roda em CI; sem terminal e sem `--yes` ele **recusa** em vez de responder por
+  você. Instalar sem provar não conta.
+- **Instalar é atualizar** (ciclo 051) — um manifesto registra o que o método escreveu, então
+  reinstalar distingue arquivo nosso de arquivo seu: o que você não tocou é renovado, o que
+  você modificou é mantido com a versão nova ao lado, e nada seu é sobrescrito em silêncio.
+- **O agente é escolha declarada** (ciclo 057) — `--ai claude|copilot|cursor-agent|codex`, no
+  modelo do spec-kit. Cada agente recebe o bloco no arquivo que ele lê, e **só o Claude recebe
+  formatos do Claude**. Um id desconhecido recusa listando os válidos, em vez de cair no
+  padrão calado.
+- **A camada que cobra** (ciclo 056) — para o Claude Code, hooks que **recusam** reescrever o
+  que é história: corpo de ADR já commitado, o índice de decisões e os cards datados. Para os
+  outros agentes ela não é instalada, e o instalador **diz** que não instalou.
+- **Três portões novos** — `check-flags` (as flags que o parser aceita e as que a documentação
+  promete são o mesmo conjunto), e as duas comparações que o `check-installed` ganhou: a árvore
+  publicada × uma instalação feita na hora, e os ids `--ai` da receita × os que o instalador
+  aceita. Este último nasceu acusando três ciclos de receita que não instalava.
+- **A caixa marcada passa a ter testemunha** (ciclo 061) — `check-conformance --ticked-only`
+  bloqueia na CI: se você marcou um passo da cauda, a evidência tem de existir.
+
+**O que ela reconhecidamente NÃO tem.**
+
+- **As tags continuam sem publicar.** A da v0.1.0 nunca chegou ao GitHub, a da v0.2.0 também
+  não, e o estado da `v0.3.0` está registrado no `qa-report` do ciclo 062 — o que foi
+  **verificado** com `git ls-remote`, não o que se esperava.
+- **Quatro agentes, não os 27 do upstream.** O custo de um agente não é a linha na tabela, é
+  **testar** que a instalação funciona lá. Acrescentar é uma linha em `install-agents.tsv`
+  mais um teste; o gatilho é alguém usar.
+- **`check-cycle`, `check-retro` e `check-conformance` (completo) continuam consultivos**, cada
+  um por uma razão escrita no próprio script. Esta versão moveu **uma** regra para bloqueante,
+  de propósito, e não mais.
+- **Nenhuma linguagem ubíqua é entregue.** Vocabulário de domínio pertence ao domínio; o método
+  diz o que fazer quando ela não existe, e não finge tê-la (ciclo 061).
+- **As seções já lançadas do CHANGELOG carregam repetição de tipo** (a v0.1.0 repete
+  `### Changed`). Fica declarada: entrada lançada é registro histórico.
+
+**Como ela é verificada.** Os quatorze portões bloqueantes e a metade bloqueante da
+conformidade rodam em toda PR e todo push, ao lado do `package-plugin --verify` e do build do
+livro. A promoção `dev` → `main` passa por
+`promote-main.sh`, que recusa enquanto a conformidade estiver vermelha e grava o gate no índice
+de decisões.
+
 ### Adicionado
 - **A caixa marcada passa a ter testemunha** (ciclo 061, retrospectiva). Em **quatro ciclos
   seguidos** — 057, 058, 059, 060 — as quatro caixas `TAIL` foram marcadas sem `qa-report.md`

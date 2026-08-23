@@ -592,6 +592,53 @@ else
   fi
 fi
 
+# The recipe publishes a SAMPLE install-options.json — and a sample is a claim about what a
+# program writes. It carried "maestro_version": "0.2.0" through eleven cycles, because nothing
+# read it. Same family as the tree and the --ai ids: a fact stated on a page and produced by a
+# program. `installed` is a date, different on every run, so it is compared by KEY only.
+echo ""
+echo "── The install-options.json the recipe publishes × the one init writes ──"
+if [[ "$tree_fixture" -eq 0 ]]; then
+  note "sample comparison skipped: the reference installation did not build"
+elif [[ ! -f "$TREE/.maestro/install-options.json" ]]; then
+  bad "the installation wrote no .maestro/install-options.json — the recipe documents a file that does not appear"
+else
+  sample_err="$(python3 - "$ROOT/docs/receitas/instalar-o-maestro.md" "$TREE/.maestro/install-options.json" <<'PYS'
+import json, re, sys
+page, real_path = sys.argv[1], sys.argv[2]
+text = open(page, encoding="utf-8").read()
+# The sample is the fenced ```json block that carries the option keys — found by content,
+# never by line number, so moving the section does not silently disable this check.
+sample = None
+for m in re.finditer(r"```json\s*\n(.*?)\n```", text, re.S):
+    try:
+        d = json.loads(m.group(1))
+    except Exception:
+        continue
+    if isinstance(d, dict) and "maestro_version" in d:
+        sample = d
+        break
+if sample is None:
+    print("the recipe publishes no install-options.json sample the gate can parse")
+    sys.exit(0)
+real = json.load(open(real_path, encoding="utf-8"))
+for k in sorted(set(sample) ^ set(real)):
+    where = "the recipe's sample" if k in sample else "the file init writes"
+    print(f"key '{k}' is in {where} and not in the other")
+for k in sorted(set(sample) & set(real)):
+    if k == "installed":       # a date: different on every run, compared by key only
+        continue
+    if sample[k] != real[k]:
+        print(f"the recipe's sample says {k}={sample[k]!r}, and init writes {real[k]!r}")
+PYS
+)"
+  if [[ -n "$sample_err" ]]; then
+    while IFS= read -r e; do [[ -n "$e" ]] && bad "$e"; done <<<"$sample_err"
+  else
+    ok "the published sample matches what init actually writes"
+  fi
+fi
+
 # The pages announce COUNTS — 13 subagentes, 6 skills, 12 comandos — and nothing compared a
 # single one of them with disk. The class is not hypothetical: it is what produced the worst
 # defect of cycle 060 (three cycles of `--ai` ids the installer refused). The reference
