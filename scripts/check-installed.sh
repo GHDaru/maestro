@@ -510,26 +510,52 @@ fi
 # Same family as check-flags — a set the parser accepts, said in a second place — so it is
 # compared the same way, both directions, against the table the parser actually reads.
 echo ""
-echo '── The --ai ids the recipe publishes × the ids the installer accepts ──'
-RECIPE_P="$ROOT/docs/receitas/instalar-o-maestro.md"
-if [[ ! -f "$RECIPE_P" || ! -f "$ROOT/scripts/install-agents.tsv" ]]; then
-  bad "cannot compare agent ids: the recipe or install-agents.tsv is missing"
+echo '── The --ai ids the pages publish × the ids the installer accepts ──'
+# Two pages tell a reader which id to pass, and only one of them was ever read. The README
+# could publish an id the installer refuses — the exact defect cycle 060 found in the recipe,
+# one page over, and the README is the page an agent lands on first (cycle 064).
+#
+# Scoped extraction: the rows that FOLLOW the header whose first cell is `--ai`, up to the
+# first line that is not a table row. "Any row whose first cell is a backticked lowercase
+# token" would swallow every other table on the page and report its first column as ghost ids.
+ids_in_page() {  # $1 = page. Prints one id per line.
+  awk '
+    /^\| `--ai`/            { intable = 1; next }
+    intable && !/^\|/       { intable = 0 }
+    intable {
+      line = $0
+      sub(/^\|[[:space:]]*/, "", line)
+      if (match(line, /^`[a-z][a-z0-9-]*`/)) print substr(line, RSTART + 1, RLENGTH - 2)
+    }
+  ' "$1" | sort -u
+}
+if [[ ! -f "$ROOT/scripts/install-agents.tsv" ]]; then
+  bad "cannot compare agent ids: install-agents.tsv is missing"
 else
-  # Only the rows of the `--ai` table: a markdown row whose first cell is a single
-  # backticked token, optionally followed by an italic note like *(padrão)*.
-  DOC_IDS="$(grep -oE '^\| `[a-z][a-z0-9-]*`' "$RECIPE_P" | sed -E 's/^\| `//; s/`$//' | sort -u || true)"
   REAL_IDS="$(tr -d '\r' < "$ROOT/scripts/install-agents.tsv" | grep -v '^#' | cut -f1 \
     | grep -E '^[a-z][a-z0-9-]*$' | sort -u || true)"
-  if [[ -z "$DOC_IDS" ]]; then
-    bad "no --ai table found in the recipe — the page that tells you to choose an agent lists none"
-  elif [[ -z "$REAL_IDS" ]]; then
+  if [[ -z "$REAL_IDS" ]]; then
     bad "install-agents.tsv yielded no ids"
   else
-    ghost="$(comm -23 <(echo "$DOC_IDS") <(echo "$REAL_IDS") || true)"
-    unlisted="$(comm -13 <(echo "$DOC_IDS") <(echo "$REAL_IDS") || true)"
-    while read -r i; do [[ -n "$i" ]] && bad "the recipe tells you to use --ai ${i}, and the installer refuses it"; done <<<"$ghost"
-    while read -r i; do [[ -n "$i" ]] && bad "the installer accepts --ai ${i}, and the recipe never lists it"; done <<<"$unlisted"
-    [[ -z "$ghost$unlisted" ]] && ok "every --ai id in the recipe is one the installer accepts, and vice versa ($(wc -w <<<"$REAL_IDS"))"
+    for page in "$ROOT/docs/receitas/instalar-o-maestro.md" "$ROOT/README.md"; do
+      rel="$(basename "$page")"
+      if [[ ! -f "$page" ]]; then
+        bad "${rel} is missing — a page that tells you which agent to pass cannot be compared"
+        continue
+      fi
+      DOC_IDS="$(ids_in_page "$page")"
+      # Absence is a FAILURE, never a pass: a page that stopped publishing the table reads
+      # exactly like a reader that broke, and both leave the choice undocumented.
+      if [[ -z "$DOC_IDS" ]]; then
+        bad "${rel} publishes no --ai table — the page that tells you to choose an agent lists none"
+        continue
+      fi
+      ghost="$(comm -23 <(echo "$DOC_IDS") <(echo "$REAL_IDS") || true)"
+      unlisted="$(comm -13 <(echo "$DOC_IDS") <(echo "$REAL_IDS") || true)"
+      while read -r i; do [[ -n "$i" ]] && bad "${rel} tells you to use --ai ${i}, and the installer refuses it"; done <<<"$ghost"
+      while read -r i; do [[ -n "$i" ]] && bad "the installer accepts --ai ${i}, and ${rel} never lists it"; done <<<"$unlisted"
+      [[ -z "$ghost$unlisted" ]] && ok "${rel}: every --ai id is one the installer accepts, and vice versa ($(wc -w <<<"$REAL_IDS"))"
+    done
   fi
 fi
 

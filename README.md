@@ -23,7 +23,14 @@ prática consolidada em `ghdaru` e `flowbuilder`; ver `docs/adr/0007`).
 
 ## Se você é uma IA e acabou de abrir este repositório
 
-Leia isto antes de escrever qualquer coisa. Não é o método — é como se comportar **aqui**.
+Duas situações diferentes, e a primeira coisa a fazer é saber em qual você está:
+
+- **Vim instalar o Maestro em outro projeto** → pule para
+  **[Instalar o Maestro no seu projeto](#instalar-o-maestro-no-seu-projeto)**. Nada aqui
+  precisa ser lido antes; o comando está na primeira linha da seção, e ele já vem na forma
+  que funciona sem terminal.
+- **Vim trabalhar no método, neste repositório** → é o resto desta seção. Leia antes de
+  escrever qualquer coisa: não é o método, é como se comportar **aqui**.
 
 **1. Não responda "estou seguindo o método?" de memória.** Rode e leia:
 
@@ -69,97 +76,100 @@ revisão independente encontrou um portão que media a frase e não o fato.
 
 ## Instalar o Maestro no seu projeto
 
-> **Para uma IA que leu isto:** o Maestro é um método instalável, não uma biblioteca de
-> pacote. Instalar = **copiar o toolkit** (agentes, skills, scripts, comandos, templates e
-> governança) para o repositório do projeto e apontar o `CLAUDE.md`/`AGENTS.md` para ele.
-> Não existe `npm install` nem `pip install` — os passos abaixo são a instalação.
+> **Se você é a IA encarregada de instalar:** o Maestro é um método **instalável**, não um
+> pacote. Não existe `npm install` nem `pip install`. Instalar é copiar o toolkit — agentes,
+> skills, scripts, comandos, templates e governança — para o repositório do projeto e
+> **apontar o `CLAUDE.md`/`AGENTS.md` para ele**. As duas metades contam: copiar sem apontar
+> deixa arquivos que ninguém lê, e o verificador reprova.
 
-Há **três caminhos**, do mais completo ao mais leve. Escolha pelo que você precisa:
-
-### A. Método completo (qualquer agente) — recomendado
-
-> **O clone é a ferramenta. O alvo é outro projeto.**
-> Você clona o Maestro uma vez, em qualquer lugar, e a partir dele instala o método **dentro
-> do seu projeto**. Nada é instalado na pasta do Maestro.
+### O comando — inclusive para quem roda sem terminal
 
 ```bash
-git clone https://github.com/GHDaru/maestro.git
-```
-
-Depois, **de dentro do seu projeto** — a forma do dia a dia:
-
-```bash
+git clone https://github.com/GHDaru/maestro.git /tmp/maestro
 cd /caminho/do/meu-app
-/onde/clonei/maestro/bin/maestro init .
+/tmp/maestro/bin/maestro init . --ai claude --yes
 ```
 
-Ou **de dentro do clone**, apontando para fora:
+**`--yes` não é conveniência.** `init` faz quatro perguntas e, **sem terminal e sem `--yes`,
+sai com código 2 sem escrever nada** — `maestro: no terminal to ask about which agent`.
+Sessão de agente não tem terminal: sem essa flag, a instalação não acontece e o erro não se
+parece com um erro de instalação. Toda pergunta é flag exatamente por isso.
 
-```bash
-cd /onde/clonei/maestro
-./bin/maestro init /caminho/do/meu-app
-```
+**O alvo é o seu projeto, nunca o clone.** O clone é a ferramenta; nada é instalado dentro
+dele. Caminho relativo vale a partir de onde **você** está — daí o `cd` antes do comando.
+Rodar os portões de dentro do clone devolve verde sobre o repositório *do método*, não sobre
+o seu.
 
-Caminho relativo vale a partir de onde **você** está. Cansou de digitar o caminho?
-`export PATH="$PATH:/onde/clonei/maestro/bin"` e depois é só `maestro init .`.
+### As flags que decidem a instalação
 
-**Um comando só instala: `init`.** Ele conduz quatro passos — agente, destino, instalação e
-**verificação** — e sai com erro se a verificação falhar. Instalar sem provar não conta.
+| Flag | O que faz | Quando você precisa |
+|---|---|---|
+| `--ai <id>` | escolhe o agente; **recusa** um id que não conhece | sempre — sem ela, assume `claude` |
+| `--yes` | aceita o padrão do que não foi declarado | sempre que não houver terminal (CI, sessão de agente) |
+| `--dry-run` | mostra o que faria e **não escreve nada** | antes de instalar num repositório alheio |
+| `--no-hooks` | instala sem a camada de aplicação | o agente não é Claude Code, ou você não quer os hooks |
+| `--force` | adota a versão do método de um arquivo que você alterou, salvando o seu antes | conflito consciente, numa atualização |
 
-Sem `--ai`, ele instala para o **Claude Code**. Para ver as outras opções antes de decidir
-(é só uma consulta, não escreve nada):
+### Os ids que o `--ai` aceita
 
-```bash
-maestro agents
-```
+| `--ai` | Agente | Arquivo que ele lê | Comandos | Camada de hooks |
+|---|---|---|---|---|
+| `claude` | Claude Code | `CLAUDE.md` | `.claude/commands` | **sim** |
+| `copilot` | GitHub Copilot | `.github/copilot-instructions.md` | — | não |
+| `cursor-agent` | Cursor | `.cursor/rules/specify-rules.mdc` | — | não |
+| `codex` | Codex CLI · Amp, opencode, Kiro, Bob, Pi | `AGENTS.md` | — | não |
 
-Instalar é também **atualizar**: o que o método escreveu e você não tocou é renovado; o que
-você modificou é mantido, com a versão nova ao lado como `*.maestro-new`. Nada seu é
-sobrescrito em silêncio. Para ver antes sem escrever nada: `--dry-run`.
+`—` em comandos significa que **não verificamos** o formato daquele agente, então nada é
+instalado ali; hooks são mecanismo do Claude Code, e o instalador **diz** quando não instalou
+a camada. Para ver a mesma tabela sem escrever nada: `maestro agents`.
 
-#### O que aparece no seu projeto
-
-A árvore completa, com o que cada camada é, está na receita:
-**[o que fica no seu projeto depois](docs/receitas/instalar-o-maestro.md#o-que-fica-no-seu-projeto-depois)**.
-
-Funciona com qualquer assistente que leia `CLAUDE.md`/`AGENTS.md`; os hooks são mecanismo do
-Claude Code e não são instalados para os outros — e o instalador **diz** quando não instalou.
-
-### B. Plugin do Claude Code — instala e atualiza sozinho
-
-```
-/plugin marketplace add GHDaru/maestro
-/plugin install maestro@ghdaru-maestro
-```
-
-Traz os **13 subagentes, 6 skills e os comandos** já namespaced. Não traz scripts nem
-governança — para o método inteiro, use o caminho A.
-
-### C. Só as skills (75+ agentes) — padrão aberto da comunidade
-
-```bash
-npx skills add GHDaru/maestro
-```
-
-Instala as **6 skills** (`constitution-check`, `verifiable-dod`, `fight-the-pile-up`,
-`anti-patterns`, `diagnose-before-fix`, `living-journey`) em Claude Code, Cursor, Codex,
-Copilot, Cline e outros. É a fatia menor — sem agentes, scripts ou fluxo.
-
-O script leva cinco camadas e imprime, ao final, o bloco pronto para colar no
-`CLAUDE.md` do seu projeto:
+### O que cai no seu projeto
 
 | Camada | Vai para | Papel |
 |---|---|---|
 | 13 subagentes | `.claude/agents/` | **quem faz** cada papel (inclui UX/semântica) |
 | 6 skills | `skills/` | **como fazer** (cada uma com sua Iron Law) |
-| 13 scripts | `scripts/` | o **ritual** repetido e as verificações |
-| comandos + templates | `.claude/commands/`, `.specify/templates/` | o **motor** spec-driven |
+| 13 scripts, dos quais 9 portões | `scripts/` | o **ritual** repetido e as verificações |
+| 12 comandos + 12 templates | `.claude/commands/`, `.specify/templates/` | o **motor** spec-driven |
 | governança | `docs/governance/` | a **fonte de verdade** |
 
-Depois: `scripts/check-agents.sh` (deve sair com código 0) e
-`scripts/new-cycle.sh 001 primeiro-ciclo`.
+A árvore completa, arquivo por arquivo, está na receita:
+**[o que fica no seu projeto depois](docs/receitas/instalar-o-maestro.md#o-que-fica-no-seu-projeto-depois)**.
 
-**Passo a passo detalhado**: [receita de instalação](docs/receitas/instalar-o-maestro.md).
+### Prove que instalou — e só então diga que instalou
+
+```bash
+cd /caminho/do/meu-app
+scripts/check-install.sh
+```
+
+Código 0 é a única evidência que conta. Esse portão reprova enquanto o `CLAUDE.md` não
+apontar para o método — é ele que mede a segunda metade da instalação. O próprio `init` já o
+roda ao final e **sai diferente de zero se ele falhar**: instalar sem provar não conta.
+
+Depois disso, o primeiro ciclo:
+
+```bash
+scripts/new-cycle.sh 001 primeiro-ciclo
+```
+
+### Instalar é também atualizar
+
+Rodar `init` de novo renova o que o método escreveu e você não tocou, e **mantém** o que você
+modificou, deixando a versão nova ao lado como `*.maestro-new`. Nada seu é sobrescrito em
+silêncio. Para ver antes sem escrever nada: `--dry-run`.
+
+### Os outros dois caminhos, menores
+
+| Caminho | Leva | Quando |
+|---|---|---|
+| **Plugin do Claude Code** — `/plugin marketplace add GHDaru/maestro` e depois `/plugin install maestro@ghdaru-maestro` | os 13 subagentes, 6 skills e os comandos, já namespaced; atualiza sozinho | você usa Claude Code e quer só isso |
+| **Só as skills** — `npx skills add GHDaru/maestro` | as 6 skills, em Claude Code, Cursor, Codex, Copilot, Cline e outros | quer a fatia menor, em qualquer assistente |
+
+Nenhum dos dois traz scripts nem governança — ou seja, **não trazem os portões**. Para o
+método inteiro, é o `init` acima.
+
+**Passo a passo detalhado, um comando por vez**: [receita de instalação](docs/receitas/instalar-o-maestro.md).
 
 ---
 
@@ -171,7 +181,7 @@ Depois: `scripts/check-agents.sh` (deve sair com código 0) e
 | **Glossário** | [`docs/governance/glossary.md`](docs/governance/glossary.md) | dicionário de todas as siglas |
 | **Princípios** | [`docs/governance/principles.md`](docs/governance/principles.md) | inegociáveis da metodologia (constituição do Maestro) |
 | **Modelo operacional** | [`docs/governance/operating-model.md`](docs/governance/operating-model.md) | a regra vigente: papéis, cerimônias, artefatos, raias, gates |
-| **Handbook** | [`docs/handbook/`](docs/handbook/README.md) | fundamentos por elemento — 12 capítulos (teoria + frameworks + recomendação) |
+| **Handbook** | [`docs/handbook/`](docs/handbook/README.md) | fundamentos por elemento — 13 capítulos (teoria + frameworks + recomendação) |
 | **Decisões** | [`docs/adr/`](docs/adr/README.md) | ADRs (imutáveis) |
 | **Pesquisa + diário** | [`docs/research/`](docs/research/) | a síntese citada e o diário de aprendizado |
 | **Templates** | `.github/pull_request_template.md`, `.claude/commands/dod.md`, `.github/workflows/ci.yml` | boas práticas prontas para reuso |

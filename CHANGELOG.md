@@ -10,6 +10,25 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Corrigido
+- **O README publicava a única forma do comando que uma IA não consegue rodar** (ciclo 064).
+  A página tem duas seções endereçadas a uma IA, e a de instalação publicava só
+  `maestro init <dir>` — que, sem terminal, **sai com código 2 e não escreve nada**
+  (`no terminal to ask about which agent`). Sessão de agente não tem terminal: quem seguisse
+  a página ao pé da letra não instalava, e recebia um erro que não parece de instalação. A
+  receita já dizia `--yes` desde o ciclo 057; o README ficou para trás — anti-padrão 23, a
+  porta nova numa página e a outra nunca soube. Agora a primeira forma publicada é
+  `init . --ai claude --yes`, com o código de saída e a mensagem escritos ao lado.
+  Junto: os quatro ids do `--ai` passam a aparecer no README (eram uma ida e volta a
+  `maestro agents`); a tabela das cinco camadas e os comandos de verificação saíram de baixo
+  de "só as skills", onde descreviam outro caminho; a verificação publicada passa a ser
+  `check-install.sh` — a da instalação inteira — rodada de dentro do projeto alvo; e
+  "12 capítulos" vira 13, que é o que `docs/handbook/` tem.
+
+- **O portão de ids lia só a receita** (ciclo 064). O README podia publicar um `--ai` que o
+  instalador recusa e nada reprovava — o mesmo defeito que o ciclo 060 encontrou na receita,
+  uma página ao lado. Passa a comparar **as duas** páginas contra `install-agents.tsv`, nas
+  duas direções, com extração escopada ao cabeçalho da tabela, e **ausência da tabela é
+  reprovação**: uma página que parou de publicá-la lê exatamente como um leitor que quebrou.
 - **Nove defeitos no que o ciclo 062 e o 063 acabaram de escrever** (ciclo 063, segundo
   parecer). O `--ticked-only` **era** o portão sempre-vermelho que existe para evitar, e a
   primeira correção abriu um buraco mais barato que o que fechou: `rm qa-report.md` fazia o
