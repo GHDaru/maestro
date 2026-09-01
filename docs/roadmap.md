@@ -65,7 +65,7 @@ docs/
   comece-por-aqui.md        ✅ guia narrativo
   roadmap.md                ✅ este mapa
   governance/               ✅ principios · modelo · glossario
-  handbook/                 ✅ 12 capítulos + decks + PDFs
+  handbook/                 ✅ 13 capítulos + decks + PDFs
   adr/                      ✅ decisões imutáveis
   research/                 ✅ pesquisa + diário
   architecture/             ➕ visão de arquitetura do toolkit (a criar)
