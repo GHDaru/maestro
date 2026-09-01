@@ -50,6 +50,32 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
   vermelho ao acaso em `dev` e em `main`. Passa a ler com `awk`, que abre o arquivo, e a
   **validar a forma** do resultado. Anti-padrão 21, sétima ocorrência.
 
+- **O comando que o próprio ciclo 064 publicou era executável por terceiro** (ciclo 064,
+  revisão independente). A primeira entrega trocou o clone por um caminho fixo — `/tmp/maestro` —
+  com as três linhas **soltas**: quando o clone falha porque o caminho já existe, o `cd` e o
+  `init` rodam mesmo assim, contra o que estivesse lá. `/tmp` é gravável por qualquer um da
+  máquina. E a nota de segurança do próprio ciclo examinou esse caminho e concluiu o contrário,
+  porque parou na recusa do `git clone` sem notar que a linha seguinte executa de qualquer
+  forma. Agora o comando é encadeado por `&&` e o clone vai para `~/maestro-toolkit`.
+
+- **A capa que o GitHub Pages serve ficou para trás** (ciclo 064, revisão independente).
+  `site/index.html` continuava publicando a forma sem `--yes` — a que este mesmo ciclo existe
+  para aposentar —, e nenhum portão lia aquela página. Anti-padrão 23 repetido dentro da
+  correção do anti-padrão 23.
+
+- **O portão de ids media a tabela e não o comando** (ciclo 064, revisão independente). O
+  primeiro bloco que um agente copia não era lido por ninguém: `--ai cursor` ali passava verde
+  em `check-installed`, `check-flags` e `check-links` ao mesmo tempo, e quem seguisse a página
+  parava no passo 0 com `error: unknown agent 'cursor'`. Agora **todo** `--ai <valor>` das três
+  páginas é comparado contra `install-agents.tsv`, e uma página que não nomeia agente nenhum
+  reprova.
+
+- **Âncora de página para ela mesma não era de ninguém** (ciclo 064, revisão independente).
+  `check-links.sh` descarta todo alvo que começa em `#` e corta o fragmento dos demais, então
+  `](#uma-ancora-que-nao-existe)` era verde — e a evidência que o ciclo escreveu para o seu
+  próprio ponteiro de navegação citava justamente esse portão. Agora as âncoras do README para
+  ele mesmo resolvem sob portão.
+
 ## [0.3.0] — 2026-08-22
 
 **A versão em que o método ganhou porta de entrada — e em que instalar passou a ser

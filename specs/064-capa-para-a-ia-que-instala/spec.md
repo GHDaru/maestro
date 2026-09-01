@@ -57,11 +57,24 @@ receita**. O README podia publicar um id que o instalador recusa e nada reprovav
 - **FR5**: A verificação pós-instalação publicada DEVERÁ ser `check-install.sh`, rodado de
   dentro do projeto alvo.
 
+Acrescentados depois da revisão independente, que reprovou a primeira entrega:
+
+- **FR6**: O comando publicado DEVERÁ ser encadeado, e o clone NÃO DEVERÁ ir para um caminho
+  fixo em `/tmp` — solto, o `init` roda mesmo com o clone falho, e `/tmp` é gravável por
+  qualquer um da máquina.
+- **FR7**: `site/index.html`, que é a capa servida pelo GitHub Pages, DEVERÁ publicar a mesma
+  forma do comando que o README.
+- **FR8**: TODO `--ai <valor>` que qualquer uma das três páginas entrega DEVERÁ ser comparado
+  contra `install-agents.tsv` — o comando, não só a tabela.
+- **FR9**: As âncoras do README para ele mesmo DEVERÃO resolver, sob portão.
+
 ## Critérios de aceite (DoD)
 
 - `scripts/check-installed.sh` compara os ids das **duas** páginas e sai 0.
 - Cada contagem que o README anuncia é conferida contra uma instalação real (o portão de
   contagens já lê o README) — subagentes, skills, scripts, portões, comandos e templates.
 - As três mutações do portão de ids reprovam: id fantasma, tabela ausente, id esquecido.
-- `check-flags.sh` verde: toda flag que o README promete existe no parser, e vice-versa.
+- `check-flags.sh` verde: toda flag que o README **promete** existe no parser. (Só essa
+  direção: `prose_check()` calcula fantasmas e nada mais — o próprio script diz que prosa é
+  verificada em uma direção. `--help`, `-h` e `-y` são aceitos e a página não os cita.)
 - Os 14 portões bloqueantes verdes, mais `check-conformance.sh --ticked-only`.

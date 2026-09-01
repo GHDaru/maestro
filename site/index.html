@@ -107,11 +107,11 @@
            até aqui, chegar à instalação eram QUATRO cliques, pelo caminho que se anuncia como
            "~1 dia". O livro existe para convencer; isto existe para quem já foi. -->
       <div style="margin-top:34px;border:1px solid var(--line);border-radius:12px;padding:18px 20px;max-width:44rem">
-        <div class="eyebrow" style="margin:0 0 10px">Três comandos</div>
-        <pre style="margin:0;overflow-x:auto;font-family:var(--fm);font-size:13px;line-height:1.9"><code>git clone https://github.com/GHDaru/maestro.git &amp;&amp; cd maestro
-./bin/maestro agents          <span style="opacity:.6"># qual IA vai ler o seu projeto</span>
-./bin/maestro init ../seu-projeto --ai claude</code></pre>
-        <p style="margin:12px 0 0;font-size:14px;color:var(--muted)">O <code>init</code> conduz os quatro passos e <b>termina verificando</b> — instalar sem provar não conta. Detalhe: <a href="instalar-o-maestro.html">a receita</a>.</p>
+        <div class="eyebrow" style="margin:0 0 10px">Um comando</div>
+        <pre style="margin:0;overflow-x:auto;font-family:var(--fm);font-size:13px;line-height:1.9"><code>git clone https://github.com/GHDaru/maestro.git ~/maestro-toolkit \
+  &amp;&amp; cd /caminho/do/seu-projeto \
+  &amp;&amp; ~/maestro-toolkit/bin/maestro init . --ai claude --yes</code></pre>
+        <p style="margin:12px 0 0;font-size:14px;color:var(--muted)">O <code>init</code> conduz os quatro passos e <b>termina verificando</b> — instalar sem provar não conta. O <code>--yes</code> é o que faz isso rodar <b>sem terminal</b>: sem ele, numa sessão de agente ou em CI, o <code>init</code> sai com código 2 e não escreve nada. Detalhe: <a href="instalar-o-maestro.html">a receita</a>.</p>
       </div>
     </section>
 

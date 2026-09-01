@@ -504,6 +504,41 @@ PYA
   [[ "$anchors_ok" -eq 1 ]] && ok "every README anchor into the recipe resolves to a heading"
 fi
 
+# Same-page anchors were nobody's job: check-links.sh drops every target starting with '#'
+# and strips the fragment off the rest, so a link to a heading that does not exist was green
+# — and the cycle that added the README's own jump pointer cited check-links as its evidence
+# (independent review of cycle 064). The pointer IS the navigation this page exists to give.
+echo ""
+echo "── The README's pointers into itself ──"
+if [[ -f "$ROOT/README.md" ]]; then
+  self_ok=1; self_seen=0
+  while IFS= read -r a; do
+    [[ -n "$a" ]] || continue
+    self_seen=$((self_seen + 1))
+    if ! python3 - "$ROOT/README.md" "$a" <<'PYB'
+import re, sys
+target = sys.argv[2]
+for line in open(sys.argv[1], encoding="utf-8"):
+    if not line.startswith("#"):
+        continue
+    t = line.lstrip("#").strip().lower()
+    t = re.sub(r"[^\w\s-]", "", t, flags=re.UNICODE)
+    if re.sub(r"\s+", "-", t).strip("-") == target:
+        sys.exit(0)
+sys.exit(1)
+PYB
+    then
+      bad "README links to '#${a}' on its own page, and no heading there produces that anchor"
+      self_ok=0
+    fi
+  done < <(grep -oE '\]\(#[^)]+\)' "$ROOT/README.md" | sed -E 's/^\]\(#//; s/\)$//' | sort -u)
+  if [[ "$self_seen" -eq 0 ]]; then
+    note "the README carries no same-page anchor to resolve"
+  elif [[ "$self_ok" -eq 1 ]]; then
+    ok "every README anchor into itself resolves to a heading (${self_seen})"
+  fi
+fi
+
 # The recipe publishes a table of `--ai` ids. Those ids were the ids of a first draft, and
 # the installer REFUSED them for three cycles while every gate stayed green: the person
 # following the page hit `error: unknown agent 'cursor'` at step 0 and had nowhere to go.
@@ -616,6 +651,53 @@ else
   else
     bad "the installation creates CLAUDE.md and the recipe never mentions it"
   fi
+fi
+
+# The table is not the only place a page names an agent id — and it was the only place read.
+# The first thing an agent copies is the COMMAND, and a command carrying `--ai cursor` (the id
+# the installer refuses, and the one cycle 060 caught in the recipe) sailed through every gate
+# while the table beside it was perfect. So: every `--ai <value>` on the page, wherever it is,
+# is a claim about what the installer accepts. Three pages, because site/index.html is the one
+# GitHub Pages actually serves and no gate had ever read it (independent review of cycle 064).
+echo ""
+echo '── Every --ai a page hands you × the ids the installer accepts ──'
+ai_values_in_page() {  # $1 = page. Prints one value per line, placeholders dropped.
+  grep -oE -- '--ai[[:space:]]+[A-Za-z0-9<][A-Za-z0-9._<>-]*' "$1" 2>/dev/null \
+    | sed -E 's/^--ai[[:space:]]+//' \
+    | grep -vE '^<' \
+    | sort -u || true
+}
+if [[ ! -f "$ROOT/scripts/install-agents.tsv" ]]; then
+  bad "cannot check the --ai values: install-agents.tsv is missing"
+else
+  # Recomputed, never borrowed from the block above: that one sets REAL_IDS inside a branch,
+  # and reading it here would make this gate depend on which branch ran (and abort under set -u).
+  ACCEPTED="$(tr -d '\r' < "$ROOT/scripts/install-agents.tsv" | grep -v '^#' | cut -f1 \
+    | grep -E '^[a-z][a-z0-9-]*$' | sort -u || true)"
+  [[ -n "$ACCEPTED" ]] || bad "install-agents.tsv yielded no ids — nothing to compare the pages against"
+  # `list` is accepted only because the installer IMPLEMENTS it — read from the parser, never
+  # asserted here, so the exception disappears the day the feature does.
+  if grep -qE '"\$ARG_AI"[[:space:]]*==[[:space:]]*"list"' "$ROOT/scripts/install-maestro.sh"; then
+    ACCEPTED="$(printf '%s\nlist\n' "$ACCEPTED" | sort -u)"
+  fi
+  for page in "$ROOT/docs/receitas/instalar-o-maestro.md" "$ROOT/README.md" "$ROOT/site/index.html"; do
+    rel="$(basename "$page")"
+    [[ -f "$page" ]] || { bad "${rel} is missing — a page that hands out install commands cannot be checked"; continue; }
+    VALUES="$(ai_values_in_page "$page")"
+    # A page that names no agent at all is the "did not look" case: all three publish an
+    # install command, and a command with no --ai is a command that installs for the default
+    # without saying so.
+    if [[ -z "$VALUES" ]]; then
+      bad "${rel} hands out install commands and names no --ai at all — the reader is left to guess, or the reader of this gate broke"
+      continue
+    fi
+    page_bad=0
+    while read -r v; do
+      [[ -n "$v" ]] || continue
+      grep -qxF "$v" <<<"$ACCEPTED" || { bad "${rel} hands you '--ai ${v}', and the installer refuses it"; page_bad=1; }
+    done <<<"$VALUES"
+    [[ "$page_bad" -eq 0 ]] && ok "${rel}: every --ai it hands you is one the installer accepts ($(wc -l <<<"$VALUES"))"
+  done
 fi
 
 # The recipe publishes a SAMPLE install-options.json — and a sample is a claim about what a

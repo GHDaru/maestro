@@ -85,15 +85,23 @@ revisão independente encontrou um portão que media a frase e não o fato.
 ### O comando — inclusive para quem roda sem terminal
 
 ```bash
-git clone https://github.com/GHDaru/maestro.git /tmp/maestro
-cd /caminho/do/meu-app
-/tmp/maestro/bin/maestro init . --ai claude --yes
+git clone https://github.com/GHDaru/maestro.git ~/maestro-toolkit \
+  && cd /caminho/do/meu-app \
+  && ~/maestro-toolkit/bin/maestro init . --ai claude --yes
 ```
 
-**`--yes` não é conveniência.** `init` faz quatro perguntas e, **sem terminal e sem `--yes`,
-sai com código 2 sem escrever nada** — `maestro: no terminal to ask about which agent`.
-Sessão de agente não tem terminal: sem essa flag, a instalação não acontece e o erro não se
-parece com um erro de instalação. Toda pergunta é flag exatamente por isso.
+**As três linhas são encadeadas por `&&` de propósito.** Soltas, o `init` roda mesmo quando o
+clone falhou — e então instala o que já estivesse naquele caminho, reportando sucesso. Pelo
+mesmo motivo o clone vai para dentro da sua `$HOME`, e não para um caminho fixo em `/tmp`:
+`/tmp` é gravável por qualquer um da máquina, e um diretório previsível ali é o executável de
+outra pessoa. Já tem o clone? Então não clone de novo: atualize-o com um `git pull` lá dentro e siga
+das duas últimas linhas.
+
+**`--yes` não é conveniência.** `init` faz três perguntas — agente, destino, e criar o
+destino se ele não existir — e, **sem terminal e sem `--yes`, sai com código 2 sem escrever
+nada**: `maestro: no terminal to ask about which agent`. Sessão de agente não tem terminal:
+sem essa flag, a instalação não acontece e o erro não se parece com um erro de instalação.
+Toda pergunta é flag exatamente por isso.
 
 **O alvo é o seu projeto, nunca o clone.** O clone é a ferramenta; nada é instalado dentro
 dele. Caminho relativo vale a partir de onde **você** está — daí o `cd` antes do comando.
@@ -132,6 +140,11 @@ a camada. Para ver a mesma tabela sem escrever nada: `maestro agents`.
 | 13 scripts, dos quais 9 portões | `scripts/` | o **ritual** repetido e as verificações |
 | 12 comandos + 12 templates | `.claude/commands/`, `.specify/templates/` | o **motor** spec-driven |
 | governança | `docs/governance/` | a **fonte de verdade** |
+
+**Essa tabela é a instalação `--ai claude`.** Os outros três ids escrevem as mesmas skills,
+scripts e governança, e **nenhum** `.claude/` — nem os 13 subagentes, nem os 12 comandos:
+o formato não foi verificado para eles, e derramar arquivo que ninguém lê não é suporte.
+`--ai codex` escreve 53 arquivos, contra 81 do `claude`.
 
 A árvore completa, arquivo por arquivo, está na receita:
 **[o que fica no seu projeto depois](docs/receitas/instalar-o-maestro.md#o-que-fica-no-seu-projeto-depois)**.
