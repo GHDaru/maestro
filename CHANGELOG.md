@@ -9,6 +9,20 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 
 ## [Unreleased]
 
+### Adicionado
+- **Portão de slop no livro** (ciclo 064, ADR 0021): `publicar/verifica-slop.mjs` roda antes
+  do `build.mjs` e barra 16 padrões de "Signs of AI writing" na fonte em Markdown do
+  handbook, receitas, diagramas, `docs/livro` e `docs/jornada`. Cada padrão carrega uma
+  amostra-canário que o autoteste roda a cada build — e também dobrada em duas linhas,
+  porque Markdown quebra parágrafo onde quiser. Escape por linha com motivo escrito
+  (`<!-- slop-ok: motivo -->`). É o Princípio IV aplicado à prosa: "este capítulo soa
+  gerado" era julgamento editorial e virou checagem.
+  Três regras do guia de origem foram **descartadas com medição**, não esquecidas: §14
+  (travessão — é pontuação em português), §18 (emoji — os 90 do livro são notação com
+  legenda: ⭐ marca a seção 6 do esqueleto, ✨ capítulo migrado, as bolas coloridas são a
+  legenda dos diagramas) e §16 (listas com rótulo em negrito — acusa lista de definição).
+  O critério: portão com falso positivo conhecido é portão que se aprende a ignorar.
+
 ### Corrigido
 - **Nove defeitos no que o ciclo 062 e o 063 acabaram de escrever** (ciclo 063, segundo
   parecer). O `--ticked-only` **era** o portão sempre-vermelho que existe para evitar, e a

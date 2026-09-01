@@ -4,7 +4,7 @@
 > skills, workflows, scripts). Também serve de **orientação**: se você está perdido, comece
 > por aqui. Documento vivo — atualizado a cada fase.
 >
-> **Status**: Ativo · **Versão**: **v0.3.0** (2026-08-22) · **Atualizado**: ciclo 062 · **Regra**: este mapa é
+> **Status**: Ativo · **Versão**: **v0.3.0** (2026-08-22) · **Atualizado**: ciclo 064 · **Regra**: este mapa é
 > artefato vivo — todo ciclo concluído atualiza a tabela de fases **no mesmo PR**
 > (anti-padrão 15: artefato de planejamento que congela).
 
@@ -132,6 +132,7 @@ Cada fase = **um ciclo** (uma spec, um gate). Ordem por dependência:
 | **F26 — O instalador que atualiza** | manifesto com hash por arquivo escrito: atualiza o que é nosso e está inalterado, mantém o que o projeto modificou (com `.maestro-new` ao lado), remove o que o método deixou de enviar. `--force` guarda `.maestro-old`; travessia de caminho recusada. Dez asserções novas no portão da cópia instalada | 051 | ✅ |
 | **F27 — A porta da frente** | `bin/maestro` conduz agente, destino, instalação e **verificação**, e sai diferente de zero se ela falhar; toda pergunta é também flag, então roda em CI. `--ai` torna o agente escolha declarada (quatro ids, no modelo do spec-kit), e a camada de hooks só vai para quem a lê | 056, 057, 058, 059 | ✅ |
 | **F28 — v0.3.0** | terceira versão fechada: dezessete portões, quatorze bloqueantes inteiros mais a metade bloqueante da conformidade (`--ticked-only`). A nota declara o que a versão **não** tem, e o estado da tag no remoto é o que o `git ls-remote` devolveu — não o que se esperava | 062 | ✅ |
+| **F29 — O portão que lê a prosa** | `publicar/verifica-slop.mjs`: 16 padrões de "Signs of AI writing" barrados na fonte do livro, cada um com amostra-canário que o autoteste roda a cada build — também dobrada em duas linhas, porque Markdown quebra parágrafo onde quiser. Três regras do guia foram **descartadas com medição** (travessão é pontuação em português; os 90 emojis do livro são notação com legenda; lista de definição não é lista de chatbot): portão com falso positivo conhecido é portão que se aprende a ignorar | 064 | ✅ |
 | **(contínuo) — Retrospectiva** | erro recorrente → regra versionada; **gatilho por dívida de achados** (`check-retro.sh`) desde o ciclo 034 | 017, 034 e seguintes | 🔄 |
 
 ### Gatilhos abertos (decisões adiadas, com condição de revisão)

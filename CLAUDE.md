@@ -98,6 +98,7 @@
   scripts/check-conformance.sh       # "estou seguindo o Maestro?" — resposta executável
   scripts/check-chapters.sh            # Iron Law editorial: 9 seções, datação, exemplo real
   scripts/package-plugin.sh --verify   # plugin sincronizado com as fontes
+  node publicar/verifica-slop.mjs      # livro: marcas de escrita de IA na prosa (ADR 0021)
   node publicar/build.mjs                   # livro: links, imagens e slugs
   ```
 

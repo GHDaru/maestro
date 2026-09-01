@@ -23,6 +23,7 @@ consequências → fontes.
 | 0018 | [Fronteira interna em vez de divisão em dois repositórios](0018-fronteira-interna-em-vez-de-divisao.md) | Aceito |
 | 0019 | [Conformidade executável e catálogo de artefatos](0019-conformidade-executavel-e-catalogo-de-artefatos.md) | Aceito |
 | 0020 | [MIT, e a atribuição viaja com a cópia](0020-licenca-mit-e-atribuicao-que-viaja.md) | Aceito |
+| 0021 | [Portão de slop no livro, sem travessão e sem emoji](0021-portao-de-slop-no-livro.md) | Aceito |
 
 > Índice consultável por máquina (append-only): [`../records/decisoes.jsonl`](../records/decisoes.jsonl) — ver [protocolo](../records/README.md).
 

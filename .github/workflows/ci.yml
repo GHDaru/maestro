@@ -103,6 +103,12 @@ jobs:
           npm ci --ignore-scripts --prefix publicar
           node publicar/build.mjs
 
+      # Runs as its own step, not inside the structural loop above: that loop calls
+      # scripts/<name>.sh, and this gate is JavaScript living next to the book engine
+      # (it is book surface, not installable method — ADR 0021).
+      - name: Prose without AI writing marks (blocking)
+        run: node publicar/verifica-slop.mjs
+
       # Advisory: these are red for legitimate reasons while work is in flight.
       # check-cycle compares against the main line; check-retro is a debt trigger by design;
       # and check-conformance rejects the placeholder qa-report.md that new-cycle.sh emits
