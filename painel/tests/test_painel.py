@@ -163,5 +163,22 @@ class Extracao(Fixture):
         self.assertTrue(any("merge na main não é deploy" in n for n in d["notas"]))
 
 
+class HigieneGit(unittest.TestCase):
+    def test_detecta_branch_com_upstream_na_main(self):
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as r:
+            g = lambda *a: subprocess.run(["git", "-C", r, *a], capture_output=True, check=True)
+            g("init", "-q", "-b", "main")
+            g("-c", "user.email=t@t", "-c", "user.name=t", "commit", "-q", "--allow-empty", "-m", "c0")
+            g("remote", "add", "origin", r)
+            g("fetch", "-q", "origin")
+            g("branch", "-q", "perigo", "origin/main")  # tracks origin/main: git push goes to main
+            g("branch", "-q", "segura")
+            cfg = {"raiz": r, "repos": [{"nome": "x", "caminho": r, "principal": "main"}]}
+            db = sqlite3.connect(":memory:")
+            db.executescript(ingest.DERIVADAS)
+            ingest.ingere_worktrees(db, cfg)
+            self.assertEqual(db.execute("SELECT branch FROM branches_risco").fetchall(), [("perigo",)])
+
+
 if __name__ == "__main__":
     unittest.main()

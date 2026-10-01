@@ -29,12 +29,18 @@ DROP TABLE IF EXISTS sessoes; DROP TABLE IF EXISTS commits; DROP TABLE IF EXISTS
 DROP TABLE IF EXISTS decisoes; DROP TABLE IF EXISTS adrs; DROP TABLE IF EXISTS desvios;
 DROP TABLE IF EXISTS barra_execucoes; DROP TABLE IF EXISTS defeitos; DROP TABLE IF EXISTS glossario;
 DROP TABLE IF EXISTS documentos; DROP TABLE IF EXISTS specs; DROP TABLE IF EXISTS roadmap;
-DROP TABLE IF EXISTS meta;
+DROP TABLE IF EXISTS meta; DROP TABLE IF EXISTS worktrees; DROP TABLE IF EXISTS fases;
 CREATE TABLE meta (chave TEXT PRIMARY KEY, valor TEXT);
+CREATE TABLE worktrees (repo TEXT, caminho TEXT, branch TEXT, head TEXT, upstream TEXT,
+  integrada INTEGER, ultimo_commit TEXT, idade_d REAL, sujeira INTEGER, risco TEXT,
+  PRIMARY KEY (repo, caminho));
+DROP TABLE IF EXISTS branches_risco;
+CREATE TABLE branches_risco (repo TEXT, branch TEXT, upstream TEXT, PRIMARY KEY (repo, branch));
+CREATE TABLE fases (n INTEGER PRIMARY KEY, ts TEXT, rodada TEXT, fase TEXT, quem TEXT, evento TEXT, nota TEXT);
 CREATE TABLE sessoes (nome TEXT PRIMARY KEY, papel TEXT, arquivo TEXT, estado_em TEXT,
   estado_texto TEXT, worktree TEXT, ultimo_hash TEXT, proximo TEXT);
 CREATE TABLE commits (repo TEXT, hash TEXT, ts TEXT, autor TEXT, assunto TEXT,
-  pais INTEGER, primeiro_pai INTEGER, PRIMARY KEY (repo, hash));
+  pais INTEGER, primeiro_pai INTEGER, ts_autor TEXT, PRIMARY KEY (repo, hash));
 CREATE TABLE entregas (repo TEXT, hash TEXT, ts TEXT, assunto TEXT, n_commits INTEGER,
   lead_h_mediana REAL, lead_h_max REAL, eh_correcao INTEGER, PRIMARY KEY (repo, hash));
 CREATE TABLE decisoes (id TEXT, origem TEXT, quando TEXT, titulo TEXT, contexto TEXT,
@@ -71,6 +77,7 @@ CREATE TRIGGER IF NOT EXISTS eventos_sem_update BEFORE UPDATE ON eventos
   BEGIN SELECT RAISE(ABORT, 'eventos e append-only'); END;
 CREATE TRIGGER IF NOT EXISTS eventos_sem_delete BEFORE DELETE ON eventos
   BEGIN SELECT RAISE(ABORT, 'eventos e append-only'); END;
+CREATE TABLE IF NOT EXISTS ingest_log (id INTEGER PRIMARY KEY AUTOINCREMENT, ts TEXT, duracao_ms INTEGER, contagem TEXT);
 """
 
 
@@ -197,8 +204,14 @@ def norm_sessao(nome: str) -> str:
 
 
 def git(repo, *args):
-    r = subprocess.run(["git", "-C", repo, *args], capture_output=True, text=True,
-                       encoding="utf-8", errors="replace")
+    for tentativa in range(3):
+        try:
+            r = subprocess.run(["git", "-C", repo, *args], capture_output=True, text=True,
+                               encoding="utf-8", errors="replace")
+            break
+        except OSError:  # transient process-creation failure on Windows
+            if tentativa == 2:
+                return ""
     if r.returncode != 0:
         return ""
     return r.stdout
@@ -216,23 +229,23 @@ def ingere_git(db, cfg):
             continue
         limite = str(rep.get("limite", 3000))
         fp = set(git(caminho, "rev-list", "--first-parent", ref, "-n", limite).split())
-        out = git(caminho, "log", ref, "-n", limite, "--format=%H%x1f%cI%x1f%an%x1f%s%x1f%P")
+        out = git(caminho, "log", ref, "-n", limite, "--format=%H%x1f%cI%x1f%an%x1f%s%x1f%P%x1f%aI")
         for linha in out.splitlines():
-            h, ts, autor, assunto, pais = (linha.split("\x1f") + [""] * 5)[:5]
+            h, ts, autor, assunto, pais, ts_autor = (linha.split("\x1f") + [""] * 6)[:6]
             npais = len(pais.split())
-            db.execute("INSERT OR REPLACE INTO commits VALUES (?,?,?,?,?,?,?)",
-                       (nome, h, ts, autor, assunto, npais, 1 if h in fp else 0))
+            db.execute("INSERT OR REPLACE INTO commits VALUES (?,?,?,?,?,?,?,?)",
+                       (nome, h, ts, autor, assunto, npais, 1 if h in fp else 0, ts_autor))
             total += 1
         # deliveries: each first-parent commit on the main line; lead time = author date -> landing
         for h in fp:
-            row = db.execute("SELECT ts, assunto, pais FROM commits WHERE repo=? AND hash=?", (nome, h)).fetchone()
+            row = db.execute("SELECT ts, assunto, pais, ts_autor FROM commits WHERE repo=? AND hash=?", (nome, h)).fetchone()
             if not row:
                 continue
-            ts_main, assunto, npais = row
+            ts_main, assunto, npais, ts_autor = row
             if npais > 1:
                 datas = git(caminho, "log", f"{h}^1..{h}", "--format=%aI").split()
             else:
-                datas = git(caminho, "log", "-1", h, "--format=%aI").split()
+                datas = [ts_autor] if ts_autor else []
             t_main = dt.datetime.fromisoformat(ts_main)
             leads = sorted(max(0.0, (t_main - dt.datetime.fromisoformat(d)).total_seconds() / 3600) for d in datas)
             if not leads:
@@ -438,6 +451,66 @@ def ingere_roadmap(db, cfg):
     return n
 
 
+def ingere_worktrees(db, cfg):
+    """Worktree hygiene: integrated/abandoned trees and branches whose upstream is the production line."""
+    n = 0
+    t0 = agora()
+    for rep in cfg.get("repos", []):
+        caminho, ref = rep["caminho"], rep.get("principal", "main")
+        integradas = {b.strip().lstrip("*+ ").strip() for b in git(caminho, "branch", "--merged", ref).splitlines()}
+        ups = {}
+        for l in git(caminho, "for-each-ref", "--format=%(refname:short)|%(upstream:short)|%(committerdate:iso-strict)",
+                     "refs/heads").splitlines():
+            b, u, d = (l.split("|") + ["", ""])[:3]
+            ups[b] = (u, d)
+            if u and re.search(r"(^|/)(main|master)$", u) and b not in ("main", "master"):
+                db.execute("INSERT OR REPLACE INTO branches_risco VALUES (?,?,?)", (rep["nome"], b, u))
+        blocos =git(caminho, "worktree", "list", "--porcelain").strip().split("\n\n")
+        for bl in blocos:
+            campos = dict((l.split(" ", 1) + [""])[:2] for l in bl.splitlines() if l)
+            wt = campos.get("worktree")
+            if not wt or os.path.normcase(os.path.normpath(wt)) == os.path.normcase(os.path.normpath(caminho)):
+                continue
+            branch = campos.get("branch", "").replace("refs/heads/", "")
+            up, data = ups.get(branch, ("", ""))
+            t = dt.datetime.fromisoformat(data) if data else None
+            idade = round((t0 - t).total_seconds() / 86400, 1) if t else None
+            integrada = int(branch in integradas) if branch else 0
+            riscos = []
+            if up and re.search(r"(^|/)(main|master)$", up) and branch not in ("main", "master"):
+                riscos.append("upstream na linha de producao: git push vai para a main")
+            if "prunable" in campos:
+                riscos.append("pasta sumiu (prunable)")
+            if "detached" in campos:
+                riscos.append("HEAD destacado")
+            if any(re.search(p, rel(cfg, wt)) for p in cfg.get("worktree_protegidas", [])):
+                riscos.append("protegida (em uso pela entrega)")
+            sujeira = None
+            if cfg.get("worktree_sujeira") and os.path.isdir(wt) and (integrada or (idade or 0) > 3):
+                sujeira = int(bool(git(wt, "status", "--porcelain", "--untracked-files=no").strip()))
+            db.execute("INSERT OR REPLACE INTO worktrees VALUES (?,?,?,?,?,?,?,?,?,?)",
+                       (rep["nome"], rel(cfg, wt), branch, campos.get("HEAD", "")[:10], up, integrada,
+                        data, idade, sujeira, "; ".join(riscos)))
+            n += 1
+    return n
+
+
+def ingere_fases(db, cfg):
+    arq = cfg.get("ponto")
+    if not arq or not os.path.exists(arq):
+        return 0
+    n = 0
+    for linha in ler(arq).splitlines():
+        try:
+            d = json.loads(linha)
+        except ValueError:
+            continue
+        n += 1
+        db.execute("INSERT INTO fases VALUES (?,?,?,?,?,?,?)",
+                   (n, d.get("timestamp"), d.get("rodada"), d.get("fase"), d.get("quem"), d.get("evento"), d.get("nota")))
+    return n
+
+
 # ---------- plumbing ----------
 
 def expande(padroes):
@@ -472,7 +545,7 @@ def carrega_cfg(caminho):
         return v
 
     for k in ("equipe", "decisoes", "decisoes_jsonl", "adrs", "retro", "barra_execucoes",
-              "barra_resultados", "glossario", "roadmap"):
+              "barra_resultados", "glossario", "roadmap", "ponto"):
         if k in cfg:
             cfg[k] = absol(cfg[k])
     for k in ("repos", "specs"):
@@ -489,13 +562,15 @@ def abre(db_path):
 
 
 def ingere(cfg, db_path):
+    inicio = agora()
     db = abre(db_path)
     db.executescript(DERIVADAS)
     contagem = {}
     for nome, fn in [("sessoes", ingere_sessoes), ("commits", ingere_git), ("decisoes", ingere_decisoes),
                      ("adrs", ingere_adrs), ("desvios", ingere_desvios), ("barra", ingere_barra),
                      ("glossario", ingere_glossario), ("documentos", ingere_documentos),
-                     ("specs", ingere_specs), ("roadmap", ingere_roadmap)]:
+                     ("specs", ingere_specs), ("roadmap", ingere_roadmap),
+                     ("worktrees", ingere_worktrees), ("fases", ingere_fases)]:
         try:
             contagem[nome] = fn(db, cfg)
         except PermissionError:
@@ -506,6 +581,11 @@ def ingere(cfg, db_path):
     db.execute("INSERT INTO meta VALUES ('ingerido_em', ?)", (agora().isoformat(timespec="seconds"),))
     db.execute("INSERT INTO meta VALUES ('contagem', ?)", (json.dumps(contagem, ensure_ascii=False),))
     db.execute("INSERT INTO meta VALUES ('limiar_parado_min', ?)", (str(cfg.get("limiar_parado_min", 60)),))
+    db.execute("INSERT INTO meta VALUES ('equipes', ?)", (json.dumps(cfg.get("equipes", {}), ensure_ascii=False),))
+    db.execute("INSERT INTO meta VALUES ('titulo', ?)", (cfg.get("titulo", cfg.get("projeto", "")),))
+    db.execute("INSERT INTO ingest_log (ts, duracao_ms, contagem) VALUES (?,?,?)",
+               (agora().isoformat(timespec="seconds"), int((agora() - inicio).total_seconds() * 1000),
+                json.dumps(contagem, ensure_ascii=False)))
     db.commit()
     db.close()
     return contagem

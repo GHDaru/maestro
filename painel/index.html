@@ -112,6 +112,10 @@ tr:hover td{background:var(--surface-2)}
     <div class="grupo">Medição</div>
     <button data-v="dora">↗ Indicadores DORA</button>
     <button data-v="qualidade">✓ Barra, defeitos e desvios <span class="cnt" id="c-desv"></span></button>
+    <button data-v="tempo">◷ Tempo por fase</button>
+    <div class="grupo">Controle</div>
+    <button data-v="higiene">⎇ Higiene do git <span class="cnt" id="c-hig"></span></button>
+    <button data-v="lote">✎ Relatório de lote (retro)</button>
     <div class="grupo">Conhecimento</div>
     <button data-v="documentos">❏ Documentos do projeto <span class="cnt" id="c-docs"></span></button>
     <button data-v="glossario">Aa Linguagem ubíqua <span class="cnt" id="c-glos"></span></button>
@@ -327,12 +331,56 @@ async function vIA(){
     `<section class="panel"><div class="corpo"><pre class="mono" style="white-space:pre-wrap;margin:0">${esc(JSON.stringify(d,null,2))}</pre></div></section>`;
 }
 
+// ---------- Higiene do git ----------
+async function vHigiene(manterFoco){
+  const d = await api("/api/higiene");
+  const ws = d.worktrees.filter(casa);
+  let h = cabecalho("Controle / Higiene do git","Worktrees, branches e riscos de push",
+    `Lido de <code>git worktree list</code> e <code>git for-each-ref</code>. ${esc(d.regra)}`,
+    `<span class="legenda">${d.total} worktrees · ${d.integradas} integradas · ${d.candidatas_remocao.length} candidatas</span>`);
+  h += `<div class="grid">
+    <div class="tile"><div class="k">Branches com upstream na produção</div><div class="v" style="color:${d.branches_upstream_producao.length?"var(--bad)":"var(--ok)"}">${d.branches_upstream_producao.length}</div><div class="f">qualquer branch ≠ main com upstream origin/main: <code>git push</code> sem refspec vai para o deploy</div></div>
+    <div class="tile"><div class="k">Worktrees com risco</div><div class="v">${d.com_risco.length}</div><div class="f">HEAD destacado, pasta sumida ou upstream na produção</div></div>
+    <div class="tile"><div class="k">Candidatas à remoção</div><div class="v">${d.candidatas_remocao.length}</div><div class="f">integradas, limpas, sem risco, fora da lista protegida</div></div>
+  </div>`;
+  if(d.branches_upstream_producao.length) h += `<div class="aviso">Upstream na produção: ${d.branches_upstream_producao.map(b=>`<code>${esc(b.repo)}:${esc(b.branch)}</code>`).join(", ")}. Correção do dono: <code>git branch --unset-upstream</code>.</div>`;
+  h += `<section class="panel"><h2>Worktrees</h2><div class="scroll"><table><thead><tr><th>Caminho</th><th>Branch</th><th>Integrada</th><th>Pendência</th><th>Último commit</th><th>Risco</th></tr></thead><tbody>
+    ${ws.map(w=>`<tr><td class="mono">${esc(w.caminho)}</td><td class="mono">${esc(w.branch||"—")}</td><td>${w.integrada?`<span class="loz ok">sim</span>`:`<span class="loz idle">não</span>`}</td>
+    <td>${w.sujeira==null?`<span class="legenda">não medida</span>`:w.sujeira?`<span class="loz warn">alterações</span>`:`<span class="legenda">limpa</span>`}</td>
+    <td class="legenda">${w.idade_d==null?"—":Math.round(w.idade_d)+" d"}</td><td>${w.risco?`<span class="loz ${/protegida/.test(w.risco)?"info":"bad"}">${esc(w.risco)}</span>`:""}</td></tr>`).join("")}</tbody></table></div></section>`;
+  h += `<section class="panel"><h2>Lista para aprovação do Gilsiley <span class="loz idle">${d.candidatas_remocao.length}</span></h2><div class="corpo"><pre class="mono" style="white-space:pre-wrap;margin:0">${esc(d.candidatas_remocao.map(w=>`git -C ${w.repo} worktree remove ${w.caminho}`).join("\n"))}</pre></div></section>`;
+  $("#main").innerHTML = h; $("#c-hig").textContent = d.com_risco.length + d.branches_upstream_producao.length || ""; liga_busca(vHigiene); if(manterFoco) foca();
+}
+
+// ---------- Tempo por fase ----------
+async function vTempo(){
+  const d = await api("/api/tempo");
+  let h = cabecalho("Medição / Tempo por fase","Quanto tempo cada fase do método consome",`Fonte: ${esc(d.fonte)}. Cada sessão marca <code>ponto.py inicio|fim &lt;rodada&gt; &lt;fase&gt;</code>.`);
+  if(!d.fechados.length && !d.abertos.length) h += `<div class="aviso">Nenhuma marcação de ponto ainda. Ordem do Gilsiley: cada gerente marca início e fim de rodada e fase com <code>python ola/ferramentas/ponto.py</code>.</div>`;
+  const max = Math.max(1,...Object.values(d.por_fase));
+  h += `<section class="panel"><h2>Horas por fase</h2><div class="corpo">${Object.entries(d.por_fase).map(([f,v])=>`<div style="display:grid;grid-template-columns:140px 1fr 60px;gap:10px;align-items:center;margin:5px 0"><span>${esc(f)}</span><div class="prog" style="height:12px"><i style="width:${v/max*100}%"></i></div><b>${v} h</b></div>`).join("")||`<span class="legenda">—</span>`}</div></section>`;
+  h += `<section class="panel"><h2>Fases abertas agora</h2><table><thead><tr><th>Rodada</th><th>Fase</th><th>Quem</th><th>Desde</th></tr></thead><tbody>${d.abertos.map(a=>`<tr><td>${esc(a.rodada)}</td><td>${esc(a.fase)}</td><td>${esc(a.quem)}</td><td class="legenda">${esc(a.ts)}</td></tr>`).join("")}</tbody></table></section>`;
+  $("#main").innerHTML = h;
+}
+
+// ---------- Relatório de lote ----------
+async function vLote(){
+  const desde = cache.desde || "";
+  const d = await api("/api/relatorio-lote"+(desde?"?desde="+encodeURIComponent(desde):""));
+  $("#main").innerHTML = cabecalho("Controle / Relatório de lote","Material para a retro, gerado dos arquivos",
+    "Evidência (barra, DORA, desvios, higiene, documentos parados) mais as três perguntas. MANTER/MUDAR/CORTAR continua humano.",
+    `<label class="legenda">desde <input type="datetime-local" id="desde" value="${esc(desde)}"></label><button class="btn" id="copia">Copiar Markdown</button>`) +
+    `<section class="panel"><div class="corpo"><pre class="mono" style="white-space:pre-wrap;margin:0" id="md">${esc(d.markdown)}</pre></div></section>`;
+  $("#desde").onchange = e=>{ cache.desde = e.target.value; vLote(); };
+  $("#copia").onclick = async()=>{ try{ await navigator.clipboard.writeText(d.markdown); $("#copia").textContent="Copiado"; }catch{ $("#copia").textContent="Selecione e copie"; } };
+}
+
 // ---------- plumbing ----------
 function drawer(titulo, html){ $("#dtitulo").textContent = titulo; $("#dcorpo").innerHTML = html; const d=$("#drawer"); d.classList.add("aberto"); d.setAttribute("aria-hidden","false"); $("#dfecha").focus(); }
 function fecha(){ const d=$("#drawer"); d.classList.remove("aberto"); d.setAttribute("aria-hidden","true"); }
 $("#dfecha").onclick = fecha; document.addEventListener("keydown", e=>{ if(e.key==="Escape") fecha(); });
 function foca(){ const b=$("#busca"); if(b){ b.focus(); b.setSelectionRange(b.value.length,b.value.length);} }
-const VIEWS = {board:vBoard, pecas:vPecas, roadmap:vRoadmap, decisoes:vDecisoes, dora:vDora, qualidade:vQualidade, documentos:vDocumentos, glossario:vGlossario, ia:vIA};
+const VIEWS = {board:vBoard, pecas:vPecas, roadmap:vRoadmap, decisoes:vDecisoes, dora:vDora, qualidade:vQualidade, documentos:vDocumentos, glossario:vGlossario, ia:vIA, higiene:vHigiene, tempo:vTempo, lote:vLote};
 let atual = "board";
 function vai(v){ atual = v; document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-current", b.dataset.v===v?"page":"false")); location.hash = v; VIEWS[v]().catch(e=>$("#main").innerHTML=`<div class="aviso">Erro: ${esc(e.message)}</div>`); }
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>vai(b.dataset.v));

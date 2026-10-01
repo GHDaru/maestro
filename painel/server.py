@@ -170,6 +170,10 @@ def v_dora(db, dias=30):
         meds = [x["lead_h_mediana"] for x in v if x["lead_h_mediana"] is not None]
         if meds:
             lt[r] = {"mediana_h": round(statistics.median(meds), 2), "p90_h": round(sorted(meds)[int(len(meds) * 0.9) - 1 if len(meds) > 1 else 0], 2), "n": len(meds)}
+    for r, x in lt.items():
+        if x["mediana_h"] == 0:
+            out["notas"].append(f"{r}: lead time 0 h porque os commits entram direto na linha principal (sem merge); "
+                                "a medida útil para este repositório é hash entregue → integrado, registrado como peça.")
     out["metricas"]["lead_time"] = {"por_repo": lt, "unidade": "horas",
                                      "fonte": "git: data do autor -> commit na linha principal (first-parent)"}
 
@@ -222,29 +226,102 @@ def serie(ts):
 
 
 def v_meta(db):
-    return {r["chave"]: r["valor"] for r in linhas(db, "SELECT * FROM meta")}
+    m = {r["chave"]: r["valor"] for r in linhas(db, "SELECT * FROM meta")}
+    m["equipes"] = json.loads(m.get("equipes") or "{}")
+    return m
 
 
-def v_estado_ia(db):
+def v_higiene(db):
+    wts = linhas(db, "SELECT * FROM worktrees ORDER BY integrada DESC, idade_d DESC")
+    candidatas = [w for w in wts if w["integrada"] and not w["sujeira"] and not w["risco"]]
+    return {"worktrees": wts, "total": len(wts), "integradas": sum(w["integrada"] for w in wts),
+            "com_risco": [w for w in wts if w["risco"] and "protegida" not in w["risco"]],
+            "branches_upstream_producao": linhas(db, "SELECT * FROM branches_risco"),
+            "candidatas_remocao": candidatas,
+            "regra": "candidata = branch já integrada na linha principal, sem alteração rastreada pendente e sem risco. "
+                     "Remover só com ordem do Gilsiley (git worktree remove <caminho>)."}
+
+
+def v_tempo(db):
+    evs = linhas(db, "SELECT * FROM fases ORDER BY n")
+    abertos, fechados = {}, []
+    for e in evs:
+        k = (e["rodada"], e["fase"], e["quem"])
+        if e["evento"] == "inicio":
+            abertos[k] = e
+        elif e["evento"] == "fim" and k in abertos:
+            i = abertos.pop(k)
+            t0, t1 = parse_ts(i["ts"]), parse_ts(e["ts"])
+            fechados.append({"rodada": k[0], "fase": k[1], "quem": k[2], "inicio": i["ts"], "fim": e["ts"],
+                             "horas": round((t1 - t0).total_seconds() / 3600, 2) if t0 and t1 else None})
+    por_fase = {}
+    for f in fechados:
+        por_fase[f["fase"]] = round(por_fase.get(f["fase"], 0) + (f["horas"] or 0), 2)
+    return {"fechados": fechados, "abertos": list(abertos.values()), "por_fase": por_fase,
+            "fonte": "ola/especificacao/tempos/ponto.jsonl (ponto.py do W04)"}
+
+
+def v_estado_ia(db, sessao=None):
     """The 'active context' an agent reads at session start (memory-bank style, derived)."""
     b = v_board(db)
     q = v_qualidade(db)
     d = v_dora(db, 7)
-    return {
+    cards = [c for col in b["colunas"].values() for c in col]
+    out = {
         "gerado_em": dt.datetime.now().astimezone().isoformat(timespec="seconds"),
         "fonte": "painel Maestro (cache derivado; a verdade são os arquivos citados)",
-        "sessoes": [{"sessao": c["sessao"], "estado": c["estado"], "em": c["em"], "idade_min": c["idade_min"]}
-                    for col in b["colunas"].values() for c in col],
-        "ultimas_decisoes": linhas(db, "SELECT id, quando, titulo FROM decisoes ORDER BY rowid LIMIT 8"),
+        "equipe": [{"sessao": c["sessao"], "estado": c["estado"], "em": c["em"], "idade_min": c["idade_min"]} for c in cards],
+        "ultimas_decisoes": linhas(db, "SELECT id, quando, titulo, desfazer FROM decisoes ORDER BY rowid LIMIT 8"),
         "barra_ultima": q["barra"][:1],
-        "desvios_por_classe": q["classes"],
+        "desvios_recentes": [{k: x[k] for k in ("quando", "quem", "classe", "candidato")} for x in q["desvios"][:6]],
+        "riscos_git": [{k: w[k] for k in ("caminho", "branch", "risco")} for w in v_higiene(db)["com_risco"]],
         "dora_7d": d["metricas"],
     }
+    if sessao:
+        eu = next((c for c in cards if c["sessao"].lower() == sessao.lower()), None)
+        out["voce"] = eu and {k: eu[k] for k in ("sessao", "estado", "em", "peca", "worktree", "ultimo_hash",
+                                                  "proximo", "arquivo_papel", "historico")}
+        out["seus_desvios"] = [x for x in q["desvios"] if sessao.lower() in (x["quem"] or "").lower()][:10]
+        out["riscos_git"] = [r for r in out["riscos_git"] if sessao.lower().replace("w", "w") in (r["caminho"] or "").lower()] or out["riscos_git"]
+    return out
+
+
+def v_relatorio_lote(db, desde=None):
+    """End-of-batch retro material (Markdown). Evidence only; MANTER/MUDAR/CORTAR stays human."""
+    agora = dt.datetime.now().astimezone()
+    ini = parse_ts(desde) if desde else agora - dt.timedelta(days=1)
+    q, d, h = v_qualidade(db), v_dora(db, max(1, (agora - ini).days or 1)), v_higiene(db)
+    barra = [b for b in q["barra"] if (parse_ts(b["quando"]) or agora) >= ini]
+    L = [f"# Relatório de lote: {ini:%d/%m %H:%M} a {agora:%d/%m %H:%M}", "",
+         "> Gerado pelo painel Maestro a partir dos arquivos. É evidência para a retro; a decisão "
+         "(MANTER/MUDAR/CORTAR) é humana.", "", "## 1. Barra", ""]
+    L += [f"- {b['quando']} {b['ambiente']} `{b['hash']}`: **{b['veredito']}** ({b['passos_com_erro']} de {b['passos']} passos com erro)"
+          for b in barra] or ["- nenhuma volta no período"]
+    L += ["", "## 2. DORA (com fonte)", ""]
+    for k, v in d["metricas"].items():
+        L.append(f"- **{k}**: " + ", ".join(f"{a}={b}" for a, b in v.items() if a not in ("serie", "fonte")) + f"  _(fonte: {v.get('fonte')})_")
+    L += [f"- nota: {n}" for n in d["notas"]]
+    L += ["", "## 3. Desvios por classe (todo o registro)", ""]
+    L += [f"- {c['classe']}: {c['n']}" for c in q["classes"]]
+    L += ["", "## 4. Desvios mais recentes e o candidato ao método", ""]
+    L += [f"- {x['quando']} · {x['quem']} · {x['classe']}: {x['candidato']}" for x in q["desvios"][:10]]
+    L += ["", "## 5. Higiene do git", "",
+          f"- {h['total']} worktrees; {h['integradas']} com branch já integrada; {len(h['candidatas_remocao'])} candidatas à remoção (só com ordem do Gilsiley)."]
+    L += [f"- RISCO {w['caminho']} ({w['branch']}): {w['risco']}" for w in h["com_risco"]]
+    docs = linhas(db, "SELECT caminho, idade_h FROM documentos WHERE idade_h > 168 ORDER BY idade_h DESC")
+    L += ["", "## 6. Documentos parados há mais de 7 dias", ""]
+    L += [f"- {x['caminho']} ({round(x['idade_h'] / 24)} d)" for x in docs[:30]] or ["- nenhum"]
+    L += ["", "## 7. Perguntas para a cerimônia", "",
+          "1. Qual erro se repetiu, e por que a regra existente não o pegou?",
+          "2. Qual regra não pagou por si e deve ser cortada?",
+          "3. Qual passo manual se repetiu idêntico e deve virar ferramenta?"]
+    return {"markdown": "\n".join(L)}
 
 
 ROTAS = {"/api/board": v_board, "/api/pecas": v_pecas, "/api/specs": v_specs, "/api/decisoes": v_decisoes,
          "/api/qualidade": v_qualidade, "/api/documentos": v_documentos, "/api/roadmap": v_roadmap,
-         "/api/dora": v_dora, "/api/meta": v_meta, "/api/estado-ia": v_estado_ia}
+         "/api/dora": v_dora, "/api/meta": v_meta, "/api/estado-ia": v_estado_ia,
+         "/api/higiene": v_higiene, "/api/tempo": v_tempo, "/api/relatorio-lote": v_relatorio_lote}
 
 
 def valida_evento(ev):
@@ -308,10 +385,14 @@ def cria_handler(db_path, cfg):
             if not fn:
                 return self._json({"erro": "rota inexistente"}, 404)
             db = conecta(db_path)
+            qs = parse_qs(u.query)
             try:
                 if u.path == "/api/dora":
-                    dias = int(parse_qs(u.query).get("dias", ["30"])[0])
-                    return self._json(fn(db, dias))
+                    return self._json(fn(db, int(qs.get("dias", ["30"])[0])))
+                if u.path == "/api/estado-ia":
+                    return self._json(fn(db, qs.get("sessao", [None])[0]))
+                if u.path == "/api/relatorio-lote":
+                    return self._json(fn(db, qs.get("desde", [None])[0]))
                 return self._json(fn(db))
             finally:
                 db.close()
