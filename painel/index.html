@@ -47,6 +47,10 @@ input[type=search]:focus{outline:none;border-color:var(--brand)}
 .chip{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--border);border-radius:14px;padding:3px 10px;background:var(--surface);cursor:pointer;font-size:12px;color:var(--text)}
 .chip[aria-pressed="true"]{background:var(--brand-weak);border-color:var(--brand);color:var(--brand)}
 .board{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(250px,1fr);gap:12px;overflow-x:auto;padding-bottom:8px}
+.board.pecas{grid-auto-flow:row;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+.board.pecas .col{padding:6px}.board.pecas .card{padding:8px 9px}.board.pecas .card .titulo{font-size:13px}
+.board.pecas .card .em{font-size:12px;-webkit-line-clamp:2}
+@media (max-width:1100px){.board.pecas{grid-auto-flow:column;grid-template-columns:none;grid-auto-columns:minmax(180px,1fr)}}
 .col{background:var(--surface-2);border-radius:var(--radius);padding:8px;min-height:120px}
 .col h3{font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);margin:4px 6px 10px;display:flex;gap:6px;align-items:center}
 .col h3 .n{background:var(--surface);border-radius:10px;padding:0 7px;font-weight:600}
@@ -63,6 +67,7 @@ input[type=search]:focus{outline:none;border-color:var(--brand)}
 .loz.ok{background:var(--ok-weak);color:var(--ok)}.loz.warn{background:var(--warn-weak);color:var(--warn)}
 .loz.bad{background:var(--bad-weak);color:var(--bad)}.loz.info{background:var(--info-weak);color:var(--info)}
 .loz.idle{background:var(--idle-weak);color:var(--idle)}.loz.brand{background:var(--brand-weak);color:var(--brand)}
+code.loz{text-transform:none;font-weight:600;letter-spacing:0}
 code,.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px}
 .grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
 .tile{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px}
@@ -135,8 +140,11 @@ async function api(p){ const r = await fetch(p, {cache:"no-store"}); if(!r.ok) t
 const CORES = ["#0c66e4","#1f845a","#a54800","#5e4db2","#c9372c","#206a83","#943d73","#5b7f24","#7f5f01","#ae2e24"];
 function av(n){ let h=0; for(const c of n) h=(h*31+c.charCodeAt(0))>>>0; const ini=n.replace(/^Worker/,"W").replace(/[^A-Za-z0-9]/g,"").slice(0,3); return `<span class="av" style="background:${CORES[h%CORES.length]}" aria-hidden="true">${esc(ini.slice(0,3))}</span>`; }
 const LOZ_SESSAO = {"trabalhando":"ok","esperando":"warn","sem tarefa":"bad","bloqueado":"bad","sem registro":"idle"};
+const ROTULO_PECA = {"spec":"Spec","red":"Teste vermelho","entregue":"Entregue","suites aceitas":"Suítes aceitas","aprovada as cegas":"Aprovada às cegas","integrada":"Integrada","em producao":"Em produção"};
+const ROTULO_EV = {"hash":"hash","runner2":"runner2","par_montado_por":"par montado","descricao_factual":"descrição factual","merge":"merge","deploy":"deploy","barra":"barra","mutante":"mutante","critica":"crítica"};
 const LOZ_PECA = {"spec":"idle","red":"bad","entregue":"brand","suites aceitas":"info","aprovada as cegas":"info","integrada":"ok","em producao":"ok"};
 function idade(min){ if(min==null) return "sem registro"; if(min<60) return min+" min"; if(min<1440) return Math.round(min/60)+" h"; return Math.round(min/1440)+" d"; }
+function minDesde(ts){ const t = Date.parse(ts); return isNaN(t)? null : Math.max(0, Math.round((Date.now()-t)/60000)); }
 let filtro = "";
 function casa(o){ return !filtro || JSON.stringify(o).toLowerCase().includes(filtro); }
 
@@ -196,16 +204,27 @@ async function vPecas(manterFoco){
   let n = 0;
   let h = cabecalho("Agora / Fluxo de peças","Peças por estado, só com prova",
     `Vocabulário fechado: ${d.estados.join(" → ")}. Uma peça só muda de coluna com a evidência exigida; sem prova o registro é recusado.`);
-  h += `<div class="board">`;
+  h += `<div class="board pecas">`;
   for(const k of d.estados){
     const ps = (d.colunas[k]||[]).filter(casa); n += ps.length;
     const ex = d.exigencias[k];
-    h += `<section class="col"><h3><span class="loz ${LOZ_PECA[k]}">${esc(k)}</span><span class="n">${ps.length}</span></h3>
-      <div class="legenda" style="margin:-4px 6px 8px">${ex?"exige: "+ex.join(", "):"sem exigência"}</div>`;
+    h += `<section class="col"><h3><span class="loz ${LOZ_PECA[k]}">${esc(ROTULO_PECA[k])}</span><span class="n">${ps.length}</span></h3>
+      <div class="legenda" style="margin:-4px 6px 8px">${ex?"exige "+ex.map(x=>ROTULO_EV[x]||x).join(" + "):"sem exigência"}</div>`;
+    const proxima = d.estados[d.estados.indexOf(k)+1];
+    const exigeProx = (d.exigencias[proxima]||[]).filter(x=>x!=="hash");
     for(const p of ps){
-      h += `<article class="card" tabindex="0" data-p="${esc(p.peca)}"><div class="l1"><span class="titulo">${esc(p.peca)}</span></div>
-        <div class="em">${esc(Object.entries(p.evidencia||{}).map(([a,b])=>a+": "+b).join(" · "))}</div>
-        <div class="l3">${av(p.sessao||"?")} ${esc(p.sessao||"")} · ${esc(p.ts)}</div></article>`;
+      const ev = p.evidencia||{};
+      const exige = (d.exigencias[k]||[]).filter(x=>x!=="hash");
+      const tem = exige.map(x=>`<span class="loz ${ev[x]?"ok":"bad"}" title="${esc(ev[x]||"falta")}">${ev[x]?"✓":"✗"} ${esc(ROTULO_EV[x]||x)}</span>`);
+      const extra = Object.keys(ev).filter(x=>x!=="hash" && !exige.includes(x)).map(x=>`<span class="loz idle" title="${esc(ev[x])}">${esc(ROTULO_EV[x]||x)}</span>`);
+      const falta = exigeProx.filter(x=>!ev[x]);
+      const ultimo = p.historico[p.historico.length-1];
+      const min = minDesde(p.ts), parada = min!=null && min>1440 && k!=="em producao";
+      h += `<article class="card ${parada?"alerta":""}" tabindex="0" data-p="${esc(p.peca)}"><div class="titulo">${esc(p.peca)}</div>
+        ${ultimo?.texto?`<div class="em" style="color:var(--muted)">${esc(ultimo.texto)}</div>`:""}
+        <div class="l3" style="margin:4px 0">${ev.hash?`<code class="loz idle">${esc(String(ev.hash).slice(0,7))}</code>`:`<span class="loz warn">sem hash</span>`} ${tem.join(" ")} ${extra.join(" ")}</div>
+        ${proxima?`<div class="legenda">para ${esc(ROTULO_PECA[proxima])}: ${falta.length?`falta ${falta.map(x=>esc(ROTULO_EV[x]||x)).join(", ")}`:`<span style="color:var(--ok)">pronta</span>`}</div>`:""}
+        <div class="l3" style="margin-top:6px">${av(p.sessao||"?")}<b style="color:var(--text)">${esc(p.sessao||"")}</b><span title="${esc(p.ts)}" ${parada?`style="color:var(--bad);font-weight:600"`:""}>· ${parada?"parada há":"há"} ${idade(min)}</span></div></article>`;
     }
     h += `</section>`;
   }
@@ -385,6 +404,7 @@ let atual = "board";
 function vai(v){ atual = v; document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-current", b.dataset.v===v?"page":"false")); location.hash = v; VIEWS[v]().catch(e=>$("#main").innerHTML=`<div class="aviso">Erro: ${esc(e.message)}</div>`); }
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>vai(b.dataset.v));
 async function meta(){ const m = await api("/api/meta"); $("#pnome").textContent = "Maestro · "+(m.projeto||""); $("#pingest").textContent = "arquivos lidos "+(m.ingerido_em||"").slice(11,16)+" de "+(m.ingerido_em||"").slice(8,10)+"/"+(m.ingerido_em||"").slice(5,7); }
+window.addEventListener("hashchange", ()=>{ const v = location.hash.slice(1); if(v in VIEWS && v!==atual) vai(v); });
 const inicial = location.hash.slice(1);
 meta(); vai(inicial in VIEWS ? inicial : "board");
 setInterval(()=>{ if(atual==="board" && !document.activeElement?.matches("input")) vBoard(); }, 60000);
