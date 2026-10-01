@@ -55,8 +55,17 @@ input[type=search]:focus{outline:none;border-color:var(--brand)}
 .board-cab div{font-size:12px}
 .raia{margin-bottom:14px}.raia-t{font-size:13px;font-weight:600;margin:6px 2px 6px;display:flex;gap:8px;align-items:center}
 .roster{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+.roster{grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:6px}
 .roster .card{margin:0;border-left-width:4px}
-.card.st-ok{border-left-color:var(--ok)}.card.st-warn{border-left-color:var(--warn)}.card.st-bad{border-left-color:var(--bad)}.card.st-idle{border-left-color:var(--border)}
+.card.mini{padding:7px 10px}.card.mini .l1{gap:7px}.card.mini .av{width:22px;height:22px;font-size:10px}
+.card.mini .nome{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:0 1 auto;min-width:3.2em}
+.card.mini .l1 .loz{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card.mini .idade{margin-left:auto}
+.card.mini .idade{font-size:12px;color:var(--muted);white-space:nowrap}.card.mini .idade.ruim{color:var(--bad);font-weight:600}
+.card.mini .tarefa{font-size:12.5px;color:var(--text);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.urgente{background:var(--bad-weak);border-radius:var(--radius);padding:8px 10px 10px;margin-bottom:14px}
+.urgente .raia-t{margin-top:0}
+.card.st-ok{border-left-color:transparent}.card.st-warn{border-left-color:var(--warn)}.card.st-bad{border-left-color:var(--bad)}.card.st-idle{border-left-color:var(--border)}
 .card.alerta{box-shadow:0 0 0 1px var(--bad),var(--shadow)}
 .col{background:var(--surface-2);border-radius:var(--radius);padding:8px;min-height:120px}
 .col h3{font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);margin:4px 6px 10px;display:flex;gap:6px;align-items:center}
@@ -167,7 +176,7 @@ async function vBoard(manterFoco){
   const ordem = ["trabalhando","esperando","bloqueado","sem tarefa","sem registro"];
   const parados = Object.values(d.colunas).flat().filter(c=>c.parado).length;
   let h = cabecalho("Agora / Board de agentes","O que cada sessão está fazendo",
-    `Fonte: o último registro de status de cada sessão (append-only), mais o "Estado atual" do arquivo de papel. Sinal de vida mais velho que ${d.limiar_min} min fica marcado.`,
+    `<span title="Fonte: o último registro de status de cada sessão (só acrescenta), mais o Estado atual do arquivo de papel.">Sinal de vida mais velho que ${d.limiar_min} min fica marcado. Cor só nas exceções.</span>`,
     `<span class="legenda">${d.total} sessões · ${parados} sem sinal de vida recente</span><button class="btn" id="reing">Reingerir arquivos</button>`);
   const equipes = cache.meta?.equipes || {};
   const todos = Object.values(d.colunas).flat();
@@ -177,14 +186,21 @@ async function vBoard(manterFoco){
   h = h.replace('<button class="btn" id="reing">', `<button class="chip" id="raias" aria-pressed="${!!raias}">Raias por equipe</button><button class="btn" id="reing">`);
   const naCol = (c,k)=> k==="sem registro" ? !["trabalhando","esperando","bloqueado","sem tarefa"].includes(c.estado) : c.estado===k;
   const PRIO = {"bloqueado":0,"sem tarefa":1,"esperando":2,"trabalhando":3};
+  const equipeDe = n=>{ const e = Object.entries(equipes).find(([_,m])=>m.includes(n)); return e?e[0]:""; };
+  const CORES_EQ = ["#0c66e4","#1f845a","#943d73","#a54800"]; const nomesEq = Object.keys(equipes);
+  const corEq = n=>{ const i = nomesEq.indexOf(equipeDe(n)); return i<0?"#626f86":CORES_EQ[i%CORES_EQ.length]; };
+  const avEq = n=>`<span class="av" style="background:${corEq(n)}" aria-hidden="true">${esc(n.replace(/^Worker/,"W").replace(/[^A-Za-z0-9]/g,"").slice(0,3))}</span>`;
+  const atencaoDe = c=> c.estado==="bloqueado"||c.estado==="sem tarefa"||c.estado==="esperando"||(c.parado&&LOZ_SESSAO[c.estado]&&c.estado!=="sem registro");
   const cardS = c=>{
     const k = LOZ_SESSAO[c.estado] ? c.estado : "sem registro";
-    const atencao = c.estado==="bloqueado"||c.estado==="sem tarefa"||(c.parado&&k!=="sem registro");
-    return `<article class="card st-${LOZ_SESSAO[k]} ${atencao?"alerta":""}" tabindex="0" role="listitem" data-s="${esc(c.sessao)}">
-      <div class="l1">${av(c.sessao)}<span class="titulo">${esc(c.sessao)}</span><span class="loz ${LOZ_SESSAO[k]}" style="margin-left:auto">${esc(k)}</span></div>
-      <div class="em">${esc(c.em || c.resumo_arquivo || "—")}</div>
-      <div class="l3"><span title="${esc(c.status_ts||"")}" ${c.parado&&k!=="sem registro"?`style="color:var(--bad);font-weight:600"`:""}>⏱ ${idade(c.idade_min)}</span>${c.ultimo_hash?`<code class="loz idle">${esc(c.ultimo_hash.slice(0,7))}</code>`:""}${c.parado&&k!=="sem registro"?`<span class="loz bad">sem sinal</span>`:""}</div></article>`;
+    const selo = k==="trabalhando" ? "" : `<span class="loz ${LOZ_SESSAO[k]}">${esc(k)}</span>`;
+    const sinal = c.parado&&k!=="sem registro";
+    return `<article class="card mini st-${LOZ_SESSAO[k]}" tabindex="0" role="listitem" data-s="${esc(c.sessao)}" title="${esc(c.em||"")}">
+      <div class="l1">${avEq(c.sessao)}<span class="titulo nome">${esc(c.sessao)}</span>${selo}<span class="idade ${sinal?"ruim":""}" title="${esc(c.status_ts||"")}">${sinal?"sem sinal · ":""}${idade(c.idade_min)}</span></div>
+      <div class="tarefa">${esc(c.em || c.resumo_arquivo || "—")}</div></article>`;
   };
+  const urgentes = todos.filter(atencaoDe).filter(casa).sort((x,y)=>({"bloqueado":0,"sem tarefa":1,"esperando":2}[x.estado]??3)-({"bloqueado":0,"sem tarefa":1,"esperando":2}[y.estado]??3) || (y.idade_min??0)-(x.idade_min??0));
+  h += `<section class="urgente"><h2 class="raia-t">Precisam de você agora <span class="loz ${urgentes.length?"bad":"ok"}">${urgentes.length}</span>${urgentes.length?"":`<span class="legenda">ninguém bloqueado, ocioso ou sem sinal</span>`}</h2>${urgentes.length?`<div class="roster" role="list">${urgentes.map(cardS).join("")}</div>`:""}</section>`;
   if(raias){
     for(const [nome, membros] of grupos){
       const ms = membros.filter(casa).sort((x,y)=>(PRIO[x.estado]??4)-(PRIO[y.estado]??4)); if(!ms.length) continue;
