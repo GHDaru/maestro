@@ -166,10 +166,14 @@ def v_dora(db, dias=30):
 
     # 2. Lead time for changes: author date -> landing on the main line (per repo).
     lt = {}
+    pais = {(r["repo"], r["hash"]): r["pais"] for r in linhas(db, "SELECT repo, hash, pais FROM commits WHERE primeiro_pai=1")}
     for r, v in por_repo.items():
-        meds = [x["lead_h_mediana"] for x in v if x["lead_h_mediana"] is not None]
+        merges = [x for x in v if pais.get((r, x["hash"]), 1) > 1]
+        base, criterio = (merges, "só merges (integração de branch)") if len(merges) >= 3 else (v, "todos os commits da linha principal")
+        meds = sorted(x["lead_h_mediana"] for x in base if x["lead_h_mediana"] is not None)
         if meds:
-            lt[r] = {"mediana_h": round(statistics.median(meds), 2), "p90_h": round(sorted(meds)[int(len(meds) * 0.9) - 1 if len(meds) > 1 else 0], 2), "n": len(meds)}
+            lt[r] = {"mediana_h": round(statistics.median(meds), 2), "p90_h": round(meds[max(0, int(len(meds) * 0.9) - 1)], 2),
+                     "n": len(meds), "criterio": criterio}
     for r, x in lt.items():
         if x["mediana_h"] == 0:
             out["notas"].append(f"{r}: lead time 0 h porque os commits entram direto na linha principal (sem merge); "

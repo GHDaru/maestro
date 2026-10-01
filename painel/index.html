@@ -102,6 +102,7 @@ tr:hover td{background:var(--surface-2)}
 .barras{display:flex;align-items:flex-end;gap:3px;height:70px;padding-top:6px}
 .barras span{flex:1;background:var(--brand);border-radius:2px 2px 0 0;min-width:4px;position:relative}
 .barras span:hover::after{content:attr(data-t);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:var(--text);color:var(--surface);font-size:11px;padding:2px 6px;border-radius:3px;white-space:nowrap}
+.eixo{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:2px}
 .prog{height:6px;background:var(--surface-2);border-radius:3px;overflow:hidden;min-width:80px}
 .prog i{display:block;height:100%;background:var(--ok)}
 .vazio-msg{color:var(--muted);padding:20px;text-align:center;border:1px dashed var(--border);border-radius:var(--radius);background:var(--surface)}
@@ -321,26 +322,49 @@ async function vDecisoes(manterFoco){
 // ---------- DORA ----------
 function barras(serie){
   const ent = Object.entries(serie||{}); if(!ent.length) return `<div class="legenda">sem dados</div>`;
-  const max = Math.max(...ent.map(e=>e[1]));
-  return `<div class="barras">${ent.map(([d,v])=>`<span style="height:${Math.max(4,v/max*100)}%" data-t="${esc(d)}: ${v}"></span>`).join("")}</div>`;
+  const max = Math.max(...ent.map(e=>e[1])), total = ent.reduce((t,e)=>t+e[1],0);
+  const dm = d=>d.slice(8,10)+"/"+d.slice(5,7);
+  return `<div class="legenda">máximo ${max}/dia · total ${total} em ${ent.length} dias com atividade</div><div class="barras" role="img" aria-label="${esc(ent.map(([d,v])=>dm(d)+": "+v).join(", "))}">${ent.map(([d,v])=>`<span style="height:${Math.max(4,v/max*100)}%" data-t="${esc(dm(d))}: ${v}"></span>`).join("")}</div><div class="eixo"><span>${dm(ent[0][0])}</span><span>${dm(ent[ent.length-1][0])}</span></div>`;
+}
+const FAIXA = { // DORA 2023 bands
+  lead:  v=> v==null?null: v<24?["elite","ok"]: v<24*7?["alta","ok"]: v<24*30?["média","warn"]:["baixa","bad"],
+  cfr:   v=> v==null?null: v<=15?["elite","ok"]: v<=30?["alta","warn"]: v<=45?["média","warn"]:["baixa","bad"],
+  mttr:  v=> v==null?null: v<1?["elite","ok"]: v<24?["alta","ok"]: v<24*7?["média","warn"]:["baixa","bad"],
+  freq:  v=> v==null?null: v>=7?["elite","ok"]: v>=1?["alta","ok"]: v>=0.25?["média","warn"]:["baixa","bad"],
+};
+function tile(titulo, valor, unidade, origem, detalhes, faixa){
+  const f = faixa ? `<span class="loz ${faixa[1]}" title="faixa DORA">${esc(faixa[0])}</span>` : "";
+  return `<div class="tile ${valor==null?"vazio":""}"><div class="k">${esc(titulo)} ${f}</div><div class="v">${valor==null?"—":esc(valor)}<small style="font-size:14px;color:var(--muted)"> ${valor==null?"":esc(unidade)}</small></div>
+    <div class="f"><b>${esc(origem)}</b></div><div class="f" style="margin-top:4px">${detalhes}</div></div>`;
 }
 async function vDora(){
   const dias = cache.dias || 30;
   const d = await api("/api/dora?dias="+dias); const m = d.metricas;
   const fmt = (v,u="")=> v==null? "—" : v+u;
-  const lt = Object.entries(m.lead_time.por_repo).map(([r,x])=>`${r}: mediana ${x.mediana_h} h · p90 ${x.p90_h} h (${x.n})`).join("<br>");
+  const lts = Object.entries(m.lead_time.por_repo).filter(([_,x])=>x.mediana_h>0);
+  const lt0 = lts[0];
+  const cfrDeploy = m.taxa_falha.deploys_falhos_pct, cfrBarra = m.taxa_falha.barra_reprova_pct;
+  const mttrInc = m.tempo_restauracao.incidentes_mediana_h, mttrBarra = m.tempo_restauracao.barra_reprova_ate_passa_mediana_h;
   let h = cabecalho("Medição / DORA","As quatro métricas, com a fonte de cada número",
-    `Janela de ${dias} dias. Nenhum número é estimado: cada um diz de onde veio. Onde falta registro, o valor fica "—" e a nota diz o que registrar.`,
+    `Janela de ${dias} dias. Nenhum número é estimado. O número grande diz de onde veio; a faixa DORA só aparece quando a medida é a de verdade (produção), nunca para proxy.`,
     [7,30,90].map(x=>`<button class="chip" aria-pressed="${x===dias}" data-d="${x}">${x} dias</button>`).join(""));
   for(const n of d.notas) h += `<div class="aviso">${esc(n)}</div>`;
-  h += `<div class="grid">
-   <div class="tile ${m.frequencia_deploy.valor==null?"vazio":""}"><div class="k">Frequência de deploy</div><div class="v">${fmt(m.frequencia_deploy.valor)}</div><div class="f">deploys/semana · ${m.frequencia_deploy.n} ok de ${m.frequencia_deploy.tentativas}<br>proxy (entregas na linha principal): ${Object.entries(m.frequencia_deploy.proxy_entregas_por_repo).map(([r,v])=>r+" "+v+"/sem").join(", ")||"—"}</div></div>
-   <div class="tile"><div class="k">Lead time de mudança</div><div class="v">${Object.values(m.lead_time.por_repo)[0]?.mediana_h ?? "—"} h</div><div class="f">${lt||"—"}<br>${esc(m.lead_time.fonte)}</div></div>
-   <div class="tile"><div class="k">Taxa de falha de mudança</div><div class="v">${fmt(m.taxa_falha.deploys_falhos_pct ?? m.taxa_falha.barra_reprova_pct,"%")}</div><div class="f">deploys falhos: ${fmt(m.taxa_falha.deploys_falhos_pct,"%")} · barra REPROVA: ${fmt(m.taxa_falha.barra_reprova_pct,"%")} (${m.taxa_falha.barra_n} voltas)<br>correções na linha principal: ${Object.entries(m.taxa_falha.correcoes_na_linha_principal_pct).map(([r,v])=>r+" "+v+"%").join(", ")}</div></div>
-   <div class="tile ${m.tempo_restauracao.incidentes_mediana_h==null&&m.tempo_restauracao.barra_reprova_ate_passa_mediana_h==null?"vazio":""}"><div class="k">Tempo de restauração</div><div class="v">${fmt(m.tempo_restauracao.incidentes_mediana_h ?? m.tempo_restauracao.barra_reprova_ate_passa_mediana_h," h")}</div><div class="f">incidentes: ${fmt(m.tempo_restauracao.incidentes_mediana_h," h")} (${m.tempo_restauracao.incidentes_n}, ${m.tempo_restauracao.incidentes_abertos} abertos)<br>barra REPROVA → PASSA: ${fmt(m.tempo_restauracao.barra_reprova_ate_passa_mediana_h," h")}</div></div>
-  </div>`;
-  for(const [r,s] of Object.entries(d.entregas_por_semana)) h += `<section class="panel"><h2>Entregas por dia · ${esc(r)}</h2><div class="corpo">${barras(s)}</div></section>`;
-  h += `<section class="panel"><h2>Deploys registrados</h2><div class="corpo">${barras(m.frequencia_deploy.serie)}</div></section>`;
+  h += `<div class="grid">`;
+  h += tile("Frequência de deploy", m.frequencia_deploy.valor, "deploys/semana",
+    m.frequencia_deploy.valor==null ? "sem deploy registrado" : "deploys registrados (Railway)",
+    `${m.frequencia_deploy.n} com sucesso de ${m.frequencia_deploy.tentativas}<br>proxy, não é deploy: entregas na linha principal ${Object.entries(m.frequencia_deploy.proxy_entregas_por_repo).map(([r,v])=>r+" "+v+"/sem").join(", ")||"—"}`,
+    FAIXA.freq(m.frequencia_deploy.valor));
+  h += tile("Lead time até a linha principal", lt0? lt0[1].mediana_h : null, "h (mediana)", lt0? `git ${lt0[0]}: commit do autor → linha principal (${lt0[1].criterio}); não é até produção` : "sem entrega na linha principal",
+    `${lts.map(([r,x])=>`${r}: mediana ${x.mediana_h} h · p90 ${x.p90_h} h · ${x.n} entregas (${x.criterio})`).join("<br>")||"—"}`, null);
+  h += tile("Taxa de falha de mudança", cfrDeploy ?? cfrBarra, "%", cfrDeploy!=null ? "deploys falhos" : "pré-produção: voltas da barra que reprovaram",
+    `barra: ${fmt(cfrBarra,"%")} de ${m.taxa_falha.barra_n} voltas<br>commits de correção na linha principal: ${Object.entries(m.taxa_falha.correcoes_na_linha_principal_pct).map(([r,v])=>r+" "+v+"%").join(", ")}`,
+    cfrDeploy!=null ? FAIXA.cfr(cfrDeploy) : null);
+  h += tile("Tempo de restauração", mttrInc ?? mttrBarra, "h (mediana)", mttrInc!=null ? "incidentes registrados" : "pré-produção: barra REPROVA → PASSA",
+    `incidentes: ${fmt(mttrInc," h")} (${m.tempo_restauracao.incidentes_n} fechados, ${m.tempo_restauracao.incidentes_abertos} abertos)<br>barra: ${fmt(mttrBarra," h")}`,
+    mttrInc!=null ? FAIXA.mttr(mttrInc) : null);
+  h += `</div>`;
+  for(const [r,s] of Object.entries(d.entregas_por_semana)) h += `<section class="panel"><h2>Entregas na linha principal por dia · ${esc(r)}</h2><div class="corpo">${barras(s)}</div></section>`;
+  h += `<section class="panel"><h2>Deploys registrados por dia</h2><div class="corpo">${barras(m.frequencia_deploy.serie)}</div></section>`;
   $("#main").innerHTML = h;
   document.querySelectorAll("[data-d]").forEach(b=>b.onclick=()=>{ cache.dias=+b.dataset.d; vDora(); });
 }
