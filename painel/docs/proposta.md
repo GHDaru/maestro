@@ -129,7 +129,9 @@ Documentos mortos (W11): 28 arquivos parados desde 21–22/09, entre eles `plano
 
 ## 6. Desvios de método encontrados nesta rodada (para a retro)
 
-1. **Crítico sem visão (W08, par 01).** A descrição chamou de "tema escuro" duas telas claras e não transcreveu nenhum texto. Veredito anulado. Hipótese: o modelo da sessão do worker não lê imagem; o W12 de 30/09 tem o mesmo padrão. Regra proposta: **antes de valer, todo crítico transcreve três textos literais de cada imagem, e quem monta o par confere**. Crítico que não transcreve não julga imagem.
+1. **Crítico sem visão (W08, par 01). Confirmado em teste controlado pela Office (W12, 01/10): 2 de 2.** O W08 chamou de "tema escuro" duas telas claras e não transcreveu texto. No teste da Office, o W12 inventou título, frase e contador de uma captura da banca. As sessões de worker não leem imagem.
+   - **Regra para o Maestro:** a crítica de imagem exige prova de leitura antes de valer. São três textos literais por imagem, conferidos por quem montou o par.
+   - **Na prática:** a crítica de imagem é feita só por um subagente de contexto novo no modelo da sessão principal. Os workers criticam código, texto e dados. Worker que recebe imagem responde "não consigo ler a imagem".
 2. **Assistente: testes da v0 escritos depois do código.** Princípio IV. Registrado; a v1 incluiu o teste do detector junto com o detector. A partir da v2, teste vermelho antes.
 3. **Dez branches com upstream em origin/main** (achado do painel, corrigido pela Office com `--unset-upstream`). A regra já estava na memória e não era verificada. Agora é detector.
 4. **Ponto sem uso.** `ponto.py` está pronto desde 30/09 e tem zero marcações. A ordem do Gilsiley ainda não virou hábito; o painel mostra o vazio na tela de Tempo.
