@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Painel Maestro</title>
+<style>
+:root{
+  --bg:#f7f8f9; --surface:#fff; --surface-2:#f1f2f4; --border:#dcdfe4; --text:#172b4d; --muted:#626f86;
+  --brand:#0c66e4; --brand-weak:#e9f2ff; --ok:#1f845a; --ok-weak:#dcfff1; --warn:#a54800; --warn-weak:#fff3eb;
+  --bad:#c9372c; --bad-weak:#ffeceb; --info:#5e4db2; --info-weak:#f3f0ff; --idle:#626f86; --idle-weak:#f1f2f4;
+  --shadow:0 1px 1px rgba(9,30,66,.25),0 0 1px rgba(9,30,66,.31); --radius:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1d2125; --surface:#22272b; --surface-2:#2c333a; --border:#38414a; --text:#dee4ea; --muted:#9fadbc;
+  --brand:#579dff; --brand-weak:#1c2b41; --ok:#4bce97; --ok-weak:#1c3329; --warn:#fea362; --warn-weak:#38291e;
+  --bad:#f87168; --bad-weak:#42221f; --info:#9f8fef; --info-weak:#2b273f; --idle:#9fadbc; --idle-weak:#2c333a;
+  --shadow:0 0 0 1px #38414a;}}
+:root[data-theme="dark"]{
+  --bg:#1d2125; --surface:#22272b; --surface-2:#2c333a; --border:#38414a; --text:#dee4ea; --muted:#9fadbc;
+  --brand:#579dff; --brand-weak:#1c2b41; --ok:#4bce97; --ok-weak:#1c3329; --warn:#fea362; --warn-weak:#38291e;
+  --bad:#f87168; --bad-weak:#42221f; --info:#9f8fef; --info-weak:#2b273f; --idle:#9fadbc; --idle-weak:#2c333a;
+  --shadow:0 0 0 1px #38414a;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 -apple-system,"Segoe UI",Roboto,Ubuntu,sans-serif}
+a{color:var(--brand)}
+.app{display:grid;grid-template-columns:232px 1fr;min-height:100vh}
+nav{background:var(--surface);border-right:1px solid var(--border);padding:16px 8px;position:sticky;top:0;height:100vh;overflow:auto}
+.proj{display:flex;gap:10px;align-items:center;padding:4px 8px 16px}
+.proj .logo{width:32px;height:32px;border-radius:6px;background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:700}
+.proj b{display:block;font-size:14px}.proj small{color:var(--muted);font-size:12px}
+nav .grupo{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;padding:14px 10px 6px}
+nav button{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;color:var(--text);padding:7px 10px;border-radius:4px;font:inherit;cursor:pointer;text-align:left}
+nav button:hover{background:var(--surface-2)}
+nav button[aria-current="page"]{background:var(--brand-weak);color:var(--brand);font-weight:600}
+nav .cnt{margin-left:auto;font-size:11px;color:var(--muted)}
+main{min-width:0;padding:20px 28px 40px}
+header.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.crumb{color:var(--muted);font-size:13px}
+h1{font-size:22px;margin:2px 0 4px;font-weight:600}
+.sub{color:var(--muted);margin:0 0 16px;font-size:13px}
+.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0 16px}
+input[type=search]{border:2px solid var(--border);background:var(--surface);color:var(--text);border-radius:4px;padding:6px 10px;width:260px;font:inherit}
+input[type=search]:focus{outline:none;border-color:var(--brand)}
+.btn{border:0;border-radius:4px;padding:7px 12px;background:var(--surface-2);color:var(--text);font:inherit;font-weight:500;cursor:pointer}
+.btn:hover{filter:brightness(.96)}.btn.primary{background:var(--brand);color:#fff}
+.chip{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--border);border-radius:14px;padding:3px 10px;background:var(--surface);cursor:pointer;font-size:12px;color:var(--text)}
+.chip[aria-pressed="true"]{background:var(--brand-weak);border-color:var(--brand);color:var(--brand)}
+.board{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(250px,1fr);gap:12px;overflow-x:auto;padding-bottom:8px}
+.col{background:var(--surface-2);border-radius:var(--radius);padding:8px;min-height:120px}
+.col h3{font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);margin:4px 6px 10px;display:flex;gap:6px;align-items:center}
+.col h3 .n{background:var(--surface);border-radius:10px;padding:0 7px;font-weight:600}
+.card{background:var(--surface);border-radius:4px;box-shadow:var(--shadow);padding:10px 12px;margin-bottom:8px;cursor:pointer;border-left:3px solid transparent}
+.card:hover{background:var(--surface-2)}
+.card:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
+.card .l1{display:flex;align-items:center;gap:8px}
+.card .titulo{font-weight:600}
+.card .em{margin:6px 0;font-size:13px;color:var(--text);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.card .l3{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.card.alerta{border-left-color:var(--bad)}
+.av{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff;flex:none}
+.loz{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;border-radius:3px;padding:1px 6px;letter-spacing:.02em}
+.loz.ok{background:var(--ok-weak);color:var(--ok)}.loz.warn{background:var(--warn-weak);color:var(--warn)}
+.loz.bad{background:var(--bad-weak);color:var(--bad)}.loz.info{background:var(--info-weak);color:var(--info)}
+.loz.idle{background:var(--idle-weak);color:var(--idle)}.loz.brand{background:var(--brand-weak);color:var(--brand)}
+code,.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.tile{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px}
+.tile .k{font-size:12px;color:var(--muted);font-weight:600}
+.tile .v{font-size:28px;font-weight:600;margin:4px 0;font-variant-numeric:tabular-nums}
+.tile .f{font-size:12px;color:var(--muted)}
+.tile.vazio .v{color:var(--muted)}
+.panel{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);margin:16px 0;overflow:hidden}
+.panel h2{font-size:15px;margin:0;padding:12px 16px;border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:center}
+.panel .corpo{padding:12px 16px}
+table{width:100%;border-collapse:collapse}
+th{font-size:12px;text-align:left;color:var(--muted);font-weight:600;padding:8px 10px;border-bottom:2px solid var(--border);position:sticky;top:0;background:var(--surface)}
+td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover td{background:var(--surface-2)}
+.scroll{max-height:560px;overflow:auto}
+.barras{display:flex;align-items:flex-end;gap:3px;height:70px;padding-top:6px}
+.barras span{flex:1;background:var(--brand);border-radius:2px 2px 0 0;min-width:4px;position:relative}
+.barras span:hover::after{content:attr(data-t);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:var(--text);color:var(--surface);font-size:11px;padding:2px 6px;border-radius:3px;white-space:nowrap}
+.prog{height:6px;background:var(--surface-2);border-radius:3px;overflow:hidden;min-width:80px}
+.prog i{display:block;height:100%;background:var(--ok)}
+.vazio-msg{color:var(--muted);padding:20px;text-align:center;border:1px dashed var(--border);border-radius:var(--radius);background:var(--surface)}
+.aviso{background:var(--warn-weak);color:var(--warn);border-radius:var(--radius);padding:10px 14px;margin:8px 0;font-size:13px}
+.drawer{position:fixed;inset:0 0 0 auto;width:min(560px,100%);background:var(--surface);box-shadow:-4px 0 24px rgba(0,0,0,.18);transform:translateX(100%);transition:transform .18s;z-index:10;display:flex;flex-direction:column}
+.drawer.aberto{transform:none}
+.drawer header{display:flex;align-items:center;gap:10px;padding:16px 20px;border-bottom:1px solid var(--border)}
+.drawer .corpo{padding:16px 20px;overflow:auto}
+.drawer dl{display:grid;grid-template-columns:130px 1fr;gap:8px 12px;margin:0 0 16px}
+.drawer dt{color:var(--muted);font-size:12px;font-weight:600}.drawer dd{margin:0;white-space:pre-wrap;word-break:break-word}
+.fecha{margin-left:auto}
+.timeline{border-left:2px solid var(--border);margin-left:6px;padding-left:14px}
+.timeline div{margin-bottom:10px;position:relative}
+.timeline div::before{content:"";position:absolute;left:-20px;top:5px;width:10px;height:10px;border-radius:50%;background:var(--brand)}
+.legenda{font-size:12px;color:var(--muted)}
+@media (max-width:820px){.app{grid-template-columns:1fr}nav{position:static;height:auto;display:flex;flex-wrap:wrap;gap:4px}nav .grupo{display:none}nav button{width:auto}main{padding:16px}input[type=search]{width:100%}}
+</style>
+</head>
+<body>
+<div class="app">
+  <nav aria-label="Seções">
+    <div class="proj"><div class="logo">M</div><div><b id="pnome">Maestro</b><small id="pingest">carregando…</small></div></div>
+    <div class="grupo">Agora</div>
+    <button data-v="board" aria-current="page">◧ Board de agentes <span class="cnt" id="c-board"></span></button>
+    <button data-v="pecas">▤ Fluxo de peças <span class="cnt" id="c-pecas"></span></button>
+    <div class="grupo">Planejamento</div>
+    <button data-v="roadmap">⇢ Roadmap e specs <span class="cnt" id="c-specs"></span></button>
+    <button data-v="decisoes">⚖ Decisões e ADRs <span class="cnt" id="c-dec"></span></button>
+    <div class="grupo">Medição</div>
+    <button data-v="dora">↗ Indicadores DORA</button>
+    <button data-v="qualidade">✓ Barra, defeitos e desvios <span class="cnt" id="c-desv"></span></button>
+    <div class="grupo">Conhecimento</div>
+    <button data-v="documentos">❏ Documentos do projeto <span class="cnt" id="c-docs"></span></button>
+    <button data-v="glossario">Aa Linguagem ubíqua <span class="cnt" id="c-glos"></span></button>
+    <button data-v="ia">⚙ Estado para a IA</button>
+  </nav>
+  <main id="main" tabindex="-1"></main>
+</div>
+<aside class="drawer" id="drawer" aria-hidden="true" role="dialog" aria-label="Detalhe">
+  <header><b id="dtitulo"></b><button class="btn fecha" id="dfecha">Fechar (Esc)</button></header>
+  <div class="corpo" id="dcorpo"></div>
+</aside>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const cache = {};
+async function api(p){ const r = await fetch(p, {cache:"no-store"}); if(!r.ok) throw new Error(p+" "+r.status); return r.json(); }
+const CORES = ["#0c66e4","#1f845a","#a54800","#5e4db2","#c9372c","#206a83","#943d73","#5b7f24","#7f5f01","#ae2e24"];
+function av(n){ let h=0; for(const c of n) h=(h*31+c.charCodeAt(0))>>>0; const ini=n.replace(/^Worker/,"W").replace(/[^A-Za-z0-9]/g,"").slice(0,3); return `<span class="av" style="background:${CORES[h%CORES.length]}" aria-hidden="true">${esc(ini.slice(0,3))}</span>`; }
+const LOZ_SESSAO = {"trabalhando":"ok","esperando":"warn","sem tarefa":"bad","bloqueado":"bad","sem registro":"idle"};
+const LOZ_PECA = {"spec":"idle","red":"bad","entregue":"brand","suites aceitas":"info","aprovada as cegas":"info","integrada":"ok","em producao":"ok"};
+function idade(min){ if(min==null) return "sem registro"; if(min<60) return min+" min"; if(min<1440) return Math.round(min/60)+" h"; return Math.round(min/1440)+" d"; }
+let filtro = "";
+function casa(o){ return !filtro || JSON.stringify(o).toLowerCase().includes(filtro); }
+
+function cabecalho(crumb, titulo, sub, extra=""){
+  return `<header class="top"><span class="crumb">${esc(crumb)}</span></header><h1>${esc(titulo)}</h1><p class="sub">${sub}</p>
+  <div class="toolbar"><input type="search" id="busca" placeholder="Filtrar (sessão, peça, hash, texto)…" value="${esc(filtro)}" aria-label="Filtrar">${extra}</div>`;
+}
+function liga_busca(fn){ const b=$("#busca"); if(!b) return; b.addEventListener("input", e=>{ filtro=e.target.value.toLowerCase(); fn(true); }); }
+
+// ---------- Board de agentes ----------
+async function vBoard(manterFoco){
+  const d = cache.board = await api("/api/board");
+  const ordem = ["trabalhando","esperando","bloqueado","sem tarefa","sem registro"];
+  const parados = Object.values(d.colunas).flat().filter(c=>c.parado).length;
+  let h = cabecalho("Agora / Board de agentes","O que cada sessão está fazendo",
+    `Fonte: o último registro de status de cada sessão (append-only), mais o "Estado atual" do arquivo de papel. Sinal de vida mais velho que ${d.limiar_min} min fica marcado.`,
+    `<span class="legenda">${d.total} sessões · ${parados} sem sinal de vida recente</span><button class="btn" id="reing">Reingerir arquivos</button>`);
+  h += `<div class="board" role="list">`;
+  for(const k of ordem){
+    const cs = (d.colunas[k]||[]).filter(casa);
+    h += `<section class="col" aria-label="${esc(k)}"><h3><span class="loz ${LOZ_SESSAO[k]}">${esc(k)}</span><span class="n">${cs.length}</span></h3>`;
+    for(const c of cs){
+      h += `<article class="card ${c.parado&&k!=="sem registro"?"alerta":""}" tabindex="0" role="listitem" data-s="${esc(c.sessao)}">
+        <div class="l1">${av(c.sessao)}<span class="titulo">${esc(c.sessao)}</span>${c.peca?`<span class="loz brand">${esc(c.peca)}</span>`:""}</div>
+        <div class="em">${esc(c.em || c.resumo_arquivo || "—")}</div>
+        <div class="l3"><span title="${esc(c.status_ts||"")}">⏱ ${idade(c.idade_min)}</span>${c.ultimo_hash?`<code>${esc(c.ultimo_hash.slice(0,7))}</code>`:""}${c.parado&&k!=="sem registro"?`<span class="loz bad">sem sinal</span>`:""}</div></article>`;
+    }
+    if(!cs.length) h += `<div class="legenda" style="padding:6px">nenhuma</div>`;
+    h += `</section>`;
+  }
+  h += `</div>`;
+  if(d.colunas["sem registro"]?.length===d.total) h += `<div class="aviso">Nenhum status registrado ainda. O loop de 30 min da Assistente grava um status por sessão com <code>registrar.py status</code>; até lá o card mostra o "Estado atual" do arquivo de papel.</div>`;
+  $("#main").innerHTML = h;
+  $("#c-board").textContent = d.total;
+  liga_busca(vBoard); if(manterFoco) foca();
+  $("#reing").onclick = async()=>{ $("#reing").textContent="Reingerindo…"; await fetch("/api/reingerir",{method:"POST"}); meta(); vBoard(); };
+  document.querySelectorAll(".card[data-s]").forEach(el=>{
+    const abre=()=>detalheSessao(Object.values(d.colunas).flat().find(c=>c.sessao===el.dataset.s));
+    el.onclick=abre; el.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();abre();} };
+  });
+}
+function detalheSessao(c){
+  let h = `<dl><dt>Estado</dt><dd><span class="loz ${LOZ_SESSAO[c.estado]||"idle"}">${esc(c.estado)}</span></dd>
+  <dt>Fazendo</dt><dd>${esc(c.em||"—")}</dd><dt>Peça</dt><dd>${esc(c.peca||"—")}</dd>
+  <dt>Último status</dt><dd>${esc(c.status_ts||"nunca")} (${idade(c.idade_min)})</dd>
+  <dt>Evidência</dt><dd>${esc(c.evidencia||"—")}</dd><dt>Worktree</dt><dd class="mono">${esc(c.worktree||"—")}</dd>
+  <dt>Último hash</dt><dd class="mono">${esc(c.ultimo_hash||"—")}</dd><dt>Próximo passo</dt><dd>${esc(c.proximo||"—")}</dd>
+  <dt>Arquivo de papel</dt><dd class="mono">${esc(c.arquivo_papel||"—")}<br><span class="legenda">Estado atual de ${esc(c.estado_em_arquivo||"?")}</span></dd></dl>`;
+  if(c.resumo_arquivo) h += `<h3>Estado atual (arquivo)</h3><div style="white-space:pre-wrap;font-size:13px">${esc(c.resumo_arquivo)}</div>`;
+  if(c.historico?.length) h += `<h3>Histórico de status</h3><div class="timeline">${c.historico.map(x=>`<div><b>${esc(x.estado)}</b> · ${esc(x.texto||"")}<br><span class="legenda">${esc(x.ts)} · por ${esc(x.autor)}</span></div>`).join("")}</div>`;
+  drawer(c.sessao, h);
+}
+
+// ---------- Fluxo de peças ----------
+async function vPecas(manterFoco){
+  const d = await api("/api/pecas");
+  let n = 0;
+  let h = cabecalho("Agora / Fluxo de peças","Peças por estado, só com prova",
+    `Vocabulário fechado: ${d.estados.join(" → ")}. Uma peça só muda de coluna com a evidência exigida; sem prova o registro é recusado.`);
+  h += `<div class="board">`;
+  for(const k of d.estados){
+    const ps = (d.colunas[k]||[]).filter(casa); n += ps.length;
+    const ex = d.exigencias[k];
+    h += `<section class="col"><h3><span class="loz ${LOZ_PECA[k]}">${esc(k)}</span><span class="n">${ps.length}</span></h3>
+      <div class="legenda" style="margin:-4px 6px 8px">${ex?"exige: "+ex.join(", "):"sem exigência"}</div>`;
+    for(const p of ps){
+      h += `<article class="card" tabindex="0" data-p="${esc(p.peca)}"><div class="l1"><span class="titulo">${esc(p.peca)}</span></div>
+        <div class="em">${esc(Object.entries(p.evidencia||{}).map(([a,b])=>a+": "+b).join(" · "))}</div>
+        <div class="l3">${av(p.sessao||"?")} ${esc(p.sessao||"")} · ${esc(p.ts)}</div></article>`;
+    }
+    h += `</section>`;
+  }
+  h += `</div>`;
+  if(!n) h += `<div class="aviso">Nenhuma peça registrada. Quem promove é humano ou a Office: <code>python registrar.py projetos/hindiana.json peca --peca P6 --estado "suites aceitas" --evidencia '{"hash":"…","runner2":"…"}' --autor Office</code></div>`;
+  $("#main").innerHTML = h; $("#c-pecas").textContent = n || "";
+  liga_busca(vPecas); if(manterFoco) foca();
+  document.querySelectorAll(".card[data-p]").forEach(el=>el.onclick=()=>{
+    const p = Object.values(d.colunas).flat().find(x=>x.peca===el.dataset.p);
+    drawer(p.peca, `<div class="timeline">${p.historico.map(x=>`<div><span class="loz ${LOZ_PECA[x.estado]}">${esc(x.estado)}</span> ${esc(x.texto||"")}<br><code>${esc(x.evidencia||"")}</code><br><span class="legenda">${esc(x.ts)} · ${esc(x.autor)}</span></div>`).join("")}</div>`);
+  });
+}
+
+// ---------- Roadmap e specs ----------
+async function vRoadmap(manterFoco){
+  const [specs, rm] = await Promise.all([api("/api/specs"), api("/api/roadmap")]);
+  let h = cabecalho("Planejamento / Roadmap e specs","Do roadmap às tasks",
+    "Specs lidas das pastas <code>specs/NNN-*</code> de cada repositório: status do cabeçalho, tasks marcadas em <code>tasks.md</code>, presença de plan e qa-report.");
+  const porRepo = {};
+  for(const s of specs.filter(casa)) (porRepo[s.repo] ||= []).push(s);
+  for(const [repo, ss] of Object.entries(porRepo)){
+    const semQa = ss.filter(s=>!s.tem_qa).length;
+    h += `<section class="panel"><h2>${esc(repo)} <span class="loz idle">${ss.length} specs</span>${semQa?`<span class="loz warn">${semQa} sem qa-report</span>`:""}</h2><div class="scroll"><table>
+      <thead><tr><th>#</th><th>Spec</th><th>Status</th><th>Tasks</th><th>Plan</th><th>QA</th><th>Mexida em</th></tr></thead><tbody>`;
+    for(const s of ss){
+      const pct = s.tasks_total? Math.round(s.tasks_feitas/s.tasks_total*100):0;
+      h += `<tr><td class="mono">${esc(s.numero)}</td><td>${esc(s.titulo)}<br><span class="legenda mono">${esc(s.slug)}</span></td>
+        <td>${s.status?`<span class="loz ${/implement|conclu|done|aprov/i.test(s.status)?"ok":"idle"}">${esc(s.status.slice(0,28))}</span>`:`<span class="legenda">—</span>`}</td>
+        <td>${s.tasks_total?`<div class="prog" title="${s.tasks_feitas}/${s.tasks_total}"><i style="width:${pct}%"></i></div><span class="legenda">${s.tasks_feitas}/${s.tasks_total}</span>`:`<span class="legenda">sem tasks</span>`}</td>
+        <td>${s.tem_plan?"✓":"—"}</td><td>${s.tem_qa?"✓":`<span class="loz warn">falta</span>`}</td><td class="legenda">${esc((s.modificado||"").slice(0,16).replace("T"," "))}</td></tr>`;
+    }
+    h += `</tbody></table></div></section>`;
+  }
+  const secoes = {};
+  for(const r of rm.filter(casa)) (secoes[r.secao] ||= {cols:r.colunas, rows:[]}).rows.push(r.linha);
+  for(const [sec, t] of Object.entries(secoes)){
+    h += `<section class="panel"><h2>Roadmap · ${esc(sec)}</h2><div class="scroll"><table><thead><tr>${t.cols.map(c=>`<th>${esc(c)}</th>`).join("")}</tr></thead><tbody>${t.rows.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div></section>`;
+  }
+  $("#main").innerHTML = h; liga_busca(vRoadmap); if(manterFoco) foca();
+}
+
+// ---------- Decisões ----------
+async function vDecisoes(manterFoco){
+  const d = await api("/api/decisoes");
+  let h = cabecalho("Planejamento / Decisões e ADRs","Quem decidiu o quê, e como desfazer","Decisões das tabelas de <code>decisoes-*.md</code> e ADRs da pasta <code>adr/</code>. Fonte de verdade: os arquivos.");
+  h += `<section class="panel"><h2>ADRs <span class="loz idle">${d.adrs.length}</span></h2><table><thead><tr><th>Data</th><th>ADR</th><th>Estado</th></tr></thead><tbody>
+    ${d.adrs.filter(casa).map(a=>`<tr><td class="mono">${esc(a.data)}</td><td>${esc(a.titulo)}<br><span class="legenda mono">${esc(a.arquivo)}</span></td><td>${esc(a.estado||"—")}</td></tr>`).join("")}</tbody></table></section>`;
+  h += `<section class="panel"><h2>Decisões <span class="loz idle">${d.decisoes.length}</span></h2><div class="scroll"><table><thead><tr><th>#</th><th>Quando</th><th>Decisão</th><th>Como desfazer</th></tr></thead><tbody>
+    ${d.decisoes.filter(casa).map(x=>`<tr data-c="${esc(x.contexto)}"><td class="mono"><b>${esc(x.id)}</b></td><td class="legenda">${esc(x.quando)}</td><td>${esc(x.titulo)}<br><span class="legenda">${esc(x.contexto.slice(0,220))}${x.contexto.length>220?"…":""}</span></td><td class="legenda">${esc(x.desfazer)}</td></tr>`).join("")}</tbody></table></div></section>`;
+  $("#main").innerHTML = h; $("#c-dec").textContent = d.decisoes.length; liga_busca(vDecisoes); if(manterFoco) foca();
+}
+
+// ---------- DORA ----------
+function barras(serie){
+  const ent = Object.entries(serie||{}); if(!ent.length) return `<div class="legenda">sem dados</div>`;
+  const max = Math.max(...ent.map(e=>e[1]));
+  return `<div class="barras">${ent.map(([d,v])=>`<span style="height:${Math.max(4,v/max*100)}%" data-t="${esc(d)}: ${v}"></span>`).join("")}</div>`;
+}
+async function vDora(){
+  const dias = cache.dias || 30;
+  const d = await api("/api/dora?dias="+dias); const m = d.metricas;
+  const fmt = (v,u="")=> v==null? "—" : v+u;
+  const lt = Object.entries(m.lead_time.por_repo).map(([r,x])=>`${r}: mediana ${x.mediana_h} h · p90 ${x.p90_h} h (${x.n})`).join("<br>");
+  let h = cabecalho("Medição / DORA","As quatro métricas, com a fonte de cada número",
+    `Janela de ${dias} dias. Nenhum número é estimado: cada um diz de onde veio. Onde falta registro, o valor fica "—" e a nota diz o que registrar.`,
+    [7,30,90].map(x=>`<button class="chip" aria-pressed="${x===dias}" data-d="${x}">${x} dias</button>`).join(""));
+  for(const n of d.notas) h += `<div class="aviso">${esc(n)}</div>`;
+  h += `<div class="grid">
+   <div class="tile ${m.frequencia_deploy.valor==null?"vazio":""}"><div class="k">Frequência de deploy</div><div class="v">${fmt(m.frequencia_deploy.valor)}</div><div class="f">deploys/semana · ${m.frequencia_deploy.n} ok de ${m.frequencia_deploy.tentativas}<br>proxy (entregas na linha principal): ${Object.entries(m.frequencia_deploy.proxy_entregas_por_repo).map(([r,v])=>r+" "+v+"/sem").join(", ")||"—"}</div></div>
+   <div class="tile"><div class="k">Lead time de mudança</div><div class="v">${Object.values(m.lead_time.por_repo)[0]?.mediana_h ?? "—"} h</div><div class="f">${lt||"—"}<br>${esc(m.lead_time.fonte)}</div></div>
+   <div class="tile"><div class="k">Taxa de falha de mudança</div><div class="v">${fmt(m.taxa_falha.deploys_falhos_pct ?? m.taxa_falha.barra_reprova_pct,"%")}</div><div class="f">deploys falhos: ${fmt(m.taxa_falha.deploys_falhos_pct,"%")} · barra REPROVA: ${fmt(m.taxa_falha.barra_reprova_pct,"%")} (${m.taxa_falha.barra_n} voltas)<br>correções na linha principal: ${Object.entries(m.taxa_falha.correcoes_na_linha_principal_pct).map(([r,v])=>r+" "+v+"%").join(", ")}</div></div>
+   <div class="tile ${m.tempo_restauracao.incidentes_mediana_h==null&&m.tempo_restauracao.barra_reprova_ate_passa_mediana_h==null?"vazio":""}"><div class="k">Tempo de restauração</div><div class="v">${fmt(m.tempo_restauracao.incidentes_mediana_h ?? m.tempo_restauracao.barra_reprova_ate_passa_mediana_h," h")}</div><div class="f">incidentes: ${fmt(m.tempo_restauracao.incidentes_mediana_h," h")} (${m.tempo_restauracao.incidentes_n}, ${m.tempo_restauracao.incidentes_abertos} abertos)<br>barra REPROVA → PASSA: ${fmt(m.tempo_restauracao.barra_reprova_ate_passa_mediana_h," h")}</div></div>
+  </div>`;
+  for(const [r,s] of Object.entries(d.entregas_por_semana)) h += `<section class="panel"><h2>Entregas por dia · ${esc(r)}</h2><div class="corpo">${barras(s)}</div></section>`;
+  h += `<section class="panel"><h2>Deploys registrados</h2><div class="corpo">${barras(m.frequencia_deploy.serie)}</div></section>`;
+  $("#main").innerHTML = h;
+  document.querySelectorAll("[data-d]").forEach(b=>b.onclick=()=>{ cache.dias=+b.dataset.d; vDora(); });
+}
+
+// ---------- Qualidade ----------
+async function vQualidade(manterFoco){
+  const d = await api("/api/qualidade");
+  const max = Math.max(1,...d.classes.map(c=>c.n));
+  let h = cabecalho("Medição / Barra, defeitos e desvios","A barra decide; a retro aprende","Execuções de <code>barra/execucoes</code>, defeitos de <code>barra-v2-resultado.md</code> e desvios de <code>retro-anotacoes.md</code>, agrupados por classe.");
+  h += `<section class="panel"><h2>Voltas da barra <span class="loz idle">${d.barra.length}</span></h2><table><thead><tr><th>Quando</th><th>Ambiente</th><th>Hash</th><th>Veredito</th><th>Passos com erro</th></tr></thead><tbody>
+    ${d.barra.filter(casa).map(b=>`<tr><td class="mono">${esc(b.quando.replace("T"," "))}</td><td>${esc(b.ambiente)}</td><td class="mono">${esc(b.hash)}</td><td><span class="loz ${b.veredito==="PASSA"?"ok":"bad"}">${esc(b.veredito)}</span></td><td>${b.passos_com_erro} de ${b.passos}</td></tr>`).join("")}</tbody></table></section>`;
+  h += `<section class="panel"><h2>Desvios de método por classe <span class="loz idle">${d.desvios.length}</span></h2><div class="corpo">
+    ${d.classes.map(c=>`<div style="display:grid;grid-template-columns:200px 1fr 40px;gap:10px;align-items:center;margin:5px 0"><span>${esc(c.classe)}</span><div class="prog" style="height:12px"><i style="width:${c.n/max*100}%;background:var(--warn)"></i></div><b>${c.n}</b></div>`).join("")}</div></section>`;
+  h += `<section class="panel"><h2>Desvios (mais recentes primeiro)</h2><div class="scroll"><table><thead><tr><th>Quando</th><th>Quem</th><th>Classe</th><th>O que houve</th><th>Candidato ao método</th></tr></thead><tbody>
+    ${d.desvios.filter(casa).map(x=>`<tr><td class="legenda">${esc(x.quando)}</td><td>${esc(x.quem)}</td><td><span class="loz warn">${esc(x.classe)}</span></td><td>${esc(x.fato)}</td><td class="legenda">${esc(x.candidato)}</td></tr>`).join("")}</tbody></table></div></section>`;
+  h += `<section class="panel"><h2>Defeitos da barra</h2><div class="scroll"><table><thead><tr><th>Volta</th><th>Defeito</th><th>Ocorrências</th><th>O que é</th><th>Com quem</th></tr></thead><tbody>
+    ${d.defeitos.filter(casa).map(x=>`<tr><td class="legenda">${esc(x.volta)}</td><td class="mono"><b>${esc(x.id)}</b></td><td>${esc(x.ocorrencias)}</td><td>${esc(x.descricao)}</td><td>${esc(x.com_quem)}</td></tr>`).join("")}</tbody></table></div></section>`;
+  $("#main").innerHTML = h; $("#c-desv").textContent = d.desvios.length; liga_busca(vQualidade); if(manterFoco) foca();
+}
+
+// ---------- Documentos ----------
+const TIPOS_DOC = {"constituicao":"Constituição e regras","linguagem-e-objetos":"Linguagem ubíqua e objetos semânticos","jornadas":"Jornadas","plano-e-roadmap":"Plano e roadmap","decisoes":"Decisões","controle-e-retro":"Controle e retro","barra-e-qualidade":"Barra e qualidade","papeis-de-sessao":"Papéis das sessões (para a IA)","infraestrutura":"Infraestrutura"};
+async function vDocumentos(manterFoco){
+  const d = await api("/api/documentos");
+  const grupos = {}; for(const x of d.documentos.filter(casa)) (grupos[x.tipo] ||= []).push(x);
+  let h = cabecalho("Conhecimento / Documentos do projeto","Os documentos que o projeto precisa manter vivos",
+    "Idade = horas desde a última mudança no arquivo. Documento parado há mais de 7 dias fica marcado: artefato de planejamento que congela é anti-padrão do Maestro.");
+  for(const [t, xs] of Object.entries(grupos)){
+    const mortos = xs.filter(x=>x.idade_h>168).length;
+    h += `<section class="panel"><h2>${esc(TIPOS_DOC[t]||t)} <span class="loz idle">${xs.length}</span>${mortos?`<span class="loz warn">${mortos} parados</span>`:""}</h2><table><thead><tr><th>Documento</th><th>Linhas</th><th>Última mudança</th></tr></thead><tbody>
+      ${xs.map(x=>`<tr><td>${esc(x.titulo)}<br><span class="legenda mono">${esc(x.caminho)}</span></td><td>${x.linhas}</td><td><span class="loz ${x.idade_h<24?"ok":x.idade_h<168?"idle":"warn"}">${x.idade_h<24?Math.round(x.idade_h)+" h":Math.round(x.idade_h/24)+" d"}</span></td></tr>`).join("")}</tbody></table></section>`;
+  }
+  const faltando = Object.keys(TIPOS_DOC).filter(t=>!grupos[t]);
+  if(faltando.length && !filtro) h += `<div class="aviso">Sem documento: ${faltando.map(t=>esc(TIPOS_DOC[t])).join(", ")}.</div>`;
+  $("#main").innerHTML = h; $("#c-docs").textContent = d.documentos.length; liga_busca(vDocumentos); if(manterFoco) foca();
+}
+async function vGlossario(manterFoco){
+  const d = await api("/api/documentos");
+  let h = cabecalho("Conhecimento / Linguagem ubíqua","Os termos que código, tela e conversa devem usar","Lido das tabelas Termo | Definição | Evitar do glossário configurado.");
+  h += `<section class="panel"><div class="scroll"><table><thead><tr><th>Termo</th><th>Definição</th><th>Evitar</th></tr></thead><tbody>
+    ${d.glossario.filter(casa).map(g=>`<tr><td><b>${esc(g.termo)}</b></td><td>${esc(g.definicao)}</td><td class="legenda">${esc(g.evitar)}</td></tr>`).join("")}</tbody></table></div></section>`;
+  $("#main").innerHTML = h; $("#c-glos").textContent = d.glossario.length; liga_busca(vGlossario); if(manterFoco) foca();
+}
+async function vIA(){
+  const d = await api("/api/estado-ia");
+  $("#main").innerHTML = cabecalho("Conhecimento / Estado para a IA","O contexto ativo que um agente lê ao abrir a sessão",
+    "Gerado do cache (estilo memory bank: activeContext + progress). Endpoint: <code>GET /api/estado-ia</code>. É derivado; a verdade são os arquivos.") +
+    `<section class="panel"><div class="corpo"><pre class="mono" style="white-space:pre-wrap;margin:0">${esc(JSON.stringify(d,null,2))}</pre></div></section>`;
+}
+
+// ---------- plumbing ----------
+function drawer(titulo, html){ $("#dtitulo").textContent = titulo; $("#dcorpo").innerHTML = html; const d=$("#drawer"); d.classList.add("aberto"); d.setAttribute("aria-hidden","false"); $("#dfecha").focus(); }
+function fecha(){ const d=$("#drawer"); d.classList.remove("aberto"); d.setAttribute("aria-hidden","true"); }
+$("#dfecha").onclick = fecha; document.addEventListener("keydown", e=>{ if(e.key==="Escape") fecha(); });
+function foca(){ const b=$("#busca"); if(b){ b.focus(); b.setSelectionRange(b.value.length,b.value.length);} }
+const VIEWS = {board:vBoard, pecas:vPecas, roadmap:vRoadmap, decisoes:vDecisoes, dora:vDora, qualidade:vQualidade, documentos:vDocumentos, glossario:vGlossario, ia:vIA};
+let atual = "board";
+function vai(v){ atual = v; document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-current", b.dataset.v===v?"page":"false")); location.hash = v; VIEWS[v]().catch(e=>$("#main").innerHTML=`<div class="aviso">Erro: ${esc(e.message)}</div>`); }
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>vai(b.dataset.v));
+async function meta(){ const m = await api("/api/meta"); $("#pnome").textContent = "Maestro · "+(m.projeto||""); $("#pingest").textContent = "arquivos lidos "+(m.ingerido_em||"").slice(11,16)+" de "+(m.ingerido_em||"").slice(8,10)+"/"+(m.ingerido_em||"").slice(5,7); }
+const inicial = location.hash.slice(1);
+meta(); vai(inicial in VIEWS ? inicial : "board");
+setInterval(()=>{ if(atual==="board" && !document.activeElement?.matches("input")) vBoard(); }, 60000);
+</script>
+</body>
+</html>
