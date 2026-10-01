@@ -51,6 +51,13 @@ input[type=search]:focus{outline:none;border-color:var(--brand)}
 .board.pecas .col{padding:6px}.board.pecas .card{padding:8px 9px}.board.pecas .card .titulo{font-size:13px}
 .board.pecas .card .em{font-size:12px;-webkit-line-clamp:2}
 @media (max-width:1100px){.board.pecas{grid-auto-flow:column;grid-template-columns:none;grid-auto-columns:minmax(180px,1fr)}}
+.board-cab{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;padding:0 8px 6px;position:sticky;top:0;background:var(--bg);z-index:2}
+.board-cab div{font-size:12px}
+.raia{margin-bottom:14px}.raia-t{font-size:13px;font-weight:600;margin:6px 2px 6px;display:flex;gap:8px;align-items:center}
+.roster{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+.roster .card{margin:0;border-left-width:4px}
+.card.st-ok{border-left-color:var(--ok)}.card.st-warn{border-left-color:var(--warn)}.card.st-bad{border-left-color:var(--bad)}.card.st-idle{border-left-color:var(--border)}
+.card.alerta{box-shadow:0 0 0 1px var(--bad),var(--shadow)}
 .col{background:var(--surface-2);border-radius:var(--radius);padding:8px;min-height:120px}
 .col h3{font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);margin:4px 6px 10px;display:flex;gap:6px;align-items:center}
 .col h3 .n{background:var(--surface);border-radius:10px;padding:0 7px;font-weight:600}
@@ -61,7 +68,7 @@ input[type=search]:focus{outline:none;border-color:var(--brand)}
 .card .titulo{font-weight:600}
 .card .em{margin:6px 0;font-size:13px;color:var(--text);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .card .l3{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--muted)}
-.card.alerta{border-left-color:var(--bad)}
+
 .av{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff;flex:none}
 .loz{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;border-radius:3px;padding:1px 6px;letter-spacing:.02em}
 .loz.ok{background:var(--ok-weak);color:var(--ok)}.loz.warn{background:var(--warn-weak);color:var(--warn)}
@@ -162,24 +169,42 @@ async function vBoard(manterFoco){
   let h = cabecalho("Agora / Board de agentes","O que cada sessão está fazendo",
     `Fonte: o último registro de status de cada sessão (append-only), mais o "Estado atual" do arquivo de papel. Sinal de vida mais velho que ${d.limiar_min} min fica marcado.`,
     `<span class="legenda">${d.total} sessões · ${parados} sem sinal de vida recente</span><button class="btn" id="reing">Reingerir arquivos</button>`);
-  h += `<div class="board" role="list">`;
-  for(const k of ordem){
-    const cs = (d.colunas[k]||[]).filter(casa);
-    h += `<section class="col" aria-label="${esc(k)}"><h3><span class="loz ${LOZ_SESSAO[k]}">${esc(k)}</span><span class="n">${cs.length}</span></h3>`;
-    for(const c of cs){
-      h += `<article class="card ${c.parado&&k!=="sem registro"?"alerta":""}" tabindex="0" role="listitem" data-s="${esc(c.sessao)}">
-        <div class="l1">${av(c.sessao)}<span class="titulo">${esc(c.sessao)}</span>${c.peca?`<span class="loz brand">${esc(c.peca)}</span>`:""}</div>
-        <div class="em">${esc(c.em || c.resumo_arquivo || "—")}</div>
-        <div class="l3"><span title="${esc(c.status_ts||"")}">⏱ ${idade(c.idade_min)}</span>${c.ultimo_hash?`<code>${esc(c.ultimo_hash.slice(0,7))}</code>`:""}${c.parado&&k!=="sem registro"?`<span class="loz bad">sem sinal</span>`:""}</div></article>`;
+  const equipes = cache.meta?.equipes || {};
+  const todos = Object.values(d.colunas).flat();
+  const raias = cache.raias !== false && Object.keys(equipes).length;
+  const grupos = raias ? Object.entries(equipes).map(([nome, membros])=>[nome, todos.filter(c=>membros.includes(c.sessao))]) : [["", todos]];
+  if(raias){ const vistos = new Set(Object.values(equipes).flat()); const outros = todos.filter(c=>!vistos.has(c.sessao)); if(outros.length) grupos.push(["Outras sessões", outros]); }
+  h = h.replace('<button class="btn" id="reing">', `<button class="chip" id="raias" aria-pressed="${!!raias}">Raias por equipe</button><button class="btn" id="reing">`);
+  const naCol = (c,k)=> k==="sem registro" ? !["trabalhando","esperando","bloqueado","sem tarefa"].includes(c.estado) : c.estado===k;
+  const PRIO = {"bloqueado":0,"sem tarefa":1,"esperando":2,"trabalhando":3};
+  const cardS = c=>{
+    const k = LOZ_SESSAO[c.estado] ? c.estado : "sem registro";
+    const atencao = c.estado==="bloqueado"||c.estado==="sem tarefa"||(c.parado&&k!=="sem registro");
+    return `<article class="card st-${LOZ_SESSAO[k]} ${atencao?"alerta":""}" tabindex="0" role="listitem" data-s="${esc(c.sessao)}">
+      <div class="l1">${av(c.sessao)}<span class="titulo">${esc(c.sessao)}</span><span class="loz ${LOZ_SESSAO[k]}" style="margin-left:auto">${esc(k)}</span></div>
+      <div class="em">${esc(c.em || c.resumo_arquivo || "—")}</div>
+      <div class="l3"><span title="${esc(c.status_ts||"")}" ${c.parado&&k!=="sem registro"?`style="color:var(--bad);font-weight:600"`:""}>⏱ ${idade(c.idade_min)}</span>${c.ultimo_hash?`<code class="loz idle">${esc(c.ultimo_hash.slice(0,7))}</code>`:""}${c.parado&&k!=="sem registro"?`<span class="loz bad">sem sinal</span>`:""}</div></article>`;
+  };
+  if(raias){
+    for(const [nome, membros] of grupos){
+      const ms = membros.filter(casa).sort((x,y)=>(PRIO[x.estado]??4)-(PRIO[y.estado]??4)); if(!ms.length) continue;
+      const alerta = ms.filter(c=>c.estado==="bloqueado"||c.estado==="sem tarefa"||(c.parado&&c.estado!=="sem registro")).length;
+      const resumo = ordem.map(k=>[k, ms.filter(c=>naCol(c,k)).length]).filter(x=>x[1]).map(([k,n])=>`<span class="loz ${LOZ_SESSAO[k]}">${n} ${esc(k)}</span>`).join(" ");
+      h += `<section class="raia"><h2 class="raia-t">${esc(nome)} ${resumo}${alerta?`<span class="loz bad">${alerta} pedem atenção</span>`:""}</h2><div class="roster" role="list">${ms.map(cardS).join("")}</div></section>`;
     }
-    if(!cs.length) h += `<div class="legenda" style="padding:6px">nenhuma</div>`;
-    h += `</section>`;
+  } else {
+    h += `<div class="board" role="list">`;
+    for(const k of ordem){
+      const cs = todos.filter(c=>naCol(c,k)).filter(casa);
+      h += `<section class="col" aria-label="${esc(k)}"><h3><span class="loz ${LOZ_SESSAO[k]}">${esc(k)}</span><span class="n">${cs.length}</span></h3>${cs.map(cardS).join("")||`<div class="legenda" style="padding:6px">nenhuma</div>`}</section>`;
+    }
+    h += `</div>`;
   }
-  h += `</div>`;
   if(d.colunas["sem registro"]?.length===d.total) h += `<div class="aviso">Nenhum status registrado ainda. O loop de 30 min da Assistente grava um status por sessão com <code>registrar.py status</code>; até lá o card mostra o "Estado atual" do arquivo de papel.</div>`;
   $("#main").innerHTML = h;
   $("#c-board").textContent = d.total;
   liga_busca(vBoard); if(manterFoco) foca();
+  $("#raias").onclick = ()=>{ cache.raias = !raias; vBoard(); };
   $("#reing").onclick = async()=>{ $("#reing").textContent="Reingerindo…"; await fetch("/api/reingerir",{method:"POST"}); meta(); vBoard(); };
   document.querySelectorAll(".card[data-s]").forEach(el=>{
     const abre=()=>detalheSessao(Object.values(d.colunas).flat().find(c=>c.sessao===el.dataset.s));
@@ -403,10 +428,10 @@ const VIEWS = {board:vBoard, pecas:vPecas, roadmap:vRoadmap, decisoes:vDecisoes,
 let atual = "board";
 function vai(v){ atual = v; document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-current", b.dataset.v===v?"page":"false")); location.hash = v; VIEWS[v]().catch(e=>$("#main").innerHTML=`<div class="aviso">Erro: ${esc(e.message)}</div>`); }
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>vai(b.dataset.v));
-async function meta(){ const m = await api("/api/meta"); $("#pnome").textContent = "Maestro · "+(m.projeto||""); $("#pingest").textContent = "arquivos lidos "+(m.ingerido_em||"").slice(11,16)+" de "+(m.ingerido_em||"").slice(8,10)+"/"+(m.ingerido_em||"").slice(5,7); }
+async function meta(){ const m = cache.meta = await api("/api/meta"); $("#pnome").textContent = "Maestro · "+(m.projeto||""); $("#pingest").textContent = "arquivos lidos "+(m.ingerido_em||"").slice(11,16)+" de "+(m.ingerido_em||"").slice(8,10)+"/"+(m.ingerido_em||"").slice(5,7); }
 window.addEventListener("hashchange", ()=>{ const v = location.hash.slice(1); if(v in VIEWS && v!==atual) vai(v); });
 const inicial = location.hash.slice(1);
-meta(); vai(inicial in VIEWS ? inicial : "board");
+meta().finally(()=>vai(inicial in VIEWS ? inicial : "board"));
 setInterval(()=>{ if(atual==="board" && !document.activeElement?.matches("input")) vBoard(); }, 60000);
 </script>
 </body>

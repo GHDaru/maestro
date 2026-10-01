@@ -163,6 +163,22 @@ class Extracao(Fixture):
         self.assertTrue(any("merge na main não é deploy" in n for n in d["notas"]))
 
 
+class Mcp(Fixture):
+    def test_mcp_lista_ferramentas_e_recusa_peca_sem_prova(self):
+        import mcp_painel
+        ingest.ingere(self.cfg, self.db)
+        nomes = [t["name"] for t in mcp_painel.responde({"id": 1, "method": "tools/list"}, self.db)["tools"]]
+        self.assertEqual(nomes, ["estado_atual", "registrar_status", "registrar_peca"])
+        r = mcp_painel.responde({"id": 2, "method": "tools/call", "params": {"name": "registrar_peca", "arguments": {
+            "peca": "P", "estado": "integrada", "evidencia": {"hash": "a"}, "autor": "t"}}}, self.db)
+        self.assertTrue(r.get("isError"))
+        r = mcp_painel.responde({"id": 3, "method": "tools/call", "params": {"name": "registrar_status", "arguments": {
+            "sessao": "W04", "estado": "trabalhando", "texto": "x", "autor": "W04"}}}, self.db)
+        self.assertFalse(r.get("isError"))
+        r = mcp_painel.responde({"id": 4, "method": "tools/call", "params": {"name": "estado_atual", "arguments": {"sessao": "W04"}}}, self.db)
+        self.assertEqual(json.loads(r["content"][0]["text"])["voce"]["estado"], "trabalhando")
+
+
 class HigieneGit(unittest.TestCase):
     def test_detecta_branch_com_upstream_na_main(self):
         with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as r:

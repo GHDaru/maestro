@@ -282,7 +282,7 @@ def v_estado_ia(db, sessao=None):
         out["voce"] = eu and {k: eu[k] for k in ("sessao", "estado", "em", "peca", "worktree", "ultimo_hash",
                                                   "proximo", "arquivo_papel", "historico")}
         out["seus_desvios"] = [x for x in q["desvios"] if sessao.lower() in (x["quem"] or "").lower()][:10]
-        out["riscos_git"] = [r for r in out["riscos_git"] if sessao.lower().replace("w", "w") in (r["caminho"] or "").lower()] or out["riscos_git"]
+        out["riscos_git"] = [r for r in out["riscos_git"] if sessao.lower() in (r["caminho"] or "").lower()] or out["riscos_git"]
     return out
 
 
