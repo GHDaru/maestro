@@ -143,6 +143,8 @@ tr:hover td{background:var(--surface-2)}
     <button data-v="glossario">Aa Linguagem ubíqua <span class="cnt" id="c-glos"></span></button>
     <button data-v="ia">⚙ Estado para a IA</button>
   </nav>
+  <div id="aviso-velho" style="display:none;padding:4px 12px;background:var(--warn-bg,rgba(255,193,7,.15));border-bottom:1px solid var(--warn,#f59e0b);font-size:13px"></div>
+  <div id="aviso-erro" style="display:none;padding:4px 12px"></div>
   <main id="main" tabindex="-1"></main>
 </div>
 <aside class="drawer" id="drawer" aria-hidden="true" role="dialog" aria-label="Detalhe">
@@ -282,9 +284,23 @@ async function vPecas(manterFoco){
 
 // ---------- Roadmap e specs ----------
 async function vRoadmap(manterFoco){
-  const [specs, rm] = await Promise.all([api("/api/specs"), api("/api/roadmap")]);
+  const [specs, rm, rod] = await Promise.all([api("/api/specs"), api("/api/roadmap"), api("/api/rodadas")]);
   let h = cabecalho("Planejamento / Roadmap e specs","Do roadmap às tasks",
     "Specs lidas das pastas <code>specs/NNN-*</code> de cada repositório: status do cabeçalho, tasks marcadas em <code>tasks.md</code>, presença de plan e qa-report.");
+  // T6: rodadas com passo atual, tempo em cada passo, quem está nele
+  const rodadas = rod.rodadas || [];
+  if(rodadas.length){
+    h += `<section class="panel"><h2>Rodadas <span class="loz idle">${rodadas.length}</span></h2><div class="scroll"><table><thead><tr><th>ID</th><th>Desejo</th><th>Passo atual</th><th>Quem</th><th>Passos (tempo)</th><th>Arquivo</th></tr></thead><tbody>`;
+    for(const r of rodadas.filter(casa)){
+      const passosTxt = r.passos.map(p=>`${esc(p.passo)}: ${p.horas!=null?p.horas+"h":`<span class="loz warn">aberto</span>`}`).join(" → ");
+      h += `<tr><td class="mono"><b>${esc(r.id)}</b></td><td>${esc(r.desejo||"—")}</td>
+        <td>${r.passo_atual?`<span class="loz warn">${esc(r.passo_atual)}</span>`:`<span class="legenda">—</span>`}</td>
+        <td>${r.quem?av(r.quem)+esc(r.quem):`<span class="legenda">—</span>`}</td>
+        <td class="legenda">${passosTxt||"—"}</td>
+        <td>${r.arquivo?`<code title="${esc(r.arquivo)}">${esc(r.arquivo)}</code>`:`<span class="legenda">—</span>`}</td></tr>`;
+    }
+    h += `</tbody></table></div></section>`;
+  }
   const porRepo = {};
   for(const s of specs.filter(casa)) (porRepo[s.repo] ||= []).push(s);
   for(const [repo, ss] of Object.entries(porRepo)){
@@ -468,7 +484,13 @@ const VIEWS = {board:vBoard, pecas:vPecas, roadmap:vRoadmap, decisoes:vDecisoes,
 let atual = "board";
 function vai(v){ atual = v; document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-current", b.dataset.v===v?"page":"false")); location.hash = v; VIEWS[v]().catch(e=>$("#main").innerHTML=`<div class="aviso">Erro: ${esc(e.message)}</div>`); }
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>vai(b.dataset.v));
-async function meta(){ const m = cache.meta = await api("/api/meta"); $("#pnome").textContent = "Maestro · "+(m.projeto||""); $("#pingest").textContent = "arquivos lidos "+(m.ingerido_em||"").slice(11,16)+" de "+(m.ingerido_em||"").slice(8,10)+"/"+(m.ingerido_em||"").slice(5,7); }
+async function meta(){ const m = cache.meta = await api("/api/meta"); $("#pnome").textContent = "Maestro · "+(m.projeto||""); $("#pingest").textContent = "arquivos lidos "+(m.ingerido_em||"").slice(11,16)+" de "+(m.ingerido_em||"").slice(8,10)+"/"+(m.ingerido_em||"").slice(5,7);
+  // T8: aviso de leitura velha se >1h
+  const avisoVelho = $("#aviso-velho");
+  if(m.ingerido_age_min > 60){ const h = Math.floor(m.ingerido_age_min/60); avisoVelho.innerHTML = `<span class="loz warn">leitura velha: ${h}h${Math.round(m.ingerido_age_min%60)}m desde o último ingest</span>`; avisoVelho.style.display = "block"; }
+  else avisoVelho.style.display = "none";
+  // T9: erros de leitura
+  try{ const erros = await api("/api/erros"); const avisoErro = $("#aviso-erro"); if(erros.length){ avisoErro.innerHTML = erros.map(e=>`<div class="aviso">Não leu <code>${esc(e.caminho)}</code>: ${esc(e.motivo)}</div>`).join(""); avisoErro.style.display = "block"; } else avisoErro.style.display = "none"; }catch{} }
 window.addEventListener("hashchange", ()=>{ const v = location.hash.slice(1); if(v in VIEWS && v!==atual) vai(v); });
 const inicial = location.hash.slice(1);
 meta().finally(()=>vai(inicial in VIEWS ? inicial : "board"));

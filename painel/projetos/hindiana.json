@@ -8,8 +8,9 @@
                           "wt-w08-d1-fitness", "wt-w07-sobe-dev-crlf", "wt-w09-d8-password-leak"],
   "ponto": "ola/especificacao/tempos/ponto.jsonl",
   "equipes": {
-    "Coordenação": ["Hindiana Office", "Assistente", "Gerente", "Gerente02", "Torre"],
-    "Time do Gerente": ["W02", "W06", "W07", "W08", "W09", "W10", "W11"],
+    "Claude Desktop": ["Office", "Assistente", "Reescrita", "Testes Dev"],
+    "Coordenação": ["Gerente", "Gerente02", "Torre"],
+    "Time do Gerente": ["W02", "W06", "W07", "W08", "W09", "W11"],
     "Time do Gerente02": ["W01", "W03", "W04", "W05", "W12", "W13"]
   },
   "equipe": "ola/especificacao/equipe",
