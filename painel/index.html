@@ -287,11 +287,14 @@ async function vPecas(manterFoco){
 let rodadaSel = null, tarefaSel = null;
 async function vRodadas(manterFoco){
   if(rodadaSel) return vArvoreRodada(rodadaSel, tarefaSel);
-  const d = await api("/api/board");
+  // FR3: board abre no filtro "só exceções" por padrão
+  const soExc = cache.rodadasSoExcecoes !== false;
+  const d = await api("/api/board" + (soExc ? "?so_excecoes=1" : ""));
   const rod = await api("/api/rodadas");
   const rodadas = rod.rodadas || [];
   let h = cabecalho("Agora / Rodadas","Board enxuto e rodada navegável",
-    "3 exceções no topo, linha por sessão e roadmap por ciclo. Clique numa rodada para ver a árvore.");
+    "3 exceções no topo, linha por sessão e roadmap por ciclo. Clique numa rodada para ver a árvore.",
+    `<button class="chip" id="rod-exc" aria-pressed="${soExc}">${soExc?"Só exceções":"Mostrar todas"}</button>`);
   // FR1: 3 exceções no topo
   const exc = d.excecoes || {};
   const excTile = (k, label, cor)=>{
@@ -335,6 +338,8 @@ async function vRodadas(manterFoco){
   }
   $("#main").innerHTML = h; $("#c-rodadas").textContent = rodadas.length || "";
   liga_busca(vRodadas); if(manterFoco) foca();
+  const excBtn = $("#rod-exc");
+  if(excBtn) excBtn.onclick = ()=>{ cache.rodadasSoExcecoes = !soExc; vRodadas(); };
   document.querySelectorAll("tr.lin[data-rod]").forEach(el=>{
     const abre=()=>{ rodadaSel=el.dataset.rod; tarefaSel=null; vRodadas(); };
     el.onclick=abre; el.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();abre();} };
