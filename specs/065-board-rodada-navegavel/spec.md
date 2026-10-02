@@ -45,7 +45,9 @@ A proposta é um board enxuto com 3 exceções no topo e uma linha por sessão; 
 
 1. O estado do workflow por tarefa vem da tabela `passos` da 064 ou de uma tabela nova? → da tabela `passos` existente, com `tarefa` como campo derivado do commit (convenção `064 T2: …`).
 2. A árvore é gerada em tempo real ou no ingest? → no ingest, como as outras tabelas derivadas. A árvore é materializada numa tabela `arvore_rodrada` para a UI consultar.
-3. O "sem tarefa há 2 ciclos" usa qual janela? → 2 ciclos = 2 rodadas consecutivas sem a sessão aparecer em nenhum passo.
+3. O "sem tarefa há 2 ciclos" usa qual janela? → 2 ciclos do loop de status de 30 min (status = "sem tarefa" em dois ciclos consecutivos, ~60 min), NÃO 2 rodadas.
+
+- **FR13**: SE o status de um worker for "sem tarefa" em dois ciclos de status consecutivos, ENTÃO O SISTEMA DEVE contá-lo na exceção "sem tarefa há 2 ciclos".
 
 <!--
   GATE (DoR — not delegable): this spec only becomes a plan after human approval.
