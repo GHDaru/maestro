@@ -127,6 +127,7 @@ tr:hover td{background:var(--surface-2)}
     <div class="proj"><div class="logo">M</div><div><b id="pnome">Maestro</b><small id="pingest">carregando…</small></div></div>
     <div class="grupo">Agora</div>
     <button data-v="board" aria-current="page">◧ Board de agentes <span class="cnt" id="c-board"></span></button>
+    <button data-v="rodadas">⬚ Rodadas <span class="cnt" id="c-rodadas"></span></button>
     <button data-v="pecas">▤ Fluxo de peças <span class="cnt" id="c-pecas"></span></button>
     <div class="grupo">Planejamento</div>
     <button data-v="roadmap">⇢ Roadmap e specs <span class="cnt" id="c-specs"></span></button>
@@ -282,10 +283,160 @@ async function vPecas(manterFoco){
 }
 
 // ---------- Roadmap e specs ----------
+// ---------- Rodadas (065: Board enxuto + Árvore + Workflow) ----------
+let rodadaSel = null, tarefaSel = null;
+async function vRodadas(manterFoco){
+  if(rodadaSel) return vArvoreRodada(rodadaSel, tarefaSel);
+  const d = await api("/api/board");
+  const rod = await api("/api/rodadas");
+  const rodadas = rod.rodadas || [];
+  let h = cabecalho("Agora / Rodadas","Board enxuto e rodada navegável",
+    "3 exceções no topo, linha por sessão e roadmap por ciclo. Clique numa rodada para ver a árvore.");
+  // FR1: 3 exceções no topo
+  const exc = d.excecoes || {};
+  const excTile = (k, label, cor)=>{
+    const e = exc[k] || {contador:0};
+    return `<div class="tile" style="${e.contador>0?`background:var(--${cor}-weak)`:""}">
+      <div class="k" style="${e.contador>0?`color:var(--${cor})`:""}">${esc(label)}</div>
+      <div class="v" style="${e.contador>0?`color:var(--${cor})`:"color:var(--muted)"}">${e.contador||0}</div>
+      <div class="f">${e.contador>0?(e.detalhe||[]).map(i=>esc(i.item||"")).join(" · "):"ok"}</div></div>`;
+  };
+  h += `<div class="grid" style="grid-template-columns:repeat(3,minmax(0,1fr));margin-bottom:14px">
+    ${excTile("gilsiley","Precisam do Gilsiley","bad")}
+    ${excTile("gate_push","Gate do push","warn")}
+    ${excTile("sem_tarefa_2ciclos","Sem tarefa 2 ciclos","warn")}
+  </div>`;
+  // FR2: linha por sessão com 5 colunas
+  const workers = d.workers || [];
+  if(workers.length){
+    h += `<section class="panel"><h2>Sessões <span class="loz idle">${workers.length}</span></h2><table><thead><tr><th>Sessão</th><th>Estado</th><th>Peça / Passo</th><th>Esperando</th><th>Há quanto</th></tr></thead><tbody>`;
+    for(const w of workers.filter(casa)){
+      h += `<tr><td>${av(w.sessao)}<b>${esc(w.sessao)}</b></td>
+        <td><span class="loz ${w.estado==="busy"?"ok":w.estado==="erro"?"bad":"idle"}">${esc(w.estado||"—")}</span></td>
+        <td>${esc(w.peca||"—")} / ${esc(w.passo||"—")}</td>
+        <td>${esc(w.esperando||"—")}</td>
+        <td>${idade(w.idade_min)}</td></tr>`;
+    }
+    h += `</tbody></table></section>`;
+  }
+  // Lista de rodadas (click → árvore)
+  if(rodadas.length){
+    h += `<section class="panel"><h2>Rodadas <span class="loz idle">${rodadas.length}</span></h2><table><thead><tr><th>ID</th><th>Desejo</th><th>Passo atual</th><th>Quem</th><th>Aberta em</th></tr></thead><tbody>`;
+    for(const r of rodadas.filter(casa)){
+      h += `<tr class="lin" tabindex="0" data-rod="${esc(r.id)}" style="cursor:pointer">
+        <td class="mono"><b>${esc(r.id)}</b></td><td>${esc(r.desejo||"—")}</td>
+        <td>${r.passo_atual?`<span class="loz warn">${esc(r.passo_atual)}</span>`:`<span class="legenda">—</span>`}</td>
+        <td>${r.quem?av(r.quem)+esc(r.quem):"—"}</td>
+        <td class="legenda">${esc((r.aberta_em||"").slice(0,16).replace("T"," "))}</td></tr>`;
+    }
+    h += `</tbody></table></section>`;
+  } else {
+    h += `<div class="aviso">Nenhuma rodada encontrada.</div>`;
+  }
+  $("#main").innerHTML = h; $("#c-rodadas").textContent = rodadas.length || "";
+  liga_busca(vRodadas); if(manterFoco) foca();
+  document.querySelectorAll("tr.lin[data-rod]").forEach(el=>{
+    const abre=()=>{ rodadaSel=el.dataset.rod; tarefaSel=null; vRodadas(); };
+    el.onclick=abre; el.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();abre();} };
+  });
+}
+async function vArvoreRodada(id, task){
+  if(task) return vWorkflowTarefa(id, task);
+  const rod = await api("/api/rodadas?id="+encodeURIComponent(id));
+  const r = (rod.rodadas||[])[0];
+  const arvore = rod.arvore || [];
+  let h = cabecalho(`Rodadas / ${esc(id)}`, r?esc(r.desejo||"—"):"Rodada não encontrada",
+    r?`Aberta por ${esc(r.criada_por||"—")} · ${esc((r.aberta_em||"").slice(0,16).replace("T"," "))}`:"");
+  h += `<button class="btn" onclick="rodadaSel=null;tarefaSel=null;vRodadas()">← Voltar</button>`;
+  // FR8: árvore navegável
+  if(arvore.length){
+    h += `<section class="panel"><h2>Árvore</h2><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div>`;
+    // Agrupar por tipo
+    const tipos = {};
+    for(const n of arvore) (tipos[n.tipo] ||= []).push(n);
+    for(const [tipo, nos] of Object.entries(tipos)){
+      h += `<div class="raia-t">${esc(tipo)}</div>`;
+      for(const n of nos){
+        const chip = n.status==="descoberto" ? `<span class="loz warn">descoberto</span>` :
+                     n.evidencia_ok===0 ? `<span class="loz warn">⚠ diverge</span>` :
+                     n.evidencia_ok===1 ? `<span class="loz ok">✓</span>` : "";
+        const click = n.tipo==="task" ? `class="lin" tabindex="0" data-task="${esc(n.id_no)}" style="cursor:pointer"` : "";
+        h += `<div ${click}>${esc(n.id_no)} ${chip} <span class="legenda">${esc(n.label||"")}</span></div>`;
+      }
+    }
+    h += `</div><div id="no-detail"><div class="legenda">Clique num nó para ver o artefato.</div></div></div></section>`;
+  } else {
+    h += `<div class="aviso">Esta rodada ainda não tem passos registrados.</div>`;
+  }
+  // Passos da rodada
+  if(r && r.passos && r.passos.length){
+    h += `<section class="panel"><h2>Passos</h2><table><thead><tr><th>Passo</th><th>Sessão</th><th>Entrada</th><th>Saída</th><th>Horas</th><th>Resumo</th></tr></thead><tbody>`;
+    for(const p of r.passos){
+      h += `<tr><td>${esc(p.passo)}</td><td>${esc(p.sessao||"—")}</td>
+        <td class="legenda">${esc((p.entrada_em||"").slice(11,16))}</td>
+        <td class="legenda">${esc((p.saida_em||"").slice(11,16))}</td>
+        <td>${p.horas!=null?p.horas+"h":"—"}</td><td>${esc(p.resumo||"—")}</td></tr>`;
+    }
+    h += `</tbody></table></section>`;
+  }
+  $("#main").innerHTML = h;
+  document.querySelectorAll("div.lin[data-task]").forEach(el=>{
+    const abre=()=>{ tarefaSel=el.dataset.task; vArvoreRodada(id, el.dataset.task); };
+    el.onclick=abre; el.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();abre();} };
+  });
+}
+async function vWorkflowTarefa(id, task){
+  const rod = await api("/api/rodadas?id="+encodeURIComponent(id));
+  const r = (rod.rodadas||[])[0];
+  const arvore = rod.arvore || [];
+  const no = arvore.find(n=>n.id_no===task);
+  let h = cabecalho(`Rodadas / ${esc(id)} / ${esc(task)}`, no?esc(no.label||task):task, "");
+  h += `<button class="btn" onclick="tarefaSel=null;vArvoreRodada('${esc(id)}',null)">← Voltar à árvore</button>`;
+  // FR6: linha do tempo dos passos
+  const passos = (r?.passos||[]).filter(p=>p.passo===task || p.passo.startsWith(task));
+  if(passos.length){
+    h += `<section class="panel"><h2>Linha do tempo — ${esc(task)}</h2><table><thead><tr><th>Entrada</th><th>Resumo</th><th>Saída</th><th>Sessão</th><th>Hash</th><th>Evidência</th></tr></thead><tbody>`;
+    for(const p of passos){
+      const chip = p.hash && no?.hash && p.hash !== no.hash ? `<span class="loz warn">⚠ diverge</span>` :
+                   p.hash && no?.hash && p.hash === no.hash ? `<span class="loz ok">✓</span>` : "";
+      h += `<tr><td class="legenda">${esc((p.entrada_em||"").slice(11,16))}</td>
+        <td>${esc(p.resumo||"—")}</td>
+        <td class="legenda">${esc((p.saida_em||"").slice(11,16))}</td>
+        <td>${esc(p.sessao||"—")}</td>
+        <td class="mono">${esc(p.hash||"—")} ${chip}</td>
+        <td class="legenda">${esc(JSON.stringify(p.evidencia||{}))}</td></tr>`;
+    }
+    h += `</tbody></table></section>`;
+  } else {
+    h += `<div class="aviso">Esta tarefa ainda não começou.</div>`;
+  }
+  $("#main").innerHTML = h;
+}
+
 async function vRoadmap(manterFoco){
   const [specs, rm, rod] = await Promise.all([api("/api/specs"), api("/api/roadmap"), api("/api/rodadas")]);
   let h = cabecalho("Planejamento / Roadmap e specs","Do roadmap às tasks",
     "Specs lidas das pastas <code>specs/NNN-*</code> de cada repositório: status do cabeçalho, tasks marcadas em <code>tasks.md</code>, presença de plan e qa-report.");
+  // FR11: raias por ciclo com cards de rodadas e barra de progresso
+  const raias = rm.raias || [];
+  if(raias.length){
+    h += `<section class="panel"><h2>Roadmap por ciclo</h2><div class="board" style="grid-auto-flow:column;grid-auto-columns:minmax(280px,1fr)">`;
+    for(const raia of raias){
+      h += `<div class="col"><div class="raia-t">${esc(raia.ciclo)}</div>`;
+      for(const c of (raia.cards||[])){
+        const pct = c.progresso_pct || 0;
+        const cor = c.fechada ? "ok" : (pct >= 80 ? "ok" : pct >= 40 ? "warn" : "idle");
+        h += `<div class="card" style="cursor:pointer;border-left:4px solid var(--${cor})" data-rod="${esc(c.id)}">
+          <div class="titulo"><b>${esc(c.id)}</b> ${esc(c.desejo||"—")}</div>
+          <div class="prog" title="${c.passos_concluidos}/${c.passos_total} passos"><i style="width:${pct}%"></i></div>
+          <div class="legenda">${c.passos_concluidos}/${c.passos_total} passos · ${pct}%</div></div>`;
+      }
+      if(!(raia.cards||[]).length) h += `<div class="legenda" style="padding:8px">—</div>`;
+      h += `</div>`;
+    }
+    h += `</div></section>`;
+  }
+  const rmSecoes = rm.secoes || rm;
   // T6: rodadas com passo atual, tempo em cada passo, quem está nele
   const rodadas = rod.rodadas || [];
   if(rodadas.length){
@@ -316,7 +467,7 @@ async function vRoadmap(manterFoco){
     h += `</tbody></table></div></section>`;
   }
   const secoes = {};
-  for(const r of rm.filter(casa)) (secoes[r.secao] ||= {cols:r.colunas, rows:[]}).rows.push(r.linha);
+  for(const r of (Array.isArray(rmSecoes)?rmSecoes:[]).filter(casa)) (secoes[r.secao] ||= {cols:r.colunas, rows:[]}).rows.push(r.linha);
   for(const [sec, t] of Object.entries(secoes)){
     h += `<section class="panel"><h2>Roadmap · ${esc(sec)}</h2><div class="scroll"><table><thead><tr>${t.cols.map(c=>`<th>${esc(c)}</th>`).join("")}</tr></thead><tbody>${t.rows.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div></section>`;
   }
@@ -484,7 +635,7 @@ async function vOperacao(){
     "Visão estática mantida pela Assistente (arquitetura.html). Abre também sozinha em <code>/arquitetura.html</code>.") +
     `<iframe src="/arquitetura.html?embed=1" title="Operação Hindiana" style="width:100%;height:calc(100vh - 180px);min-height:640px;border:1px solid var(--line, #d5dde4);border-radius:4px;background:transparent"></iframe>`;
 }
-const VIEWS = {operacao:vOperacao, board:vBoard, pecas:vPecas, roadmap:vRoadmap, decisoes:vDecisoes, dora:vDora, qualidade:vQualidade, documentos:vDocumentos, glossario:vGlossario, ia:vIA, higiene:vHigiene, tempo:vTempo, lote:vLote};
+const VIEWS = {operacao:vOperacao, board:vBoard, rodadas:vRodadas, pecas:vPecas, roadmap:vRoadmap, decisoes:vDecisoes, dora:vDora, qualidade:vQualidade, documentos:vDocumentos, glossario:vGlossario, ia:vIA, higiene:vHigiene, tempo:vTempo, lote:vLote};
 let atual = "board";
 function vai(v){ atual = v; document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-current", b.dataset.v===v?"page":"false")); location.hash = v; VIEWS[v]().catch(e=>$("#main").innerHTML=`<div class="aviso">Erro: ${esc(e.message)}</div>`); }
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>vai(b.dataset.v));
