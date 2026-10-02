@@ -40,7 +40,7 @@ def _ensure_schema(conn: sqlite3.Connection) -> None:
     """Cria tabelas se não existem."""
     tables = {r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")}
     if "rodadas" not in tables and os.path.exists(SCHEMA_SQL):
-        with open(SCHEMA_SQL) as f:
+        with open(SCHEMA_SQL, encoding="utf-8") as f:
             conn.executescript(f.read())
 
 

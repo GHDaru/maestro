@@ -34,6 +34,17 @@ def _db_path() -> str:
     return os.environ.get("MAESTRO_DB", DB_DEFAULT)
 
 
+SCHEMA_SQL = os.path.join(AQUI, "..", "..", "painel", "schema_workflow.sql")
+
+
+def _ensure_schema(conn: sqlite3.Connection) -> None:
+    """Cria tabelas workflow se não existem."""
+    tables = {r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+    if "rodadas" not in tables and os.path.exists(SCHEMA_SQL):
+        with open(SCHEMA_SQL, encoding="utf-8") as f:
+            conn.executescript(f.read())
+
+
 def main() -> int:
     db_path = _db_path()
     rodada = os.environ.get("MAESTRO_RODADA", "")
@@ -46,6 +57,7 @@ def main() -> int:
         return 0
 
     conn = sqlite3.connect(db_path)
+    _ensure_schema(conn)
 
     # Busca o passo atual
     row = conn.execute(
