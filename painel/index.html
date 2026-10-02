@@ -143,6 +143,8 @@ tr:hover td{background:var(--surface-2)}
     <button data-v="glossario">Aa Linguagem ubíqua <span class="cnt" id="c-glos"></span></button>
     <button data-v="ia">⚙ Estado para a IA</button>
   </nav>
+  <div id="aviso-velho" style="display:none;padding:4px 12px;background:var(--warn-bg,rgba(255,193,7,.15));border-bottom:1px solid var(--warn,#f59e0b);font-size:13px"></div>
+  <div id="aviso-erro" style="display:none;padding:4px 12px"></div>
   <main id="main" tabindex="-1"></main>
 </div>
 <aside class="drawer" id="drawer" aria-hidden="true" role="dialog" aria-label="Detalhe">
@@ -482,7 +484,13 @@ const VIEWS = {board:vBoard, pecas:vPecas, roadmap:vRoadmap, decisoes:vDecisoes,
 let atual = "board";
 function vai(v){ atual = v; document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-current", b.dataset.v===v?"page":"false")); location.hash = v; VIEWS[v]().catch(e=>$("#main").innerHTML=`<div class="aviso">Erro: ${esc(e.message)}</div>`); }
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>vai(b.dataset.v));
-async function meta(){ const m = cache.meta = await api("/api/meta"); $("#pnome").textContent = "Maestro · "+(m.projeto||""); $("#pingest").textContent = "arquivos lidos "+(m.ingerido_em||"").slice(11,16)+" de "+(m.ingerido_em||"").slice(8,10)+"/"+(m.ingerido_em||"").slice(5,7); }
+async function meta(){ const m = cache.meta = await api("/api/meta"); $("#pnome").textContent = "Maestro · "+(m.projeto||""); $("#pingest").textContent = "arquivos lidos "+(m.ingerido_em||"").slice(11,16)+" de "+(m.ingerido_em||"").slice(8,10)+"/"+(m.ingerido_em||"").slice(5,7);
+  // T8: aviso de leitura velha se >1h
+  const avisoVelho = $("#aviso-velho");
+  if(m.ingerido_age_min > 60){ const h = Math.floor(m.ingerido_age_min/60); avisoVelho.innerHTML = `<span class="loz warn">leitura velha: ${h}h${Math.round(m.ingerido_age_min%60)}m desde o último ingest</span>`; avisoVelho.style.display = "block"; }
+  else avisoVelho.style.display = "none";
+  // T9: erros de leitura
+  try{ const erros = await api("/api/erros"); const avisoErro = $("#aviso-erro"); if(erros.length){ avisoErro.innerHTML = erros.map(e=>`<div class="aviso">Não leu <code>${esc(e.caminho)}</code>: ${esc(e.motivo)}</div>`).join(""); avisoErro.style.display = "block"; } else avisoErro.style.display = "none"; }catch{} }
 window.addEventListener("hashchange", ()=>{ const v = location.hash.slice(1); if(v in VIEWS && v!==atual) vai(v); });
 const inicial = location.hash.slice(1);
 meta().finally(()=>vai(inicial in VIEWS ? inicial : "board"));

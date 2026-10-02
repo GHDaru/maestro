@@ -267,7 +267,20 @@ def serie(ts):
 def v_meta(db):
     m = {r["chave"]: r["valor"] for r in linhas(db, "SELECT * FROM meta")}
     m["equipes"] = json.loads(m.get("equipes") or "{}")
+    # T8: idade do ingest para o frontend avisar se >1h
+    if "ingerido_em" in m:
+        t = parse_ts(m["ingerido_em"])
+        if t:
+            m["ingerido_age_min"] = round((dt.datetime.now().astimezone() - t).total_seconds() / 60, 1)
     return m
+
+
+def v_erros_leitura(db):
+    """T9: erros de leitura de arquivos — caminho e motivo, não vazio."""
+    try:
+        return linhas(db, "SELECT caminho, motivo, fonte FROM erros_leitura ORDER BY rowid")
+    except sqlite3.OperationalError:
+        return []
 
 
 def v_higiene(db):
@@ -361,6 +374,7 @@ ROTAS = {"/api/board": v_board, "/api/pecas": v_pecas, "/api/specs": v_specs, "/
          "/api/qualidade": v_qualidade, "/api/documentos": v_documentos, "/api/roadmap": v_roadmap,
          "/api/rodadas": v_rodadas,
          "/api/dora": v_dora, "/api/meta": v_meta, "/api/estado-ia": v_estado_ia,
+         "/api/erros": v_erros_leitura,
          "/api/higiene": v_higiene, "/api/tempo": v_tempo, "/api/relatorio-lote": v_relatorio_lote}
 
 

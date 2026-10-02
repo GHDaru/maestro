@@ -30,6 +30,8 @@ DROP TABLE IF EXISTS decisoes; DROP TABLE IF EXISTS adrs; DROP TABLE IF EXISTS d
 DROP TABLE IF EXISTS barra_execucoes; DROP TABLE IF EXISTS defeitos; DROP TABLE IF EXISTS glossario;
 DROP TABLE IF EXISTS documentos; DROP TABLE IF EXISTS specs; DROP TABLE IF EXISTS roadmap;
 DROP TABLE IF EXISTS meta; DROP TABLE IF EXISTS worktrees; DROP TABLE IF EXISTS fases;
+DROP TABLE IF EXISTS erros_leitura;
+CREATE TABLE erros_leitura (caminho TEXT, motivo TEXT, fonte TEXT);
 CREATE TABLE meta (chave TEXT PRIMARY KEY, valor TEXT);
 CREATE TABLE worktrees (repo TEXT, caminho TEXT, branch TEXT, head TEXT, upstream TEXT,
   integrada INTEGER, ultimo_commit TEXT, idade_d REAL, sujeira INTEGER, risco TEXT,
@@ -260,7 +262,11 @@ def ingere_git(db, cfg):
 def ingere_decisoes(db, cfg):
     n = 0
     for arq in expande(cfg.get("decisoes", [])):
-        txt = ler(arq)
+        try:
+            txt = ler(arq)
+        except (OSError, PermissionError) as e:
+            db.execute("INSERT INTO erros_leitura VALUES (?,?,?)", (rel(cfg, arq), str(e), "decisoes"))
+            continue
         for _, cab, rows in tabelas_md(txt):
             ci, ch, cd, cc, cu = (coluna(cab, "#"), coluna(cab, "hora", "quando", "data"),
                                   coluna(cab, "decis"), coluna(cab, "contexto"), coluna(cab, "como desfazer"))
@@ -398,7 +404,8 @@ def ingere_documentos(db, cfg):
             mod = dt.datetime.fromtimestamp(st.st_mtime).astimezone()
             try:
                 txt = ler(arq)
-            except (OSError, PermissionError):
+            except (OSError, PermissionError) as e:
+                db.execute("INSERT INTO erros_leitura VALUES (?,?,?)", (rel(cfg, arq), str(e), "documentos"))
                 continue
             m = re.search(r"^#\s+(.+)$", txt, re.M)
             db.execute("INSERT OR REPLACE INTO documentos VALUES (?,?,?,?,?,?)",
@@ -443,7 +450,12 @@ def ingere_specs(db, cfg):
 def ingere_roadmap(db, cfg):
     n = 0
     for arq in expande(cfg.get("roadmap", [])):
-        for titulo, cab, rows in tabelas_md(ler(arq)):
+        try:
+            txt = ler(arq)
+        except (OSError, PermissionError) as e:
+            db.execute("INSERT INTO erros_leitura VALUES (?,?,?)", (rel(cfg, arq), str(e), "roadmap"))
+            continue
+        for titulo, cab, rows in tabelas_md(txt):
             for r in rows:
                 n += 1
                 db.execute("INSERT INTO roadmap VALUES (?,?,?,?)",

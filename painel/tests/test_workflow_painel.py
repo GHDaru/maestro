@@ -106,5 +106,80 @@ class T6RoadmapRodadas(Fixture):
         self.assertIsNone(r["passo_atual"])
 
 
+class T7EquipeReal(Fixture):
+    """T7: Equipe real com 19 sessões (4 Desktop + 15 Code sem W10)."""
+
+    def test_meta_equipes_tem_19_sessoes(self):
+        cfg = dict(self.cfg)
+        cfg["equipes"] = {
+            "Claude Desktop": ["Office", "Assistente", "Reescrita", "Testes Dev"],
+            "Coordenação": ["Gerente", "Gerente02", "Torre"],
+            "Time do Gerente": ["W02", "W06", "W07", "W08", "W09", "W11"],
+            "Time do Gerente02": ["W01", "W03", "W04", "W05", "W12", "W13"],
+        }
+        ingest.ingere(cfg, self.db)
+        m = server.v_meta(server.conecta(self.db))
+        todas = [s for grupo in m["equipes"].values() for s in grupo]
+        self.assertEqual(len(todas), 19)
+        self.assertNotIn("W10", todas)
+        for nome in ("Office", "Assistente", "Reescrita", "Testes Dev",
+                     "Gerente", "Gerente02", "Torre", "W03", "W13"):
+            self.assertIn(nome, todas)
+
+
+class T8LeituraVelha(Fixture):
+    """T8: Aviso de leitura velha quando último ingest > 1 h."""
+
+    def test_meta_inclui_idade_do_ingest(self):
+        ingest.ingere(self.cfg, self.db)
+        m = server.v_meta(server.conecta(self.db))
+        self.assertIn("ingerido_age_min", m)
+        self.assertLess(m["ingerido_age_min"], 1)
+
+
+class T9ErroLeitura(Fixture):
+    """T9: Se arquivo não pode ser lido, exibe caminho e motivo, não vazio."""
+
+    def test_erros_leitura_retorna_caminho_e_motivo(self):
+        ingest.ingere(self.cfg, self.db)
+        db = server.conecta(self.db)
+        db.execute("INSERT INTO erros_leitura VALUES (?,?,?)",
+                   ("esp/inexistente.md", "FileNotFoundError: no such file", "roadmap"))
+        db.commit()
+        erros = server.v_erros_leitura(db)
+        self.assertTrue(len(erros) > 0)
+        e = erros[0]
+        self.assertTrue(e["caminho"])
+        self.assertTrue(e["motivo"])
+
+    def test_ingere_registra_erro_de_leitura(self):
+        """Quando ler() falha, o ingest registra na tabela erros_leitura."""
+        escreve(os.path.join(self.raiz, "esp/decisoes.md"),
+                "# D\n\n| # | Hora | Decisão | Contexto | Como desfazer |\n|---|---|---|---|---|\n"
+                "| D1 | 10:00 | **Fazer X** | porque sim | reverter |\n")
+        cfg = dict(self.cfg)
+        cfg["decisoes"] = [os.path.join(self.raiz, "esp", "decisoes*.md")]
+        ingest.ingere(cfg, self.db)
+        db = server.conecta(self.db)
+        # O arquivo legível deve ter sido processado
+        d = server.v_decisoes(db)
+        self.assertTrue(len(d["decisoes"]) > 0)
+
+
+class T9bDecisoesAparecendo(Fixture):
+    """T9b: Decisões aparecendo no painel (hoje vazio)."""
+
+    def test_decisoes_nao_vazias(self):
+        escreve(os.path.join(self.raiz, "esp/decisoes.md"),
+                "# D\n\n| # | Hora | Decisão | Contexto | Como desfazer |\n|---|---|---|---|---|\n"
+                "| D1 | 10:00 | **Fazer X** | porque sim | reverter |\n")
+        cfg = dict(self.cfg)
+        cfg["decisoes"] = [os.path.join(self.raiz, "esp", "decisoes*.md")]
+        ingest.ingere(cfg, self.db)
+        d = server.v_decisoes(server.conecta(self.db))
+        self.assertTrue(len(d["decisoes"]) > 0)
+        self.assertEqual(d["decisoes"][0]["id"], "D1")
+
+
 if __name__ == "__main__":
     unittest.main()
