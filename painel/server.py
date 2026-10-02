@@ -133,6 +133,41 @@ def v_roadmap(db):
     return out
 
 
+def v_rodadas(db):
+    """T6: cada rodada com passo atual, tempo em cada passo, quem está nele."""
+    try:
+        rodadas = linhas(db, "SELECT * FROM rodadas ORDER BY aberta_em DESC")
+    except sqlite3.OperationalError:
+        return {"rodadas": []}
+    out = []
+    for r in rodadas:
+        passos = linhas(db, "SELECT * FROM passos WHERE rodada=? ORDER BY id", r["id"])
+        passo_atual = None
+        quem = None
+        passos_out = []
+        for p in passos:
+            if p["entrada_em"] and not p["saida_em"]:
+                passo_atual = p["passo"]
+                quem = p["sessao"]
+            horas = None
+            if p["entrada_em"] and p["saida_em"]:
+                t0, t1 = parse_ts(p["entrada_em"]), parse_ts(p["saida_em"])
+                if t0 and t1:
+                    horas = round((t1 - t0).total_seconds() / 3600, 2)
+            passos_out.append({
+                "passo": p["passo"], "sessao": p["sessao"],
+                "entrada_em": p["entrada_em"], "saida_em": p["saida_em"],
+                "horas": horas, "resumo": p.get("resumo"), "resultado": p.get("resultado"),
+            })
+        out.append({
+            "id": r["id"], "desejo": r["desejo"], "criada_por": r["criada_por"],
+            "aberta_em": r["aberta_em"], "fechada_em": r["fechada_em"],
+            "arquivo": r.get("arquivo", ""),
+            "passo_atual": passo_atual, "quem": quem, "passos": passos_out,
+        })
+    return {"rodadas": out}
+
+
 def semana(t):
     y, w, _ = t.isocalendar()
     return f"{y}-S{w:02d}"
@@ -324,6 +359,7 @@ def v_relatorio_lote(db, desde=None):
 
 ROTAS = {"/api/board": v_board, "/api/pecas": v_pecas, "/api/specs": v_specs, "/api/decisoes": v_decisoes,
          "/api/qualidade": v_qualidade, "/api/documentos": v_documentos, "/api/roadmap": v_roadmap,
+         "/api/rodadas": v_rodadas,
          "/api/dora": v_dora, "/api/meta": v_meta, "/api/estado-ia": v_estado_ia,
          "/api/higiene": v_higiene, "/api/tempo": v_tempo, "/api/relatorio-lote": v_relatorio_lote}
 

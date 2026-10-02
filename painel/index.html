@@ -282,9 +282,23 @@ async function vPecas(manterFoco){
 
 // ---------- Roadmap e specs ----------
 async function vRoadmap(manterFoco){
-  const [specs, rm] = await Promise.all([api("/api/specs"), api("/api/roadmap")]);
+  const [specs, rm, rod] = await Promise.all([api("/api/specs"), api("/api/roadmap"), api("/api/rodadas")]);
   let h = cabecalho("Planejamento / Roadmap e specs","Do roadmap às tasks",
     "Specs lidas das pastas <code>specs/NNN-*</code> de cada repositório: status do cabeçalho, tasks marcadas em <code>tasks.md</code>, presença de plan e qa-report.");
+  // T6: rodadas com passo atual, tempo em cada passo, quem está nele
+  const rodadas = rod.rodadas || [];
+  if(rodadas.length){
+    h += `<section class="panel"><h2>Rodadas <span class="loz idle">${rodadas.length}</span></h2><div class="scroll"><table><thead><tr><th>ID</th><th>Desejo</th><th>Passo atual</th><th>Quem</th><th>Passos (tempo)</th><th>Arquivo</th></tr></thead><tbody>`;
+    for(const r of rodadas.filter(casa)){
+      const passosTxt = r.passos.map(p=>`${esc(p.passo)}: ${p.horas!=null?p.horas+"h":`<span class="loz warn">aberto</span>`}`).join(" → ");
+      h += `<tr><td class="mono"><b>${esc(r.id)}</b></td><td>${esc(r.desejo||"—")}</td>
+        <td>${r.passo_atual?`<span class="loz warn">${esc(r.passo_atual)}</span>`:`<span class="legenda">—</span>`}</td>
+        <td>${r.quem?av(r.quem)+esc(r.quem):`<span class="legenda">—</span>`}</td>
+        <td class="legenda">${passosTxt||"—"}</td>
+        <td>${r.arquivo?`<a href="#" onclick="return false" title="${esc(r.arquivo)}">${esc(r.arquivo)}</a>`:`<span class="legenda">—</span>`}</td></tr>`;
+    }
+    h += `</tbody></table></div></section>`;
+  }
   const porRepo = {};
   for(const s of specs.filter(casa)) (porRepo[s.repo] ||= []).push(s);
   for(const [repo, ss] of Object.entries(porRepo)){
