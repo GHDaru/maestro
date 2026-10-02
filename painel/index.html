@@ -142,6 +142,7 @@ tr:hover td{background:var(--surface-2)}
     <button data-v="documentos">❏ Documentos do projeto <span class="cnt" id="c-docs"></span></button>
     <button data-v="glossario">Aa Linguagem ubíqua <span class="cnt" id="c-glos"></span></button>
     <button data-v="ia">⚙ Estado para a IA</button>
+    <button data-v="operacao">⌂ Operação: equipe, infra, CI/CD, BPMN</button>
   </nav>
   <main id="main" tabindex="-1"></main>
 </div>
@@ -171,60 +172,57 @@ function cabecalho(crumb, titulo, sub, extra=""){
 }
 function liga_busca(fn){ const b=$("#busca"); if(!b) return; b.addEventListener("input", e=>{ filtro=e.target.value.toLowerCase(); fn(true); }); }
 
-// ---------- Board de agentes ----------
+// ---------- Board de agentes (enxuto, 02/10: exceções no topo, uma linha por sessão) ----------
+const HOOK_RX = /^(turno encerrado|sess[aã]o iniciada)/i;
 async function vBoard(manterFoco){
   const d = cache.board = await api("/api/board");
-  const ordem = ["trabalhando","esperando","bloqueado","sem tarefa","sem registro"];
-  const parados = Object.values(d.colunas).flat().filter(c=>c.parado).length;
-  let h = cabecalho("Agora / Board de agentes","O que cada sessão está fazendo",
-    `<span title="Fonte: o último registro de status de cada sessão (só acrescenta), mais o Estado atual do arquivo de papel.">Sinal de vida mais velho que ${d.limiar_min} min fica marcado. Cor só nas exceções.</span>`,
-    `<span class="legenda">${d.total} sessões · ${parados} sem sinal de vida recente</span><button class="btn" id="reing">Reingerir arquivos</button>`);
   const equipes = cache.meta?.equipes || {};
-  const todos = Object.values(d.colunas).flat();
-  const raias = cache.raias !== false && Object.keys(equipes).length;
-  const grupos = raias ? Object.entries(equipes).map(([nome, membros])=>[nome, todos.filter(c=>membros.includes(c.sessao))]) : [["", todos]];
-  if(raias){ const vistos = new Set(Object.values(equipes).flat()); const outros = todos.filter(c=>!vistos.has(c.sessao)); if(outros.length) grupos.push(["Outras sessões", outros]); }
-  h = h.replace('<button class="btn" id="reing">', `<button class="chip" id="raias" aria-pressed="${!!raias}">Raias por equipe</button><button class="btn" id="reing">`);
-  const naCol = (c,k)=> k==="sem registro" ? !["trabalhando","esperando","bloqueado","sem tarefa"].includes(c.estado) : c.estado===k;
-  const PRIO = {"bloqueado":0,"sem tarefa":1,"esperando":2,"trabalhando":3};
-  const equipeDe = n=>{ const e = Object.entries(equipes).find(([_,m])=>m.includes(n)); return e?e[0]:""; };
-  const CORES_EQ = ["#0c66e4","#1f845a","#943d73","#a54800"]; const nomesEq = Object.keys(equipes);
-  const corEq = n=>{ const i = nomesEq.indexOf(equipeDe(n)); return i<0?"#626f86":CORES_EQ[i%CORES_EQ.length]; };
-  const avEq = n=>`<span class="av" style="background:${corEq(n)}" aria-hidden="true">${esc(n.replace(/^Worker/,"W").replace(/[^A-Za-z0-9]/g,"").slice(0,3))}</span>`;
-  const atencaoDe = c=> c.estado==="bloqueado"||c.estado==="sem tarefa"||c.estado==="esperando"||(c.parado&&LOZ_SESSAO[c.estado]&&c.estado!=="sem registro");
-  const cardS = c=>{
-    const k = LOZ_SESSAO[c.estado] ? c.estado : "sem registro";
-    const selo = k==="trabalhando" ? "" : `<span class="loz ${LOZ_SESSAO[k]}">${esc(k)}</span>`;
-    const sinal = c.parado&&k!=="sem registro";
-    return `<article class="card mini st-${LOZ_SESSAO[k]}" tabindex="0" role="listitem" data-s="${esc(c.sessao)}" title="${esc(c.em||"")}">
-      <div class="l1">${avEq(c.sessao)}<span class="titulo nome">${esc(c.sessao)}</span>${selo}<span class="idade ${sinal?"ruim":""}" title="${esc(c.status_ts||"")}">${sinal?"sem sinal · ":""}${idade(c.idade_min)}</span></div>
-      <div class="tarefa">${esc(c.em || c.resumo_arquivo || "—")}</div></article>`;
-  };
-  const urgentes = todos.filter(atencaoDe).filter(casa).sort((x,y)=>({"bloqueado":0,"sem tarefa":1,"esperando":2}[x.estado]??3)-({"bloqueado":0,"sem tarefa":1,"esperando":2}[y.estado]??3) || (y.idade_min??0)-(x.idade_min??0));
-  h += `<section class="urgente"><h2 class="raia-t">Precisam de você agora <span class="loz ${urgentes.length?"bad":"ok"}">${urgentes.length}</span>${urgentes.length?"":`<span class="legenda">ninguém bloqueado, ocioso ou sem sinal</span>`}</h2>${urgentes.length?`<div class="roster" role="list">${urgentes.map(cardS).join("")}</div>`:""}</section>`;
-  if(raias){
-    for(const [nome, membros] of grupos){
-      const ms = membros.filter(casa).sort((x,y)=>(PRIO[x.estado]??4)-(PRIO[y.estado]??4)); if(!ms.length) continue;
-      const alerta = ms.filter(c=>c.estado==="bloqueado"||c.estado==="sem tarefa"||(c.parado&&c.estado!=="sem registro")).length;
-      const resumo = ordem.map(k=>[k, ms.filter(c=>naCol(c,k)).length]).filter(x=>x[1]).map(([k,n])=>`<span class="loz ${LOZ_SESSAO[k]}">${n} ${esc(k)}</span>`).join(" ");
-      h += `<section class="raia"><h2 class="raia-t">${esc(nome)} ${resumo}${alerta?`<span class="loz bad">${alerta} pedem atenção</span>`:""}</h2><div class="roster" role="list">${ms.map(cardS).join("")}</div></section>`;
-    }
-  } else {
-    h += `<div class="board" role="list">`;
-    for(const k of ordem){
-      const cs = todos.filter(c=>naCol(c,k)).filter(casa);
-      h += `<section class="col" aria-label="${esc(k)}"><h3><span class="loz ${LOZ_SESSAO[k]}">${esc(k)}</span><span class="n">${cs.length}</span></h3>${cs.map(cardS).join("")||`<div class="legenda" style="padding:6px">nenhuma</div>`}</section>`;
-    }
-    h += `</div>`;
+  const membros = new Set(Object.values(equipes).flat());
+  const todos = Object.values(d.colunas).flat().filter(c=> !membros.size || membros.has(c.sessao));  // fora das equipes (ex.: W10 encerrada) não entra
+  const comStatus = c=> /^W\d+$/.test(c.sessao);  // só workers têm status de 30 min; gerentes e Desktop não contam como "sem sinal"
+  const equipeDe = n=>{ const e = Object.entries(equipes).find(([_,m])=>m.includes(n)); return e?e[0]:"Outras"; };
+  const ordemEq = [...Object.keys(equipes), "Outras"];
+  const est = c=> LOZ_SESSAO[c.estado] ? c.estado : "sem registro";
+  const bloqueados = todos.filter(c=>c.estado==="bloqueado");
+  const semTarefa = todos.filter(c=>c.estado==="sem tarefa");
+  const semSinal = todos.filter(c=>comStatus(c) && c.parado && est(c)!=="sem registro" && c.estado!=="bloqueado");
+  const excecao = c=> c.estado==="bloqueado" || c.estado==="sem tarefa" || (comStatus(c) && c.parado && est(c)!=="sem registro");
+  const so = cache.soExcecoes !== false;
+  const tile = (k, lista, cor, dica)=>`<div class="tile" style="${lista.length?`background:var(--${cor}-weak)`:""}" title="${esc(dica)}">
+     <div class="k" style="${lista.length?`color:var(--${cor})`:""}">${esc(k)}</div>
+     <div class="v" style="${lista.length?`color:var(--${cor})`:"color:var(--muted)"}">${lista.length}</div>
+     <div class="f">${lista.length?esc(lista.map(c=>c.sessao.replace(/^Worker/,"W")).join(" · ")):"ninguém"}</div></div>`;
+  let h = cabecalho("Agora / Board de agentes","Quem precisa de ação agora",
+    `Só exceções por padrão. Sinal de vida mais velho que ${d.limiar_min} min conta como sem sinal. Clique numa linha para ver o histórico.`,
+    `<button class="chip" id="soexc" aria-pressed="${so}">Só exceções</button><span class="legenda">${d.total} sessões</span><button class="btn" id="reing">Reingerir arquivos</button>`);
+  h += `<div class="grid" style="grid-template-columns:repeat(3,minmax(0,1fr));margin-bottom:14px">
+    ${tile("Bloqueados (prompt ou humano)", bloqueados, "bad", "Estado 'bloqueado': em geral prompt de permissão ou gate humano")}
+    ${tile("Sem tarefa", semTarefa, "warn", "Estado 'sem tarefa' no último status; 2 ciclos seguidos viram alerta ao Gilsiley")}
+    ${tile("Sem sinal de vida", semSinal, "warn", "Último status mais velho que o limiar")}
+  </div>`;
+  const PRIO = {"bloqueado":0,"sem tarefa":1,"esperando":2,"trabalhando":3,"sem registro":4};
+  const linhas = todos.filter(casa).filter(c=> !so || excecao(c))
+    .sort((x,y)=>(PRIO[est(x)]-PRIO[est(y)]) || ordemEq.indexOf(equipeDe(x.sessao))-ordemEq.indexOf(equipeDe(y.sessao)) || x.sessao.localeCompare(y.sessao));
+  const fazendo = c=>{ const t = c.em || c.resumo_arquivo || ""; return HOOK_RX.test(t) ? "" : t; };
+  h += `<div class="panel"><table><thead><tr><th style="width:150px">Sessão</th><th style="width:120px">Estado</th><th>Fazendo / esperando</th><th style="width:130px">Peça</th><th style="width:90px">Há</th></tr></thead><tbody>`;
+  for(const c of linhas){
+    const k = est(c), sinal = c.parado && k!=="sem registro";
+    h += `<tr class="lin" tabindex="0" data-s="${esc(c.sessao)}" style="cursor:pointer">
+      <td><div style="display:flex;gap:8px;align-items:center">${av(c.sessao)}<div><b>${esc(c.sessao)}</b><br><span class="legenda">${esc(equipeDe(c.sessao))}</span></div></div></td>
+      <td><span class="loz ${LOZ_SESSAO[k]}">${esc(k)}</span></td>
+      <td><div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:520px" title="${esc(fazendo(c))}">${esc(fazendo(c)||"—")}</div></td>
+      <td class="mono">${esc(c.peca||"—")}</td>
+      <td style="${sinal?"color:var(--bad);font-weight:600":""}" title="${esc(c.status_ts||"")}">${idade(c.idade_min)}</td></tr>`;
   }
-  if(d.colunas["sem registro"]?.length===d.total) h += `<div class="aviso">Nenhum status registrado ainda. O loop de 30 min da Assistente grava um status por sessão com <code>registrar.py status</code>; até lá o card mostra o "Estado atual" do arquivo de papel.</div>`;
+  h += `</tbody></table>${linhas.length?"":`<div class="vazio-msg">Nenhuma exceção agora. Use "Só exceções" para ver todas as sessões.</div>`}</div>`;
+  if(d.colunas["sem registro"]?.length===d.total) h += `<div class="aviso">Nenhum status registrado ainda. O loop de 30 min da Assistente grava um status por sessão com <code>registrar.py status</code>.</div>`;
   $("#main").innerHTML = h;
-  $("#c-board").textContent = d.total;
+  $("#c-board").textContent = (bloqueados.length+semTarefa.length+semSinal.length) || "";
   liga_busca(vBoard); if(manterFoco) foca();
-  $("#raias").onclick = ()=>{ cache.raias = !raias; vBoard(); };
+  $("#soexc").onclick = ()=>{ cache.soExcecoes = !so; vBoard(); };
   $("#reing").onclick = async()=>{ $("#reing").textContent="Reingerindo…"; await fetch("/api/reingerir",{method:"POST"}); meta(); vBoard(); };
-  document.querySelectorAll(".card[data-s]").forEach(el=>{
-    const abre=()=>detalheSessao(Object.values(d.colunas).flat().find(c=>c.sessao===el.dataset.s));
+  document.querySelectorAll("tr.lin").forEach(el=>{
+    const abre=()=>detalheSessao(todos.find(c=>c.sessao===el.dataset.s));
     el.onclick=abre; el.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();abre();} };
   });
 }
@@ -234,6 +232,7 @@ function detalheSessao(c){
   <dt>Último status</dt><dd>${esc(c.status_ts||"nunca")} (${idade(c.idade_min)})</dd>
   <dt>Evidência</dt><dd>${esc(c.evidencia||"—")}</dd><dt>Worktree</dt><dd class="mono">${esc(c.worktree||"—")}</dd>
   <dt>Último hash</dt><dd class="mono">${esc(c.ultimo_hash||"—")}</dd><dt>Próximo passo</dt><dd>${esc(c.proximo||"—")}</dd>
+  ${(()=>{ const ct=(cache.meta?.contatos||{})[c.sessao]; return ct?`<dt>Endereço</dt><dd class="mono">${esc(ct.endereco||"—")}<br><span class="legenda">${esc(ct.tipo||"")} · SendMessage pelo nome</span></dd><dt>Pipe</dt><dd class="mono" style="font-size:11px">${esc(ct.pipe||"não conhecido (aparece quando a sessão escreve)")}</dd><dt>session_id</dt><dd class="mono" style="font-size:11px">${esc(ct.session_id||"não mapeado (vem do hook SessionStart)")}</dd>`:`<dt>Endereço</dt><dd class="legenda">sem contato registrado</dd>`; })()}
   <dt>Arquivo de papel</dt><dd class="mono">${esc(c.arquivo_papel||"—")}<br><span class="legenda">Estado atual de ${esc(c.estado_em_arquivo||"?")}</span></dd></dl>`;
   if(c.resumo_arquivo) h += `<h3>Estado atual (arquivo)</h3><div style="white-space:pre-wrap;font-size:13px">${esc(c.resumo_arquivo)}</div>`;
   if(c.historico?.length) h += `<h3>Histórico de status</h3><div class="timeline">${c.historico.map(x=>`<div><b>${esc(x.estado)}</b> · ${esc(x.texto||"")}<br><span class="legenda">${esc(x.ts)} · por ${esc(x.autor)}</span></div>`).join("")}</div>`;
@@ -464,7 +463,12 @@ function drawer(titulo, html){ $("#dtitulo").textContent = titulo; $("#dcorpo").
 function fecha(){ const d=$("#drawer"); d.classList.remove("aberto"); d.setAttribute("aria-hidden","true"); }
 $("#dfecha").onclick = fecha; document.addEventListener("keydown", e=>{ if(e.key==="Escape") fecha(); });
 function foca(){ const b=$("#busca"); if(b){ b.focus(); b.setSelectionRange(b.value.length,b.value.length);} }
-const VIEWS = {board:vBoard, pecas:vPecas, roadmap:vRoadmap, decisoes:vDecisoes, dora:vDora, qualidade:vQualidade, documentos:vDocumentos, glossario:vGlossario, ia:vIA, higiene:vHigiene, tempo:vTempo, lote:vLote};
+async function vOperacao(){
+  $("#main").innerHTML = cabecalho("Operação Hindiana","Organograma, infraestrutura, CI/CD com validação de jornada e a rodada em BPMN",
+    "Visão estática mantida pela Assistente (arquitetura.html). Abre também sozinha em <code>/arquitetura.html</code>.") +
+    `<iframe src="/arquitetura.html?embed=1" title="Operação Hindiana" style="width:100%;height:calc(100vh - 180px);min-height:640px;border:1px solid var(--line, #d5dde4);border-radius:4px;background:transparent"></iframe>`;
+}
+const VIEWS = {operacao:vOperacao, board:vBoard, pecas:vPecas, roadmap:vRoadmap, decisoes:vDecisoes, dora:vDora, qualidade:vQualidade, documentos:vDocumentos, glossario:vGlossario, ia:vIA, higiene:vHigiene, tempo:vTempo, lote:vLote};
 let atual = "board";
 function vai(v){ atual = v; document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-current", b.dataset.v===v?"page":"false")); location.hash = v; VIEWS[v]().catch(e=>$("#main").innerHTML=`<div class="aviso">Erro: ${esc(e.message)}</div>`); }
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>vai(b.dataset.v));

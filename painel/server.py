@@ -27,7 +27,7 @@ ESTADOS_PECA = ("spec", "red", "entregue", "suites aceitas", "aprovada as cegas"
 EVIDENCIA_EXIGIDA = {
     "entregue": ("hash",),
     "suites aceitas": ("hash", "runner2"),
-    "aprovada as cegas": ("hash", "par_montado_por", "descricao_factual"),
+    "aprovada as cegas": ("hash", "runner2", "runner2_por", "par_montado_por", "descricao_factual"),  # runner2_por: quem rodou, nunca o autor (02/10)
     "integrada": ("hash", "merge"),
     "em producao": ("hash", "deploy"),
 }
@@ -145,7 +145,9 @@ def v_dora(db, dias=30):
 
     # 1. Deploy frequency: real deploys (eventos) first; merges on main only as a labelled proxy.
     deps = [e for e in linhas(db, "SELECT * FROM eventos WHERE tipo='deploy' ORDER BY ts")
-            if (parse_ts(e["ts"]) or ini) >= ini]
+            if (parse_ts(e["ts"]) or ini) >= ini
+            and '"ambiente": "dev"' not in (e.get("evidencia") or "").replace("'", '"')
+            and '"ambiente":"dev"' not in (e.get("evidencia") or "").replace(" ", "")]  # DORA counts production only
     ok = [d for d in deps if (d.get("estado") or "").lower() in [s.lower() for s in ESTADOS_DEPLOY_OK]]
     ent = linhas(db, "SELECT * FROM entregas WHERE repo IN (SELECT repo FROM entregas) ORDER BY ts")
     por_repo = {}
@@ -153,6 +155,11 @@ def v_dora(db, dias=30):
         t = parse_ts(e["ts"])
         if t and t >= ini:
             por_repo.setdefault(e["repo"], []).append(e)
+    fora = repos_fora_dora()
+    for r in fora:
+        por_repo.pop(r, None)
+    if fora:
+        out["notas"].append("Fora do DORA (não é código de produto): " + ", ".join(sorted(fora)) + ".")
     out["metricas"]["frequencia_deploy"] = {
         "valor": round(len(ok) / dias * 7, 2) if deps else None, "unidade": "deploys/semana",
         "fonte": "eventos tipo=deploy (registrados pela Office a partir do Railway)",
@@ -232,7 +239,29 @@ def serie(ts):
 def v_meta(db):
     m = {r["chave"]: r["valor"] for r in linhas(db, "SELECT * FROM meta")}
     m["equipes"] = json.loads(m.get("equipes") or "{}")
+    m["contatos"] = contatos()
     return m
+
+
+CFG_PATH = None
+
+
+def repos_fora_dora():
+    """Repos marked "dora": false in the project config (e.g. specification/tools only)."""
+    try:
+        with open(CFG_PATH, encoding="utf-8") as f:
+            return {r["nome"] for r in json.load(f).get("repos", []) if r.get("dora") is False}
+    except Exception:
+        return set()
+
+
+def contatos():
+    """Session contact info (address, pipe, session_id), read live from the project config's "contatos"."""
+    try:
+        with open(CFG_PATH, encoding="utf-8") as f:
+            return json.load(f).get("contatos", {})
+    except Exception:
+        return {}
 
 
 def v_higiene(db):
@@ -377,9 +406,12 @@ def cria_handler(db_path, cfg):
 
         def do_GET(self):
             u = urlparse(self.path)
-            if u.path in ("/", "/index.html"):
-                with open(os.path.join(AQUI, "index.html"), "rb") as f:
+            if u.path in ("/", "/index.html", "/arquitetura.html"):
+                nome = "arquitetura.html" if u.path == "/arquitetura.html" else "index.html"
+                with open(os.path.join(AQUI, nome), "rb") as f:
                     corpo = f.read()
+                if nome == "arquitetura.html":  # authored as an artifact body: add the document skeleton
+                    corpo = b'<!doctype html><html lang="pt-BR"><meta charset="utf-8">' + corpo
                 self.send_response(200)
                 self.send_header("Content-Type", "text/html; charset=utf-8")
                 self.end_headers()
@@ -432,6 +464,8 @@ def main(argv=None):
     ap.add_argument("--reingerir", action="store_true")
     a = ap.parse_args(argv)
     cfg = ingest.carrega_cfg(a.projeto)
+    global CFG_PATH
+    CFG_PATH = os.path.abspath(a.projeto)
     db_path = a.db or os.path.join(AQUI, "dados", f"{cfg.get('projeto', 'painel')}.db")
     os.makedirs(os.path.dirname(db_path), exist_ok=True)
     if a.reingerir or not os.path.exists(db_path):
