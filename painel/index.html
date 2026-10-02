@@ -297,7 +297,7 @@ async function vRoadmap(manterFoco){
         <td>${r.passo_atual?`<span class="loz warn">${esc(r.passo_atual)}</span>`:`<span class="legenda">—</span>`}</td>
         <td>${r.quem?av(r.quem)+esc(r.quem):`<span class="legenda">—</span>`}</td>
         <td class="legenda">${passosTxt||"—"}</td>
-        <td>${r.arquivo?`<a href="#" onclick="return false" title="${esc(r.arquivo)}">${esc(r.arquivo)}</a>`:`<span class="legenda">—</span>`}</td></tr>`;
+        <td>${r.arquivo?`<code title="${esc(r.arquivo)}">${esc(r.arquivo)}</code>`:`<span class="legenda">—</span>`}</td></tr>`;
     }
     h += `</tbody></table></div></section>`;
   }

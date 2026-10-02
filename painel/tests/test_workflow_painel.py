@@ -11,6 +11,7 @@ import sqlite3
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import ingest  # noqa: E402
@@ -164,6 +165,26 @@ class T9ErroLeitura(Fixture):
         # O arquivo legível deve ter sido processado
         d = server.v_decisoes(db)
         self.assertTrue(len(d["decisoes"]) > 0)
+
+    def test_ingere_erro_real_vai_para_erros_leitura(self):
+        """ler() levanta PermissionError → row em erros_leitura com caminho e motivo."""
+        arq = os.path.join(self.raiz, "esp/decisoes.md")
+        escreve(arq, "# D\n\n| # | Hora | Decisão |\n|---|---|---|\n| D1 | 10:00 | X |\n")
+        cfg = dict(self.cfg)
+        cfg["decisoes"] = [arq]
+        # Patch ler to raise PermissionError for this specific file
+        original_ler = ingest.ler
+        def ler_fail(caminho):
+            if caminho == arq:
+                raise PermissionError("mock: permission denied")
+            return original_ler(caminho)
+        with patch("ingest.ler", side_effect=ler_fail):
+            ingest.ingere(cfg, self.db)
+        erros = server.v_erros_leitura(server.conecta(self.db))
+        self.assertTrue(len(erros) > 0, "deveria ter pelo menos um erro registrado")
+        e = erros[0]
+        self.assertTrue(e["caminho"], "caminho não deve ser vazio")
+        self.assertIn("mock", e["motivo"].lower(), "motivo deve conter a causa do erro")
 
 
 class T9bDecisoesAparecendo(Fixture):
