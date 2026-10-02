@@ -24,7 +24,7 @@ class TestSchemaWorkflow:
             db_path = f.name
         try:
             conn = sqlite3.connect(db_path)
-            with open(SCHEMA_SQL) as sf:
+            with open(SCHEMA_SQL, encoding="utf-8") as sf:
                 conn.executescript(sf.read())
             tables = {
                 row[0] for row in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
@@ -43,7 +43,7 @@ class TestSchemaWorkflow:
             db_path = f.name
         try:
             conn = sqlite3.connect(db_path)
-            with open(SCHEMA_SQL) as sf:
+            with open(SCHEMA_SQL, encoding="utf-8") as sf:
                 conn.executescript(sf.read())
             mode = conn.execute("PRAGMA journal_mode").fetchone()[0]
             conn.close()
@@ -57,7 +57,7 @@ class TestSchemaWorkflow:
             db_path = f.name
         try:
             conn = sqlite3.connect(db_path)
-            with open(SCHEMA_SQL) as sf:
+            with open(SCHEMA_SQL, encoding="utf-8") as sf:
                 conn.executescript(sf.read())
             cols = {row[1] for row in conn.execute("PRAGMA table_info(rodadas)")}
             conn.close()
@@ -71,7 +71,7 @@ class TestSchemaWorkflow:
             db_path = f.name
         try:
             conn = sqlite3.connect(db_path)
-            with open(SCHEMA_SQL) as sf:
+            with open(SCHEMA_SQL, encoding="utf-8") as sf:
                 conn.executescript(sf.read())
             cols = {row[1] for row in conn.execute("PRAGMA table_info(passos)")}
             conn.close()
@@ -86,7 +86,7 @@ class TestSchemaWorkflow:
             db_path = f.name
         try:
             conn = sqlite3.connect(db_path)
-            with open(SCHEMA_SQL) as sf:
+            with open(SCHEMA_SQL, encoding="utf-8") as sf:
                 conn.executescript(sf.read())
             cols = {row[1] for row in conn.execute("PRAGMA table_info(transicoes)")}
             conn.close()
@@ -100,7 +100,7 @@ class TestSchemaWorkflow:
             db_path = f.name
         try:
             conn = sqlite3.connect(db_path)
-            with open(SCHEMA_SQL) as sf:
+            with open(SCHEMA_SQL, encoding="utf-8") as sf:
                 conn.executescript(sf.read())
             cols = {row[1] for row in conn.execute("PRAGMA table_info(fila)")}
             conn.close()
@@ -114,7 +114,7 @@ class TestSchemaWorkflow:
             db_path = f.name
         try:
             conn = sqlite3.connect(db_path)
-            with open(SCHEMA_SQL) as sf:
+            with open(SCHEMA_SQL, encoding="utf-8") as sf:
                 conn.executescript(sf.read())
             count = conn.execute(
                 "SELECT count(*) FROM passos WHERE entrada_em IS NOT NULL AND saida_em IS NULL"
