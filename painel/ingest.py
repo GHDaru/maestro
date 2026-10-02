@@ -557,37 +557,83 @@ def carrega_cfg(caminho):
 
 def abre(db_path):
     db = sqlite3.connect(db_path)
+    db.execute("PRAGMA journal_mode = WAL")  # FR13: WAL para escrita concorrente
     db.executescript(EVENTOS)
     return db
 
 
-def ingere(cfg, db_path):
-    inicio = agora()
-    db = abre(db_path)
-    db.executescript(DERIVADAS)
-    contagem = {}
-    for nome, fn in [("sessoes", ingere_sessoes), ("commits", ingere_git), ("decisoes", ingere_decisoes),
-                     ("adrs", ingere_adrs), ("desvios", ingere_desvios), ("barra", ingere_barra),
-                     ("glossario", ingere_glossario), ("documentos", ingere_documentos),
-                     ("specs", ingere_specs), ("roadmap", ingere_roadmap),
-                     ("worktrees", ingere_worktrees), ("fases", ingere_fases)]:
+def _copia_append_only(origem: sqlite3.Connection, destino: sqlite3.Connection) -> None:
+    """Copia eventos e ingest_log do DB original para o temporário (FR14)."""
+    destino.executescript(EVENTOS)
+    for tabela in ("eventos", "ingest_log"):
         try:
-            contagem[nome] = fn(db, cfg)
-        except PermissionError:
-            raise
-        except Exception as e:  # one broken source must not hide the others
-            contagem[nome] = f"erro: {e}"
-    db.execute("INSERT INTO meta VALUES ('projeto', ?)", (cfg.get("projeto", ""),))
-    db.execute("INSERT INTO meta VALUES ('ingerido_em', ?)", (agora().isoformat(timespec="seconds"),))
-    db.execute("INSERT INTO meta VALUES ('contagem', ?)", (json.dumps(contagem, ensure_ascii=False),))
-    db.execute("INSERT INTO meta VALUES ('limiar_parado_min', ?)", (str(cfg.get("limiar_parado_min", 60)),))
-    db.execute("INSERT INTO meta VALUES ('equipes', ?)", (json.dumps(cfg.get("equipes", {}), ensure_ascii=False),))
-    db.execute("INSERT INTO meta VALUES ('titulo', ?)", (cfg.get("titulo", cfg.get("projeto", "")),))
-    db.execute("INSERT INTO ingest_log (ts, duracao_ms, contagem) VALUES (?,?,?)",
-               (agora().isoformat(timespec="seconds"), int((agora() - inicio).total_seconds() * 1000),
-                json.dumps(contagem, ensure_ascii=False)))
-    db.commit()
-    db.close()
+            rows = origem.execute(f"SELECT * FROM {tabela}").fetchall()
+            if not rows:
+                continue
+            cols = [d[0] for d in origem.execute(f"SELECT * FROM {tabela} LIMIT 0").description]
+            placeholders = ",".join("?" * len(cols))
+            destino.executemany(f"INSERT INTO {tabela} ({','.join(cols)}) VALUES ({placeholders})", rows)
+        except sqlite3.OperationalError:
+            pass  # tabela não existe no original ainda
+
+
+def ingere(cfg, db_path):
+    """FR14: reconstrói num arquivo temporário e faz swap atómico no fim.
+
+    Se o ingest for interrompido antes do os.replace, o DB original
+    permanece intacto com a versão anterior completa.
+    """
+    inicio = agora()
+    tmp_path = db_path + ".tmp"
+
+    # Remove temp de run anterior interrompido
+    if os.path.exists(tmp_path):
+        os.unlink(tmp_path)
+
+    # Abre DB original para copiar append-only (eventos, ingest_log)
+    db_orig = None
+    if os.path.exists(db_path):
+        db_orig = sqlite3.connect(db_path)
+        db_orig.execute("PRAGMA journal_mode = WAL")
+
+    # Escreve tudo no temporário
+    db = sqlite3.connect(tmp_path)
+    try:
+        db.execute("PRAGMA journal_mode = WAL")
+        if db_orig is not None:
+            _copia_append_only(db_orig, db)
+        else:
+            db.executescript(EVENTOS)
+        db_orig and db_orig.close()
+
+        db.executescript(DERIVADAS)
+        contagem = {}
+        for nome, fn in [("sessoes", ingere_sessoes), ("commits", ingere_git), ("decisoes", ingere_decisoes),
+                         ("adrs", ingere_adrs), ("desvios", ingere_desvios), ("barra", ingere_barra),
+                         ("glossario", ingere_glossario), ("documentos", ingere_documentos),
+                         ("specs", ingere_specs), ("roadmap", ingere_roadmap),
+                         ("worktrees", ingere_worktrees), ("fases", ingere_fases)]:
+            try:
+                contagem[nome] = fn(db, cfg)
+            except PermissionError:
+                raise
+            except Exception as e:  # one broken source must not hide the others
+                contagem[nome] = f"erro: {e}"
+        db.execute("INSERT INTO meta VALUES ('projeto', ?)", (cfg.get("projeto", ""),))
+        db.execute("INSERT INTO meta VALUES ('ingerido_em', ?)", (agora().isoformat(timespec="seconds"),))
+        db.execute("INSERT INTO meta VALUES ('contagem', ?)", (json.dumps(contagem, ensure_ascii=False),))
+        db.execute("INSERT INTO meta VALUES ('limiar_parado_min', ?)", (str(cfg.get("limiar_parado_min", 60)),))
+        db.execute("INSERT INTO meta VALUES ('equipes', ?)", (json.dumps(cfg.get("equipes", {}), ensure_ascii=False),))
+        db.execute("INSERT INTO meta VALUES ('titulo', ?)", (cfg.get("titulo", cfg.get("projeto", "")),))
+        db.execute("INSERT INTO ingest_log (ts, duracao_ms, contagem) VALUES (?,?,?)",
+                   (agora().isoformat(timespec="seconds"), int((agora() - inicio).total_seconds() * 1000),
+                    json.dumps(contagem, ensure_ascii=False)))
+        db.commit()
+    finally:
+        db.close()
+
+    # FR14: swap atómico — só aqui o DB original é substituído
+    os.replace(tmp_path, db_path)
     return contagem
 
 
