@@ -61,6 +61,20 @@ CREATE TABLE specs (repo TEXT, numero TEXT, slug TEXT, titulo TEXT, status TEXT,
   tasks_total INTEGER, tasks_feitas INTEGER, tem_plan INTEGER, tem_qa INTEGER, modificado TEXT,
   PRIMARY KEY (repo, numero, slug));
 CREATE TABLE roadmap (ordem INTEGER PRIMARY KEY, secao TEXT, colunas TEXT, linha TEXT);
+DROP TABLE IF EXISTS arvore_rodada; DROP TABLE IF EXISTS status_workers; DROP TABLE IF EXISTS excecoes_board;
+CREATE TABLE arvore_rodada (
+  rodada TEXT NOT NULL, tipo TEXT NOT NULL, id_no TEXT NOT NULL,
+  pai TEXT, label TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'pendente',
+  referencia TEXT, hash TEXT, evidencia_ok INTEGER NOT NULL DEFAULT 1,
+  PRIMARY KEY (rodada, tipo, id_no));
+CREATE TABLE status_workers (
+  sessao TEXT PRIMARY KEY, estado TEXT NOT NULL DEFAULT 'idle',
+  peca TEXT, passo TEXT, esperando TEXT, ultima_atividade TEXT,
+  sem_tarefa_ciclos INTEGER NOT NULL DEFAULT 0);
+CREATE TABLE excecoes_board (
+  tipo TEXT PRIMARY KEY, contador INTEGER NOT NULL DEFAULT 0, detalhe_json TEXT);
+CREATE INDEX IF NOT EXISTS idx_arvore_rodada_pai ON arvore_rodada(rodada, pai);
+CREATE INDEX IF NOT EXISTS idx_status_workers_estado ON status_workers(estado);
 """
 
 EVENTOS = """
@@ -611,6 +625,161 @@ def carrega_cfg(caminho):
     return cfg
 
 
+# ---------------------------------------------------------------------------
+# T2: ingere_arvore — materializa arvore_rodada das convenções (FR8, FR10, FR12)
+# ---------------------------------------------------------------------------
+
+_FR_RE = re.compile(r"-\s+\*\*(FR\d+)\*\*")
+_TASK_RE = re.compile(r"^###\s+(T\d+)\s*[—\-]")
+_TASK_FR_RE = re.compile(r"\*\*FRs?\*\*:\s*(.+)")
+_TEST_FR_RE = re.compile(r"test_(fr\d+)_")
+
+
+def _extrai_frs_spec(spec_path):
+    """Lê spec.md e extrai IDs de FR."""
+    try:
+        with open(spec_path, encoding="utf-8") as f:
+            return _FR_RE.findall(f.read())
+    except (OSError, UnicodeDecodeError):
+        return []
+
+
+def _extrai_tasks(tasks_path):
+    """Lê tasks.md e extrai (T_id, [FR_ids]) pares."""
+    try:
+        with open(tasks_path, encoding="utf-8") as f:
+            lines = f.readlines()
+    except (OSError, UnicodeDecodeError):
+        return []
+    tasks = []
+    current_t = None
+    for line in lines:
+        m = _TASK_RE.match(line)
+        if m:
+            current_t = m.group(1)
+            continue
+        if current_t:
+            m = _TASK_FR_RE.search(line)
+            if m:
+                frs = re.findall(r"FR\d+", m.group(1))
+                tasks.append((current_t, frs))
+                current_t = None
+    return tasks
+
+
+def _extrai_testes_frs(raiz):
+    """Percorre diretório de testes e mapeia test_frN_* → FRN."""
+    fr_map = {}  # FR_id → [test_file]
+    for dirpath, _, filenames in os.walk(raiz):
+        for fn in filenames:
+            if not fn.endswith(".py"):
+                continue
+            m = _TEST_FR_RE.search(fn)
+            if m:
+                fr_id = "FR" + m.group(1)[2:]  # fr1 → FR1
+                fr_map.setdefault(fr_id, []).append(fn)
+    return fr_map
+
+
+def ingere_arvore(db, cfg):
+    """T2: materializa arvore_rodada das convenções (FR8, FR10, FR12)."""
+    raiz = cfg.get("raiz", ".")
+    contagem = 0
+
+    for spec_cfg in cfg.get("specs", []):
+        spec_path = spec_cfg.get("caminho", "")
+        numero = spec_cfg.get("numero", "")
+        if not spec_path or not numero:
+            continue
+
+        # 1. Spec → FRs
+        frs = _extrai_frs_spec(spec_path)
+        testes_map = _extrai_testes_frs(raiz)
+
+        for fr_id in frs:
+            tem_teste = fr_id in testes_map
+            status = "ok" if tem_teste else "descoberto"
+            referencia = ", ".join(testes_map.get(fr_id, [])) if tem_teste else None
+            db.execute(
+                "INSERT OR REPLACE INTO arvore_rodada "
+                "(rodada, tipo, id_no, pai, label, status, referencia, evidencia_ok) "
+                "VALUES (?, 'spec', ?, NULL, ?, ?, ?, 1)",
+                (numero, fr_id, fr_id, status, referencia),
+            )
+            contagem += 1
+
+        # 2. Tasks → T (filhos de FRs)
+        spec_dir = os.path.dirname(spec_path)
+        tasks_path = os.path.join(spec_dir, "tasks.md")
+        tasks = _extrai_tasks(tasks_path)
+
+        for t_id, t_frs in tasks:
+            pai = t_frs[0] if t_frs else None
+            db.execute(
+                "INSERT OR REPLACE INTO arvore_rodada "
+                "(rodada, tipo, id_no, pai, label, status, evidencia_ok) "
+                "VALUES (?, 'task', ?, ?, ?, 'pendente', 1)",
+                (numero, t_id, pai, t_id),
+            )
+            contagem += 1
+
+    return contagem
+
+
+# ---------------------------------------------------------------------------
+# T3: ingere_status_workers + ingere_excecoes (FR1, FR2, FR13)
+# ---------------------------------------------------------------------------
+
+def ingere_status_workers(db, cfg):
+    """T3: materializa status_workers das equipes (FR2)."""
+    contagem = 0
+    for sessao, info in cfg.get("equipes", {}).items():
+        db.execute(
+            "INSERT OR REPLACE INTO status_workers (sessao, estado) VALUES (?, 'idle')",
+            (sessao,),
+        )
+        contagem += 1
+    return contagem
+
+
+def ingere_excecoes(db, cfg):
+    """T3: calcula as 3 exceções do board (FR1, FR13)."""
+    # gilsiley: transicoes onde resultado IS NULL AND quem = 'Gilsiley'
+    try:
+        gilsiley = db.execute(
+            "SELECT count(*) FROM passos WHERE resultado IS NULL AND sessao = 'Gilsiley'"
+        ).fetchone()[0]
+    except sqlite3.OperationalError:
+        gilsiley = 0
+
+    # gate_push: passos onde passo = 'push' AND saida_em IS NULL
+    try:
+        gate_push = db.execute(
+            "SELECT count(*) FROM passos WHERE passo = 'push' AND saida_em IS NULL"
+        ).fetchone()[0]
+    except sqlite3.OperationalError:
+        gate_push = 0
+
+    # sem_tarefa_2ciclos: workers com sem_tarefa_ciclos >= 2
+    sem_tarefa = db.execute(
+        "SELECT count(*) FROM status_workers WHERE sem_tarefa_ciclos >= 2"
+    ).fetchone()[0]
+
+    db.execute(
+        "INSERT OR REPLACE INTO excecoes_board (tipo, contador, detalhe_json) "
+        "VALUES ('gilsiley', ?, NULL)", (gilsiley,)
+    )
+    db.execute(
+        "INSERT OR REPLACE INTO excecoes_board (tipo, contador, detalhe_json) "
+        "VALUES ('gate_push', ?, NULL)", (gate_push,)
+    )
+    db.execute(
+        "INSERT OR REPLACE INTO excecoes_board (tipo, contador, detalhe_json) "
+        "VALUES ('sem_tarefa_2ciclos', ?, NULL)", (sem_tarefa,)
+    )
+    return 3
+
+
 def abre(db_path):
     db = sqlite3.connect(db_path)
     db.execute("PRAGMA journal_mode = WAL")  # FR13: WAL para escrita concorrente
@@ -668,7 +837,9 @@ def ingere(cfg, db_path):
                          ("adrs", ingere_adrs), ("desvios", ingere_desvios), ("barra", ingere_barra),
                          ("glossario", ingere_glossario), ("documentos", ingere_documentos),
                          ("specs", ingere_specs), ("roadmap", ingere_roadmap),
-                         ("worktrees", ingere_worktrees), ("fases", ingere_fases)]:
+                         ("worktrees", ingere_worktrees), ("fases", ingere_fases),
+                         ("arvore", ingere_arvore), ("status_workers", ingere_status_workers),
+                         ("excecoes", ingere_excecoes)]:
             try:
                 contagem[nome] = fn(db, cfg)
             except PermissionError:

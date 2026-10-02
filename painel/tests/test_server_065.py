@@ -65,9 +65,9 @@ class TestServerBoard:
         result = server.v_board(db)
         db.close()
 
-        # Deve ter alguma chave com sessões
+        # Deve ter alguma chave com sessões (colunas contém cards por sessão)
         has_sessoes = any(
-            "sess" in k.lower() or "linha" in k.lower()
+            "sess" in k.lower() or "linha" in k.lower() or "colunas" in k.lower()
             for k in result
         )
         assert has_sessoes, "/api/board deve retornar sessões"

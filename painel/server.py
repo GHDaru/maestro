@@ -80,7 +80,9 @@ def v_board(db):
         })
     colunas = {k: [c for c in cards if c["estado"] == k] for k in ESTADOS_SESSAO}
     colunas["sem registro"] = [c for c in cards if c["estado"] not in ESTADOS_SESSAO]
-    return {"limiar_min": limiar, "colunas": colunas, "total": len(cards)}
+    # FR1: 3 exceções do topo
+    excecoes = linhas(db, "SELECT tipo, contador, detalhe_json FROM excecoes_board")
+    return {"limiar_min": limiar, "colunas": colunas, "total": len(cards), "excecoes": excecoes}
 
 
 def ordem_sessao(n):
@@ -166,6 +168,16 @@ def v_rodadas(db):
             "passo_atual": passo_atual, "quem": quem, "passos": passos_out,
         })
     return {"rodadas": out}
+
+
+def v_arvore(db, rodada=None):
+    """T4: retorna árvore materializada da rodada (FR8, FR9)."""
+    if rodada is None:
+        return {"nos": []}
+    nos = linhas(db,
+        "SELECT rodada, tipo, id_no, pai, label, status, referencia, hash, evidencia_ok "
+        "FROM arvore_rodada WHERE rodada = ? ORDER BY tipo, id_no", rodada)
+    return {"rodada": rodada, "nos": nos}
 
 
 def semana(t):
@@ -401,7 +413,7 @@ def v_relatorio_lote(db, desde=None):
 
 ROTAS = {"/api/board": v_board, "/api/pecas": v_pecas, "/api/specs": v_specs, "/api/decisoes": v_decisoes,
          "/api/qualidade": v_qualidade, "/api/documentos": v_documentos, "/api/roadmap": v_roadmap,
-         "/api/rodadas": v_rodadas,
+         "/api/rodadas": v_rodadas, "/api/arvore": v_arvore,
          "/api/dora": v_dora, "/api/meta": v_meta, "/api/estado-ia": v_estado_ia,
          "/api/erros": v_erros_leitura,
          "/api/higiene": v_higiene, "/api/tempo": v_tempo, "/api/relatorio-lote": v_relatorio_lote}
@@ -479,6 +491,8 @@ def cria_handler(db_path, cfg):
                     return self._json(fn(db, qs.get("sessao", [None])[0]))
                 if u.path == "/api/relatorio-lote":
                     return self._json(fn(db, qs.get("desde", [None])[0]))
+                if u.path == "/api/arvore":
+                    return self._json(fn(db, qs.get("id", [None])[0]))
                 return self._json(fn(db))
             finally:
                 db.close()
