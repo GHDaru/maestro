@@ -557,13 +557,54 @@ def carrega_cfg(caminho):
 
 def abre(db_path):
     db = sqlite3.connect(db_path)
+    db.execute("PRAGMA journal_mode = WAL")  # FR13: WAL para escrita concorrente
     db.executescript(EVENTOS)
     return db
 
 
+def _copia_append_only(origem: sqlite3.Connection, destino: sqlite3.Connection) -> None:
+    """Copia eventos e ingest_log do DB original para o temporário (FR14)."""
+    destino.executescript(EVENTOS)
+    for tabela in ("eventos", "ingest_log"):
+        try:
+            rows = origem.execute(f"SELECT * FROM {tabela}").fetchall()
+            if not rows:
+                continue
+            cols = [d[0] for d in origem.execute(f"SELECT * FROM {tabela} LIMIT 0").description]
+            placeholders = ",".join("?" * len(cols))
+            destino.executemany(f"INSERT INTO {tabela} ({','.join(cols)}) VALUES ({placeholders})", rows)
+        except sqlite3.OperationalError:
+            pass  # tabela não existe no original ainda
+
+
 def ingere(cfg, db_path):
+    """FR14: reconstrói num arquivo temporário e faz swap atómico no fim.
+
+    Se o ingest for interrompido antes do os.replace, o DB original
+    permanece intacto com a versão anterior completa.
+    """
     inicio = agora()
-    db = abre(db_path)
+    tmp_path = db_path + ".tmp"
+
+    # Remove temp de run anterior interrompido
+    if os.path.exists(tmp_path):
+        os.unlink(tmp_path)
+
+    # Abre DB original para copiar append-only (eventos, ingest_log)
+    db_orig = None
+    if os.path.exists(db_path):
+        db_orig = sqlite3.connect(db_path)
+        db_orig.execute("PRAGMA journal_mode = WAL")
+
+    # Escreve tudo no temporário
+    db = sqlite3.connect(tmp_path)
+    db.execute("PRAGMA journal_mode = WAL")
+    if db_orig is not None:
+        _copia_append_only(db_orig, db)
+    else:
+        db.executescript(EVENTOS)
+    db_orig and db_orig.close()
+
     db.executescript(DERIVADAS)
     contagem = {}
     for nome, fn in [("sessoes", ingere_sessoes), ("commits", ingere_git), ("decisoes", ingere_decisoes),
@@ -588,6 +629,9 @@ def ingere(cfg, db_path):
                 json.dumps(contagem, ensure_ascii=False)))
     db.commit()
     db.close()
+
+    # FR14: swap atómico — só aqui o DB original é substituído
+    os.replace(tmp_path, db_path)
     return contagem
 
 
