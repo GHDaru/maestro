@@ -367,7 +367,25 @@ for d in specs/[0-9][0-9][0-9]-*/; do
         soft "domain ${k}: DOM:${k}= has no value"; dom_bad=1; continue
       fi
       if [[ "$k" == "invariants" && "$value" != "domain" && "$value" != "edge" ]]; then
-        soft "domain invariants: DOM:invariants=${value} — the only declarations are domain and edge"; dom_bad=1; continue
+        # Itemized form, one rule per item: `DOM:invariants=rule_a=domain | rule_b=edge(why)`.
+        # Each item is domain or edge, and an edge item carries its reason in parentheses.
+        items="$(sed -E 's/.*DOM:invariants=//' <<<"$line" | tr -d '`')"
+        inv_ok=1
+        IFS='|' read -ra parts <<<"$items"
+        for it in "${parts[@]}"; do
+          it="$(sed -E 's/^[[:space:]]+|[[:space:]]+$//g' <<<"$it")"
+          [[ -z "$it" ]] && continue
+          if [[ "$it" =~ ^[A-Za-z0-9_.-]+=domain$ ]]; then continue; fi
+          if [[ "$it" =~ ^[A-Za-z0-9_.-]+=edge\(.+\)$ ]]; then continue; fi
+          if [[ "$it" =~ ^[A-Za-z0-9_.-]+=edge$ ]]; then
+            soft "domain invariants: '${it}' is edge with no reason — write ${it}(why it cannot live in the domain)"
+          else
+            soft "domain invariants: '${it}' — each item is rule=domain or rule=edge(why)"
+          fi
+          inv_ok=0
+        done
+        [[ "$inv_ok" -eq 1 ]] || dom_bad=1
+        continue
       fi
       if is_skeleton "$reason"; then
         soft "domain ${k}: declared DOM:${k}=${value} with no reason — a declaration without a why is silence"; dom_bad=1

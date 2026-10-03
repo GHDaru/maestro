@@ -56,6 +56,7 @@
   - aggregate: the aggregate root(s) this cycle touches or creates, or `none` with the reason.
   - invariants: where the business rules live — `domain` (aggregate, value object, domain
     service) or `edge` (route, adapter, screen). `edge` needs the reason it cannot be domain.
+    One rule per item also works, on the invariants line: rule_a=domain | rule_b=edge(why).
   - glossary: `changed` (terms added or changed in the ubiquitous language) or `none` with the reason.
   - ports: `changed` (ports/adapters added or changed) or `none` with the reason.
 -->
