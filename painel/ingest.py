@@ -681,8 +681,32 @@ def _extrai_testes_frs(raiz):
     return fr_map
 
 
+def _extrai_commits_t(raiz):
+    """Lê git log e mapeia T_id → commit_hash (commit cita 'NNN T_id: ...')."""
+    try:
+        out = subprocess.run(
+            ["git", "log", "--all", "--format=%H %s"],
+            cwd=raiz, capture_output=True, text=True, timeout=5,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return {}
+    t_commits = {}
+    for line in out.stdout.splitlines():
+        parts = line.split(" ", 1)
+        if len(parts) < 2:
+            continue
+        hash_val, subject = parts
+        for m in re.finditer(r"\b(T\d+)\b", subject):
+            t_commits[m.group(1)] = hash_val[:12]
+    return t_commits
+
+
 def ingere_arvore(db, cfg):
-    """T2: materializa arvore_rodada das convenções (FR8, FR10, FR12)."""
+    """T2: materializa arvore_rodada das convenções (FR8, FR10, FR12).
+
+    Cria nós: spec (FRs), plan (artefatos .md), task (Ts), teste (test_frN_*),
+    critica (passos de crítica).
+    """
     raiz = cfg.get("raiz", ".")
     contagem = 0
 
@@ -692,10 +716,12 @@ def ingere_arvore(db, cfg):
         if not spec_path or not numero:
             continue
 
+        spec_dir = os.path.dirname(spec_path)
+        testes_map = _extrai_testes_frs(raiz)
+        commit_map = _extrai_commits_t(raiz)
+
         # 1. Spec → FRs
         frs = _extrai_frs_spec(spec_path)
-        testes_map = _extrai_testes_frs(raiz)
-
         for fr_id in frs:
             tem_teste = fr_id in testes_map
             status = "ok" if tem_teste else "descoberto"
@@ -708,18 +734,60 @@ def ingere_arvore(db, cfg):
             )
             contagem += 1
 
-        # 2. Tasks → T (filhos de FRs)
-        spec_dir = os.path.dirname(spec_path)
+        # 2. Plan → artefatos .md no spec_dir
+        for fn in sorted(os.listdir(spec_dir)) if os.path.isdir(spec_dir) else []:
+            if not fn.endswith(".md") or fn == "spec.md":
+                continue
+            db.execute(
+                "INSERT OR REPLACE INTO arvore_rodada "
+                "(rodada, tipo, id_no, pai, label, status, referencia, evidencia_ok) "
+                "VALUES (?, 'plan', ?, NULL, ?, 'ok', ?, 1)",
+                (numero, fn, fn, os.path.join(spec_dir, fn)),
+            )
+            contagem += 1
+
+        # 3. Tasks → T (filhos de FRs, com hash e referencia multi-FR)
         tasks_path = os.path.join(spec_dir, "tasks.md")
         tasks = _extrai_tasks(tasks_path)
-
         for t_id, t_frs in tasks:
             pai = t_frs[0] if t_frs else None
+            ref_frs = ", ".join(t_frs) if t_frs else None
+            t_hash = commit_map.get(t_id)
+            db.execute(
+                "INSERT OR REPLACE INTO arvore_rodada "
+                "(rodada, tipo, id_no, pai, label, status, referencia, hash, evidencia_ok) "
+                "VALUES (?, 'task', ?, ?, ?, 'pendente', ?, ?, 1)",
+                (numero, t_id, pai, t_id, ref_frs, t_hash),
+            )
+            contagem += 1
+
+        # 4. Testes → nós tipo='teste' (filhos de FRs)
+        for fr_id, test_files in testes_map.items():
+            for tf in test_files:
+                db.execute(
+                    "INSERT OR REPLACE INTO arvore_rodada "
+                    "(rodada, tipo, id_no, pai, label, status, evidencia_ok) "
+                    "VALUES (?, 'teste', ?, ?, ?, 'ok', 1)",
+                    (numero, tf, fr_id, tf),
+                )
+                contagem += 1
+
+        # 5. Críticas → passos com 'crítica' no passo
+        try:
+            criticas = db.execute(
+                "SELECT passo, sessao, resultado, evidencia_json FROM passos "
+                "WHERE passo LIKE '%crítica%' OR passo LIKE '%critica%'"
+            ).fetchall()
+        except sqlite3.OperationalError:
+            criticas = []
+        for i, (passo, sessao, resultado, ev_json) in enumerate(criticas):
+            id_no = f"critica_{sessao}_{i}"
+            status = "ok" if resultado == "ok" else "pendente"
             db.execute(
                 "INSERT OR REPLACE INTO arvore_rodada "
                 "(rodada, tipo, id_no, pai, label, status, evidencia_ok) "
-                "VALUES (?, 'task', ?, ?, ?, 'pendente', 1)",
-                (numero, t_id, pai, t_id),
+                "VALUES (?, 'critica', ?, NULL, ?, ?, 1)",
+                (numero, id_no, f"{sessao}: {passo}", status),
             )
             contagem += 1
 
@@ -731,12 +799,47 @@ def ingere_arvore(db, cfg):
 # ---------------------------------------------------------------------------
 
 def ingere_status_workers(db, cfg):
-    """T3: materializa status_workers das equipes (FR2)."""
+    """T3: materializa status_workers das equipes (FR2, FR13).
+
+    Calcula sem_tarefa_ciclos dos eventos de status consecutivos.
+    Popula peca, estado, ultima_atividade do último evento.
+    """
     contagem = 0
     for sessao, info in cfg.get("equipes", {}).items():
+        # Ler últimos eventos de status para esta sessão
+        try:
+            evs = db.execute(
+                "SELECT estado, peca, ts FROM eventos "
+                "WHERE sessao = ? AND tipo = 'status' ORDER BY id DESC LIMIT 10",
+                (sessao,),
+            ).fetchall()
+        except sqlite3.OperationalError:
+            evs = []
+
+        if evs:
+            ultimo = evs[0]
+            estado = ultimo[0] or "idle"
+            peca = ultimo[1]
+            ultima_at = ultimo[2]
+            # Contar ciclos consecutivos "sem tarefa" ou "idle" do mais recente para trás
+            ciclos = 0
+            for ev in evs:
+                ev_estado = ev[0] or ""
+                if "sem tarefa" in ev_estado.lower() or ev_estado == "idle":
+                    ciclos += 1
+                else:
+                    break
+        else:
+            estado = "idle"
+            peca = None
+            ultima_at = None
+            ciclos = 0
+
         db.execute(
-            "INSERT OR REPLACE INTO status_workers (sessao, estado) VALUES (?, 'idle')",
-            (sessao,),
+            "INSERT OR REPLACE INTO status_workers "
+            "(sessao, estado, peca, ultima_atividade, sem_tarefa_ciclos) "
+            "VALUES (?, ?, ?, ?, ?)",
+            (sessao, estado, peca, ultima_at, ciclos),
         )
         contagem += 1
     return contagem
