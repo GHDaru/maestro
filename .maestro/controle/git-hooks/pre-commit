@@ -1,0 +1,5 @@
+#!/bin/sh
+# Pre-commit hook: valida vereditos (desejo 004).
+# Instalar: cp .maestro/controle/git-hooks/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
+HOOK_DIR="$(cd "$(dirname "$0")" && pwd)"
+python "$HOOK_DIR/veredito_hook.py" --pre-commit
