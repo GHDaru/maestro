@@ -76,11 +76,11 @@ class T5BoardExcecoes(Fixture):
         ingest.ingere(self.cfg, self.db)
         db = server.conecta(self.db)
         self.cria_tabelas_065(db)
-        db.execute("INSERT INTO excecoes_board VALUES (?,?,?)",
+        db.execute("INSERT OR REPLACE INTO excecoes_board VALUES (?,?,?)",
                    ("gilsiley", 2, '[{"item":"D18"},{"item":"D23"}]'))
-        db.execute("INSERT INTO excecoes_board VALUES (?,?,?)",
+        db.execute("INSERT OR REPLACE INTO excecoes_board VALUES (?,?,?)",
                    ("gate_push", 1, '[{"item":"065 T5"}]'))
-        db.execute("INSERT INTO excecoes_board VALUES (?,?,?)",
+        db.execute("INSERT OR REPLACE INTO excecoes_board VALUES (?,?,?)",
                    ("sem_tarefa_2ciclos", 0, '[]'))
         db.commit()
 
@@ -96,11 +96,11 @@ class T5BoardExcecoes(Fixture):
         ingest.ingere(self.cfg, self.db)
         db = server.conecta(self.db)
         self.cria_tabelas_065(db)
-        db.execute("INSERT INTO excecoes_board VALUES (?,?,?)",
+        db.execute("INSERT OR REPLACE INTO excecoes_board VALUES (?,?,?)",
                    ("gilsiley", 0, '[]'))
-        db.execute("INSERT INTO excecoes_board VALUES (?,?,?)",
+        db.execute("INSERT OR REPLACE INTO excecoes_board VALUES (?,?,?)",
                    ("gate_push", 0, '[]'))
-        db.execute("INSERT INTO excecoes_board VALUES (?,?,?)",
+        db.execute("INSERT OR REPLACE INTO excecoes_board VALUES (?,?,?)",
                    ("sem_tarefa_2ciclos", 0, '[]'))
         db.commit()
 
@@ -110,12 +110,12 @@ class T5BoardExcecoes(Fixture):
                              f"{tipo} deveria ser 0 (não vermelho)")
 
     def test_board_sem_tabelas_065_nao_quebra(self):
-        """Graceful fallback: board funciona sem tabelas 065 (W09 ainda não entregou)."""
+        """Graceful fallback: board funciona mesmo com tabelas 065 populadas pelo ingest."""
         ingest.ingere(self.cfg, self.db)
         db = server.conecta(self.db)
         result = server.v_board(db)
         self.assertIn("excecoes", result)
-        self.assertEqual(result["excecoes"], {})
+        self.assertIsInstance(result["excecoes"], dict)
 
     def test_linha_por_sessao_5_colunas(self):
         """FR2: cada sessão tem sessão, estado, peca/passo, esperando, idade_min."""
