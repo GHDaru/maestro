@@ -15,12 +15,12 @@ Finalmente, o Gilsiley quer subir e derrubar sessões do Claude Code pelo portal
 
 ### Custeio
 
-- **FR1**: O SISTEMA DEVE ler os transcripts das pastas configuradas e gravar o consumo por sessão, modelo e hora, sem armazenar o conteúdo das mensagens.
+- **FR1**: O SISTEMA DEVE ler os transcripts das pastas configuradas e gravar o consumo por sessão, modelo e hora, sem armazenar o conteúdo das mensagens. O SISTEMA NÃO DEVE gravar o texto de comandos Bash nem o input ou output de ferramenta — só a classificação do desvio (ex.: "commit sem runner2", "push tentado") e o hash ou nome do arquivo.
 - **FR2**: O SISTEMA DEVE contar cada `message.id` uma única vez (deduplicação pelo streaming).
 - **FR3**: ONDE o preço de um modelo não estiver configurado, O SISTEMA DEVE exibir "preço não configurado" no lugar do valor, e não inventar.
 - **FR4**: O SISTEMA DEVE exibir o custo por sessão, por papel, por rodada e por tarefa integrada.
 - **FR5**: QUANDO uma rodada for fechada, O SISTEMA DEVE incluir o custo da rodada no relatório.
-- **FR6**: SE a soma mensal divergir da fatura informada em mais de 5%, ENTÃO O SISTEMA DEVE gerar um alerta.
+- **FR6**: SE a soma mensal divergir da fatura informada pelo Gilsiley (valor + mês, no mesmo arquivo de preço) em mais de 5%, ENTÃO O SISTEMA DEVE gerar um alerta. Nenhum worker digita fatura.
 - **FR7**: O SISTEMA DEVE manter a tabela de preço por modelo e por tipo de token em `projetos/<projeto>.json`, com data de vigência, preenchida pelo Gilsiley.
 
 ### Metadados de sessão
@@ -31,12 +31,12 @@ Finalmente, o Gilsiley quer subir e derrubar sessões do Claude Code pelo portal
 - **FR11**: O SISTEMA DEVE medir o padrão de despacho: quem manda mensagem para quem, com que frequência e quanto tempo até a resposta.
 - **FR12**: O SISTEMA DEVE registrar compactações e o contexto médio por resposta.
 - **FR13**: O SISTEMA DEVE contar subagentes por tipo e o custo deles.
-- **FR14**: O SISTEMA DEVE detectar desvios do método (commit sem runner2, push tentado por worker, APPROVE sem hash) a partir dos comandos Bash registrados.
+- **FR14**: O SISTEMA DEVE detectar desvios do método (commit sem runner2, push tentado por worker, APPROVE sem hash) a partir dos comandos Bash registrados, gravando SÓ a classificação do desvio e o hash ou nome do arquivo — nunca o texto do comando, nem o input ou output de ferramenta, para que tokens ou senhas no comando não vazem para nenhuma tabela.
 
 ### Controle de sessões
 
 - **FR15**: QUANDO o usuário pedir para subir uma sessão de um papel, O SISTEMA DEVE pedir confirmação na tela, chamar o lançador com o `session_id` do mapa e registrar o evento.
-- **FR16**: QUANDO o usuário pedir para derrubar uma sessão com passo de workflow aberto, O SISTEMA DEVE mostrar os passos abertos e exigir confirmação dupla.
+- **FR16**: QUANDO o usuário pedir para derrubar uma sessão, O SISTEMA DEVE sempre pedir confirmação na tela. SE a sessão tiver passo de workflow aberto, ENTÃO O SISTEMA DEVE mostrar os passos abertos e exigir confirmação dupla. O SISTEMA DEVE mostrar o PID e a linha de comando antes de confirmar, encerrar SÓ o processo cujo `session_id` case EXATAMENTE com o do mapa, nunca encerrar mais de um processo por ação, nunca encerrar a sessão que fez o pedido, e nunca encerrar Office ou Assistente sem confirmação dupla.
 - **FR17**: O SISTEMA NÃO DEVE oferecer subir ou derrubar sessões do Claude Desktop.
 - **FR18**: O SISTEMA DEVE avisar a Office de toda ação de subir ou derrubar.
 - **FR19**: O SISTEMA DEVE registrar no histórico quem, quando, qual sessão e por quê subiu ou derrubou.
@@ -61,11 +61,15 @@ Finalmente, o Gilsiley quer subir e derrubar sessões do Claude Code pelo portal
 - WHEN rodada fechada THEN THE SYSTEM SHALL incluir custo no relatório.
 - WHEN soma mensal divergir > 5% da fatura THEN THE SYSTEM SHALL gerar alerta.
 - WHEN usuário pede para subir sessão THEN THE SYSTEM SHALL pedir confirmação, chamar lançador e registrar evento.
+- WHEN usuário pede para derrubar sessão THEN THE SYSTEM SHALL sempre pedir confirmação na tela.
 - WHEN usuário pede para derrubar sessão com passo aberto THEN THE SYSTEM SHALL mostrar passos abertos e exigir confirmação dupla.
+- WHEN dois processos claude.exe têm session_id parecido THEN THE SYSTEM SHALL encerrar SÓ o de session_id exato.
 - WHEN sessão é Claude Desktop THEN THE SYSTEM SHALL não oferecer subir/derrubar.
 - `python -m pytest tests/test_consumo.py` → todos passam.
 - `python -m pytest tests/test_controle_sessoes.py` → todos passam.
 - `python -m pytest tests/test_contrato_rotas_066.py` → todos passam.
+- `python -m pytest tests/test_seguranca_derrubar.py` → todos passam (inclui teste com dois processos parecidos: só o de `session_id` exato é encerrado).
+- `python -m pytest tests/test_dados_sensiveis.py` → todos passam (um transcript com uma string de token não deixa essa string em nenhuma tabela).
 
 ## Clarify
 
