@@ -11,6 +11,8 @@ Regras:
 4. A hora do veredito tem de ser posterior à hora do commit do objeto (autor date %ai).
 5. Sem hora no texto, usa a hora do commit (ou mtime do arquivo se pré-commit).
 6. Cherry-pick: usa data do autor (%ai), não do committer.
+7. Se existe linha Data: e o formato não é reconhecido, recusa.
+8. Standalone/painel: hora do commit = author date de `git log -1 --format=%ai -- <arquivo>`.
 
 Uso:
   pre-commit:  python veredito_hook.py --pre-commit
@@ -20,6 +22,7 @@ Uso:
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import subprocess
 import sys
@@ -33,19 +36,58 @@ TOLERANCIA = timedelta(minutes=2)
 # Fuso BRT (-03:00)
 BRT = timezone(timedelta(hours=-3))
 
+# Sentinel para formato não reconhecido
+UNRECOGNIZED = "UNRECOGNIZED"
+
 # Padrões de arquivo de veredito
 VEREDITO_PATTERNS = ("veredito", "critica")
+
+# Mapeamentos de meses
+MESES_PT = {
+    "jan": 1, "fev": 2, "mar": 3, "abr": 4, "mai": 5, "jun": 6,
+    "jul": 7, "ago": 8, "set": 9, "out": 10, "nov": 11, "dez": 12,
+}
+MESES_EN = {
+    "jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6,
+    "jul": 7, "aug": 8, "sep": 9, "oct": 10, "nov": 11, "dec": 12,
+}
 
 # Regex para linha Objeto
 RE_OBJETO = re.compile(r"^Objeto:\s*(.+?)\s+@\s+([0-9a-f]{7,40})\s*$", re.MULTILINE)
 
+# Prefixo comum: aceita **Data:** e Data:
+_DATA_PREFIX = r"\*{0,2}Data:\*{0,2}\s*"
+
 # Regex para linha Data (vários formatos)
-# "Data: 03/10/2026 13:19 -0300" ou "Data: 03/10/2026 13:19" ou "Data: sáb, 3 de out de 2026 13:19:15"
+# "Data: 03/10/2026 13:19 -0300" ou "**Data:** 03/10/2026 13:19 -0300"
 RE_DATA_DDMMYYYY_HHMM = re.compile(
-    r"Data:\s*(\d{2}/\d{2}/\d{4})\s+(\d{2}):(\d{2})(?:\s*([+-]\d{4}))?", re.MULTILINE
+    _DATA_PREFIX + r"(\d{2}/\d{2}/\d{4})\s+(\d{2}):(\d{2})(?:\s*([+-]\d{4}))?",
+    re.MULTILINE,
 )
+# "Data: 03/10/2026" (só data, sem hora)
+RE_DATA_DDMMYYYY_ONLY = re.compile(
+    _DATA_PREFIX + r"(\d{2}/\d{2}/\d{4})\s*$",
+    re.MULTILINE,
+)
+# "**Data:** 2026-10-03 14:04:08 BRT"
+RE_DATA_ISO_BRT = re.compile(
+    _DATA_PREFIX + r"(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2}):(\d{2})\s+BRT",
+    re.MULTILINE,
+)
+# "**Data:** Sat Oct 3 16:00:00 2026"
+RE_DATA_ENGLISH = re.compile(
+    _DATA_PREFIX + r"\w{3}\s+(\w{3})\s+(\d{1,2})\s+(\d{2}):(\d{2}):(\d{2})\s+(\d{4})",
+    re.MULTILINE,
+)
+# "Data: sáb, 3 de out de 2026 13:19:15"
 RE_DATA_EXTENSO = re.compile(
-    r"Data:\s*\w+,?\s+\d+\s+de\s+\w+\s+de\s+(\d{4})\s+(\d{2}):(\d{2}):(\d{2})", re.MULTILINE
+    _DATA_PREFIX + r"\w+,?\s+\d+\s+de\s+\w+\s+de\s+(\d{4})\s+(\d{2}):(\d{2}):(\d{2})",
+    re.MULTILINE,
+)
+# Detecta qualquer linha Data: (para distinguir "sem Data:" de "Data: não reconhecido")
+RE_DATA_ANY = re.compile(
+    r"\*{0,2}Data:\*{0,2}\s*\S",
+    re.MULTILINE,
 )
 
 
@@ -74,8 +116,18 @@ def _run_git(args: list[str], cwd: Path | None = None) -> str:
     return result.stdout.strip()
 
 
-def _parse_hora_texto(conteudo: str) -> datetime | None:
-    """Extrai a hora do texto do veredito. Retorna None se não houver."""
+def _parse_hora_texto(conteudo: str) -> datetime | None | str:
+    """Extrai a hora do texto do veredito.
+
+    Returns:
+        datetime: se parseou com sucesso (tem hora).
+        None: se não há linha Data:, ou há mas só com data (sem HH:MM).
+        UNRECOGNIZED: se há linha Data: mas o formato não é reconhecido.
+    """
+    # Se não há nenhuma linha Data:, retorna None
+    if not RE_DATA_ANY.search(conteudo):
+        return None
+
     # Formato dd/mm/aaaa HH:MM [±ZZZZ]
     m = RE_DATA_DDMMYYYY_HHMM.search(conteudo)
     if m:
@@ -84,10 +136,36 @@ def _parse_hora_texto(conteudo: str) -> datetime | None:
         tz_str = m.group(4)
         if tz_str:
             sign = 1 if tz_str[0] == "+" else -1
-            tz = timezone(timedelta(hours=sign * int(tz_str[1:3]), minutes=sign * int(tz_str[3:5])))
+            tz = timezone(timedelta(
+                hours=sign * int(tz_str[1:3]),
+                minutes=sign * int(tz_str[3:5]),
+            ))
         else:
             tz = BRT
         return datetime(int(ano), int(mes), int(dia), hh, mm, tzinfo=tz)
+
+    # Formato ISO com BRT: "2026-10-03 14:04:08 BRT"
+    m = RE_DATA_ISO_BRT.search(conteudo)
+    if m:
+        ano = int(m.group(1))
+        mes = int(m.group(2))
+        dia = int(m.group(3))
+        hh = int(m.group(4))
+        mm = int(m.group(5))
+        ss = int(m.group(6))
+        return datetime(ano, mes, dia, hh, mm, ss, tzinfo=BRT)
+
+    # Formato inglês: "Sat Oct 3 16:00:00 2026"
+    m = RE_DATA_ENGLISH.search(conteudo)
+    if m:
+        mes = MESES_EN.get(m.group(1).lower()[:3])
+        if mes:
+            dia = int(m.group(2))
+            hh = int(m.group(3))
+            mm = int(m.group(4))
+            ss = int(m.group(5))
+            ano = int(m.group(6))
+            return datetime(ano, mes, dia, hh, mm, ss, tzinfo=BRT)
 
     # Formato extenso: "sáb, 3 de out de 2026 13:19:15"
     m = RE_DATA_EXTENSO.search(conteudo)
@@ -96,20 +174,21 @@ def _parse_hora_texto(conteudo: str) -> datetime | None:
         hh = int(m.group(2))
         mm = int(m.group(3))
         ss = int(m.group(4))
-        # Mapeamento de meses em português
-        meses = {
-            "jan": 1, "fev": 2, "mar": 3, "abr": 4, "mai": 5, "jun": 6,
-            "jul": 7, "ago": 8, "set": 9, "out": 10, "nov": 11, "dez": 12,
-        }
         # Extrai o mês do texto
-        m_mes = re.search(r"de\s+(\w+)\s+de", conteudo[conteudo.index("Data:"):])
-        mes = meses.get(m_mes.group(1)[:3].lower(), 10) if m_mes else 10
+        idx = conteudo.index("Data:")
+        m_mes = re.search(r"de\s+(\w+)\s+de", conteudo[idx:])
+        mes = MESES_PT.get(m_mes.group(1)[:3].lower(), 10) if m_mes else 10
         # Extrai o dia
-        m_dia = re.search(r"Data:\s*\w+,?\s+(\d+)\s+de", conteudo)
+        m_dia = re.search(r"\*{0,2}Data:\*{0,2}\s*\w+,?\s+(\d+)\s+de", conteudo)
         dia = int(m_dia.group(1)) if m_dia else 1
         return datetime(ano, mes, dia, hh, mm, ss, tzinfo=BRT)
 
-    return None
+    # Formato dd/mm/aaaa só com data (sem hora) — reconhecido, usa commit
+    if RE_DATA_DDMMYYYY_ONLY.search(conteudo):
+        return None
+
+    # Linha Data: existe mas formato não reconhecido
+    return UNRECOGNIZED
 
 
 def _autor_date(hash: str, cwd: Path | None = None) -> datetime:
@@ -117,6 +196,25 @@ def _autor_date(hash: str, cwd: Path | None = None) -> datetime:
     out = _run_git(["log", "-1", "--format=%ai", hash], cwd=cwd)
     # Formato: 2026-10-03 13:19:15 -0300
     return datetime.fromisoformat(out)
+
+
+def _autor_date_arquivo(arquivo: Path, git_cwd: Path) -> datetime | None:
+    """Author date do commit que introduziu o arquivo.
+
+    Usa `git log -1 --format=%ai -- <arquivo>`.
+    Retorna None se o arquivo não está commitado.
+    """
+    try:
+        if arquivo.is_absolute():
+            rel = str(arquivo.relative_to(git_cwd)).replace("\\", "/")
+        else:
+            rel = str(arquivo).replace("\\", "/")
+        out = _run_git(["log", "-1", "--format=%ai", "--", rel], cwd=git_cwd)
+        if not out:
+            return None
+        return datetime.fromisoformat(out)
+    except (RuntimeError, ValueError):
+        return None
 
 
 def _commit_existe(hash: str, cwd: Path | None = None) -> bool:
@@ -130,7 +228,6 @@ def _commit_existe(hash: str, cwd: Path | None = None) -> bool:
 
 def _arquivo_mtime(caminho: Path) -> datetime:
     """Data de modificação do arquivo como datetime com tz BRT."""
-    import os
     ts = os.path.getmtime(caminho)
     return datetime.fromtimestamp(ts, tz=BRT)
 
@@ -145,7 +242,8 @@ def verificar_veredito(
     Args:
         arquivo: caminho do arquivo veredito.
         hora_commit: hora do commit (para pre-commit, usar datetime.now(BRT)).
-                     Se None, usa mtime do arquivo.
+                     Se None (standalone), usa author date do commit que
+                     introduziu o arquivo; se não commitado, usa mtime.
         git_cwd: diretório do repo git (default: cwd atual).
     """
     if git_cwd is None:
@@ -187,14 +285,32 @@ def verificar_veredito(
             objeto_hash=objeto_hash,
         )
 
-    # 4. Hora do veredito: texto > commit/mtime
-    hora_texto = _parse_hora_texto(conteudo)
+    # 4. Hora do commit: standalone usa author date, pre-commit usa valor passado
     if hora_commit is None:
-        hora_commit = _arquivo_mtime(arquivo)
+        # Standalone: author date do commit que introduziu o arquivo
+        hora_commit = _autor_date_arquivo(arquivo, git_cwd)
+        if hora_commit is None:
+            # Arquivo não commitado (pré-commit) → usa mtime
+            hora_commit = _arquivo_mtime(arquivo)
 
+    # 5. Parse da hora no texto
+    hora_texto = _parse_hora_texto(conteudo)
+
+    # 5a. Formato não reconhecido → recusa
+    if hora_texto == UNRECOGNIZED:
+        return VereditoCheck(
+            arquivo=nome,
+            ok=False,
+            motivo="Data em formato não reconhecido",
+            hora_commit=hora_commit,
+            objeto_caminho=objeto_caminho,
+            objeto_hash=objeto_hash,
+        )
+
+    # 6. Hora do veredito: texto > commit/mtime
     hora_veredito = hora_texto if hora_texto else hora_commit
 
-    # 5. Veredito tem de ser posterior ao objeto
+    # 7. Veredito tem de ser posterior ao objeto
     if hora_veredito < hora_objeto:
         return VereditoCheck(
             arquivo=nome,
@@ -210,7 +326,7 @@ def verificar_veredito(
             objeto_hash=objeto_hash,
         )
 
-    # 6. Hora no texto não pode ser > commit + 2 min
+    # 8. Hora no texto não pode ser > commit + 2 min
     if hora_texto and hora_texto > hora_commit + TOLERANCIA:
         return VereditoCheck(
             arquivo=nome,
