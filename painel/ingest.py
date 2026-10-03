@@ -891,9 +891,20 @@ def abre(db_path):
 
 
 def _copia_append_only(origem: sqlite3.Connection, destino: sqlite3.Connection) -> None:
-    """Copia eventos e ingest_log do DB original para o temporário (FR14)."""
+    """Copia tabelas primárias do DB original para o temporário (FR14).
+
+    Append-only: eventos, ingest_log.
+    Workflow (registro primário gravado pelos hooks): rodadas, passos, transicoes, fila.
+    Estas NÃO são derivadas dos arquivos — não podem ser apagadas pelo reingerir.
+    """
     destino.executescript(EVENTOS)
-    for tabela in ("eventos", "ingest_log"):
+    # Criar schema das tabelas de workflow no destino
+    schema_wf = os.path.join(AQUI, "schema_workflow.sql")
+    if os.path.exists(schema_wf):
+        with open(schema_wf, encoding="utf-8") as f:
+            destino.executescript(f.read())
+    # Tabelas primárias: append-only + workflow
+    for tabela in ("eventos", "ingest_log", "rodadas", "passos", "transicoes", "fila"):
         try:
             rows = origem.execute(f"SELECT * FROM {tabela}").fetchall()
             if not rows:
