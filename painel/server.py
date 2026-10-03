@@ -54,7 +54,7 @@ def parse_ts(s):
 
 # ---------- views ----------
 
-def v_board(db):
+def v_board(db, so_excecoes=False):
     agora = dt.datetime.now().astimezone()
     limiar = int((db.execute("SELECT valor FROM meta WHERE chave='limiar_parado_min'").fetchone() or [60])[0])
     sessoes = {r["nome"]: r for r in linhas(db, "SELECT * FROM sessoes")}
@@ -80,9 +80,38 @@ def v_board(db):
         })
     colunas = {k: [c for c in cards if c["estado"] == k] for k in ESTADOS_SESSAO}
     colunas["sem registro"] = [c for c in cards if c["estado"] not in ESTADOS_SESSAO]
-    # FR1: 3 exceções do topo
-    excecoes = linhas(db, "SELECT tipo, contador, detalhe_json FROM excecoes_board")
-    return {"limiar_min": limiar, "colunas": colunas, "total": len(cards), "excecoes": excecoes}
+
+    # FR1: 3 exceções no topo (tabela excecoes_board, W09 T1)
+    excecoes = {}
+    try:
+        for r in linhas(db, "SELECT * FROM excecoes_board"):
+            excecoes[r["tipo"]] = {"contador": r["contador"], "detalhe": json.loads(r["detalhe_json"] or "[]")}
+    except sqlite3.OperationalError:
+        pass
+
+    # FR2: workers com 5 colunas (tabela status_workers, W09 T3)
+    workers = []
+    try:
+        for r in linhas(db, "SELECT * FROM status_workers ORDER BY sessao"):
+            w = {
+                "sessao": r["sessao"], "estado": r["estado"] or "",
+                "peca": r["peca"] or "", "passo": r["passo"] or "",
+                "esperando": r["esperando"], "ultima_atividade": r["ultima_atividade"],
+                "sem_tarefa_ciclos": r["sem_tarefa_ciclos"] or 0,
+            }
+            t = parse_ts(r["ultima_atividade"])
+            w["idade_min"] = round((agora - t).total_seconds() / 60) if t else None
+            workers.append(w)
+    except sqlite3.OperationalError:
+        pass
+
+    # FR3: filtro só exceções — só sessões com estado de exceção
+    if so_excecoes:
+        workers = [w for w in workers
+                   if w["estado"] == "erro" or (w["sem_tarefa_ciclos"] or 0) >= 2]
+
+    return {"limiar_min": limiar, "colunas": colunas, "total": len(cards),
+            "excecoes": excecoes, "workers": workers}
 
 
 def ordem_sessao(n):
@@ -132,15 +161,57 @@ def v_roadmap(db):
     out = []
     for r in linhas(db, "SELECT * FROM roadmap ORDER BY ordem"):
         out.append({"secao": r["secao"], "colunas": json.loads(r["colunas"]), "linha": json.loads(r["linha"])})
-    return out
+    # FR11: raias por ciclo com cards de rodadas e barra de progresso dos 15 passos
+    raias = _raias_ciclos(db)
+    return {"secoes": out, "raias": raias}
 
 
-def v_rodadas(db):
-    """T6: cada rodada com passo atual, tempo em cada passo, quem está nele."""
+def _raias_ciclos(db):
+    """FR11: agrupa rodadas em raias por ciclo (atual, próximo, depois) com progresso."""
+    PASSOS_TOTAL = 15
     try:
         rodadas = linhas(db, "SELECT * FROM rodadas ORDER BY aberta_em DESC")
     except sqlite3.OperationalError:
-        return {"rodadas": []}
+        rodadas = []
+    if not rodadas:
+        return [{"ciclo": "atual", "cards": []},
+                {"ciclo": "proximo", "cards": []},
+                {"ciclo": "depois", "cards": []}]
+    cards = []
+    for r in rodadas:
+        try:
+            passos = linhas(db, "SELECT * FROM passos WHERE rodada=? AND saida_em IS NOT NULL", r["id"])
+            concluidos = len(passos)
+        except sqlite3.OperationalError:
+            concluidos = 0
+        fechada = bool(r.get("fechada_em"))
+        cards.append({
+            "id": r["id"], "desejo": r["desejo"], "criada_por": r["criada_por"],
+            "passos_concluidos": concluidos, "passos_total": PASSOS_TOTAL,
+            "fechada": fechada,
+            "progresso_pct": round(concluidos / PASSOS_TOTAL * 100),
+        })
+    # Distribui: 1ª rodada aberta = atual, 2ª = próximo, resto = depois
+    abertas = [c for c in cards if not c["fechada"]]
+    fechadas = [c for c in cards if c["fechada"]]
+    raias = [
+        {"ciclo": "atual", "cards": abertas[:1] if abertas else []},
+        {"ciclo": "proximo", "cards": abertas[1:2] if len(abertas) > 1 else []},
+        {"ciclo": "depois", "cards": abertas[2:] + fechadas},
+    ]
+    return raias
+
+
+def v_rodadas(db, rodada_id=None):
+    """T6: cada rodada com passo atual, tempo em cada passo, quem está nele.
+    T6 065: se rodada_id dado, retorna árvore navegável (FR8, FR9, FR10)."""
+    try:
+        if rodada_id:
+            rodadas = linhas(db, "SELECT * FROM rodadas WHERE id=?", rodada_id)
+        else:
+            rodadas = linhas(db, "SELECT * FROM rodadas ORDER BY aberta_em DESC")
+    except sqlite3.OperationalError:
+        rodadas = []
     out = []
     for r in rodadas:
         passos = linhas(db, "SELECT * FROM passos WHERE rodada=? ORDER BY id", r["id"])
@@ -156,10 +227,16 @@ def v_rodadas(db):
                 t0, t1 = parse_ts(p["entrada_em"]), parse_ts(p["saida_em"])
                 if t0 and t1:
                     horas = round((t1 - t0).total_seconds() / 3600, 2)
+            # FR6: extrai hash e evidência do evidencia_json
+            try:
+                evid = json.loads(p.get("evidencia_json") or "{}")
+            except (ValueError, TypeError):
+                evid = {}
             passos_out.append({
                 "passo": p["passo"], "sessao": p["sessao"],
                 "entrada_em": p["entrada_em"], "saida_em": p["saida_em"],
                 "horas": horas, "resumo": p.get("resumo"), "resultado": p.get("resultado"),
+                "hash": evid.get("hash"), "evidencia": evid,
             })
         out.append({
             "id": r["id"], "desejo": r["desejo"], "criada_por": r["criada_por"],
@@ -167,7 +244,14 @@ def v_rodadas(db):
             "arquivo": r.get("arquivo", ""),
             "passo_atual": passo_atual, "quem": quem, "passos": passos_out,
         })
-    return {"rodadas": out}
+    # FR8: árvore navegável (tabela arvore_rodada, W09 T1-T2)
+    arvore = []
+    if rodada_id:
+        try:
+            arvore = linhas(db, "SELECT * FROM arvore_rodada WHERE rodada=? ORDER BY tipo, id_no", rodada_id)
+        except sqlite3.OperationalError:
+            pass
+    return {"rodadas": out, "arvore": arvore}
 
 
 def v_arvore(db, rodada=None):
@@ -493,6 +577,10 @@ def cria_handler(db_path, cfg):
                     return self._json(fn(db, qs.get("desde", [None])[0]))
                 if u.path == "/api/arvore":
                     return self._json(fn(db, qs.get("id", [None])[0]))
+                if u.path == "/api/board":
+                    return self._json(fn(db, so_excecoes=qs.get("so_excecoes", ["0"])[0] == "1"))
+                if u.path == "/api/rodadas":
+                    return self._json(fn(db, rodada_id=qs.get("id", [None])[0]))
                 return self._json(fn(db))
             finally:
                 db.close()
