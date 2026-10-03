@@ -1,6 +1,6 @@
 # Spec 066 — Custeio da operação e controle de sessões pelo portal
 
-- **Status**: Draft · **Lane**: full · **Date**: 2026-10-02
+- **Status**: Approved (GATE Gilsiley 02/10) · **Lane**: full · **Date**: 2026-10-02
 - **Origin**: Desejo 003 do Gilsiley, redigido pela Hindiana Assistente (.maestro/docs/desejo-003-custeio-e-controle-de-sessoes.md). Depende das rodadas 001 (spec 064: workflow em SQLite) e 002 (spec 065: board e rodada navegável).
 
 ## What and why
@@ -15,7 +15,7 @@ Finalmente, o Gilsiley quer subir e derrubar sessões do Claude Code pelo portal
 
 ### Custeio
 
-- **FR1**: O SISTEMA DEVE ler os transcripts das pastas configuradas e gravar o consumo por sessão, modelo e hora, sem armazenar o conteúdo das mensagens. O SISTEMA NÃO DEVE gravar o texto de comandos Bash nem o input ou output de ferramenta — só a classificação do desvio (ex.: "commit sem runner2", "push tentado") e o hash ou nome do arquivo.
+- **FR1**: O SISTEMA DEVE ler os transcripts das pastas configuradas e gravar o consumo por sessão, modelo e hora, sem armazenar o conteúdo das mensagens. O SISTEMA NÃO DEVE gravar o texto de comandos Bash nem o input ou output de ferramenta — só a classificação do desvio (ex.: "commit sem runner2", "push tentado") e o hash ou nome do arquivo. O ingest DEVE ser incremental: guarda o arquivo + offset de cada `.jsonl` e lê só o que é novo a cada Stop, nunca relê o arquivo inteiro.
 - **FR2**: O SISTEMA DEVE contar cada `message.id` uma única vez (deduplicação pelo streaming).
 - **FR3**: ONDE o preço de um modelo não estiver configurado, O SISTEMA DEVE exibir "preço não configurado" no lugar do valor, e não inventar.
 - **FR4**: O SISTEMA DEVE exibir o custo por sessão, por papel, por rodada e por tarefa integrada.
@@ -35,9 +35,9 @@ Finalmente, o Gilsiley quer subir e derrubar sessões do Claude Code pelo portal
 
 ### Controle de sessões
 
-- **FR15**: QUANDO o usuário pedir para subir uma sessão de um papel, O SISTEMA DEVE pedir confirmação na tela, chamar o lançador com o `session_id` do mapa e registrar o evento.
-- **FR16**: QUANDO o usuário pedir para derrubar uma sessão, O SISTEMA DEVE sempre pedir confirmação na tela. SE a sessão tiver passo de workflow aberto, ENTÃO O SISTEMA DEVE mostrar os passos abertos e exigir confirmação dupla. O SISTEMA DEVE mostrar o PID e a linha de comando antes de confirmar, encerrar SÓ o processo cujo `session_id` case EXATAMENTE com o do mapa, nunca encerrar mais de um processo por ação, nunca encerrar a sessão que fez o pedido, e nunca encerrar Office ou Assistente sem confirmação dupla.
-- **FR17**: O SISTEMA NÃO DEVE oferecer subir ou derrubar sessões do Claude Desktop.
+- **FR15**: QUANDO o usuário pedir para subir uma sessão de um papel, O SISTEMA DEVE pedir confirmação na tela, chamar o lançador (caminho configurado em `projetos/<projeto>.json`) com o `session_id` do mapa e registrar o evento. O lançador DEVE gravar o PID (e o `session_id` quando surgir) no lançamento; sem esse registro, o portal não oferece derrubar.
+- **FR16**: QUANDO o usuário pedir para derrubar uma sessão, O SISTEMA DEVE sempre pedir confirmação na tela. SE a sessão tiver passo de workflow aberto, ENTÃO O SISTEMA DEVE mostrar os passos abertos e exigir confirmação dupla. O SISTEMA DEVE mostrar o PID e a linha de comando antes de confirmar, encerrar SÓ o processo cujo `session_id` case EXATAMENTE com o do registro de lançamento, nunca encerrar mais de um processo por ação, e nunca encerrar a sessão que fez o pedido.
+- **FR17**: O SISTEMA NÃO DEVE oferecer subir ou derrubar sessões do Claude Desktop (Office, Assistente e demais sessões Desktop ficam só em leitura e não aparecem para derrubar).
 - **FR18**: O SISTEMA DEVE avisar a Office de toda ação de subir ou derrubar.
 - **FR19**: O SISTEMA DEVE registrar no histórico quem, quando, qual sessão e por quê subiu ou derrubou.
 
@@ -78,6 +78,9 @@ Finalmente, o Gilsiley quer subir e derrubar sessões do Claude Code pelo portal
 3. O lançador `multi-session.py` já existe — o portal só o chama? → sim, o portal chama o script existente com `--name` ou `--resume`. O portal não re-implementa o lançador.
 4. Derrubar sessão: o portal mata o processo `claude.exe` pelo `session_id` na linha de comando? → sim, após aviso para commit/relatório. O `session_id` vem do mapa `contatos`/`sessoes.json`.
 5. Os 4 contadores de tokens são `input_tokens`, `output_tokens`, `cache_read_input_tokens`, `cache_creation_input_tokens`? → sim, todos de `message.usage`.
+6. FR8 "esperando permissão": o `.jsonl` registra o prompt de permissão? → provar com transcript real no clarify. Se não registrar, o FR muda de fonte (hook) ou sai. Nada na tela sem fonte.
+7. Sessão aberta com `--name` não leva `session_id` na linha de comando. Como derrubar? → o lançador grava o PID (e o `session_id` quando surgir) no lançamento. O FR16 usa esse registro. Sem registro, o portal não oferece derrubar.
+8. O caminho do `multi-session.py` é fixo? → não, vira configuração em `projetos/<projeto>.json`.
 
 <!--
   GATE (DoR — not delegable): this spec only becomes a plan after human approval.
