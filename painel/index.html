@@ -288,14 +288,16 @@ async function vRoadmap(manterFoco){
   for(const s of specs.filter(casa)) (porRepo[s.repo] ||= []).push(s);
   for(const [repo, ss] of Object.entries(porRepo)){
     const semQa = ss.filter(s=>!s.tem_qa).length;
-    h += `<section class="panel"><h2>${esc(repo)} <span class="loz idle">${ss.length} specs</span>${semQa?`<span class="loz warn">${semQa} sem qa-report</span>`:""}</h2><div class="scroll"><table>
+    // A spec without plan or tasks skipped the step where domain, data model and slicing are decided.
+    const semPlano = ss.filter(s=>!s.tem_plan || !s.tasks_total).length;
+    h += `<section class="panel"><h2>${esc(repo)} <span class="loz idle">${ss.length} specs</span>${semPlano?`<span class="loz bad">${semPlano} sem plan ou tasks</span>`:""}${semQa?`<span class="loz warn">${semQa} sem qa-report</span>`:""}</h2><div class="scroll"><table>
       <thead><tr><th>#</th><th>Spec</th><th>Status</th><th>Tasks</th><th>Plan</th><th>QA</th><th>Mexida em</th></tr></thead><tbody>`;
     for(const s of ss){
       const pct = s.tasks_total? Math.round(s.tasks_feitas/s.tasks_total*100):0;
       h += `<tr><td class="mono">${esc(s.numero)}</td><td>${esc(s.titulo)}<br><span class="legenda mono">${esc(s.slug)}</span></td>
         <td>${s.status?`<span class="loz ${/implement|conclu|done|aprov/i.test(s.status)?"ok":"idle"}">${esc(s.status.slice(0,28))}</span>`:`<span class="legenda">—</span>`}</td>
-        <td>${s.tasks_total?`<div class="prog" title="${s.tasks_feitas}/${s.tasks_total}"><i style="width:${pct}%"></i></div><span class="legenda">${s.tasks_feitas}/${s.tasks_total}</span>`:`<span class="legenda">sem tasks</span>`}</td>
-        <td>${s.tem_plan?"✓":"—"}</td><td>${s.tem_qa?"✓":`<span class="loz warn">falta</span>`}</td><td class="legenda">${esc((s.modificado||"").slice(0,16).replace("T"," "))}</td></tr>`;
+        <td>${s.tasks_total?`<div class="prog" title="${s.tasks_feitas}/${s.tasks_total}"><i style="width:${pct}%"></i></div><span class="legenda">${s.tasks_feitas}/${s.tasks_total}</span>`:`<span class="loz bad">sem tasks</span>`}</td>
+        <td>${s.tem_plan?"✓":`<span class="loz bad">falta</span>`}</td><td>${s.tem_qa?"✓":`<span class="loz warn">falta</span>`}</td><td class="legenda">${esc((s.modificado||"").slice(0,16).replace("T"," "))}</td></tr>`;
     }
     h += `</tbody></table></div></section>`;
   }

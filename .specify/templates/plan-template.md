@@ -46,6 +46,27 @@
 | `checklist.md` | `ART:checklist=no` | [a quality checklist specific to this cycle] |
 | `ux-design.md` | `ART:ux-design=no` | [**touches a screen? then it is not optional** — semantic role before component] |
 
+## Domain model (declare all four — silence is not a decision)
+
+<!--
+  MANDATORY. The plan is where the domain is discussed; a cycle that skips it ships rules
+  in routes and terms nobody agreed on. Each line is a decision with a reason, read by
+  `scripts/check-conformance.sh` like the ART tokens. Source of truth: the project's
+  ubiquitous language (glossary) and its existing aggregates.
+  - aggregate: the aggregate root(s) this cycle touches or creates, or `none` with the reason.
+  - invariants: where the business rules live — `domain` (aggregate, value object, domain
+    service) or `edge` (route, adapter, screen). `edge` needs the reason it cannot be domain.
+  - glossary: `changed` (terms added or changed in the ubiquitous language) or `none` with the reason.
+  - ports: `changed` (ports/adapters added or changed) or `none` with the reason.
+-->
+
+| Decision | Declaration | Why |
+|---|---|---|
+| Aggregate root | `DOM:aggregate=` | [which root, or none and why] |
+| Where the invariants live | `DOM:invariants=` | [domain or edge; edge needs the reason] |
+| Ubiquitous language | `DOM:glossary=` | [changed: which terms, or none and why] |
+| Ports and adapters | `DOM:ports=` | [changed: which ports, or none and why] |
+
 ## How
 
 <!--
