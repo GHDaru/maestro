@@ -35,6 +35,7 @@ nav button:hover{background:var(--surface-2)}
 nav button[aria-current="page"]{background:var(--brand-weak);color:var(--brand);font-weight:600}
 nav .cnt{margin-left:auto;font-size:11px;color:var(--muted)}
 main{min-width:0;padding:20px 28px 40px}
+.conteudo{min-width:0}
 header.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px}
 .crumb{color:var(--muted);font-size:13px}
 h1{font-size:22px;margin:2px 0 4px;font-weight:600}
@@ -145,9 +146,11 @@ tr:hover td{background:var(--surface-2)}
     <button data-v="ia">⚙ Estado para a IA</button>
     <button data-v="operacao">⌂ Operação: equipe, infra, CI/CD, BPMN</button>
   </nav>
-  <div id="aviso-velho" style="display:none;padding:4px 12px;background:var(--warn-bg,rgba(255,193,7,.15));border-bottom:1px solid var(--warn,#f59e0b);font-size:13px"></div>
-  <div id="aviso-erro" style="display:none;padding:4px 12px"></div>
-  <main id="main" tabindex="-1"></main>
+  <div class="conteudo">
+    <div id="aviso-velho" style="display:none;padding:4px 12px;background:var(--warn-bg,rgba(255,193,7,.15));border-bottom:1px solid var(--warn,#f59e0b);font-size:13px"></div>
+    <div id="aviso-erro" style="display:none;padding:4px 12px"></div>
+    <main id="main" tabindex="-1"></main>
+  </div>
 </div>
 <aside class="drawer" id="drawer" aria-hidden="true" role="dialog" aria-label="Detalhe">
   <header><b id="dtitulo"></b><button class="btn fecha" id="dfecha">Fechar (Esc)</button></header>
