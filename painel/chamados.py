@@ -12,6 +12,8 @@ import os
 import re
 import subprocess
 
+import custo
+
 GATES = [
     ("abertura", "Abertura", "Office"),
     ("G0", "Reprodução", "Sessão de testes"),
@@ -206,6 +208,9 @@ def confere(arquivos: dict, data_hash, tem_spec: bool) -> dict:
             "desvios": sum(g["desvios"] for g in gates)}
 
 
+_docs: dict = {}
+
+
 def le_chamados(cfg: dict) -> dict:
     """Varre cfg['chamados'] = [{repo, pasta, dias}] e devolve os chamados no padrão.
 
@@ -246,6 +251,7 @@ def le_chamados(cfg: dict) -> dict:
                     ai = _git(repo, "log", "-1", "--format=%ai", h)
                     cache[h] = dt.datetime.strptime(ai.strip(), "%Y-%m-%d %H:%M:%S %z") if ai else None
                 return cache[h]
+            _docs[cid] = {"repo": repo, "arquivos": {n: {"texto": arquivos[n], "commit": arqs[n][0][:7], "quando": arqs[n][1]} for n in arquivos}}
             r = confere(arquivos, data_hash, "spec.md" in nomes)
             r.update({"id": cid, "fonte": f"{fonte['repo']}, {len({c for c, _ in arqs.values()})} commit(s), o mais recente {commit[:7]}", "commit": commit[:7], "commit_em": quando,
                       "registro": "padrão"})
@@ -276,6 +282,10 @@ _trava = threading.Lock()
 
 def _atualiza(cfg):
     try:
+        try:
+            custo.indexa(cfg, os.path.join(os.path.dirname(os.path.abspath(__file__)), "dados", "custo.db"))
+        except Exception:  # sem custo a trilha só fica sem tokens
+            pass
         dados = le_chamados(cfg)
         with _trava:
             _cache.update(dados=dados, t=time.time(), erro="")
@@ -296,3 +306,93 @@ def em_cache(cfg, idade_max=120, forcar=False):
         dados = _cache["dados"]
         return {"pronto": dados is not None, "atualizando": _cache["rodando"], "erro": _cache["erro"],
                 **(dados or {"gates": [{"gate": g, "nome": n, "dono": d} for g, n, d in GATES], "chamados": []})}
+
+
+# ---------- trilha do chamado: cada passo com documento, quem, quando, hash e tokens (para IA e auditoria) ----------
+
+ATIV = [(r"^test", "teste vermelho"), (r"^merge|cherry", "integração"), (r"critica|veredito|review", "veredito"),
+        (r"^fix.*verde|^feat", "implementação (verde)"), (r"^fix", "correção"), (r"^docs", "documento")]
+
+
+def _utc(iso: str) -> dt.datetime | None:
+    try:
+        return dt.datetime.fromisoformat(iso).astimezone(dt.timezone.utc)
+    except (TypeError, ValueError):
+        d = data(iso)
+        return d.astimezone(dt.timezone.utc) if d else None
+
+
+def trilha(cfg: dict, cid: str) -> dict:
+    dados = _cache.get("dados") or {}
+    c = next((x for x in dados.get("chamados", []) if x["id"] == cid), None)
+    docs = _docs.get(cid)
+    if not c or not docs:
+        return {"erro": "chamado ainda não lido (abra a aba Chamados e espere a leitura do git)"}
+    repo = docs["repo"]
+    hab = cabecalho(docs["arquivos"].get("00-chamado.md", {}).get("texto", ""))
+    apelidos = [a.strip() for a in hab.get("apelidos", "").split(",") if a.strip()] or [cid.split("-")[1] if "-" in cid else cid]
+    desde = hab.get("data", "")[:16]
+    args = ["log", "--all", "-i", "--format=%H%x1f%h%x1f%aI%x1f%s%x1f%B%x1e",
+            f"--grep=Chamado: {cid}"] + [f"--grep={a}" for a in apelidos]
+    if desde:
+        args.append(f"--since={desde}")
+    eventos, vistos = [], set()
+    for registro in (_git(repo, *args) or "").split("\x1e"):
+        partes = registro.strip("\n").split("\x1f")
+        if len(partes) < 5:
+            continue
+        h, curto, quando, assunto, corpo = partes
+        m = re.search(r"^Sessao:\s*(.+?)\s*$", corpo, re.M)
+        sessao = m.group(1) if m else ""
+        chave = (assunto, quando)
+        if chave in vistos:  # cherry-pick repete o commit com outro hash
+            continue
+        vistos.add(chave)
+        ativ = next((a for rx, a in ATIV if re.search(rx, assunto, re.I)), "commit")
+        eventos.append({"quando": quando, "quem": sessao.strip() or "?", "origem": "commit", "atividade": ativ,
+                        "gate": "G2" if ativ == "teste vermelho" else "", "hash": curto, "titulo": assunto})
+    for g in c["gates"]:
+        for i in g["itens"]:
+            d = data(i["data"])
+            eventos.append({"quando": d.isoformat() if d else "", "quem": i["por"] or "?", "origem": "arquivo de gate",
+                            "atividade": f"{g['gate']} {i['papel'] or g['nome']}".strip(), "gate": g["gate"],
+                            "veredito": i["veredito"], "hash": i["hash"], "titulo": i["arquivo"], "arquivo": i["arquivo"],
+                            "numeros": i["numeros"], "nao_conta": i["erros"],
+                            "documento": docs["arquivos"].get(i["arquivo"], {}).get("texto", "")})
+    eventos.sort(key=lambda e: _utc(e["quando"]) or dt.datetime.min.replace(tzinfo=dt.timezone.utc))
+    db_custo = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dados", "custo.db")
+    anterior = {}
+    tot = {"saida": 0, "cache_lido": 0, "entrada": 0, "turnos": 0}
+    por_gate, por_quem = {}, {}
+    for e in eventos:
+        t = _utc(e["quando"])
+        quem = e["quem"]
+        if not t or quem in ("?", "") or e["origem"] == "commit" and e["atividade"] == "documento" and False:
+            continue
+        ini = anterior.get(quem) or (t - dt.timedelta(minutes=90))
+        tk = custo.janela(db_custo, quem, ini.strftime("%Y-%m-%dT%H:%M"), t.strftime("%Y-%m-%dT%H:%M"))
+        anterior[quem] = t
+        if tk:
+            e["tokens"] = tk
+            for k in tot:
+                tot[k] += tk.get(k, 0)
+            gk = e["gate"] or "implementação"
+            pg = por_gate.setdefault(gk, {"saida": 0, "cache_lido": 0, "eventos": 0})
+            pq = por_quem.setdefault(quem, {"saida": 0, "cache_lido": 0, "eventos": 0})
+            for d_ in (pg, pq):
+                d_["saida"] += tk.get("saida", 0)
+                d_["cache_lido"] += tk.get("cache_lido", 0)
+                d_["eventos"] += 1
+    vereds = [e for e in eventos if e.get("veredito")]
+    reprov = [e for e in vereds if e["veredito"] in ("REPROVE", "RETURN", "FALHA", "INVALIDO")]
+    t0 = _utc(eventos[0]["quando"]) if eventos else None
+    tn = _utc(eventos[-1]["quando"]) if eventos else None
+    rodadas_g3 = len({e["hash"] for e in vereds if e["gate"] == "G3" and e["hash"]})
+    return {"id": cid, "titulo": c["titulo"], "onde": c["onde"], "eventos": eventos,
+            "metricas": {"eventos": len(eventos), "vereditos": len(vereds), "reprovacoes": len(reprov),
+                         "aprovacoes": sum(1 for e in vereds if e["veredito"] in ("APPROVE", "OK", "PASSA", "FALHA_ESPERADA", "REPRODUZIDO")),
+                         "rodadas_g3": rodadas_g3, "nao_contam": sum(1 for e in eventos if e.get("nao_conta")),
+                         "horas_abertura_ate_ultimo_passo": round((tn - t0).total_seconds() / 3600, 1) if t0 and tn else None,
+                         "tokens": tot, "por_gate": por_gate, "por_quem": por_quem,
+                         "nota": "tokens por janela: da ação anterior da mesma sessão neste chamado (ou 90 min antes) até esta; é estimativa, a sessão pode ter feito outra coisa na janela"},
+            "apelidos_usados": apelidos}

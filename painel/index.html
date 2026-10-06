@@ -163,6 +163,15 @@ tr:hover td{background:var(--surface-2)}
 .ch-grupo{container-type:inline-size}
 @container (max-width:1000px){.ch-linha{grid-template-columns:112px minmax(0,1fr) 48px 110px 132px}.ch-falta,.tag{display:none}.ch-tit{grid-column:1/-1;order:-1}}
 @container (max-width:620px){.ch-linha{grid-template-columns:112px minmax(0,1fr) 48px}.ch-quem,.trilho{display:none}}
+
+.ch-abas{display:flex;gap:8px;align-items:center;margin:0 0 12px}.ch-abas a{margin-left:auto}
+.tr-metricas{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.tr-metricas div{background:var(--surface-2);border-radius:var(--radius);padding:6px 10px}.tr-metricas b{display:block;font-size:17px;font-variant-numeric:tabular-nums}.tr-metricas span{font-size:11px;color:var(--muted)}
+.tr-duas{display:grid;grid-template-columns:1fr 1fr;gap:10px}.tr-tab{width:100%;border-collapse:collapse;font-size:12px}.tr-tab th,.tr-tab td{padding:3px 6px;border-bottom:1px solid var(--border);text-align:left}.tr-tab .num,.tr-linha .num{text-align:right;font-variant-numeric:tabular-nums}
+.tr-eventos{list-style:none;margin:10px 0 0;padding:0}.tr-ev{border-bottom:1px solid var(--border)}
+.tr-linha{display:grid;grid-template-columns:44px 90px 1fr 92px 64px 54px;gap:6px;align-items:center;width:100%;border:0;background:none;padding:5px 2px;font:inherit;font-size:12px;color:var(--text);text-align:left;cursor:pointer}
+.tr-linha:hover{background:var(--surface-2)}.tr-ev.naoconta .tr-linha{box-shadow:inset 3px 0 0 var(--warn)}
+.tr-doc{padding:4px 6px 10px}.tr-doc pre{white-space:pre-wrap;word-break:break-word;max-height:320px;overflow:auto;background:var(--surface-2);padding:8px;border-radius:4px;font-size:11px}
 </style>
 </head>
 <body>
@@ -508,7 +517,7 @@ async function vLote(){
 
 // ---------- plumbing ----------
 function drawer(titulo, html){ $("#dtitulo").textContent = titulo; $("#dcorpo").innerHTML = html; const d=$("#drawer"); d.classList.add("aberto"); d.setAttribute("aria-hidden","false"); $("#dfecha").focus(); }
-function fecha(){ const d=$("#drawer"); d.classList.remove("aberto"); d.setAttribute("aria-hidden","true"); document.body.classList.remove("com-detalhe"); if(atual==="chamados"){ cache.chSel=""; document.querySelectorAll(".ch-linha.sel").forEach(x=>x.classList.remove("sel")); } }
+function fecha(){ cache.chAba=""; const d=$("#drawer"); d.classList.remove("aberto"); d.setAttribute("aria-hidden","true"); document.body.classList.remove("com-detalhe"); if(atual==="chamados"){ cache.chSel=""; document.querySelectorAll(".ch-linha.sel").forEach(x=>x.classList.remove("sel")); } }
 $("#dfecha").onclick = fecha; document.addEventListener("keydown", e=>{ if(e.key==="Escape") fecha(); });
 function foca(){ const b=$("#busca"); if(b){ b.focus(); b.setSelectionRange(b.value.length,b.value.length);} }
 // ---------- Chamados e gates (padrão hindiana DOCS/processo/padrao-chamado.md) ----------
@@ -589,6 +598,33 @@ function itemHtml(i, substituido){
     ${i.objeto?`<div class="mono legenda">objeto ${esc(i.objeto)}</div>`:""}
     ${i.erros.map(e=>`<div class="naoconta-msg">Não conta: ${esc(e)}</div>`).join("")}</li>`;
 }
+
+const fmtK = n => n>=1e6 ? (n/1e6).toFixed(1)+" M" : n>=1e3 ? Math.round(n/1e3)+" mil" : String(n||0);
+async function trilhaChamado(id){
+  cache.chAba = "trilha";
+  const box = $("#ch-trilha"); box.innerHTML = `<div class="legenda">Montando a trilha (git, arquivos de gate e custo das sessões)…</div>`;
+  const t = await api("/api/chamados/"+encodeURIComponent(id)+"/trilha");
+  if(t.erro){ box.innerHTML = `<div class="aviso">${esc(t.erro)}</div>`; return; }
+  const m = t.metricas;
+  const linhasTab = (obj)=>Object.entries(obj).sort((a,b)=>b[1].saida-a[1].saida).map(([k,v])=>`<tr><td>${esc(k)}</td><td class="num">${v.eventos}</td><td class="num">${fmtK(v.saida)}</td><td class="num">${fmtK(v.cache_lido)}</td></tr>`).join("");
+  box.innerHTML = `
+    <div class="tr-metricas">
+      <div><b>${m.eventos}</b><span>passos</span></div><div><b>${m.aprovacoes}/${m.reprovacoes}</b><span>aprovações / reprovações</span></div>
+      <div><b>${m.rodadas_g3}</b><span>rodadas no G3</span></div><div><b>${m.horas_abertura_ate_ultimo_passo ?? "—"} h</b><span>da abertura ao último passo</span></div>
+      <div><b>${fmtK(m.tokens.saida)}</b><span>tokens de saída</span></div><div><b>${fmtK(m.tokens.cache_lido)}</b><span>cache lido</span></div>
+    </div>
+    <div class="tr-duas"><table class="tr-tab"><thead><tr><th>Gate</th><th>passos</th><th>saída</th><th>cache</th></tr></thead><tbody>${linhasTab(m.por_gate)}</tbody></table>
+      <table class="tr-tab"><thead><tr><th>Sessão</th><th>passos</th><th>saída</th><th>cache</th></tr></thead><tbody>${linhasTab(m.por_quem)}</tbody></table></div>
+    <div class="legenda">${esc(m.nota)}</div>
+    <ol class="tr-eventos">${t.eventos.map((e,k)=>`<li class="tr-ev${e.nao_conta?.length?" naoconta":""}">
+      <button class="tr-linha" data-k="${k}"><span class="mono">${esc((e.quando||"").slice(11,16))}</span><span>${esc(e.quem)}</span><span>${esc(e.atividade)}</span>
+        <span>${e.veredito?`<span class="loz ${["APPROVE","OK","PASSA","FALHA_ESPERADA","REPRODUZIDO"].includes(e.veredito)?"ok":["REPROVE","RETURN","FALHA","INVALIDO"].includes(e.veredito)?"bad":"info"}">${esc(e.veredito)}</span>`:""}</span>
+        <span class="mono">${esc(e.hash||"")}</span><span class="num">${e.tokens?fmtK(e.tokens.saida):""}</span></button>
+      <div class="tr-doc" hidden><div class="legenda">${esc(e.origem)}: ${esc(e.titulo||"")}${e.numeros?" · "+esc(e.numeros):""}</div>
+        ${(e.nao_conta||[]).map(x=>`<div class="naoconta-msg">Não conta: ${esc(x)}</div>`).join("")}
+        ${e.documento?`<pre class="mono">${esc(e.documento)}</pre>`:""}</div></li>`).join("")}</ol>`;
+  box.querySelectorAll(".tr-linha").forEach(b=>b.onclick=()=>{ const d=b.nextElementSibling; d.hidden=!d.hidden; });
+}
 function abreChamado(id, manter){
   const c = (cache.chamados?.chamados||[]).find(x=>x.id===id); if(!c) return;
   cache.chSel = id;
@@ -606,7 +642,7 @@ function abreChamado(id, manter){
       ${corpo}${g.falta?.length?`<div class="legenda">Falta: ${g.falta.map(esc).join("; ")}</div>`:""}
       <button class="btn mini" data-bpmn="${esc(BPMN_EL[g.gate]||"")}">Ver o passo no fluxo</button></details></li>`;
   }).join("");
-  drawer(`${c.id} · ${c.titulo}`, `
+  drawer(`${c.id} · ${c.titulo}`, `<div class="ch-abas"><button class="chip" aria-pressed="true" id="aba-resumo">Resumo</button><button class="chip" aria-pressed="false" id="aba-trilha">Trilha (IA e auditoria)</button><a class="legenda" href="/api/chamados/${encodeURIComponent(c.id)}/trilha" target="_blank">JSON para IA</a></div><div id="ch-resumo">
     <dl><dt>Tipo</dt><dd>${esc(c.tipo)}${c.escopo?" · "+esc(c.escopo):""}${c.severidade?" · "+esc(c.severidade):""}</dd>
       <dt>Aberto</dt><dd>${esc(c.aberto_em)}${c.aberto_por?" por "+esc(c.aberto_por):""}</dd>
       ${c.origem?`<dt>Origem</dt><dd>${esc(c.origem)}</dd>`:""}
@@ -614,7 +650,10 @@ function abreChamado(id, manter){
       <dt>Fonte</dt><dd class="mono">${esc(c.fonte||"")}</dd></dl>
     ${c.falta?.length?`<div class="ch-faltabox"><b>Falta para passar o ${esc(c.onde)}</b><ul>${c.falta.map(f=>`<li>${esc(f)}</li>`).join("")}</ul></div>`:""}
     <ol class="tl-lista">${linhaDoTempo}</ol>
-    <div class="legenda">↑ ↓ trocam de chamado · Esc fecha</div>`);
+    <div class="legenda">↑ ↓ trocam de chamado · Esc fecha</div></div><div id="ch-trilha" hidden></div>`);
+  $("#aba-resumo").onclick=()=>{ $("#ch-resumo").hidden=false; $("#ch-trilha").hidden=true; $("#aba-resumo").setAttribute("aria-pressed","true"); $("#aba-trilha").setAttribute("aria-pressed","false"); };
+  $("#aba-trilha").onclick=()=>{ $("#ch-resumo").hidden=true; $("#ch-trilha").hidden=false; $("#aba-resumo").setAttribute("aria-pressed","false"); $("#aba-trilha").setAttribute("aria-pressed","true"); trilhaChamado(c.id); };
+  if(cache.chAba==="trilha") $("#aba-trilha").click();
   document.querySelectorAll("#dcorpo [data-bpmn]").forEach(b=>b.onclick=()=>{ cache.focoBpmn=b.dataset.bpmn; cache.voltaChamado=c.id; fecha(); vai("processo"); });
   document.body.classList.add("com-detalhe");
   if(!manter) try{ history.replaceState(null,"","#chamados/"+id); }catch{}

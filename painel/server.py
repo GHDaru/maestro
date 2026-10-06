@@ -434,6 +434,8 @@ def cria_handler(db_path, cfg):
                 self.end_headers()
                 self.wfile.write(corpo)
                 return
+            if u.path.startswith("/api/chamados/") and u.path.endswith("/trilha"):
+                return self._json(chamados.trilha(cfg, u.path.split("/")[3]))
             if u.path == "/api/chamados":
                 return self._json(chamados.em_cache(cfg, forcar="atualizar" in parse_qs(u.query)))
             fn = ROTAS.get(u.path)
