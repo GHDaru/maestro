@@ -52,6 +52,20 @@ cd "$ROOT"
 FLOOR="${MAESTRO_MIN_CYCLE_CONFORMANCE:-42}"
 # The no-checkbox rule starts at 045 (cycle that introduced it); older cycles keep theirs.
 CRIT_FLOOR="${MAESTRO_MIN_CYCLE_CRITERIA:-45}"
+# The domain-model declarations (DOM:*) start at 067, the cycle after the 03/10 finding that a
+# whole round shipped business rules in routes because the plan was skipped. Older cycles keep theirs.
+DOM_FLOOR="${MAESTRO_MIN_CYCLE_DOMAIN:-67}"
+DOM_FLOOR_DEFAULT=67
+# Validated like ABSENCE_FLOOR: a floor that fails OPEN is not a knob, and it may only tighten.
+[[ "$DOM_FLOOR" =~ ^[0-9]+$ ]] || {
+  echo "✗ MAESTRO_MIN_CYCLE_DOMAIN='${DOM_FLOOR}' is not a number — refusing to run with an unreadable floor." >&2
+  exit 2
+}
+[[ "$((10#$DOM_FLOOR))" -le "$DOM_FLOOR_DEFAULT" ]] || {
+  echo "✗ MAESTRO_MIN_CYCLE_DOMAIN=${DOM_FLOOR} is above the built-in floor ${DOM_FLOOR_DEFAULT} — this knob may only tighten the rule, never relax it." >&2
+  exit 2
+}
+DOMAIN=(aggregate invariants glossary ports)
 TICKED_ONLY=0
 ONLY=""
 for arg in "$@"; do
@@ -334,6 +348,54 @@ for d in specs/[0-9][0-9][0-9]-*/; do
     soft "artifacts never declared (neither yes nor no): ${missing_decl[*]}"
   elif [[ "$art_bad" -eq 0 ]]; then
     ok "all ${#ARTIFACTS[@]} conditional artifacts declared with a reason"
+  fi
+
+  # ---- 3b. the domain model is DECLARED (aggregate, invariants, glossary, ports) ----
+  # The plan is where the ubiquitous language, the aggregate roots and the ports are
+  # discussed. Skipping it is silent: rules land in routes and nobody notices. Each DOM
+  # token needs a value and a reason; invariants=edge is allowed only with its reason.
+  if [[ "$((10#$n))" -lt "$((10#$DOM_FLOOR))" ]]; then
+    note "domain-model declarations: not checked below cycle ${DOM_FLOOR}"
+  else
+    dom_missing=(); dom_bad=0
+    for k in "${DOMAIN[@]}"; do
+      line="$(grep -m1 "DOM:${k}=" "$d/plan.md" || true)"
+      if [[ -z "$line" ]]; then dom_missing+=("$k"); continue; fi
+      value="$(sed -E "s/.*DOM:${k}=([A-Za-z_-]*).*/\1/" <<<"$line")"
+      reason="$(sed -E "s/.*DOM:${k}=[A-Za-z_-]*//" <<<"$line" | tr -d '|`')"
+      if [[ -z "$value" ]]; then
+        soft "domain ${k}: DOM:${k}= has no value"; dom_bad=1; continue
+      fi
+      if [[ "$k" == "invariants" && "$value" != "domain" && "$value" != "edge" ]]; then
+        # Itemized form, one rule per item: `DOM:invariants=rule_a=domain | rule_b=edge(why)`.
+        # Each item is domain or edge, and an edge item carries its reason in parentheses.
+        items="$(sed -E 's/.*DOM:invariants=//' <<<"$line" | tr -d '`')"
+        inv_ok=1
+        IFS='|' read -ra parts <<<"$items"
+        for it in "${parts[@]}"; do
+          it="$(sed -E 's/^[[:space:]]+|[[:space:]]+$//g' <<<"$it")"
+          [[ -z "$it" ]] && continue
+          if [[ "$it" =~ ^[A-Za-z0-9_.-]+=domain$ ]]; then continue; fi
+          if [[ "$it" =~ ^[A-Za-z0-9_.-]+=edge\(.+\)$ ]]; then continue; fi
+          if [[ "$it" =~ ^[A-Za-z0-9_.-]+=edge$ ]]; then
+            soft "domain invariants: '${it}' is edge with no reason — write ${it}(why it cannot live in the domain)"
+          else
+            soft "domain invariants: '${it}' — each item is rule=domain or rule=edge(why)"
+          fi
+          inv_ok=0
+        done
+        [[ "$inv_ok" -eq 1 ]] || dom_bad=1
+        continue
+      fi
+      if is_skeleton "$reason"; then
+        soft "domain ${k}: declared DOM:${k}=${value} with no reason — a declaration without a why is silence"; dom_bad=1
+      fi
+    done
+    if [[ ${#dom_missing[@]} -gt 0 ]]; then
+      soft "domain model never declared in plan.md: ${dom_missing[*]}"
+    elif [[ "$dom_bad" -eq 0 ]]; then
+      ok "domain model declared (aggregate, invariants, glossary, ports) with a reason"
+    fi
   fi
 
   # ---- 4. the closing tail survived into tasks.md -------------------------

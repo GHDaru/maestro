@@ -139,6 +139,15 @@ def semana(t):
     return f"{y}-S{w:02d}"
 
 
+def _ambiente(evento):
+    """Environment named in a deploy event's evidence ("" when absent, which counts as production)."""
+    try:
+        ev = json.loads(evento.get("evidencia") or "{}")
+    except (ValueError, TypeError):
+        return ""
+    return str(ev.get("ambiente", "")).strip().lower() if isinstance(ev, dict) else ""
+
+
 def v_dora(db, dias=30):
     agora = dt.datetime.now().astimezone()
     ini = agora - dt.timedelta(days=dias)
@@ -147,8 +156,7 @@ def v_dora(db, dias=30):
     # 1. Deploy frequency: real deploys (eventos) first; merges on main only as a labelled proxy.
     deps = [e for e in linhas(db, "SELECT * FROM eventos WHERE tipo='deploy' ORDER BY ts")
             if (parse_ts(e["ts"]) or ini) >= ini
-            and '"ambiente": "dev"' not in (e.get("evidencia") or "").replace("'", '"')
-            and '"ambiente":"dev"' not in (e.get("evidencia") or "").replace(" ", "")]  # DORA counts production only
+            and _ambiente(e) in ("", "production", "producao", "produção")]  # DORA counts production only
     ok = [d for d in deps if (d.get("estado") or "").lower() in [s.lower() for s in ESTADOS_DEPLOY_OK]]
     ent = linhas(db, "SELECT * FROM entregas WHERE repo IN (SELECT repo FROM entregas) ORDER BY ts")
     por_repo = {}
