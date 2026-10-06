@@ -219,22 +219,26 @@ def le_chamados(cfg: dict) -> dict:
         pasta = fonte.get("pasta", "specs").strip("/")
         saida = _git(repo, "log", "--all", f"--since={fonte.get('dias', 14)}.days", "--format=@%H %cI",
                      "--name-only", "--", f"{pasta}/*/00-chamado.md", f"{pasta}/*/G*.md", f"{pasta}/*/spec.md") or ""
-        ultimo = {}
+        # Cada crítico commita na sua branch: junta, por arquivo, a versão mais recente em qualquer branch.
+        por_arquivo = {}
         commit = quando = None
         for linha in saida.splitlines():
             if linha.startswith("@"):
                 commit, quando = linha[1:].split(" ", 1)
             elif linha.strip() and commit:
                 partes = linha.strip().split("/")
-                if len(partes) == 3 and partes[1] not in ultimo:
-                    ultimo[partes[1]] = (commit, quando)
-        for cid, (commit, quando) in ultimo.items():
-            lista = _git(repo, "ls-tree", "--name-only", commit, "--", f"{pasta}/{cid}/") or ""
-            nomes = [p.split("/")[-1] for p in lista.splitlines()]
-            if not any(n.startswith("00-chamado") for n in nomes):
+                if len(partes) == 3:
+                    por_arquivo.setdefault(partes[1], {}).setdefault(partes[2], (commit, quando))
+        for cid, arqs in por_arquivo.items():
+            if not any(n.startswith("00-chamado") for n in arqs):
                 continue
-            arquivos = {n: _git(repo, "show", f"{commit}:{pasta}/{cid}/{n}") or "" for n in nomes
-                        if n.endswith(".md") and (n.startswith(("00-", "G")) or n == "spec.md")}
+            arquivos = {}
+            for n, (c, _) in arqs.items():
+                txt = _git(repo, "show", f"{c}:{pasta}/{cid}/{n}")
+                if txt is not None:  # arquivo apagado nesse commit
+                    arquivos[n] = txt
+            nomes = list(arquivos)
+            commit, quando = max(arqs.values(), key=lambda x: x[1])
             cache = {}
 
             def data_hash(h, repo=repo, cache=cache):
@@ -243,7 +247,7 @@ def le_chamados(cfg: dict) -> dict:
                     cache[h] = dt.datetime.strptime(ai.strip(), "%Y-%m-%d %H:%M:%S %z") if ai else None
                 return cache[h]
             r = confere(arquivos, data_hash, "spec.md" in nomes)
-            r.update({"id": cid, "fonte": f"{fonte['repo']} @ {commit[:7]}", "commit": commit[:7], "commit_em": quando,
+            r.update({"id": cid, "fonte": f"{fonte['repo']}, {len({c for c, _ in arqs.values()})} commit(s), o mais recente {commit[:7]}", "commit": commit[:7], "commit_em": quando,
                       "registro": "padrão"})
             vistos[cid] = r
     manual = []
