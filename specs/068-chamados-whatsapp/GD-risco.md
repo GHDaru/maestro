@@ -1,14 +1,24 @@
 ---
 gate: GD
 papel: risco
-objeto: specs/068-chamados-whatsapp/spec.md @ 4d62287
-veredito: B
+objeto: specs/068-chamados-whatsapp/spec.md @ 1303db8
+veredito: C
 por: Hindiana Office
-data: 2026-10-06 13:49 -0300
-data_objeto: 2026-10-06 13:46:43 -0300
+data: 2026-10-06 14:18 -0300
+data_objeto: 2026-10-06 13:50:22 -0300
 ---
 
 # GD: classe de risco do chamado 068 (chamados pelo WhatsApp)
+
+## Revisão de 06/10, 14:17: sobe para C
+
+A condição 4 disparou. O G1 do W06 (8ed2338) achou duas decisões de LGPD que só o controlador toma:
+- a base legal para tratar o telefone e as mensagens do cliente (LGPD art. 7º);
+- a base legal para guardar relato, conversa e anexos por 12 meses no repositório `chamados` (art. 16).
+
+Classe C: essas duas decisões são do Gilsiley, e o G1 só passa depois delas, com a spec corrigida e a nova crítica do W06. As condições 1 a 3 abaixo continuam valendo.
+
+## Avaliação original (classe B, 13:49)
 
 **Classe: B.** Tooling interno do Maestro, reversível, que não toca o código nem o banco do produto hindiana nem a produção.
 
