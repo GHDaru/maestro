@@ -145,7 +145,8 @@ class TestP3(Base):
         self.assertEqual(self.linhas("P3-1")[0][0], perigoso)
         log = ""
         for f in os.listdir(self.cfg["log_dir"]):
-            log += open(os.path.join(self.cfg["log_dir"], f), encoding="utf-8").read()
+            with open(os.path.join(self.cfg["log_dir"], f), encoding="utf-8") as fh:
+                log += fh.read()
         self.assertIn("P3-1", log)
         for proibido in (perigoso, "Beltrano Teste", "5547999999999", TOKEN):
             self.assertNotIn(proibido, log)
