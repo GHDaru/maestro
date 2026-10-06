@@ -172,6 +172,28 @@ tr:hover td{background:var(--surface-2)}
 .tr-linha{display:grid;grid-template-columns:44px 90px 1fr 92px 64px 54px;gap:6px;align-items:center;width:100%;border:0;background:none;padding:5px 2px;font:inherit;font-size:12px;color:var(--text);text-align:left;cursor:pointer}
 .tr-linha:hover{background:var(--surface-2)}.tr-ev.naoconta .tr-linha{box-shadow:inset 3px 0 0 var(--warn)}
 .tr-doc{padding:4px 6px 10px}.tr-doc pre{white-space:pre-wrap;word-break:break-word;max-height:320px;overflow:auto;background:var(--surface-2);padding:8px;border-radius:4px;font-size:11px}
+
+.ch-vista{display:inline-flex;gap:4px;margin-left:8px}
+.mc-scroll{overflow-x:auto}
+table.mc{border-collapse:separate;border-spacing:0;width:100%;font-size:13px}
+table.mc th,table.mc td{border-bottom:1px solid var(--border);padding:6px 6px;text-align:left;vertical-align:middle}
+table.mc thead th{font-size:11px;color:var(--muted);font-weight:700;background:var(--surface);position:sticky;top:0;text-align:center;white-space:nowrap}
+table.mc thead th.mc-fixa{text-align:left}
+.mc-fixa{position:sticky;left:0;background:var(--surface);z-index:1;min-width:240px;max-width:320px;box-shadow:1px 0 0 var(--border)}
+table.mc tbody tr:hover td{background:var(--surface-2)}table.mc tbody tr.sel td{background:var(--brand-weak)}
+.mc-tit{border:0;background:none;padding:0;font:inherit;color:var(--text);text-align:left;cursor:pointer;display:block;width:100%}
+.mc-tit b{font-weight:600}.mc-tit small{display:block;color:var(--muted);font-size:11px}
+.mc-c{text-align:center;padding:4px 3px}
+.mc-cel{min-width:32px;height:26px;border-radius:5px;border:1px solid transparent;font:600 12px ui-monospace,Consolas,monospace;cursor:pointer;position:relative}
+.mc-cel.ok{background:var(--ok-weak);color:var(--ok)}.mc-cel.run{background:var(--info-weak);color:var(--info);border-color:var(--info)}
+.mc-cel.bad{background:var(--bad-weak);color:var(--bad);border-color:var(--bad)}.mc-cel.falta{background:var(--surface-2);color:var(--muted)}
+.mc-cel.na{background:transparent;color:var(--muted)}
+.mc-cel.atual{outline:2px solid var(--text);outline-offset:1px}
+.mc-cel sup{color:var(--warn);font-size:9px;position:absolute;top:-2px;right:1px}
+.mc-cel:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
+.mc-n{font-variant-numeric:tabular-nums;color:var(--muted);white-space:nowrap}
+.mc-falta{color:var(--muted);max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl.tl-foco > details > summary{background:var(--warn-weak);border-radius:4px}
 </style>
 </head>
 <body>
@@ -539,6 +561,7 @@ async function carregaChamados(forcar){
   cache.chamados = d; return d;
 }
 async function vChamados(){
+  if(!cache.chVista){ try{ cache.chVista = localStorage.getItem("painel-ch-vista") || "lista"; }catch{ cache.chVista = "lista"; } }
   const d = cache.chamados && !cache.chamadosVelho ? cache.chamados : await carregaChamados();
   cache.chamadosVelho = false;
   const filtro = cache.chFiltro || "", quem = cache.chQuem || "", tipo = cache.chTipo || "";
@@ -568,8 +591,9 @@ async function vChamados(){
      <div class="ch-filtros"><label>Com quem <select id="ch-quem"><option value="">Todos</option>${quens.map(q=>`<option ${q===quem?"selected":""}>${esc(q)}</option>`).join("")}</select></label>
        <label>Tipo <select id="ch-tipo"><option value="">Todos</option>${["bug","melhoria","sugestao"].map(t=>`<option value="${t}" ${t===tipo?"selected":""}>${t==="sugestao"?"sugestão":t}</option>`).join("")}</select></label>
        ${filtro||quem||tipo?`<button class="btn" id="ch-limpa">Limpar filtros</button>`:""}
+       <span class="ch-vista" role="group" aria-label="Vista"><button class="chip" data-vista="lista" aria-pressed="${(cache.chVista||"lista")==="lista"}">Lista por gate</button><button class="chip" data-vista="tabela" aria-pressed="${cache.chVista==="tabela"}">Tabela (board)</button></span>
        <span class="legenda ch-leg">${Object.entries(EST).map(([k,[s,l]])=>`<span><i class="seg ${k}"></i>${s} ${l}</span>`).join("")}<span>▲ evidência que não conta</span></span></div>` +
-    (grupos.length ? grupos.map(([g,l])=>`<section class="ch-grupo"><h2>${esc(g==="entregue"?"Entregue":g+" · "+(nomeG[g]||""))} <span class="cnt">${l.length}</span></h2>
+    (cache.chVista==="tabela" ? tabelaChamados(grupos.flatMap(([,l])=>l), d.gates) : grupos.length ? grupos.map(([g,l])=>`<section class="ch-grupo"><h2>${esc(g==="entregue"?"Entregue":g+" · "+(nomeG[g]||""))} <span class="cnt">${l.length}</span></h2>
       <div role="list">${l.map(c=>{ const [s,lab,cls]=est(c.estado_atual); return `<div role="listitem" class="ch-linha${cache.chSel===c.id?" sel":""}" data-id="${esc(c.id)}" tabindex="0">
         <span class="loz ${cls}">${s} ${lab}</span>
         <span class="ch-gate"><b>${esc(c.onde)}</b> ${esc(nomeG[c.onde]||"")}</span>
@@ -586,6 +610,9 @@ async function vChamados(){
   if($("#ch-limpa")) $("#ch-limpa").onclick = ()=>{ cache.chFiltro=cache.chQuem=cache.chTipo=""; vChamados(); };
   $("#ch-atualiza").onclick = async()=>{ await carregaChamados(true); $("#ch-atualiza").textContent="Lendo o git…"; setTimeout(()=>{cache.chamadosVelho=true; vChamados();}, 4000); };
   document.querySelectorAll(".ch-linha").forEach(el=>{ el.onclick=()=>abreChamado(el.dataset.id); el.onkeydown=e=>{ if(e.key==="Enter") abreChamado(el.dataset.id); }; });
+  document.querySelectorAll("[data-vista]").forEach(b=>b.onclick=()=>{ cache.chVista=b.dataset.vista; try{ localStorage.setItem("painel-ch-vista", cache.chVista); }catch{} vChamados(); });
+  document.querySelectorAll(".mc-cel").forEach(b=>b.onclick=()=>{ abreChamado(b.dataset.id); focaGate(b.dataset.g); });
+  document.querySelectorAll(".mc-tit").forEach(b=>b.onclick=()=>abreChamado(b.dataset.id));
   if(!d.pronto || d.atualizando) setTimeout(()=>{ if(atual==="chamados"){ cache.chamadosVelho=true; vChamados(); } }, 4000);
   if(cache.chSel && todos.some(c=>c.id===cache.chSel)) abreChamado(cache.chSel, true);
 }
@@ -625,10 +652,29 @@ async function trilhaChamado(id){
         ${e.documento?`<pre class="mono">${esc(e.documento)}</pre>`:""}</div></li>`).join("")}</ol>`;
   box.querySelectorAll(".tr-linha").forEach(b=>b.onclick=()=>{ const d=b.nextElementSibling; d.hidden=!d.hidden; });
 }
+
+function tabelaChamados(lista, gates){
+  if(!lista.length) return `<div class="vazio">Nenhum chamado com esse filtro.</div>`;
+  const nomes = Object.fromEntries(gates.map(g=>[g.gate,g.nome]));
+  const cols = gates.map(g=>g.gate);
+  return `<div class="panel"><div class="mc-scroll"><table class="mc"><thead><tr><th class="mc-fixa">Chamado</th>${cols.map(g=>`<th title="${esc(nomes[g])}">${esc(g==="abertura"?"Abert.":g)}</th>`).join("")}<th>Há</th><th>Com quem</th><th>O que falta</th></tr></thead><tbody>${lista.map(c=>{
+    const por = Object.fromEntries(c.gates.map(g=>[g.gate,g]));
+    return `<tr class="${cache.chSel===c.id?"sel":""}"><td class="mc-fixa"><button class="mc-tit" data-id="${esc(c.id)}"><span class="tag ${esc(c.tipo)}">${esc({bug:"BUG",melhoria:"MEL",sugestao:"SUG"}[c.tipo]||c.tipo)}</span> <b>${esc(c.titulo)}</b><small>${esc(c.id)}${c.registro==="manual"?" · registro manual":""}</small></button></td>${cols.map(k=>{
+      const g = por[k] || {estado:"falta", detalhe:""}; const [sim,lab] = est(g.estado); const atual = k===c.onde;
+      return `<td class="mc-c"><button class="mc-cel ${g.estado}${atual?" atual":""}${g.desvios?" desv-c":""}" data-id="${esc(c.id)}" data-g="${esc(k)}" title="${esc(k)} ${esc(nomes[k]||"")}: ${esc(lab)}${g.detalhe?" · "+esc(g.detalhe):""}" aria-label="${esc(c.id)} ${esc(k)}: ${esc(lab)}">${sim}${g.desvios?"<sup>▲</sup>":""}</button></td>`; }).join("")}
+      <td class="mc-n">${c.desde?esc(idade(c.desde)):"—"}</td><td>${esc(c.com_quem||"—")}</td><td class="mc-falta">${esc((c.falta||[])[0]||"")}</td></tr>`; }).join("")}</tbody></table></div></div>`;
+}
+function focaGate(g){
+  const li = document.querySelector(`#dcorpo .tl[data-gate="${CSS.escape(g)}"]`); if(!li) return;
+  const d = li.querySelector("details"); if(d) d.open = true;
+  li.classList.add("tl-foco"); setTimeout(()=>li.classList.remove("tl-foco"), 1600);
+  li.scrollIntoView({block:"start"});
+}
 function abreChamado(id, manter){
   const c = (cache.chamados?.chamados||[]).find(x=>x.id===id); if(!c) return;
   cache.chSel = id;
   document.querySelectorAll(".ch-linha").forEach(el=>el.classList.toggle("sel", el.dataset.id===id));
+  document.querySelectorAll("table.mc tbody tr").forEach(tr=>tr.classList.toggle("sel", tr.querySelector(".mc-tit")?.dataset.id===id));
   const ga = c.gates.find(g=>g.gate===c.onde);
   const linhaDoTempo = c.gates.map(g=>{
     const [s,lab,cls] = est(g.estado); const atualG = g.gate===c.onde;
@@ -638,7 +684,7 @@ function abreChamado(id, manter){
       const hashes = Object.keys(porHash).sort((a,b)=>Math.max(...porHash[b].map(i=>Date.parse((i.data||"").replace(" ","T").replace(/ ([+-]\d\d)(\d\d)$/,"$1:$2"))||0)) - Math.max(...porHash[a].map(i=>Date.parse((i.data||"").replace(" ","T").replace(/ ([+-]\d\d)(\d\d)$/,"$1:$2"))||0)));
       corpo = hashes.map((h,k)=>`<div class="ch-hash">${h!=="—"?`@ <code>${esc(h)}</code>`:""}${k>0?` <span class="legenda">substituído por ${esc(hashes[0])}</span>`:""}</div><ul>${porHash[h].map(i=>itemHtml(i,k>0)).join("")}</ul>`).join("");
     }
-    return `<li class="tl ${g.estado}${atualG?" atual":""}"><details ${atualG?"open":""}><summary><span class="tl-ic">${s}</span><b>${esc(g.gate)}</b> ${esc(g.nome)} <span class="loz ${cls}">${esc(lab)}</span>${g.desvios?` <span class="desv">▲ ${g.desvios}</span>`:""}<div class="legenda">${esc(g.detalhe)}</div></summary>
+    return `<li class="tl ${g.estado}${atualG?" atual":""}" data-gate="${esc(g.gate)}"><details ${atualG?"open":""}><summary><span class="tl-ic">${s}</span><b>${esc(g.gate)}</b> ${esc(g.nome)} <span class="loz ${cls}">${esc(lab)}</span>${g.desvios?` <span class="desv">▲ ${g.desvios}</span>`:""}<div class="legenda">${esc(g.detalhe)}</div></summary>
       ${corpo}${g.falta?.length?`<div class="legenda">Falta: ${g.falta.map(esc).join("; ")}</div>`:""}
       <button class="btn mini" data-bpmn="${esc(BPMN_EL[g.gate]||"")}">Ver o passo no fluxo</button></details></li>`;
   }).join("");
