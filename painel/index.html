@@ -119,6 +119,50 @@ tr:hover td{background:var(--surface-2)}
 .timeline div::before{content:"";position:absolute;left:-20px;top:5px;width:10px;height:10px;border-radius:50%;background:var(--brand)}
 .legenda{font-size:12px;color:var(--muted)}
 @media (max-width:820px){.app{grid-template-columns:1fr}nav{position:static;height:auto;display:flex;flex-wrap:wrap;gap:4px}nav .grupo{display:none}nav button{width:auto}main{padding:16px}input[type=search]{width:100%}}
+
+/* chamados e gates */
+.ch-cartoes{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.ch-cartao{display:flex;flex-direction:column;align-items:flex-start;min-width:130px;border:1px solid var(--border);border-left:4px solid var(--border);background:var(--surface);border-radius:var(--radius);padding:8px 12px;cursor:pointer;font:inherit;color:var(--text);text-align:left}
+.ch-cartao b{font-size:22px;line-height:1.1;font-variant-numeric:tabular-nums}.ch-cartao span{font-size:12px;color:var(--muted)}
+.ch-cartao.bad{border-left-color:var(--bad)}.ch-cartao.warn{border-left-color:var(--warn)}.ch-cartao.info{border-left-color:var(--info)}
+.ch-cartao[aria-pressed="true"]{background:var(--brand-weak);border-color:var(--brand)}
+.ch-filtros{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:4px 0 8px;font-size:13px}
+.ch-filtros select{font:inherit;padding:4px 6px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text)}
+.ch-leg{display:flex;flex-wrap:wrap;gap:10px;margin-left:auto}.ch-leg span{display:inline-flex;align-items:center;gap:4px}
+.ch-grupo{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);margin:12px 0;overflow:hidden}
+.ch-grupo h2{font-size:13px;margin:0;padding:8px 14px;background:var(--surface-2);display:flex;gap:8px;align-items:center}
+.ch-linha{display:grid;grid-template-columns:118px 150px 52px 120px minmax(150px,1.1fr) minmax(200px,1.6fr) 40px 132px;gap:10px;align-items:center;padding:8px 14px;border-top:1px solid var(--border);cursor:pointer;font-size:13px}
+.ch-linha:hover{background:var(--surface-2)}.ch-linha.sel{background:var(--brand-weak);box-shadow:inset 3px 0 0 var(--brand)}
+.ch-linha:focus-visible{outline:2px solid var(--brand);outline-offset:-2px}
+.ch-gate b{font-family:ui-monospace,Consolas,monospace}
+.ch-idade{font-variant-numeric:tabular-nums;color:var(--muted)}.ch-idade.velho{color:var(--warn);font-weight:700}
+.ch-falta{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ch-tit{min-width:0}.ch-tit b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}.ch-tit small{color:var(--muted);font-size:11px}
+.desv{color:var(--warn);font-weight:700}
+.tag{font:600 10px ui-monospace,Consolas,monospace;border:1px solid;border-radius:3px;padding:1px 4px;text-align:center}
+.tag.bug{color:var(--bad)}.tag.melhoria{color:var(--brand)}.tag.sugestao{color:var(--muted)}
+.trilho{display:inline-flex;gap:5px;align-items:center}.trilho .fase{display:inline-flex;gap:2px}
+.seg{display:inline-block;width:8px;height:8px;border-radius:2px;border:1.5px solid var(--idle);background:transparent}
+.seg.ok{background:var(--ok);border-color:var(--ok);opacity:.55}.seg.run{background:var(--info);border-color:var(--info)}
+.seg.bad{background:var(--bad);border-color:var(--bad)}.seg.na{border-color:transparent;width:3px}
+.seg.atual{width:12px;height:12px;opacity:1}
+.ch-faltabox{background:var(--info-weak);border-radius:var(--radius);padding:10px 14px;margin:0 0 14px;font-size:13px}.ch-faltabox ul{margin:4px 0 0;padding-left:18px}
+.tl-lista{list-style:none;margin:0;padding:0;border-left:2px solid var(--border);margin-left:8px}
+.tl{position:relative;padding:4px 0 8px 18px}.tl summary{cursor:pointer;list-style:none}.tl summary::-webkit-details-marker{display:none}
+.tl-ic{position:absolute;left:-10px;top:4px;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font-size:11px;background:var(--surface);border:2px solid var(--idle);color:var(--idle)}
+.tl.ok .tl-ic{border-color:var(--ok);color:var(--ok)}.tl.run .tl-ic{border-color:var(--info);color:var(--info)}.tl.bad .tl-ic{border-color:var(--bad);color:var(--bad)}
+.tl.atual > details > summary{font-weight:600}
+.tl ul{list-style:none;margin:6px 0;padding:0;display:grid;gap:6px}
+.ch-item{border:1px solid var(--border);border-radius:var(--radius);padding:6px 10px;font-size:13px}
+.ch-item.subst{opacity:.55}.ch-item.naoconta{border-color:var(--warn)}
+.naoconta-msg{color:var(--warn);font-size:12px;font-weight:600}
+.ch-hash{font-size:12px;margin-top:6px}
+.btn.mini{padding:3px 8px;font-size:12px;margin-top:4px}
+#bpmn .hl .djs-visual > :first-child{stroke:#d97706 !important;stroke-width:5px !important}
+@media (min-width:1280px){body.com-detalhe main{margin-right:min(560px,42vw)}}
+.ch-grupo{container-type:inline-size}
+@container (max-width:1000px){.ch-linha{grid-template-columns:112px minmax(0,1fr) 48px 110px 132px}.ch-falta,.tag{display:none}.ch-tit{grid-column:1/-1;order:-1}}
+@container (max-width:620px){.ch-linha{grid-template-columns:112px minmax(0,1fr) 48px}.ch-quem,.trilho{display:none}}
 </style>
 </head>
 <body>
@@ -128,9 +172,11 @@ tr:hover td{background:var(--surface-2)}
     <div class="grupo">Agora</div>
     <button data-v="board" aria-current="page">◧ Board de agentes <span class="cnt" id="c-board"></span></button>
     <button data-v="pecas">▤ Fluxo de peças <span class="cnt" id="c-pecas"></span></button>
+    <button data-v="chamados">◆ Chamados e gates <span class="cnt" id="c-cham"></span></button>
     <div class="grupo">Planejamento</div>
     <button data-v="roadmap">⇢ Roadmap e specs <span class="cnt" id="c-specs"></span></button>
     <button data-v="decisoes">⚖ Decisões e ADRs <span class="cnt" id="c-dec"></span></button>
+    <button data-v="processo">⇄ Fluxo do chamado (BPMN)</button>
     <div class="grupo">Medição</div>
     <button data-v="dora">↗ Indicadores DORA</button>
     <button data-v="qualidade">✓ Barra, defeitos e desvios <span class="cnt" id="c-desv"></span></button>
@@ -460,22 +506,161 @@ async function vLote(){
 
 // ---------- plumbing ----------
 function drawer(titulo, html){ $("#dtitulo").textContent = titulo; $("#dcorpo").innerHTML = html; const d=$("#drawer"); d.classList.add("aberto"); d.setAttribute("aria-hidden","false"); $("#dfecha").focus(); }
-function fecha(){ const d=$("#drawer"); d.classList.remove("aberto"); d.setAttribute("aria-hidden","true"); }
+function fecha(){ const d=$("#drawer"); d.classList.remove("aberto"); d.setAttribute("aria-hidden","true"); document.body.classList.remove("com-detalhe"); if(atual==="chamados"){ cache.chSel=""; document.querySelectorAll(".ch-linha.sel").forEach(x=>x.classList.remove("sel")); } }
 $("#dfecha").onclick = fecha; document.addEventListener("keydown", e=>{ if(e.key==="Escape") fecha(); });
 function foca(){ const b=$("#busca"); if(b){ b.focus(); b.setSelectionRange(b.value.length,b.value.length);} }
+// ---------- Chamados e gates (padrão hindiana DOCS/processo/padrao-chamado.md) ----------
+const EST = {ok:["✓","passou","ok"], run:["●","em curso","info"], bad:["✕","barrado","bad"], falta:["○","não chegou","idle"], na:["–","não se aplica","idle"]};
+const FASES = [["abertura","G0","GD","G1","G2"],["G3","G4","G5","G6"],["G7","G8","G9"]];
+const BPMN_EL = {abertura:"S_chamado", G0:"G0", GD:"GD", G1:"G1", G2:"G2", G3:"G3", G4:"G4", G5:"G5", G6:"G6", G7:"G7", G8:"T_ordem", G9:"G9"};
+const ORDEM_G = ["abertura","G0","GD","G1","G2","G3","G4","G5","G6","G7","G8","G9","entregue"];
+const est = e => EST[e] || EST.falta;
+function idade(iso){ if(!iso) return ""; const m=(Date.now()-new Date(iso))/60000; if(m<60) return Math.max(1,Math.round(m))+" min"; if(m<1440) return Math.round(m/60)+" h"; return Math.round(m/1440)+" d"; }
+function parado24(c){ return c.desde && (Date.now()-new Date(c.desde))>864e5; }
+function trilho(c){
+  const por = Object.fromEntries(c.gates.map(g=>[g.gate,g]));
+  return `<span class="trilho" aria-label="Trilho: ${esc(c.onde)}">` + FASES.map(f=>`<span class="fase">`+f.map(k=>{
+    const g = por[k] || {estado:"falta"}; const atual = k===c.onde;
+    return `<i class="seg ${g.estado}${atual?" atual":""}" title="${esc(k)} · ${esc(est(g.estado)[1])}"></i>`; }).join("")+`</span>`).join("") + `</span>`;
+}
+async function carregaChamados(forcar){
+  const d = await api("/api/chamados"+(forcar?"?atualizar=1":""));
+  cache.chamados = d; return d;
+}
+async function vChamados(){
+  const d = cache.chamados && !cache.chamadosVelho ? cache.chamados : await carregaChamados();
+  cache.chamadosVelho = false;
+  const filtro = cache.chFiltro || "", quem = cache.chQuem || "", tipo = cache.chTipo || "";
+  const todos = d.chamados;
+  $("#c-cham").textContent = todos.length || "";
+  const cartoes = [
+    ["", todos.length, "abertos", ""],
+    ["bad", todos.filter(c=>c.estado_atual==="bad").length, "barrados", "bad"],
+    ["parado", todos.filter(parado24).length, "parados há mais de 24 h", "warn"],
+    ["G7", todos.filter(c=>c.onde==="G7").length, "aguardando o cliente (G7)", "info"],
+    ["G8", todos.filter(c=>c.onde==="G8").length, "aguardando a ordem (G8)", "info"],
+    ["desvio", todos.filter(c=>c.desvios>0).length, "com evidência que não conta", "warn"],
+  ];
+  const passa = c => (!filtro || (filtro==="bad"&&c.estado_atual==="bad") || (filtro==="parado"&&parado24(c)) || (filtro==="desvio"&&c.desvios>0) || c.onde===filtro)
+                    && (!quem || c.com_quem===quem) && (!tipo || c.tipo===tipo);
+  const lista = todos.filter(passa);
+  const grupos = ORDEM_G.map(g=>[g, lista.filter(c=>c.onde===g).sort((a,b)=>(a.desde||"").localeCompare(b.desde||""))]).filter(([,l])=>l.length);
+  const nomeG = Object.fromEntries(d.gates.map(g=>[g.gate,g.nome]));
+  const quens = [...new Set(todos.map(c=>c.com_quem).filter(Boolean))].sort();
+  cache.chOrdem = grupos.flatMap(([,l])=>l.map(c=>c.id));
+  $("#main").innerHTML = cabecalho("Agora / Chamados e gates", "Onde cada chamado está e o que falta",
+      "O estado vem dos arquivos de gate em specs/&lt;id&gt;/ no git, conferidos pelas regras do padrão. Linhas marcadas \"registro manual\" são anteriores ao padrão.",
+      `<button class="btn" id="ch-atualiza">${d.atualizando?"Lendo o git…":"Ler o git de novo"}</button>`) +
+    (!d.pronto ? `<div class="aviso">Lendo as pastas specs/ no git (cerca de 20 s na primeira vez)…</div>` : "") +
+    (d.erro ? `<div class="aviso">Erro ao ler o git: ${esc(d.erro)}</div>` : "") +
+    `<div class="ch-cartoes">${cartoes.map(([k,n,l,cls])=>`<button class="ch-cartao ${cls}" data-f="${k}" aria-pressed="${filtro===k&&k!==""}"><b>${n}</b><span>${esc(l)}</span></button>`).join("")}</div>
+     <div class="ch-filtros"><label>Com quem <select id="ch-quem"><option value="">Todos</option>${quens.map(q=>`<option ${q===quem?"selected":""}>${esc(q)}</option>`).join("")}</select></label>
+       <label>Tipo <select id="ch-tipo"><option value="">Todos</option>${["bug","melhoria","sugestao"].map(t=>`<option value="${t}" ${t===tipo?"selected":""}>${t==="sugestao"?"sugestão":t}</option>`).join("")}</select></label>
+       ${filtro||quem||tipo?`<button class="btn" id="ch-limpa">Limpar filtros</button>`:""}
+       <span class="legenda ch-leg">${Object.entries(EST).map(([k,[s,l]])=>`<span><i class="seg ${k}"></i>${s} ${l}</span>`).join("")}<span>▲ evidência que não conta</span></span></div>` +
+    (grupos.length ? grupos.map(([g,l])=>`<section class="ch-grupo"><h2>${esc(g==="entregue"?"Entregue":g+" · "+(nomeG[g]||""))} <span class="cnt">${l.length}</span></h2>
+      <div role="list">${l.map(c=>{ const [s,lab,cls]=est(c.estado_atual); return `<div role="listitem" class="ch-linha${cache.chSel===c.id?" sel":""}" data-id="${esc(c.id)}" tabindex="0">
+        <span class="loz ${cls}">${s} ${lab}</span>
+        <span class="ch-gate"><b>${esc(c.onde)}</b> ${esc(nomeG[c.onde]||"")}</span>
+        <span class="ch-idade${parado24(c)?" velho":""}">${c.desde?esc(idade(c.desde)):"—"}</span>
+        <span class="ch-quem">${esc(c.com_quem||"—")}</span>
+        <span class="ch-falta">${esc((c.falta||[])[0]||c.gates.find(x=>x.gate===c.onde)?.detalhe||"")}</span>
+        <span class="ch-tit"><b>${esc(c.titulo)}</b><small>${esc(c.id)}${c.registro==="manual"?" · registro manual":""}${c.desvios?` · <span class="desv">▲ ${c.desvios}</span>`:""}</small></span>
+        <span class="tag ${esc(c.tipo)}">${esc({bug:"BUG",melhoria:"MEL",sugestao:"SUG"}[c.tipo]||c.tipo)}</span>
+        ${trilho(c)}</div>`; }).join("")}</div></section>`).join("")
+      : `<div class="vazio">Nenhum chamado com esse filtro.</div>`);
+  document.querySelectorAll(".ch-cartao").forEach(b=>b.onclick=()=>{ cache.chFiltro = (cache.chFiltro===b.dataset.f?"":b.dataset.f); vChamados(); });
+  $("#ch-quem").onchange = e=>{ cache.chQuem=e.target.value; vChamados(); };
+  $("#ch-tipo").onchange = e=>{ cache.chTipo=e.target.value; vChamados(); };
+  if($("#ch-limpa")) $("#ch-limpa").onclick = ()=>{ cache.chFiltro=cache.chQuem=cache.chTipo=""; vChamados(); };
+  $("#ch-atualiza").onclick = async()=>{ await carregaChamados(true); $("#ch-atualiza").textContent="Lendo o git…"; setTimeout(()=>{cache.chamadosVelho=true; vChamados();}, 4000); };
+  document.querySelectorAll(".ch-linha").forEach(el=>{ el.onclick=()=>abreChamado(el.dataset.id); el.onkeydown=e=>{ if(e.key==="Enter") abreChamado(el.dataset.id); }; });
+  if(!d.pronto || d.atualizando) setTimeout(()=>{ if(atual==="chamados"){ cache.chamadosVelho=true; vChamados(); } }, 4000);
+  if(cache.chSel && todos.some(c=>c.id===cache.chSel)) abreChamado(cache.chSel, true);
+}
+function itemHtml(i, substituido){
+  const [s,,cls] = i.erros.length ? ["▲","","warn"] : ({APPROVE:["✓","","ok"],OK:["✓","","ok"],PASSA:["✓","","ok"],REPRODUZIDO:["✓","","ok"],FALHA_ESPERADA:["✓","","ok"],
+     REPROVE:["✕","","bad"],RETURN:["↩","","bad"],FALHA:["✕","","bad"],INVALIDO:["✕","","bad"]}[i.veredito] || ["●","","info"]);
+  return `<li class="ch-item${substituido?" subst":""}${i.erros.length?" naoconta":""}">
+    <div><span class="loz ${cls}">${s} ${esc(i.veredito||"sem veredito")}</span> <b>${esc(i.papel||"")}</b> ${esc(i.por)} <span class="legenda">${esc((i.data||"").slice(11,16))}</span></div>
+    <div class="mono legenda">${esc(i.arquivo)}${i.numeros?" · "+esc(i.numeros):""}${i.transcrito_por?" · transcrito por "+esc(i.transcrito_por):""}</div>
+    ${i.objeto?`<div class="mono legenda">objeto ${esc(i.objeto)}</div>`:""}
+    ${i.erros.map(e=>`<div class="naoconta-msg">Não conta: ${esc(e)}</div>`).join("")}</li>`;
+}
+function abreChamado(id, manter){
+  const c = (cache.chamados?.chamados||[]).find(x=>x.id===id); if(!c) return;
+  cache.chSel = id;
+  document.querySelectorAll(".ch-linha").forEach(el=>el.classList.toggle("sel", el.dataset.id===id));
+  const ga = c.gates.find(g=>g.gate===c.onde);
+  const linhaDoTempo = c.gates.map(g=>{
+    const [s,lab,cls] = est(g.estado); const atualG = g.gate===c.onde;
+    let corpo = "";
+    if(g.itens.length){
+      const porHash = {}; g.itens.forEach(i=>{ (porHash[i.hash||"—"] ||= []).push(i); });
+      const hashes = Object.keys(porHash).sort((a,b)=>Math.max(...porHash[b].map(i=>Date.parse((i.data||"").replace(" ","T").replace(/ ([+-]\d\d)(\d\d)$/,"$1:$2"))||0)) - Math.max(...porHash[a].map(i=>Date.parse((i.data||"").replace(" ","T").replace(/ ([+-]\d\d)(\d\d)$/,"$1:$2"))||0)));
+      corpo = hashes.map((h,k)=>`<div class="ch-hash">${h!=="—"?`@ <code>${esc(h)}</code>`:""}${k>0?` <span class="legenda">substituído por ${esc(hashes[0])}</span>`:""}</div><ul>${porHash[h].map(i=>itemHtml(i,k>0)).join("")}</ul>`).join("");
+    }
+    return `<li class="tl ${g.estado}${atualG?" atual":""}"><details ${atualG?"open":""}><summary><span class="tl-ic">${s}</span><b>${esc(g.gate)}</b> ${esc(g.nome)} <span class="loz ${cls}">${esc(lab)}</span>${g.desvios?` <span class="desv">▲ ${g.desvios}</span>`:""}<div class="legenda">${esc(g.detalhe)}</div></summary>
+      ${corpo}${g.falta?.length?`<div class="legenda">Falta: ${g.falta.map(esc).join("; ")}</div>`:""}
+      <button class="btn mini" data-bpmn="${esc(BPMN_EL[g.gate]||"")}">Ver o passo no fluxo</button></details></li>`;
+  }).join("");
+  drawer(`${c.id} · ${c.titulo}`, `
+    <dl><dt>Tipo</dt><dd>${esc(c.tipo)}${c.escopo?" · "+esc(c.escopo):""}${c.severidade?" · "+esc(c.severidade):""}</dd>
+      <dt>Aberto</dt><dd>${esc(c.aberto_em)}${c.aberto_por?" por "+esc(c.aberto_por):""}</dd>
+      ${c.origem?`<dt>Origem</dt><dd>${esc(c.origem)}</dd>`:""}
+      <dt>Agora</dt><dd><b>${esc(c.onde)}</b> ${esc(ga?.nome||"")} · com ${esc(c.com_quem||"—")}${c.desde?" · há "+esc(idade(c.desde)):""}</dd>
+      <dt>Fonte</dt><dd class="mono">${esc(c.fonte||"")}</dd></dl>
+    ${c.falta?.length?`<div class="ch-faltabox"><b>Falta para passar o ${esc(c.onde)}</b><ul>${c.falta.map(f=>`<li>${esc(f)}</li>`).join("")}</ul></div>`:""}
+    <ol class="tl-lista">${linhaDoTempo}</ol>
+    <div class="legenda">↑ ↓ trocam de chamado · Esc fecha</div>`);
+  document.querySelectorAll("#dcorpo [data-bpmn]").forEach(b=>b.onclick=()=>{ cache.focoBpmn=b.dataset.bpmn; cache.voltaChamado=c.id; fecha(); vai("processo"); });
+  document.body.classList.add("com-detalhe");
+  if(!manter) try{ history.replaceState(null,"","#chamados/"+id); }catch{}
+}
+document.addEventListener("keydown", e=>{
+  if(atual!=="chamados" || !$("#drawer").classList.contains("aberto") || !["ArrowDown","ArrowUp"].includes(e.key)) return;
+  const o = cache.chOrdem||[]; const i = o.indexOf(cache.chSel); const n = o[i + (e.key==="ArrowDown"?1:-1)];
+  if(n){ e.preventDefault(); abreChamado(n); document.querySelector(`.ch-linha[data-id="${CSS.escape(n)}"]`)?.scrollIntoView({block:"nearest"}); }
+});
+let bpmnViewer = null;
+function carregaScript(src){ return new Promise((ok,erro)=>{ const s=document.createElement("script"); s.src=src; s.onload=ok; s.onerror=erro; document.head.appendChild(s); }); }
+async function vProcesso(){
+  $("#main").innerHTML = cabecalho("Planejamento / Fluxo do chamado", "Do chamado aberto pelo cliente à produção",
+      "BPMN 2.0 com 12 raias e 11 gates (workflow-chamado.bpmn; abre no bpmn.io e no Camunda Modeler). Losango âmbar = gate.",
+      (cache.voltaChamado?`<button class="btn" id="bp-volta">Voltar ao ${esc(cache.voltaChamado)}</button>`:"")+`<button class="btn" id="bp-fit">Ver tudo</button>`) +
+    `<div class="ch-cartoes">${Object.entries(BPMN_EL).map(([g,el])=>`<button class="chip" data-el="${el}">${g}</button>`).join("")}</div>
+     <div id="bpmn" style="height:calc(100vh - 230px);min-height:520px;background:#fff;border:1px solid var(--border);border-radius:var(--radius)"></div>`;
+  try{
+    if(!window.BpmnJS){
+      const l=document.createElement("link"); l.rel="stylesheet"; l.href="https://unpkg.com/bpmn-js@17.11.1/dist/assets/diagram-js.css"; document.head.appendChild(l);
+      await carregaScript("https://unpkg.com/bpmn-js@17.11.1/dist/bpmn-navigated-viewer.production.min.js");
+    }
+    const xml = await (await fetch("/workflow-chamado.bpmn",{cache:"no-store"})).text();
+    bpmnViewer = new BpmnJS({container:"#bpmn"}); await bpmnViewer.importXML(xml);
+    const canvas = bpmnViewer.get("canvas");
+    const foca = id=>{ const el=bpmnViewer.get("elementRegistry").get(id); if(!el) return;
+      document.querySelectorAll(".djs-element.hl").forEach(x=>x.classList.remove("hl")); canvas.addMarker(id,"hl");
+      const w=Math.max(900,$("#bpmn").clientWidth*1.1), h=Math.max(520,$("#bpmn").clientHeight*1.1); canvas.viewbox({x:el.x+el.width/2-w/2,y:el.y+el.height/2-h/2,width:w,height:h}); };
+    if(cache.focoBpmn){ foca(cache.focoBpmn); cache.focoBpmn=""; } else canvas.viewbox({x:10,y:10,width:$("#bpmn").clientWidth/0.62,height:$("#bpmn").clientHeight/0.62});
+    document.querySelectorAll("[data-el]").forEach(b=>b.onclick=()=>foca(b.dataset.el));
+    $("#bp-fit").onclick=()=>canvas.zoom("fit-viewport");
+  }catch(e){ $("#bpmn").innerHTML=`<div class="aviso">O visualizador BPMN não carregou (${esc(e.message||e)}). O arquivo está em /workflow-chamado.bpmn.</div>`; }
+  if($("#bp-volta")) $("#bp-volta").onclick=()=>{ const id=cache.voltaChamado; cache.voltaChamado=""; vai("chamados"); setTimeout(()=>abreChamado(id),300); };
+}
+
 async function vOperacao(){
   $("#main").innerHTML = cabecalho("Operação Hindiana","Organograma, infraestrutura, CI/CD com validação de jornada e a rodada em BPMN",
     "Visão estática mantida pela Assistente (arquitetura.html). Abre também sozinha em <code>/arquitetura.html</code>.") +
     `<iframe src="/arquitetura.html?embed=1" title="Operação Hindiana" style="width:100%;height:calc(100vh - 180px);min-height:640px;border:1px solid var(--line, #d5dde4);border-radius:4px;background:transparent"></iframe>`;
 }
-const VIEWS = {operacao:vOperacao, board:vBoard, pecas:vPecas, roadmap:vRoadmap, decisoes:vDecisoes, dora:vDora, qualidade:vQualidade, documentos:vDocumentos, glossario:vGlossario, ia:vIA, higiene:vHigiene, tempo:vTempo, lote:vLote};
+const VIEWS = {chamados:vChamados, processo:vProcesso, operacao:vOperacao, board:vBoard, pecas:vPecas, roadmap:vRoadmap, decisoes:vDecisoes, dora:vDora, qualidade:vQualidade, documentos:vDocumentos, glossario:vGlossario, ia:vIA, higiene:vHigiene, tempo:vTempo, lote:vLote};
 let atual = "board";
-function vai(v){ atual = v; document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-current", b.dataset.v===v?"page":"false")); location.hash = v; VIEWS[v]().catch(e=>$("#main").innerHTML=`<div class="aviso">Erro: ${esc(e.message)}</div>`); }
+function vai(v){ fecha(); atual = v; document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-current", b.dataset.v===v?"page":"false")); if(location.hash.slice(1).split("/")[0]!==v) location.hash = v; VIEWS[v]().catch(e=>$("#main").innerHTML=`<div class="aviso">Erro: ${esc(e.message)}</div>`); }
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>vai(b.dataset.v));
 async function meta(){ const m = cache.meta = await api("/api/meta"); $("#pnome").textContent = "Maestro · "+(m.projeto||""); $("#pingest").textContent = "arquivos lidos "+(m.ingerido_em||"").slice(11,16)+" de "+(m.ingerido_em||"").slice(8,10)+"/"+(m.ingerido_em||"").slice(5,7); }
-window.addEventListener("hashchange", ()=>{ const v = location.hash.slice(1); if(v in VIEWS && v!==atual) vai(v); });
-const inicial = location.hash.slice(1);
-meta().finally(()=>vai(inicial in VIEWS ? inicial : "board"));
+window.addEventListener("hashchange", ()=>{ const v = location.hash.slice(1).split("/")[0]; if(v in VIEWS && v!==atual) vai(v); });
+const [inicial, inicialId] = location.hash.slice(1).split("/");
+meta().finally(()=>{ vai(inicial in VIEWS ? inicial : "board"); if(inicial==="chamados" && inicialId) cache.chSel = decodeURIComponent(inicialId); });
 setInterval(()=>{ if(atual==="board" && !document.activeElement?.matches("input")) vBoard(); }, 60000);
 </script>
 </body>

@@ -1,0 +1,1133 @@
+{
+ "_": "Chamados anteriores ao padrão (sem pasta specs/<id>/ com arquivos de gate). Estado digitado pela Assistente; some quando o chamado ganhar a pasta.",
+ "chamados": [
+  {
+   "id": "095b-R01-TIR3",
+   "tipo": "bug",
+   "titulo": "TIR diverge do Excel em 3 cenários",
+   "aberto_em": "05/10 15:22",
+   "escopo": "",
+   "severidade": "",
+   "aberto_por": "",
+   "origem": "",
+   "gates": [
+    {
+     "gate": "abertura",
+     "nome": "Abertura",
+     "dono": "Office",
+     "estado": "ok",
+     "detalhe": "registro anterior ao padrão",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G0",
+     "nome": "Reprodução",
+     "dono": "Sessão de testes",
+     "estado": "ok",
+     "detalhe": "W06 reproduziu (8837f33)",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "GD",
+     "nome": "Risco",
+     "dono": "Office",
+     "estado": "ok",
+     "detalhe": "Office bloqueou a produção (~15:50)",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G1",
+     "nome": "Spec",
+     "dono": "Crítico de spec",
+     "estado": "ok",
+     "detalhe": "Despacho da Office com os 3 fluxos",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G2",
+     "nome": "Vermelho",
+     "dono": "Autor e crítico",
+     "estado": "ok",
+     "detalhe": "Vermelho ea95ad0 (17:30)",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G3",
+     "nome": "Crítica e runner2",
+     "dono": "Críticos e runner2",
+     "estado": "ok",
+     "detalhe": "W02 557051a, W11 4aa2389 (Excel real 7/7), runner2 W07 297fbbf 2757/0 ×3",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G4",
+     "nome": "VM",
+     "dono": "Office",
+     "estado": "run",
+     "detalhe": "integrada na rc-095b (9bc7499); prévia no Dev em office/dev-r03-tir3",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G5",
+     "nome": "Barra no Dev",
+     "dono": "Office",
+     "estado": "falta",
+     "detalhe": "",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G6",
+     "nome": "Teste por tela",
+     "dono": "Sessão de testes",
+     "estado": "falta",
+     "detalhe": "",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G7",
+     "nome": "Aceite do cliente",
+     "dono": "Cliente",
+     "estado": "falta",
+     "detalhe": "",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G8",
+     "nome": "Ordem de produção",
+     "dono": "Gilsiley",
+     "estado": "falta",
+     "detalhe": "",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G9",
+     "nome": "Pospush",
+     "dono": "Office",
+     "estado": "falta",
+     "detalhe": "",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    }
+   ],
+   "onde": "G4",
+   "estado_atual": "run",
+   "com_quem": "Office",
+   "falta": [
+    "VM e Dev no hash da rc, junto com o R03-fix"
+   ],
+   "desde": "",
+   "desvios": 0,
+   "fonte": "registro manual da Assistente, 05/10 21:20 (antes do padrão)"
+  },
+  {
+   "id": "095b-R02",
+   "tipo": "melhoria",
+   "titulo": "Data Planejada de T4 e T5 só leitura depois do T3",
+   "aberto_em": "04/10",
+   "escopo": "",
+   "severidade": "",
+   "aberto_por": "",
+   "origem": "",
+   "gates": [
+    {
+     "gate": "abertura",
+     "nome": "Abertura",
+     "dono": "Office",
+     "estado": "ok",
+     "detalhe": "registro anterior ao padrão",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G0",
+     "nome": "Reprodução",
+     "dono": "Sessão de testes",
+     "estado": "na",
+     "detalhe": "",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "GD",
+     "nome": "Risco",
+     "dono": "Office",
+     "estado": "ok",
+     "detalhe": "ADR ola 6a7656f: R02 prevalece",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G1",
+     "nome": "Spec",
+     "dono": "Crítico de spec",
+     "estado": "ok",
+     "detalhe": "Spec 095-b",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G2",
+     "nome": "Vermelho",
+     "dono": "Autor e crítico",
+     "estado": "ok",
+     "detalhe": "Vermelho 5886164",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G3",
+     "nome": "Crítica e runner2",
+     "dono": "Críticos e runner2",
+     "estado": "ok",
+     "detalhe": "2/2 APPROVE e runner2 0/0",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G4",
+     "nome": "VM",
+     "dono": "Office",
+     "estado": "run",
+     "detalhe": "Migração 0034: descida não provada no Postgres",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G5",
+     "nome": "Barra no Dev",
+     "dono": "Office",
+     "estado": "ok",
+     "detalhe": "Barra v2 127/127 em 076d0f2",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G6",
+     "nome": "Teste por tela",
+     "dono": "Sessão de testes",
+     "estado": "ok",
+     "detalhe": "14/14 em 7963d47",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G7",
+     "nome": "Aceite do cliente",
+     "dono": "Cliente",
+     "estado": "run",
+     "detalhe": "Staging 27a19d1",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G8",
+     "nome": "Ordem de produção",
+     "dono": "Gilsiley",
+     "estado": "falta",
+     "detalhe": "",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G9",
+     "nome": "Pospush",
+     "dono": "Office",
+     "estado": "falta",
+     "detalhe": "",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    }
+   ],
+   "onde": "G4",
+   "estado_atual": "run",
+   "com_quem": "Office",
+   "falta": [
+    "Ida e volta da 0034 no Postgres da VM"
+   ],
+   "desde": "",
+   "desvios": 0,
+   "fonte": "registro manual da Assistente, 05/10 21:20 (antes do padrão)"
+  },
+  {
+   "id": "095b-R04",
+   "tipo": "melhoria",
+   "titulo": "Aviso de alterações não salvas em Impacto, Marcos e KPIs",
+   "aberto_em": "04/10",
+   "escopo": "",
+   "severidade": "",
+   "aberto_por": "",
+   "origem": "",
+   "gates": [
+    {
+     "gate": "abertura",
+     "nome": "Abertura",
+     "dono": "Office",
+     "estado": "ok",
+     "detalhe": "registro anterior ao padrão",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G0",
+     "nome": "Reprodução",
+     "dono": "Sessão de testes",
+     "estado": "na",
+     "detalhe": "",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "GD",
+     "nome": "Risco",
+     "dono": "Office",
+     "estado": "ok",
+     "detalhe": "Gilsiley: abrir a 095-b (04/10)",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G1",
+     "nome": "Spec",
+     "dono": "Crítico de spec",
+     "estado": "ok",
+     "detalhe": "Spec 095-b",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G2",
+     "nome": "Vermelho",
+     "dono": "Autor e crítico",
+     "estado": "ok",
+     "detalhe": "Vermelho ec77227",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G3",
+     "nome": "Crítica e runner2",
+     "dono": "Críticos e runner2",
+     "estado": "ok",
+     "detalhe": "2/2 APPROVE e runner2 0/0",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G4",
+     "nome": "VM",
+     "dono": "Office",
+     "estado": "ok",
+     "detalhe": "VM verde",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G5",
+     "nome": "Barra no Dev",
+     "dono": "Office",
+     "estado": "ok",
+     "detalhe": "Barra v2 127/127 em 076d0f2",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G6",
+     "nome": "Teste por tela",
+     "dono": "Sessão de testes",
+     "estado": "ok",
+     "detalhe": "14/14 em 7963d47",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G7",
+     "nome": "Aceite do cliente",
+     "dono": "Cliente",
+     "estado": "run",
+     "detalhe": "Staging 27a19d1",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G8",
+     "nome": "Ordem de produção",
+     "dono": "Gilsiley",
+     "estado": "falta",
+     "detalhe": "",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G9",
+     "nome": "Pospush",
+     "dono": "Office",
+     "estado": "falta",
+     "detalhe": "",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    }
+   ],
+   "onde": "G7",
+   "estado_atual": "run",
+   "com_quem": "Cliente",
+   "falta": [
+    "Aceite no staging, junto com a TIR3"
+   ],
+   "desde": "",
+   "desvios": 0,
+   "fonte": "registro manual da Assistente, 05/10 21:20 (antes do padrão)"
+  },
+  {
+   "id": "095b-R05",
+   "tipo": "melhoria",
+   "titulo": "Status Concluída e aviso depois do T5",
+   "aberto_em": "04/10",
+   "escopo": "",
+   "severidade": "",
+   "aberto_por": "",
+   "origem": "",
+   "gates": [
+    {
+     "gate": "abertura",
+     "nome": "Abertura",
+     "dono": "Office",
+     "estado": "ok",
+     "detalhe": "registro anterior ao padrão",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G0",
+     "nome": "Reprodução",
+     "dono": "Sessão de testes",
+     "estado": "na",
+     "detalhe": "",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "GD",
+     "nome": "Risco",
+     "dono": "Office",
+     "estado": "ok",
+     "detalhe": "Gilsiley: abrir a 095-b (04/10)",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G1",
+     "nome": "Spec",
+     "dono": "Crítico de spec",
+     "estado": "ok",
+     "detalhe": "Spec 095-b",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G2",
+     "nome": "Vermelho",
+     "dono": "Autor e crítico",
+     "estado": "ok",
+     "detalhe": "Vermelho 10069de",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G3",
+     "nome": "Crítica e runner2",
+     "dono": "Críticos e runner2",
+     "estado": "ok",
+     "detalhe": "2/2 APPROVE e runner2 0/0",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G4",
+     "nome": "VM",
+     "dono": "Office",
+     "estado": "ok",
+     "detalhe": "VM verde",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G5",
+     "nome": "Barra no Dev",
+     "dono": "Office",
+     "estado": "ok",
+     "detalhe": "Barra v2 127/127",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G6",
+     "nome": "Teste por tela",
+     "dono": "Sessão de testes",
+     "estado": "ok",
+     "detalhe": "14/14 em 7963d47",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G7",
+     "nome": "Aceite do cliente",
+     "dono": "Cliente",
+     "estado": "run",
+     "detalhe": "Staging 27a19d1",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G8",
+     "nome": "Ordem de produção",
+     "dono": "Gilsiley",
+     "estado": "falta",
+     "detalhe": "",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G9",
+     "nome": "Pospush",
+     "dono": "Office",
+     "estado": "falta",
+     "detalhe": "",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    }
+   ],
+   "onde": "G7",
+   "estado_atual": "run",
+   "com_quem": "Cliente",
+   "falta": [
+    "Aceite no staging"
+   ],
+   "desde": "",
+   "desvios": 0,
+   "fonte": "registro manual da Assistente, 05/10 21:20 (antes do padrão)"
+  },
+  {
+   "id": "095b-R06",
+   "tipo": "melhoria",
+   "titulo": "Rascunhos fora das listas, com o seletor Mostrar rascunhos",
+   "aberto_em": "04/10",
+   "escopo": "",
+   "severidade": "",
+   "aberto_por": "",
+   "origem": "",
+   "gates": [
+    {
+     "gate": "abertura",
+     "nome": "Abertura",
+     "dono": "Office",
+     "estado": "ok",
+     "detalhe": "registro anterior ao padrão",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G0",
+     "nome": "Reprodução",
+     "dono": "Sessão de testes",
+     "estado": "na",
+     "detalhe": "",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "GD",
+     "nome": "Risco",
+     "dono": "Office",
+     "estado": "ok",
+     "detalhe": "Gilsiley: abrir a 095-b (04/10)",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G1",
+     "nome": "Spec",
+     "dono": "Crítico de spec",
+     "estado": "ok",
+     "detalhe": "Spec 095-b",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G2",
+     "nome": "Vermelho",
+     "dono": "Autor e crítico",
+     "estado": "ok",
+     "detalhe": "Vermelho d73e34f",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G3",
+     "nome": "Crítica e runner2",
+     "dono": "Críticos e runner2",
+     "estado": "ok",
+     "detalhe": "2/2 APPROVE e runner2 0/0",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G4",
+     "nome": "VM",
+     "dono": "Office",
+     "estado": "ok",
+     "detalhe": "VM verde",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G5",
+     "nome": "Barra no Dev",
+     "dono": "Office",
+     "estado": "ok",
+     "detalhe": "Barra v2 127/127",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G6",
+     "nome": "Teste por tela",
+     "dono": "Sessão de testes",
+     "estado": "ok",
+     "detalhe": "14/14 em 7963d47",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G7",
+     "nome": "Aceite do cliente",
+     "dono": "Cliente",
+     "estado": "run",
+     "detalhe": "Staging 27a19d1",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G8",
+     "nome": "Ordem de produção",
+     "dono": "Gilsiley",
+     "estado": "falta",
+     "detalhe": "",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G9",
+     "nome": "Pospush",
+     "dono": "Office",
+     "estado": "falta",
+     "detalhe": "",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    }
+   ],
+   "onde": "G7",
+   "estado_atual": "run",
+   "com_quem": "Cliente",
+   "falta": [
+    "Aceite no staging"
+   ],
+   "desde": "",
+   "desvios": 0,
+   "fonte": "registro manual da Assistente, 05/10 21:20 (antes do padrão)"
+  },
+  {
+   "id": "095b-R11",
+   "tipo": "bug",
+   "titulo": "Status do marco fixo em Não iniciado antes do T3",
+   "aberto_em": "04/10",
+   "escopo": "",
+   "severidade": "",
+   "aberto_por": "",
+   "origem": "",
+   "gates": [
+    {
+     "gate": "abertura",
+     "nome": "Abertura",
+     "dono": "Office",
+     "estado": "ok",
+     "detalhe": "registro anterior ao padrão",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G0",
+     "nome": "Reprodução",
+     "dono": "Sessão de testes",
+     "estado": "ok",
+     "detalhe": "Sessão de testes: a tela mostra Não iniciado e grava Em andamento",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "GD",
+     "nome": "Risco",
+     "dono": "Office",
+     "estado": "ok",
+     "detalhe": "Gilsiley: abrir a 095-b (04/10)",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G1",
+     "nome": "Spec",
+     "dono": "Crítico de spec",
+     "estado": "ok",
+     "detalhe": "Spec 095-b",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G2",
+     "nome": "Vermelho",
+     "dono": "Autor e crítico",
+     "estado": "ok",
+     "detalhe": "Vermelho bd29190",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G3",
+     "nome": "Crítica e runner2",
+     "dono": "Críticos e runner2",
+     "estado": "ok",
+     "detalhe": "2/2 APPROVE e runner2 0/0",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G4",
+     "nome": "VM",
+     "dono": "Office",
+     "estado": "ok",
+     "detalhe": "VM verde",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G5",
+     "nome": "Barra no Dev",
+     "dono": "Office",
+     "estado": "ok",
+     "detalhe": "Barra v2 127/127",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G6",
+     "nome": "Teste por tela",
+     "dono": "Sessão de testes",
+     "estado": "ok",
+     "detalhe": "14/14 em 7963d47",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G7",
+     "nome": "Aceite do cliente",
+     "dono": "Cliente",
+     "estado": "run",
+     "detalhe": "Staging 27a19d1",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G8",
+     "nome": "Ordem de produção",
+     "dono": "Gilsiley",
+     "estado": "falta",
+     "detalhe": "",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G9",
+     "nome": "Pospush",
+     "dono": "Office",
+     "estado": "falta",
+     "detalhe": "",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    }
+   ],
+   "onde": "G7",
+   "estado_atual": "run",
+   "com_quem": "Cliente",
+   "falta": [
+    "Aceite no staging"
+   ],
+   "desde": "",
+   "desvios": 0,
+   "fonte": "registro manual da Assistente, 05/10 21:20 (antes do padrão)"
+  },
+  {
+   "id": "095b-R12",
+   "tipo": "melhoria",
+   "titulo": "Texto de ajuda do Porte",
+   "aberto_em": "04/10",
+   "escopo": "",
+   "severidade": "",
+   "aberto_por": "",
+   "origem": "",
+   "gates": [
+    {
+     "gate": "abertura",
+     "nome": "Abertura",
+     "dono": "Office",
+     "estado": "ok",
+     "detalhe": "registro anterior ao padrão",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G0",
+     "nome": "Reprodução",
+     "dono": "Sessão de testes",
+     "estado": "na",
+     "detalhe": "",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "GD",
+     "nome": "Risco",
+     "dono": "Office",
+     "estado": "ok",
+     "detalhe": "Gilsiley: abrir a 095-b (04/10)",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G1",
+     "nome": "Spec",
+     "dono": "Crítico de spec",
+     "estado": "ok",
+     "detalhe": "Spec 095-b",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G2",
+     "nome": "Vermelho",
+     "dono": "Autor e crítico",
+     "estado": "ok",
+     "detalhe": "Vermelho 25451b5",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G3",
+     "nome": "Crítica e runner2",
+     "dono": "Críticos e runner2",
+     "estado": "ok",
+     "detalhe": "2/2 APPROVE e runner2 0/0",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G4",
+     "nome": "VM",
+     "dono": "Office",
+     "estado": "ok",
+     "detalhe": "VM verde",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G5",
+     "nome": "Barra no Dev",
+     "dono": "Office",
+     "estado": "ok",
+     "detalhe": "Barra v2 127/127",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G6",
+     "nome": "Teste por tela",
+     "dono": "Sessão de testes",
+     "estado": "ok",
+     "detalhe": "14/14 em 7963d47",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G7",
+     "nome": "Aceite do cliente",
+     "dono": "Cliente",
+     "estado": "run",
+     "detalhe": "Staging 27a19d1",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G8",
+     "nome": "Ordem de produção",
+     "dono": "Gilsiley",
+     "estado": "falta",
+     "detalhe": "",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G9",
+     "nome": "Pospush",
+     "dono": "Office",
+     "estado": "falta",
+     "detalhe": "",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    }
+   ],
+   "onde": "G7",
+   "estado_atual": "run",
+   "com_quem": "Cliente",
+   "falta": [
+    "Aceite no staging"
+   ],
+   "desde": "",
+   "desvios": 0,
+   "fonte": "registro manual da Assistente, 05/10 21:20 (antes do padrão)"
+  },
+  {
+   "id": "097-MCP",
+   "tipo": "melhoria",
+   "titulo": "Servidor MCP do Hindiana, só leitura, com o JWT do usuário",
+   "aberto_em": "03/10",
+   "escopo": "",
+   "severidade": "",
+   "aberto_por": "",
+   "origem": "",
+   "gates": [
+    {
+     "gate": "abertura",
+     "nome": "Abertura",
+     "dono": "Office",
+     "estado": "ok",
+     "detalhe": "registro anterior ao padrão",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G0",
+     "nome": "Reprodução",
+     "dono": "Sessão de testes",
+     "estado": "na",
+     "detalhe": "",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "GD",
+     "nome": "Risco",
+     "dono": "Office",
+     "estado": "ok",
+     "detalhe": "Gilsiley: só leitura, todos os papéis, adapter apagado",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G1",
+     "nome": "Spec",
+     "dono": "Crítico de spec",
+     "estado": "ok",
+     "detalhe": "Spec 097",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G2",
+     "nome": "Vermelho",
+     "dono": "Autor e crítico",
+     "estado": "ok",
+     "detalhe": "Vermelho por peça (P1–P4)",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G3",
+     "nome": "Crítica e runner2",
+     "dono": "Críticos e runner2",
+     "estado": "ok",
+     "detalhe": "Críticas e runner2 da rodada 097",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G4",
+     "nome": "VM",
+     "dono": "Office",
+     "estado": "ok",
+     "detalhe": "VM verde",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G5",
+     "nome": "Barra no Dev",
+     "dono": "Office",
+     "estado": "bad",
+     "detalhe": "Fechou no Dev em dbe9034, mas sobre a base antiga: refazer sobre a 095-b",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G6",
+     "nome": "Teste por tela",
+     "dono": "Sessão de testes",
+     "estado": "falta",
+     "detalhe": "",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G7",
+     "nome": "Aceite do cliente",
+     "dono": "Cliente",
+     "estado": "falta",
+     "detalhe": "",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G8",
+     "nome": "Ordem de produção",
+     "dono": "Gilsiley",
+     "estado": "falta",
+     "detalhe": "",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    },
+    {
+     "gate": "G9",
+     "nome": "Pospush",
+     "dono": "Office",
+     "estado": "falta",
+     "detalhe": "",
+     "falta": [],
+     "itens": [],
+     "desvios": 0
+    }
+   ],
+   "onde": "G5",
+   "estado_atual": "bad",
+   "com_quem": "Office",
+   "falta": [
+    "Cherry-pick sobre a 095-b final, com VM, Dev, barra e contrato de novo"
+   ],
+   "desde": "",
+   "desvios": 0,
+   "fonte": "registro manual da Assistente, 05/10 21:20 (antes do padrão)"
+  }
+ ]
+}

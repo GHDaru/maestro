@@ -18,6 +18,7 @@ import sys
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, urlparse
 
+import chamados
 import ingest
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
@@ -417,6 +418,16 @@ def cria_handler(db_path, cfg):
                 self.end_headers()
                 self.wfile.write(corpo)
                 return
+            if u.path == "/workflow-chamado.bpmn":
+                with open(os.path.join(AQUI, "workflow-chamado.bpmn"), "rb") as f:
+                    corpo = f.read()
+                self.send_response(200)
+                self.send_header("Content-Type", "application/xml; charset=utf-8")
+                self.end_headers()
+                self.wfile.write(corpo)
+                return
+            if u.path == "/api/chamados":
+                return self._json(chamados.em_cache(cfg, forcar="atualizar" in parse_qs(u.query)))
             fn = ROTAS.get(u.path)
             if not fn:
                 return self._json({"erro": "rota inexistente"}, 404)
