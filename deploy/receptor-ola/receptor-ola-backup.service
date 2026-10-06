@@ -1,0 +1,7 @@
+[Unit]
+Description=Backup diário do banco do receptor do grupo Ola (sqlite .backup, 14 dias)
+
+[Service]
+Type=oneshot
+User=receptor
+ExecStart=/bin/sh -c 'mkdir -p /var/lib/receptor-ola/backup && sqlite3 /var/lib/receptor-ola/ola_grupo.db ".backup /var/lib/receptor-ola/backup/ola_grupo-$(date +%%Y%%m%%d).db" && find /var/lib/receptor-ola/backup -name "ola_grupo-*.db" -mtime +14 -delete'

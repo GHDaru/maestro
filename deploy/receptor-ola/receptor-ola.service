@@ -1,0 +1,20 @@
+[Unit]
+Description=Receptor HTTPS do grupo Ola (Maestro 069)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=receptor
+Group=receptor
+EnvironmentFile=/etc/receptor-ola/token.env
+ExecStart=/usr/bin/python3 /opt/receptor-ola/receptor_ola.py /opt/receptor-ola/config.json
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/receptor-ola
+ProtectHome=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

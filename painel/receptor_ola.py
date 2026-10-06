@@ -198,13 +198,16 @@ def _token_do_ambiente(nome):
 def main(argv=None):
     aqui = os.path.dirname(os.path.abspath(__file__))
     caminho = (argv or sys.argv[1:] or [os.path.join(aqui, "projetos", "hindiana.json")])[0]
-    rc = json.load(open(caminho, encoding="utf-8")).get("receptor_ola", {})
+    bruto = json.load(open(caminho, encoding="utf-8"))
+    rc = bruto.get("receptor_ola", bruto)  # aceita o hindiana.json do painel ou o config.json do LXC
+    dados = rc.get("dados", os.path.join(aqui, "dados"))  # no LXC: /var/lib/receptor-ola
     cfg = {"host": rc.get("host", "192.168.15.12"), "porta": int(rc.get("porta", 8793)),
-           "db": os.path.join(aqui, "dados", "ola_grupo.db"), "log_dir": os.path.join(aqui, "dados", "logs"),
+           "db": os.path.join(dados, "ola_grupo.db"), "log_dir": os.path.join(dados, "logs"),
            "ips": rc.get("ips", ["192.168.15.9"]), "grupos": rc.get("grupos", ["120363413483485664@g.us"]),
            "instancias": rc.get("instancias", ["whatsapp-daru"]), "max_bytes": int(rc.get("max_bytes", 65536)),
            "limite_por_min": int(rc.get("limite_por_min", 120)),
-           "cert": os.path.join(aqui, "dados", "tls", "servidor.crt"), "key": os.path.join(aqui, "dados", "tls", "servidor.key"),
+           "cert": rc.get("cert", os.path.join(dados, "tls", "servidor.crt")),
+           "key": rc.get("key", os.path.join(dados, "tls", "servidor.key")),
            "tokens": [_token_do_ambiente("OLA_WEBHOOK_TOKEN"), _token_do_ambiente("OLA_WEBHOOK_TOKEN_ANTERIOR")]}
     srv = cria_servidor(cfg)
     print(f"receptor do grupo Ola em https://{cfg['host']}:{cfg['porta']}{ROTA} (origens {', '.join(cfg['ips'])})")

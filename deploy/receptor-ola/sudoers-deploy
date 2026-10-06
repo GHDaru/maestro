@@ -1,0 +1,2 @@
+# /etc/sudoers.d/receptor-ola-deploy (root:root 0440) — conferir com: visudo -cf /etc/sudoers.d/receptor-ola-deploy
+deploy ALL=(root) NOPASSWD: /usr/local/sbin/receptor-ola-implanta, /bin/systemctl status receptor-ola, /bin/journalctl -u receptor-ola -n 200 --no-pager

@@ -1,0 +1,20 @@
+#!/bin/sh
+# /usr/local/sbin/receptor-ola-implanta (root:root 0755) — spec 069.
+# Instala o que o usuário deploy deixou em /home/deploy/entrega/ nos caminhos FIXOS abaixo e reinicia o serviço.
+# Sem argumentos: o sudoers libera só este script, então nenhum caminho vem de fora.
+set -eu
+E=/home/deploy/entrega
+for f in receptor_ola.py config.json servidor.crt servidor.key; do
+  [ -f "$E/$f" ] || { echo "falta $E/$f" >&2; exit 2; }
+  [ ! -L "$E/$f" ] || { echo "$E/$f é link simbólico: recusado" >&2; exit 2; }
+done
+python3 -m py_compile "$E/receptor_ola.py"
+python3 -c 'import json,sys; c=json.load(open(sys.argv[1])); assert c["dados"]=="/var/lib/receptor-ola" and c["cert"]=="/etc/receptor-ola/servidor.crt" and c["key"]=="/etc/receptor-ola/servidor.key"' "$E/config.json"
+install -o root -g receptor -m 0644 "$E/receptor_ola.py" /opt/receptor-ola/receptor_ola.py
+install -o root -g receptor -m 0644 "$E/config.json"     /opt/receptor-ola/config.json
+install -o root -g receptor -m 0644 "$E/servidor.crt"    /etc/receptor-ola/servidor.crt
+install -o root -g receptor -m 0640 "$E/servidor.key"    /etc/receptor-ola/servidor.key
+rm -f "$E/servidor.key"
+systemctl restart receptor-ola
+sleep 2
+systemctl is-active receptor-ola

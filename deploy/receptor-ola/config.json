@@ -1,0 +1,12 @@
+{
+  "host": "192.168.15.30",
+  "porta": 8793,
+  "ips": ["192.168.15.9", "192.168.15.12"],
+  "grupos": ["120363413483485664@g.us"],
+  "instancias": ["whatsapp-daru"],
+  "max_bytes": 65536,
+  "limite_por_min": 120,
+  "dados": "/var/lib/receptor-ola",
+  "cert": "/etc/receptor-ola/servidor.crt",
+  "key": "/etc/receptor-ola/servidor.key"
+}
