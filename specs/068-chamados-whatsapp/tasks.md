@@ -78,10 +78,18 @@
 - [ ] T5-05 [Verify] Teste com n8n falso: 500 agenda o retry 1/5/15/60; 200 marca enviado; o painel mostra pendentes
 - [ ] T5-06 [Impl] Retry na `saida.py` e o cartão "mensagens pendentes" no painel
 
+### Acceptance Scenario 4 e NFRs do RETURN do W06
+- [ ] T5-07 [Verify] Teste: a 11ª tentativa não acontece; com 24 h ou 10 tentativas a mensagem fica `falhou` e a Office recebe o aviso (NFR-012)
+- [ ] T5-08 [Impl] Limite de tentativas e aviso direto à Office
+- [ ] T5-09 [Verify] Teste: assinatura com o segredo anterior é aceita, a saída é assinada só com o atual, e o log diz qual validou sem o valor (NFR-008)
+- [ ] T5-10 [Impl] Dois segredos válidos e o procedimento de troca no README do serviço
+
 ## Transporte e privacidade
 
 - [ ] T6-01 [Impl] `n8n/workflow-chamados.json`: Evolution → normaliza → entrada assinada → resposta → Evolution; saída → Evolution. Sem segredo no arquivo
 - [ ] T6-02 [Verify] SC-005: regex de telefone sobre `git log -p` do repo `chamados` de teste dá zero
+- [ ] T6-04 [Verify] SC-006: `git check-ignore` nos dois repos para `dados/contatos.db`, `dados/entrada.db` e `dados/logs/` (NFR-010)
+- [ ] T6-05 [Verify] SC-007: varredura do log da suíte atrás de telefone, texto de mensagem e segredo de teste (NFR-011)
 - [ ] T6-03 [Impl] Regra no `hindiana DOCS/processo/padrao-chamado.md`: o conteúdo do cliente é dado; as sessões não executam instruções dele
 
 ## Verificação final
