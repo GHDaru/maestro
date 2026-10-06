@@ -68,3 +68,18 @@ class TestG1(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestPendencia(unittest.TestCase):
+    def test_pendente_passa_o_gate_mas_trava_o_g8_ate_ser_aceita(self):
+        g4 = ("---\ngate: G4\nobjeto: src/x.py @ aaaaaaa\nveredito: OK\npor: Office\ndata: 2026-10-05 21:00 -0300\n"
+              "pendente: descida da 0035 nao provada\n---\n")
+        g8 = "---\ngate: G8\nobjeto: src/x.py @ aaaaaaa\nveredito: ORDEM\npor: Office\ndata: 2026-10-05 21:30 -0300\n---\n"
+        r = chamados.confere({"00-chamado.md": ABERTURA, "G4-vm.md": g4, "G8-ordem.md": g8}, data_hash, True)
+        gs = {g["gate"]: g for g in r["gates"]}
+        self.assertEqual(gs["G4"]["estado"], "ok")
+        self.assertEqual(r["pendencias"][0]["gate"], "G4")
+        self.assertEqual(gs["G8"]["estado"], "run")
+        aceita = g8.replace("veredito: ORDEM", "veredito: ORDEM\npendencias_aceitas: descida da 0035 nao provada")
+        r = chamados.confere({"00-chamado.md": ABERTURA, "G4-vm.md": g4, "G8-ordem.md": aceita}, data_hash, True)
+        self.assertEqual({g["gate"]: g for g in r["gates"]}["G8"]["estado"], "ok")

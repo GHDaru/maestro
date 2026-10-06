@@ -109,7 +109,7 @@ def confere(arquivos: dict, data_hash, tem_spec: bool) -> dict:
     hab = cabecalho(ab_txt)
     tipo = hab.get("tipo", "")
     autores = {a.strip() for a in hab.get("autores", "").split(",") if a.strip()}
-    gates, datas = [], []
+    gates, datas, pendencias = [], [], []
     for gid, nome, dono in GATES:
         pref = PREFIXO.get(gid, gid + "-")
         itens = []
@@ -122,7 +122,8 @@ def confere(arquivos: dict, data_hash, tem_spec: bool) -> dict:
             itens.append({"arquivo": n, "papel": h.get("papel", ""), "veredito": h.get("veredito", ""),
                           "por": h.get("por", ""), "data": h.get("data", ""), "objeto": h.get("objeto", ""),
                           "hash": m.group(2) if m else "", "numeros": h.get("numeros", ""),
-                          "transcrito_por": h.get("transcrito_por", ""), "erros": erros})
+                          "transcrito_por": h.get("transcrito_por", ""), "pendente": h.get("pendente", ""),
+                          "pendencias_aceitas": h.get("pendencias_aceitas", ""), "erros": erros})
             if data(h.get("data")):
                 datas.append(data(h["data"]))
         validos = [i for i in itens if not i["erros"]]
@@ -196,7 +197,13 @@ def confere(arquivos: dict, data_hash, tem_spec: bool) -> dict:
                 v = validos[-1]["veredito"]
                 est = "ok" if v in PASSA[gid] else "bad" if v in BARRA[gid] else "run"
                 det = f"{validos[-1]['arquivo']}: {v}"
-        gates.append({"gate": gid, "nome": nome, "dono": dono, "estado": est, "detalhe": det, "falta": falta,
+                if gid == "G8" and est == "ok" and pendencias and not validos[-1]["pendencias_aceitas"]:
+                    est, det = "run", "ordem sem aceitar as pendências"
+                    falta = ["pendencias_aceitas no G8: " + "; ".join(f"{x['gate']}: {x['texto']}" for x in pendencias)]
+        pend_gate = [i["pendente"] for i in validos if i["pendente"]]
+        for t in pend_gate:
+            pendencias.append({"gate": gid, "texto": t})
+        gates.append({"gate": gid, "nome": nome, "dono": dono, "estado": est, "detalhe": det, "falta": falta, "pendente": pend_gate,
                       "itens": itens, "desvios": sum(1 for i in itens if i["erros"])})
     atual = next((g for g in gates if g["estado"] not in ("ok", "na")), None)
     desde = max(datas) if datas else data(hab.get("data"))
@@ -205,7 +212,7 @@ def confere(arquivos: dict, data_hash, tem_spec: bool) -> dict:
             "autores": sorted(autores), "gates": gates, "onde": atual["gate"] if atual else "entregue",
             "estado_atual": atual["estado"] if atual else "ok", "com_quem": atual["dono"] if atual else "",
             "falta": atual["falta"] if atual else [], "desde": desde.isoformat() if desde else "",
-            "desvios": sum(g["desvios"] for g in gates)}
+            "desvios": sum(g["desvios"] for g in gates), "pendencias": pendencias}
 
 
 _docs: dict = {}

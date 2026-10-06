@@ -194,6 +194,10 @@ table.mc tbody tr:hover td{background:var(--surface-2)}table.mc tbody tr.sel td{
 .mc-n{font-variant-numeric:tabular-nums;color:var(--muted);white-space:nowrap}
 .mc-falta{color:var(--muted);max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tl.tl-foco > details > summary{background:var(--warn-weak);border-radius:4px}
+
+.pend{color:var(--warn);font-weight:700}.pend-msg{color:var(--warn);font-size:12px;font-weight:600;margin:4px 0}
+.ch-pendbox{background:var(--warn-weak);color:var(--text);border-radius:var(--radius);padding:10px 14px;margin:0 0 10px;font-size:13px}.ch-pendbox ul{margin:4px 0 0;padding-left:18px}
+.mc-cel sub{color:var(--warn);font-size:9px;position:absolute;bottom:-1px;right:1px}
 </style>
 </head>
 <body>
@@ -592,7 +596,7 @@ async function vChamados(){
        <label>Tipo <select id="ch-tipo"><option value="">Todos</option>${["bug","melhoria","sugestao"].map(t=>`<option value="${t}" ${t===tipo?"selected":""}>${t==="sugestao"?"sugestão":t}</option>`).join("")}</select></label>
        ${filtro||quem||tipo?`<button class="btn" id="ch-limpa">Limpar filtros</button>`:""}
        <span class="ch-vista" role="group" aria-label="Vista"><button class="chip" data-vista="lista" aria-pressed="${(cache.chVista||"lista")==="lista"}">Lista por gate</button><button class="chip" data-vista="tabela" aria-pressed="${cache.chVista==="tabela"}">Tabela (board)</button></span>
-       <span class="legenda ch-leg">${Object.entries(EST).map(([k,[s,l]])=>`<span><i class="seg ${k}"></i>${s} ${l}</span>`).join("")}<span>▲ evidência que não conta</span></span></div>` +
+       <span class="legenda ch-leg">${Object.entries(EST).map(([k,[s,l]])=>`<span><i class="seg ${k}"></i>${s} ${l}</span>`).join("")}<span>▲ evidência que não conta</span><span>⚑ pendência aberta</span></span></div>` +
     (cache.chVista==="tabela" ? tabelaChamados(grupos.flatMap(([,l])=>l), d.gates) : grupos.length ? grupos.map(([g,l])=>`<section class="ch-grupo"><h2>${esc(g==="entregue"?"Entregue":g+" · "+(nomeG[g]||""))} <span class="cnt">${l.length}</span></h2>
       <div role="list">${l.map(c=>{ const [s,lab,cls]=est(c.estado_atual); return `<div role="listitem" class="ch-linha${cache.chSel===c.id?" sel":""}" data-id="${esc(c.id)}" tabindex="0">
         <span class="loz ${cls}">${s} ${lab}</span>
@@ -600,7 +604,7 @@ async function vChamados(){
         <span class="ch-idade${parado24(c)?" velho":""}">${c.desde?esc(idade(c.desde)):"—"}</span>
         <span class="ch-quem">${esc(c.com_quem||"—")}</span>
         <span class="ch-falta">${esc((c.falta||[])[0]||c.gates.find(x=>x.gate===c.onde)?.detalhe||"")}</span>
-        <span class="ch-tit"><b>${esc(c.titulo)}</b><small>${esc(c.id)}${c.registro==="manual"?" · registro manual":""}${c.desvios?` · <span class="desv">▲ ${c.desvios}</span>`:""}</small></span>
+        <span class="ch-tit"><b>${esc(c.titulo)}</b><small>${esc(c.id)}${c.registro==="manual"?" · registro manual":""}${c.desvios?` · <span class="desv">▲ ${c.desvios}</span>`:""}${c.pendencias?.length?` · <span class="pend">⚑ ${c.pendencias.length}</span>`:""}</small></span>
         <span class="tag ${esc(c.tipo)}">${esc({bug:"BUG",melhoria:"MEL",sugestao:"SUG"}[c.tipo]||c.tipo)}</span>
         ${trilho(c)}</div>`; }).join("")}</div></section>`).join("")
       : `<div class="vazio">Nenhum chamado com esse filtro.</div>`);
@@ -661,7 +665,7 @@ function tabelaChamados(lista, gates){
     const por = Object.fromEntries(c.gates.map(g=>[g.gate,g]));
     return `<tr class="${cache.chSel===c.id?"sel":""}"><td class="mc-fixa"><button class="mc-tit" data-id="${esc(c.id)}"><span class="tag ${esc(c.tipo)}">${esc({bug:"BUG",melhoria:"MEL",sugestao:"SUG"}[c.tipo]||c.tipo)}</span> <b>${esc(c.titulo)}</b><small>${esc(c.id)}${c.registro==="manual"?" · registro manual":""}</small></button></td>${cols.map(k=>{
       const g = por[k] || {estado:"falta", detalhe:""}; const [sim,lab] = est(g.estado); const atual = k===c.onde;
-      return `<td class="mc-c"><button class="mc-cel ${g.estado}${atual?" atual":""}${g.desvios?" desv-c":""}" data-id="${esc(c.id)}" data-g="${esc(k)}" title="${esc(k)} ${esc(nomes[k]||"")}: ${esc(lab)}${g.detalhe?" · "+esc(g.detalhe):""}" aria-label="${esc(c.id)} ${esc(k)}: ${esc(lab)}">${sim}${g.desvios?"<sup>▲</sup>":""}</button></td>`; }).join("")}
+      return `<td class="mc-c"><button class="mc-cel ${g.estado}${atual?" atual":""}${g.desvios?" desv-c":""}" data-id="${esc(c.id)}" data-g="${esc(k)}" title="${esc(k)} ${esc(nomes[k]||"")}: ${esc(lab)}${g.detalhe?" · "+esc(g.detalhe):""}" aria-label="${esc(c.id)} ${esc(k)}: ${esc(lab)}">${sim}${g.desvios?"<sup>▲</sup>":""}${(g.pendente||[]).length?"<sub>⚑</sub>":""}</button></td>`; }).join("")}
       <td class="mc-n">${c.desde?esc(idade(c.desde)):"—"}</td><td>${esc(c.com_quem||"—")}</td><td class="mc-falta">${esc((c.falta||[])[0]||"")}</td></tr>`; }).join("")}</tbody></table></div></div>`;
 }
 function focaGate(g){
@@ -685,7 +689,7 @@ function abreChamado(id, manter){
       corpo = hashes.map((h,k)=>`<div class="ch-hash">${h!=="—"?`@ <code>${esc(h)}</code>`:""}${k>0?` <span class="legenda">substituído por ${esc(hashes[0])}</span>`:""}</div><ul>${porHash[h].map(i=>itemHtml(i,k>0)).join("")}</ul>`).join("");
     }
     return `<li class="tl ${g.estado}${atualG?" atual":""}" data-gate="${esc(g.gate)}"><details ${atualG?"open":""}><summary><span class="tl-ic">${s}</span><b>${esc(g.gate)}</b> ${esc(g.nome)} <span class="loz ${cls}">${esc(lab)}</span>${g.desvios?` <span class="desv">▲ ${g.desvios}</span>`:""}<div class="legenda">${esc(g.detalhe)}</div></summary>
-      ${corpo}${g.falta?.length?`<div class="legenda">Falta: ${g.falta.map(esc).join("; ")}</div>`:""}
+      ${(g.pendente||[]).map(t=>`<div class="pend-msg">⚑ Pendente: ${esc(t)}</div>`).join("")}${corpo}${g.falta?.length?`<div class="legenda">Falta: ${g.falta.map(esc).join("; ")}</div>`:""}
       <button class="btn mini" data-bpmn="${esc(BPMN_EL[g.gate]||"")}">Ver o passo no fluxo</button></details></li>`;
   }).join("");
   drawer(`${c.id} · ${c.titulo}`, `<div class="ch-abas"><button class="chip" aria-pressed="true" id="aba-resumo">Resumo</button><button class="chip" aria-pressed="false" id="aba-trilha">Trilha (IA e auditoria)</button><a class="legenda" href="/api/chamados/${encodeURIComponent(c.id)}/trilha" target="_blank">JSON para IA</a></div><div id="ch-resumo">
@@ -694,6 +698,7 @@ function abreChamado(id, manter){
       ${c.origem?`<dt>Origem</dt><dd>${esc(c.origem)}</dd>`:""}
       <dt>Agora</dt><dd><b>${esc(c.onde)}</b> ${esc(ga?.nome||"")} · com ${esc(c.com_quem||"—")}${c.desde?" · há "+esc(idade(c.desde)):""}</dd>
       <dt>Fonte</dt><dd class="mono">${esc(c.fonte||"")}</dd></dl>
+    ${c.pendencias?.length?`<div class="ch-pendbox"><b>⚑ Pendências abertas (travam a ordem de produção até serem aceitas no G8)</b><ul>${c.pendencias.map(x=>`<li>${esc(x.gate)}: ${esc(x.texto)}</li>`).join("")}</ul></div>`:""}
     ${c.falta?.length?`<div class="ch-faltabox"><b>Falta para passar o ${esc(c.onde)}</b><ul>${c.falta.map(f=>`<li>${esc(f)}</li>`).join("")}</ul></div>`:""}
     <ol class="tl-lista">${linhaDoTempo}</ol>
     <div class="legenda">↑ ↓ trocam de chamado · Esc fecha</div></div><div id="ch-trilha" hidden></div>`);
