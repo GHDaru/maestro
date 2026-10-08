@@ -1,6 +1,6 @@
 ---
 gate: G3
-papel: seguranca
+papel: codigo
 objeto: painel/entrada/saida.py @ 5fb3557
 veredito: APPROVE
 por: Worker06
