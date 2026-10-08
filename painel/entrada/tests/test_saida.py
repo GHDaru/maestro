@@ -30,7 +30,7 @@ class TestSaida(unittest.TestCase):
 
     def test_enfileira_cria_pendente(self):
         """enfileira cria uma mensagem pendente com tentativas=0."""
-        sid = saida.enfileira(self.db_path, chamado=CHAMADO, contato=CONTATO, texto=TEXTO)
+        sid = saida.enfileira(self.db_path, chamado=CHAMADO, contato=CONTATO, texto=TEXTO, agora=self.agora)
         self.assertIsNotNone(sid)
         pend = saida.pendentes(self.db_path, agora=self.agora)
         self.assertEqual(len(pend), 1)
@@ -38,7 +38,7 @@ class TestSaida(unittest.TestCase):
 
     def test_200_marca_enviado(self):
         """send_fn retorna 200 → marca enviado, sai da fila."""
-        saida.enfileira(self.db_path, chamado=CHAMADO, contato=CONTATO, texto=TEXTO)
+        saida.enfileira(self.db_path, chamado=CHAMADO, contato=CONTATO, texto=TEXTO, agora=self.agora)
         res = saida.processa_fila(self.db_path, send_fn=lambda msg: 200, agora=self.agora)
         self.assertEqual(res["enviados"], 1)
         self.assertEqual(res["falhas"], 0)
@@ -46,7 +46,7 @@ class TestSaida(unittest.TestCase):
 
     def test_500_agenda_retry_1_min(self):
         """send_fn retorna 500 → agenda retry em 1 min, fica pendente."""
-        saida.enfileira(self.db_path, chamado=CHAMADO, contato=CONTATO, texto=TEXTO)
+        saida.enfileira(self.db_path, chamado=CHAMADO, contato=CONTATO, texto=TEXTO, agora=self.agora)
         res = saida.processa_fila(self.db_path, send_fn=lambda msg: 500, agora=self.agora)
         self.assertEqual(res["enviados"], 0)
         self.assertEqual(res["falhas"], 0)
@@ -58,7 +58,7 @@ class TestSaida(unittest.TestCase):
 
     def test_retry_intervals_1_5_15_60(self):
         """Os intervalos de retry são 1, 5, 15, 60 min."""
-        sid = saida.enfileira(self.db_path, chamado=CHAMADO, contato=CONTATO, texto=TEXTO)
+        sid = saida.enfileira(self.db_path, chamado=CHAMADO, contato=CONTATO, texto=TEXTO, agora=self.agora)
         esperados = [1, 5, 15, 60]
         t = self.agora
         for i, esperado in enumerate(esperados):
@@ -71,7 +71,7 @@ class TestSaida(unittest.TestCase):
 
     def test_10_tentativas_marca_falhou(self):
         """Após 10 tentativas, a mensagem fica 'falhou' (NFR-012)."""
-        saida.enfileira(self.db_path, chamado=CHAMADO, contato=CONTATO, texto=TEXTO)
+        saida.enfileira(self.db_path, chamado=CHAMADO, contato=CONTATO, texto=TEXTO, agora=self.agora)
         t = self.agora
         for _ in range(10):
             saida.processa_fila(self.db_path, send_fn=lambda msg: 500, agora=t)
@@ -85,7 +85,7 @@ class TestSaida(unittest.TestCase):
 
     def test_24h_marca_falhou(self):
         """Após 24h na fila, mesmo com poucas tentativas, fica 'falhou'."""
-        saida.enfileira(self.db_path, chamado=CHAMADO, contato=CONTATO, texto=TEXTO)
+        saida.enfileira(self.db_path, chamado=CHAMADO, contato=CONTATO, texto=TEXTO, agora=self.agora)
         # Simular que foi enfileirado há 24h+1min
         import sqlite3
         antigo = (self.agora - dt.timedelta(hours=24, minutes=1)).isoformat()
@@ -100,8 +100,8 @@ class TestSaida(unittest.TestCase):
 
     def test_pendentes_conta(self):
         """O painel pode ver quantas mensagens estão pendentes."""
-        saida.enfileira(self.db_path, chamado=CHAMADO, contato=CONTATO, texto=TEXTO)
-        saida.enfileira(self.db_path, chamado="100", contato=CONTATO, texto="outra")
+        saida.enfileira(self.db_path, chamado=CHAMADO, contato=CONTATO, texto=TEXTO, agora=self.agora)
+        saida.enfileira(self.db_path, chamado="100", contato=CONTATO, texto="outra", agora=self.agora)
         self.assertEqual(saida.conta_pendentes(self.db_path, agora=self.agora), 2)
 
 
