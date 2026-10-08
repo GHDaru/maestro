@@ -4,9 +4,9 @@ papel: runner2
 objeto: painel/entrada/saida.py @ 5fb3557
 veredito: OK
 por: W13
-data: 2026-10-08 14:59 -0300
+data: 2026-10-08 15:19 -0300
 data_objeto: 2026-10-08 14:40:09 -0300
-numeros: "painel/ 63 passed 0 failed; global 73 passed 1 failed (companion smoke, não relacionado a 068)"
+numeros: "pytest 63/0/0 (painel/); pytest global 73/1/0 (falha anterior, presente em 48ffd83, exclusão pendente da Office)"
 ---
 
 # G3 runner2 — 068 P2 @ 5fb3557
@@ -15,26 +15,31 @@ Objeto: painel/entrada/saida.py @ 5fb3557
 
 ## Veredito: OK
 
-0 failed, 0 errors nos testes do 068 (painel/). A 1 falha global é em `companion/backend/tests/test_smoke.py`, não relacionada ao 068 P2.
+0 failed, 0 errors na suíte relevante (painel/). A 1 falha global é anterior à trilha 068, presente em 48ffd83 (base sem 068), exclusão pendente da Office.
 
-## Evidência (runner2, clone limpo /tmp/maestro-068 @ 5fb3557)
+## Evidência (runner2, clone limpo)
 
-### pytest (painel/ — 068 P2)
+### pytest — suíte painel/ (068 P2) @ 5fb3557
 ```
 63 passed, 0 failed, 0 errors
 ```
 ✓
 
-### pytest (global — contexto)
+### pytest — global @ 5fb3557
 ```
-1 failed, 73 passed
+73 passed, 1 failed, 0 errors
 FAILED companion/backend/tests/test_smoke.py::test_corpus_cobre_todas_as_paginas_do_livro
 ```
-A falha é em `companion/backend`, não em `painel/`. Não relacionada ao 068 P2.
+A falha: `corpus desatualizado — Páginas ausentes: ['Catálogo do ecossistema']`.
 
-## Clone
+### pytest — smoke test @ 48ffd83 (base, sem 068)
 ```
-git clone <repo> /tmp/maestro-068
-git checkout 5fb3557
-git log -1 --oneline: 5fb3557 P2(068) verde: codigo que faz os testes passarem
+1 failed
+FAILED companion/backend/tests/test_smoke.py::test_corpus_cobre_todas_as_paginas_do_livro
+AssertionError: corpus desatualizado — Páginas ausentes: ['Catálogo do ecossistema']
 ```
+Mesma falha em 48ffd83 (base sem 068). É falha anterior, não introduzida pela trilha 068. Exclusão pendente da Office.
+
+## Clones
+- 5fb3557: clone limpo /tmp/maestro-068 no runner2
+- 48ffd83: bundle w08/068-p2 → /dev/shm/maestro-base no runner2
