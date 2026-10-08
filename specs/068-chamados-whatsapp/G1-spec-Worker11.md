@@ -1,14 +1,14 @@
-# Veredito G1 — 068-chamados-whatsapp (fluxo e texto para o cliente)
-
-**Gate:** G1
-**Papel:** fluxo e texto para o cliente
-**Crítico:** Worker11
-**Objeto:** `specs/068-chamados-whatsapp/spec.md` @ `1303db8`
-**Data:** 2026-10-06 14:00 -0300
-**Data do objeto:** 2026-10-06 13:50:22 -0300 (`git log -1 --format=%ci 1303db8`)
-**Veredito:** **APPROVE**
-
 ---
+gate: G1
+papel: fluxo
+objeto: specs/068-chamados-whatsapp/spec.md @ 1303db8
+veredito: APPROVE
+por: Worker11
+data: 2026-10-06 14:01 -0300
+data_objeto: 2026-10-06 13:50 -0300
+---
+
+# Veredito G1 — 068-chamados-whatsapp (fluxo e texto para o cliente)
 
 ## Conferência
 
@@ -95,7 +95,3 @@ tasks explícitas em `tasks.md`. A própria spec diz (Assumption): "O W06
 confere no G1; prazo diferente… é decisão do Gilsiley." As tasks de retenção
 são intencionalmente deferidas à conferência do W06 no G1 — consistente com
 a spec. Não é bloqueante para este G1.
-
----
-
-**Veredito: APPROVE**
