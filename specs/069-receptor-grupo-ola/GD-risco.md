@@ -21,8 +21,8 @@ As duas são do Gilsiley, como controlador.
 ## Fatos de método
 
 - A spec (fbdd9be), o vermelho (e08ef31) e o verde (70123d6) foram feitos pela mesma autora em dois minutos, entre 17:41 e 17:43 de 06/10. Isso foi antes deste GD e antes de qualquer G1.
-- A implantação no LXC (28fecbc e 8b516c3) também veio antes do GD.
-- A Assistente informou que o receptor está instalado e ainda não ligado: falta o token e a liberação do firewall.
+- O pacote de implantação (28fecbc e 8b516c3) e o pedido ao especialista também vieram antes da GD. Não houve implantação: o LXC ainda não existe, e o código foi só copiado para o painel local, desligado.
+- A Assistente confirmou em 08/10, às 13:01, que o receptor nunca foi ligado: não há processo, nada escuta na porta 8793, e o token e a regra de firewall não foram criados. Ela registrou o desvio como próprio e aceitou as quatro condições.
 
 ## Condições (obrigatórias)
 
