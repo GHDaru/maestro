@@ -5,6 +5,9 @@ HMAC-SHA256, IP de origem e janela de tempo, e responde em menos de 2 s.
 O processamento da conversa fica em conversa.py (P1/P3); aqui é só o
 esqueleto (T0-02).
 
+P5 (W02): dois segredos HMAC (NFR-008), idempotência por evento_id
+e checagem de contato cadastrado (P4).
+
 Stdlib only: http.server, hmac, json, os, time, urllib.
 """
 
@@ -18,6 +21,11 @@ import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse
+
+try:
+    from . import contatos, eventos
+except ImportError:
+    import contatos, eventos
 
 # --- Configuração -----------------------------------------------------------
 
@@ -39,6 +47,30 @@ def _segredo() -> bytes:
     if not valor:
         raise RuntimeError(f"Variável {env_var} não definida")
     return valor.encode("utf-8")
+
+
+def _segredos() -> list[bytes]:
+    """Lê o segredo atual e o anterior (NFR-008 — rotação sem parar a entrada)."""
+    env_var = _carregar_config().get("segredo_env", "MAESTRO_WEBHOOK_SEGREDO")
+    segredos: list[bytes] = []
+    valor = os.environ.get(env_var, "")
+    if valor:
+        segredos.append(valor.encode("utf-8"))
+    # Segredo anterior (NFR-008)
+    valor_ant = os.environ.get(f"{env_var}.ANTERIOR", "")
+    if valor_ant:
+        segredos.append(valor_ant.encode("utf-8"))
+    if not segredos:
+        raise RuntimeError(f"Variável {env_var} não definida")
+    return segredos
+
+
+def _db_path() -> str:
+    """Caminho do banco de entrada (env ou default)."""
+    return os.environ.get(
+        "MAESTRO_ENTRADA_DB",
+        str(Path(__file__).resolve().parent.parent / "dados" / "entrada.db"),
+    )
 
 
 # --- Validações ------------------------------------------------------------
@@ -106,15 +138,19 @@ class WebhookHandler(BaseHTTPRequestHandler):
             return
         body = self.rfile.read(tamanho)
 
-        # 3. Assinatura HMAC-SHA256
+        # 3. Assinatura HMAC-SHA256 — dois segredos (NFR-008)
         assinatura_recebida = self.headers.get("X-Signature", "")
         try:
-            segredo = _segredo()
+            segredos = _segredos()
         except RuntimeError as exc:
             self._json(500, {"erro": "configuracao incompleta", "detalhe": str(exc)})
             return
-        assinatura_esperada = _assina(body, segredo)
-        if not hmac.compare_digest(assinatura_recebida, assinatura_esperada):
+        assinatura_ok = False
+        for segredo in segredos:
+            if hmac.compare_digest(assinatura_recebida, _assina(body, segredo)):
+                assinatura_ok = True
+                break
+        if not assinatura_ok:
             self._json(401, {"erro": "assinatura invalida"})
             return
 
@@ -136,16 +172,33 @@ class WebhookHandler(BaseHTTPRequestHandler):
                 self._json(400, {"erro": "timestamp invalido"})
                 return
 
-        # 6. Idempotência (evento_id) — esqueleto: só ecoa.
-        #    T0-03 liga ao dados/entrada.db (tabela eventos).
+        # 6. Idempotência (evento_id) — P5-AC2
         evento_id = evento.get("evento_id")
         if not evento_id:
             self._json(400, {"erro": "evento_id ausente"})
             return
 
-        # 7. Skeleton — processamento vem em P1/P3 (conversa.py).
-        #    Responde 202 Accepted em < 2 s.
-        self._json(202, {"status": "aceito", "evento_id": evento_id})
+        # 7. Processamento com idempotência e checagem de contato (P4 + P5)
+        db = _db_path()
+
+        def _processar() -> dict:
+            # P4: checagem de contato cadastrado
+            telefone = evento.get("telefone")
+            if telefone:
+                contato = contatos.lookup(db, telefone)
+                if not contato:
+                    return {
+                        "status_code": 200,
+                        "payload": {"responder": [{"texto": (
+                            "Não encontramos seu cadastro. "
+                            "Fale com o Escritório de Transformação da sua empresa."
+                        )}]},
+                    }
+            # Skeleton — processamento vem em P1/P3 (conversa.py).
+            return {"status_code": 202, "payload": {"status": "aceito", "evento_id": evento_id}}
+
+        res = eventos.processa(db, evento_id, _processar)
+        self._json(res["status_code"], res["payload"])
 
 
 # --- Main -------------------------------------------------------------------
