@@ -101,7 +101,7 @@ class TestVerifica(unittest.TestCase):
         self.agora = dt.datetime(2026, 10, 8, 12, 1, tzinfo=TZ)
 
     def test_tudo_valido_retorna_ok(self):
-        ok, _ = seguranca.verifica(
+        ok, _, _, _ = seguranca.verifica(
             corpo=self.corpo,
             assinatura=self.assinatura,
             horario=self.horario,
@@ -113,7 +113,7 @@ class TestVerifica(unittest.TestCase):
         self.assertTrue(ok)
 
     def test_assinatura_errada_retorna_401(self):
-        ok, motivo, status = seguranca.verifica(
+        ok, motivo, status, _ = seguranca.verifica(
             corpo=self.corpo,
             assinatura="sha256=deadbeef",
             horario=self.horario,
@@ -126,7 +126,7 @@ class TestVerifica(unittest.TestCase):
         self.assertEqual(status, 401)
 
     def test_ip_errado_retorna_401(self):
-        ok, motivo, status = seguranca.verifica(
+        ok, motivo, status, _ = seguranca.verifica(
             corpo=self.corpo,
             assinatura=self.assinatura,
             horario=self.horario,
@@ -139,7 +139,7 @@ class TestVerifica(unittest.TestCase):
         self.assertEqual(status, 401)
 
     def test_horario_errado_retorna_401(self):
-        ok, motivo, status = seguranca.verifica(
+        ok, motivo, status, _ = seguranca.verifica(
             corpo=self.corpo,
             assinatura=self.assinatura,
             horario=dt.datetime(2026, 10, 8, 11, 50, tzinfo=TZ),
