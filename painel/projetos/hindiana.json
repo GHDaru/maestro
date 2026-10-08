@@ -134,6 +134,12 @@
   },
   "chamados": [
     {
+      "repo": "chamados",
+      "dias": 14,
+      "pasta": "",
+      "_": "repo de chamados do WhatsApp (chamado 068); pastas NNN-slug/ na raiz"
+    },
+    {
       "repo": "hindiana",
       "dias": 14,
       "pasta": "specs",

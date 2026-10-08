@@ -225,37 +225,64 @@ def le_chamados(cfg: dict) -> dict:
     branch) que a tocou nos últimos `dias` dias: é a versão mais recente do chamado.
     """
     raiz = cfg.get("raiz", ".")
+    # Todos os repos para resolver hashes跨-repo (chamado 068):
+    # um chamado no repo chamados pode referenciar hashes do hindiana.
+    todos_repos = [os.path.join(raiz, f["repo"]) for f in cfg.get("chamados", [])]
     vistos = {}
     for fonte in cfg.get("chamados", []):
         repo = os.path.join(raiz, fonte["repo"])
         pasta = fonte.get("pasta", "specs").strip("/")
+        # Pathspecs: quando pasta="" (repo chamados), usa */ no inicio.
+        # No Windows, git as vezes rejeita */ no pathspec; usa pathspec
+        # com prefixo ":" (git magic pathspec) que e mais robusto.
+        ps_base = f"{pasta}/" if pasta else ""
+        pathspecs = [
+            f":{ps_base}*/00-chamado.md",
+            f":{ps_base}*/G*.md",
+            f":{ps_base}*/spec.md",
+        ]
         saida = _git(repo, "log", "--all", f"--since={fonte.get('dias', 14)}.days", "--format=@%H %cI",
-                     "--name-only", "--", f"{pasta}/*/00-chamado.md", f"{pasta}/*/G*.md", f"{pasta}/*/spec.md") or ""
+                     "--name-only", "--", *pathspecs) or ""
+        if os.environ.get("DEBUG_CHAMADOS"):
+            print(f"DEBUG: repo={repo} pasta={pasta!r} saida={saida[:200]!r}")
         # Cada crítico commita na sua branch: junta, por arquivo, a versão mais recente em qualquer branch.
         por_arquivo = {}
         commit = quando = None
+        # profundidade esperada: pasta/cid/arquivo (3) ou cid/arquivo (2) se pasta vazia
+        prof = 3 if pasta else 2
         for linha in saida.splitlines():
             if linha.startswith("@"):
                 commit, quando = linha[1:].split(" ", 1)
             elif linha.strip() and commit:
                 partes = linha.strip().split("/")
-                if len(partes) == 3:
-                    por_arquivo.setdefault(partes[1], {}).setdefault(partes[2], (commit, quando))
+                if len(partes) == prof:
+                    cid_idx = 1 if pasta else 0
+                    arq_idx = cid_idx + 1
+                    por_arquivo.setdefault(partes[cid_idx], {}).setdefault(partes[arq_idx], (commit, quando))
         for cid, arqs in por_arquivo.items():
             if not any(n.startswith("00-chamado") for n in arqs):
                 continue
             arquivos = {}
             for n, (c, _) in arqs.items():
-                txt = _git(repo, "show", f"{c}:{pasta}/{cid}/{n}")
+                caminho_no_git = f"{pasta}/{cid}/{n}" if pasta else f"{cid}/{n}"
+                txt = _git(repo, "show", f"{c}:{caminho_no_git}")
                 if txt is not None:  # arquivo apagado nesse commit
                     arquivos[n] = txt
             nomes = list(arquivos)
             commit, quando = max(arqs.values(), key=lambda x: x[1])
             cache = {}
 
-            def data_hash(h, repo=repo, cache=cache):
+            def data_hash(h, repo=repo, cache=cache, todos_repos=todos_repos):
                 if h not in cache:
                     ai = _git(repo, "log", "-1", "--format=%ai", h)
+                    if not ai:
+                        # Cross-repo: tenta os outros repos (chamado 068).
+                        for outro in todos_repos:
+                            if outro == repo:
+                                continue
+                            ai = _git(outro, "log", "-1", "--format=%ai", h)
+                            if ai:
+                                break
                     cache[h] = dt.datetime.strptime(ai.strip(), "%Y-%m-%d %H:%M:%S %z") if ai else None
                 return cache[h]
             _docs[cid] = {"repo": repo, "arquivos": {n: {"texto": arquivos[n], "commit": arqs[n][0][:7], "quando": arqs[n][1]} for n in arquivos}}
