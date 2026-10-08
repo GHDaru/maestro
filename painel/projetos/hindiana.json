@@ -138,6 +138,12 @@
       "dias": 14,
       "pasta": "specs",
       "_": "pastas specs/<id>/ com 00-chamado.md; vale o último commit (qualquer branch) que tocou a pasta nos últimos 14 dias"
+    },
+    {
+      "repo": "../maestro",
+      "dias": 14,
+      "pasta": "specs",
+      "_": "chamados internos do Maestro (ex.: 068)"
     }
   ],
   "chamados_manuais": ".maestro/painel/projetos/chamados-manuais-hindiana.json"
