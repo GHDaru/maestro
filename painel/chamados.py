@@ -29,7 +29,7 @@ GATES = [
     ("G9", "Pospush", "Office"),
 ]
 PREFIXO = {"abertura": "00-chamado"}
-PASSA = {"G0": {"REPRODUZIDO"}, "G4": {"OK"}, "G5": {"PASSA"}, "G6": {"PASSA"}, "G7": {"ACEITO"},
+PASSA = {"G0": {"REPRODUZIDO"}, "G4": {"OK"}, "G5": {"PASSA"}, "G6": {"PASSA"}, "G7": {"ACEITO", "ADIADO"},
          "G8": {"ORDEM"}, "G9": {"OK"}}
 BARRA = {"G0": {"NAO_REPRODUZIDO"}, "G4": {"FALHA"}, "G5": {"REPROVA"}, "G6": {"FALHA"}, "G7": {"RECUSADO"},
          "G8": {"SEM_ORDEM"}, "G9": {"ROLLBACK"}}
@@ -206,6 +206,8 @@ def confere(arquivos: dict, data_hash, tem_spec: bool, commit_de: dict | None = 
                 if gid == "G8" and est == "ok" and pendencias and not validos[-1]["pendencias_aceitas"]:
                     est, det = "run", "ordem sem aceitar as pendências"
                     falta = ["pendencias_aceitas no G8: " + "; ".join(f"{x['gate']}: {x['texto']}" for x in pendencias)]
+        if gid == "G7" and any(i["veredito"] == "ADIADO" and not i["pendente"] for i in validos):
+            est, det, falta = "run", "G7 ADIADO sem o campo pendente:", ["pendente: com o aceite que ficou para depois"]
         pend_gate = [i["pendente"] for i in validos if i["pendente"]]
         for t in pend_gate:
             pendencias.append({"gate": gid, "texto": t})
