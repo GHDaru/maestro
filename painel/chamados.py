@@ -102,7 +102,7 @@ def valida(h, gate, data_hash, autores):
     return erros
 
 
-def confere(arquivos: dict, data_hash, tem_spec: bool) -> dict:
+def confere(arquivos: dict, data_hash, tem_spec: bool, commit_de: dict | None = None) -> dict:
     """arquivos: {nome: texto} da pasta do chamado. data_hash(h) -> datetime | None."""
     ab_nome = next((n for n in sorted(arquivos) if n.startswith("00-chamado")), None)
     ab_txt = arquivos.get(ab_nome, "")
@@ -118,6 +118,12 @@ def confere(arquivos: dict, data_hash, tem_spec: bool) -> dict:
                 continue
             h = cabecalho(arquivos[n])
             erros = valida(h, gid, data_hash, autores)
+            quando_arq = (commit_de or {}).get(n)
+            dv = data(h.get("data", ""))
+            if dv and quando_arq:
+                c_arq = dt.datetime.fromisoformat(quando_arq)
+                if dv > c_arq + dt.timedelta(minutes=2):
+                    erros.append(f"data do veredito ({h['data'][11:16]}) depois do commit do arquivo ({c_arq:%H:%M}): hora digitada")
             m = RE_OBJ.match((h.get("objeto") or "").replace("*", "").replace("`", ""))
             itens.append({"arquivo": n, "papel": h.get("papel", ""), "veredito": h.get("veredito", ""),
                           "por": h.get("por", ""), "data": h.get("data", ""), "objeto": h.get("objeto", ""),
@@ -229,7 +235,7 @@ def le_chamados(cfg: dict) -> dict:
     for fonte in cfg.get("chamados", []):
         repo = os.path.join(raiz, fonte["repo"])
         pasta = fonte.get("pasta", "specs").strip("/")
-        saida = _git(repo, "log", "--all", f"--since={fonte.get('dias', 14)}.days", "--format=@%H %cI",
+        saida = _git(repo, "log", "--all", f"--since={fonte.get('dias', 14)}.days", "--format=@%H %aI",
                      "--name-only", "--", f"{pasta}/*/00-chamado.md", f"{pasta}/*/G*.md", f"{pasta}/*/spec.md") or ""
         # Cada crítico commita na sua branch: junta, por arquivo, a versão mais recente em qualquer branch.
         por_arquivo = {}
@@ -259,7 +265,7 @@ def le_chamados(cfg: dict) -> dict:
                     cache[h] = dt.datetime.strptime(ai.strip(), "%Y-%m-%d %H:%M:%S %z") if ai else None
                 return cache[h]
             _docs[cid] = {"repo": repo, "arquivos": {n: {"texto": arquivos[n], "commit": arqs[n][0][:7], "quando": arqs[n][1]} for n in arquivos}}
-            r = confere(arquivos, data_hash, "spec.md" in nomes)
+            r = confere(arquivos, data_hash, "spec.md" in nomes, {n: arqs[n][1] for n in arquivos})
             r.update({"id": cid, "fonte": f"{fonte['repo']}, {len({c for c, _ in arqs.values()})} commit(s), o mais recente {commit[:7]}", "commit": commit[:7], "commit_em": quando,
                       "registro": "padrão"})
             vistos[cid] = r
