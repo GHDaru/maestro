@@ -1,11 +1,11 @@
 ---
 gate: G3
-papel: fluxo
+papel: criterio
 objeto: painel/entrada/etapas.py @ 5fb3557
 veredito: APPROVE
 por: Worker11
 data: 2026-10-08 14:47 -0300
-data_objeto: 2026-10-08 14:03 -0300
+data_objeto: 2026-10-08 14:40 -0300
 ---
 
 # Veredito G3 — 068 P2 re-crítica (fluxo e texto ao cliente)
