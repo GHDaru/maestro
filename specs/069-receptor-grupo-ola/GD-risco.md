@@ -3,6 +3,7 @@ gate: GD
 papel: risco
 objeto: specs/069-receptor-grupo-ola/spec.md @ fbdd9be
 veredito: C
+classe: C
 por: Hindiana Office
 data: 2026-10-08 13:02 -0300
 data_objeto: 2026-10-06 17:41:47 -0300
