@@ -1,13 +1,14 @@
-# G1 — Crítica de spec: 068-chamados-whatsapp
-
-**Gate**: G1
-**Papel**: Segurança e Dados
-**Objeto**: specs/068-chamados-whatsapp/spec.md @ eb64383
-**Crítico**: Worker06
-**Data**: 2026-10-06 14:33:42 -0300
-**Data objeto**: 2026-10-06 14:20:14 -0300
-
 ---
+gate: G1
+papel: seguranca
+objeto: specs/068-chamados-whatsapp/spec.md @ eb64383
+veredito: APPROVE
+por: Worker06
+data: 2026-10-06 14:33 -0300
+data_objeto: 2026-10-06 14:20 -0300
+---
+
+# G1 — Crítica de spec: 068-chamados-whatsapp (re-crítica)
 
 ## Veredito: APPROVE (nos 5 pontos técnicos)
 
@@ -85,11 +86,7 @@ Estas são decisão do Gilsiley (controlador), GD classe C (Office 09461a2). **N
 
 ---
 
-> Veredito: **APPROVE** (nos 5 pontos técnicos; bases legais pendentes do Gilsiley, GD C)
-> Objeto: specs/068-chamados-whatsapp/spec.md @ eb64383
-> Crítico: Worker06 (segurança e dados)
-> Data: 2026-10-06 14:33:42 -0300
-> Data objeto: 2026-10-06 14:20:14 -0300
+> Veredito: APPROVE (nos 5 pontos técnicos; bases legais pendentes do Gilsiley, GD C)
 > Re-crítica de: 8ed2338 (RETURN sobre 1303db8)
 
 Sessao: Worker06
