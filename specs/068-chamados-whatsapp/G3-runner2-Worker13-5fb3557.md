@@ -4,9 +4,9 @@ papel: runner2
 objeto: painel/entrada/saida.py @ 5fb3557
 veredito: OK
 por: W13
-data: 2026-10-08 15:19 -0300
+data: 2026-10-08 15:47 -0300
 data_objeto: 2026-10-08 14:40:09 -0300
-numeros: "pytest 63/0/0 (painel/); pytest global 73/1/0 (falha anterior, presente em 48ffd83, exclusão pendente da Office)"
+numeros: "pytest 63/0/0 (painel/); pytest global 74/0/0"
 ---
 
 # G3 runner2 — 068 P2 @ 5fb3557
@@ -15,31 +15,24 @@ Objeto: painel/entrada/saida.py @ 5fb3557
 
 ## Veredito: OK
 
-0 failed, 0 errors na suíte relevante (painel/). A 1 falha global é anterior à trilha 068, presente em 48ffd83 (base sem 068), exclusão pendente da Office.
+0 failed, 0 errors em todas as trincas (painel/ e global).
 
-## Evidência (runner2, clone limpo)
+## Evidência (runner2, clone limpo + cherry-pick 7bd7b72)
 
-### pytest — suíte painel/ (068 P2) @ 5fb3557
-```
-63 passed, 0 failed, 0 errors
-```
-✓
+Clone limpo de 5fb3557 (bundle w08/068-p2) + cherry-pick de 7bd7b72 (correção do corpus, regenera corpus.json com a página 'Catálogo do ecossistema').
 
-### pytest — global @ 5fb3557
+### pytest — suíte painel/ (068 P2)
 ```
-73 passed, 1 failed, 0 errors
-FAILED companion/backend/tests/test_smoke.py::test_corpus_cobre_todas_as_paginas_do_livro
+63 passed in 18.07s
 ```
-A falha: `corpus desatualizado — Páginas ausentes: ['Catálogo do ecossistema']`.
+pytest 63/0/0. ✓
 
-### pytest — smoke test @ 48ffd83 (base, sem 068)
+### pytest — global
 ```
-1 failed
-FAILED companion/backend/tests/test_smoke.py::test_corpus_cobre_todas_as_paginas_do_livro
-AssertionError: corpus desatualizado — Páginas ausentes: ['Catálogo do ecossistema']
+74 passed, 1 warning in 19.10s
 ```
-Mesma falha em 48ffd83 (base sem 068). É falha anterior, não introduzida pela trilha 068. Exclusão pendente da Office.
+pytest global 74/0/0. ✓
 
-## Clones
-- 5fb3557: clone limpo /tmp/maestro-068 no runner2
-- 48ffd83: bundle w08/068-p2 → /dev/shm/maestro-base no runner2
+## Clone
+- 5fb3557: bundle w08/068-p2 → /dev/shm/maestro-068-v2 no runner2
+- cherry-pick 7bd7b72 (correção do corpus pela Assistente)
