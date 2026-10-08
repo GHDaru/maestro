@@ -140,5 +140,14 @@
       "_": "pastas specs/<id>/ com 00-chamado.md; vale o último commit (qualquer branch) que tocou a pasta nos últimos 14 dias"
     }
   ],
-  "chamados_manuais": ".maestro/painel/projetos/chamados-manuais-hindiana.json"
+  "chamados_manuais": ".maestro/painel/projetos/chamados-manuais-hindiana.json",
+  "entrada": {
+    "ip": "127.0.0.1",
+    "porta": 8790,
+    "ips_n8n": ["127.0.0.1"],
+    "url_saida_n8n": "http://127.0.0.1:5678/webhook/maestro-saida",
+    "repo_chamados": "chamados",
+    "segredo_env": "MAESTRO_WEBHOOK_SEGREDO"
+  },
+  "chamados_repos": ["chamados", "hindiana"]
 }
