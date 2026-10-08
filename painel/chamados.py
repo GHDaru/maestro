@@ -64,6 +64,13 @@ def titulo(txt: str) -> str:
     return m.group(1).strip() if m else ""
 
 
+def numeros_limpos(numeros: str) -> bool:
+    """Toda trinca passed/failed/errors tem failed 0 e errors 0, e existe ao menos uma.
+    Teste excluído por decisão da Office não entra na trinca: roda-se com ele desmarcado e cita-se a exclusão."""
+    trincas = re.findall(r"\b(\d+)/(\d+)/(\d+)\b", numeros or "")
+    return bool(trincas) and all(f == "0" and e == "0" for _, f, e in trincas)
+
+
 def data(s):
     m = RE_DATA.match(s or "")
     if not m:
@@ -97,7 +104,7 @@ def valida(h, gate, data_hash, autores):
                     erros.append(f"veredito anterior ao objeto ({h['data'][11:16]} < {real:%H:%M})")
     if gate in ("G1", "G3") and h.get("por") in autores:
         erros.append(f"crítico {h['por']} é autor da peça")
-    if gate == "G3" and h.get("papel") == "runner2" and h.get("numeros") and not re.search(r"/0/0\b", h["numeros"]):
+    if gate == "G3" and h.get("papel") == "runner2" and h.get("numeros") and not numeros_limpos(h["numeros"]):
         erros.append(f"runner2 sem 0 failed e 0 errors ({h['numeros']})")
     return erros
 
