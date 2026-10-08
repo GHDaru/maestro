@@ -4,7 +4,7 @@ papel: fluxo
 objeto: specs/068-chamados-whatsapp/spec.md @ eb64383
 veredito: APPROVE
 por: Worker11
-data: 2026-10-08 14:15 -0300
+data: 2026-10-08 13:27 -0300
 data_objeto: 2026-10-06 14:20 -0300
 ---
 
