@@ -93,6 +93,15 @@ def conta_pendentes(db_path: str, agora: dt.datetime | None = None) -> int:
         db.close()
 
 
+def avisa_falhos(db_path: str) -> list[dict]:
+    """Lista mensagens falhou para aviso direto à Office (NFR-012).
+
+    Retorna chamado, etapa (ultimo_erro) e tentativas, sem o texto.
+    A Assistente chama no ciclo de 30 min até alguém reenviar ou descartar.
+    """
+    return falhos(db_path)
+
+
 def falhos(db_path: str) -> list[dict]:
     """Lista mensagens que excederam o limite de tentativas ou tempo."""
     db = abre(db_path)
