@@ -243,8 +243,6 @@ def le_chamados(cfg: dict) -> dict:
         ]
         saida = _git(repo, "log", "--all", f"--since={fonte.get('dias', 14)}.days", "--format=@%H %cI",
                      "--name-only", "--", *pathspecs) or ""
-        if os.environ.get("DEBUG_CHAMADOS"):
-            print(f"DEBUG: repo={repo} pasta={pasta!r} saida={saida[:200]!r}")
         # Cada crítico commita na sua branch: junta, por arquivo, a versão mais recente em qualquer branch.
         por_arquivo = {}
         commit = quando = None
