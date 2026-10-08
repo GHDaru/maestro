@@ -104,7 +104,9 @@ class TestRepositorioCria(unittest.TestCase):
     def test_numero_max_entre_repos(self) -> None:
         # 097 no hindiana, 100 no chamados
         (self.repo_hindiana / "specs" / "097-outro-chamado").mkdir()
-        (self.repo_chamados / "100-terceiro-chamado").mkdir()
+        dir100 = self.repo_chamados / "100-terceiro-chamado"
+        dir100.mkdir()
+        (dir100 / "00-chamado.md").write_text("init", encoding="utf-8")
         subprocess.run(
             ["git", "add", "-A"],
             cwd=str(self.repo_chamados), capture_output=True, check=True,
