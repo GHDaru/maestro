@@ -14,3 +14,6 @@ companion/backend/__pycache__/
 companion/backend/tests/__pycache__/
 
 # empacotamento do plugin é gerado (mas versionado — ver ADR 0012); ignorar só temporários
+
+# dados de entrada do chamado 068 (entrada.db, logs) — NFR-010, SC-006
+dados/
