@@ -3,6 +3,7 @@ gate: GD
 papel: risco
 objeto: specs/068-chamados-whatsapp/spec.md @ 1303db8
 veredito: C
+classe: C
 por: Hindiana Office
 data: 2026-10-06 14:18 -0300
 data_objeto: 2026-10-06 13:50:22 -0300
