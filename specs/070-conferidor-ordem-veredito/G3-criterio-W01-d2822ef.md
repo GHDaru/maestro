@@ -1,16 +1,18 @@
 ---
 gate: G3
 papel: criterio
-objeto: painel/chamados.py @ d2822ef e scripts/maestro/conferir_chamado.py @ 8adb545a
+objeto: painel/chamados.py @ d2822ef
 veredito: APPROVE
 por: W01
-data: 2026-10-09 09:15 -0300
+data: 2026-10-09 09:39 -0300
 data_objeto: 2026-10-09 07:43:06 -0300
 ---
 
 # G3 critério — W01 @ d2822ef (painel) + 8adb545a (CLI)
 
-Dois objetos: painel (maestro) e CLI (hindiana). Não-autor (Assistente é autora).
+Objeto principal: `painel/chamados.py @ d2822ef` (maestro). O corpo cobre
+também `scripts/maestro/conferir_chamado.py @ 8adb545a` (hindiana) — leitura
+confirmada das duas mudanças. Não-autor (Assistente é autora).
 
 ## Veredito: APPROVE
 
