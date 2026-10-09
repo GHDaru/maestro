@@ -2,24 +2,24 @@
 gate: G3
 papel: codigo
 classe: B
-objeto: painel/chamados.py @ d2822ef
+objeto: painel/chamados.py @ 98a62a1
 spec: 00-chamado.md
 vermelho: 6741315
-data_objeto: 2026-10-09 07:43 -0300
+data_objeto: 2026-10-09 10:08 -0300
 veredito: APPROVE
 por: W10
-data: 2026-10-09 09:36 -0300
+data: 2026-10-09 10:22 -0300
 runner2: pendente medição na VM
 ---
 
-# G3 código do 070: crítica de código sobre d2822ef (painel) e 8adb545a (CLI)
+# G3 código do 070: crítica de código sobre 98a62a1 (painel) e 8adb545a (CLI)
 
 Autor: Assistente. Crítico: W10 (não é autor).
 
 ## Objeto
 
 Dois objetos neste chamado:
-1. **Painel** (maestro repo): `painel/chamados.py` @ d2822ef — verde, vermelho 6741315 (base 2796cbf)
+1. **Painel** (maestro repo): `painel/chamados.py` @ 98a62a1 — verde, vermelho 6741315 (base 2796cbf). O hash 98a62a1 acrescenta os testes R2-CLI, R3 e R4 ao d2822ef; o código é o mesmo.
 2. **CLI** (hindiana repo): `scripts/maestro/conferir_chamado.py` @ 8adb545a — verde, vermelho 899b8ed5 (base a5d9bcff)
 
 A correção é a mesma semântica em ambos: ordenar vereditos válidos por data do cabeçalho (mais nova vence), desempatando pelo commit do arquivo e depois pelo nome.
@@ -29,7 +29,7 @@ foram lidas linha a linha. O painel (`painel/chamados.py:118`) define
 `ordem_veredito` com tupla `(data, commit, nome)` e aplica `sorted` em
 `validos` (linha 151). O CLI (`scripts/maestro/conferir_chamado.py:127-130`)
 aplica a mesma lógica inline com `strptime`. O vermelho 6741315 falha na base
-2796cbf (sem `sorted`, ordem alfabética decide) e o verde d2822ef passa. O
+2796cbf (sem `sorted`, ordem alfabética decide) e o verde 98a62a1 passa. O
 vermelho 899b8ed5 falha na base a5d9bcff e o verde 8adb545a passa.
 
 ## Tabela SHALL
