@@ -1,18 +1,13 @@
 ---
 gate: abertura
 tipo: bug
-aberto_por: Assistente
-data: 2026-10-09 07:40 -0300
-origem: painel
+escopo: correcao
+aberto_por: Hindiana Office
+origem: chamado 099, G6-tela-b865c4a.md (PASSA) e G6-tela-fb901a1.md (FALHA)
+data: 2026-10-09 07:41 -0300
 autores: Assistente
 ---
 
-# 070: conferidor toma veredito vigente pela ordem alfabética
+# 070: conferidor escolhe o veredito vigente pela ordem alfabética
 
-O conferidor (painel e CLI) seleciona o veredito vigente de um gate pelo
-último arquivo na ordem alfabética, não pela data do cabeçalho. Quando dois
-críticos emitem vereditos sobre o mesmo hash, o de maior data deveria vencer,
-mas o de nome alfabeticamente maior é tomado como vigente.
-
-**Sintoma:** G6 com b865c4a PASSA (21:00) e fb901a1 FALHA (20:40) resulta
-BARRADO — fb901a1 vence por ordem alfabética.
+O conferidor (painel e linha de comando) escolhe o veredito vigente dos gates de veredito único pela ordem alfabética do nome do arquivo, não pela data. No 099, o G6 antigo (FALHA) vencia o novo (PASSA). Os requisitos R1 a R4 da spec.md corrigem.
