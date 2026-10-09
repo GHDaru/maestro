@@ -1,11 +1,11 @@
 ---
 gate: G3
 papel: criterio
-objeto: painel/chamados.py @ d2822ef
+objeto: painel/chamados.py @ 98a62a1
 veredito: APPROVE
 por: W01
-data: 2026-10-09 10:13 -0300
-data_objeto: 2026-10-09 07:43:06 -0300
+data: 2026-10-09 10:24 -0300
+data_objeto: 2026-10-09 10:08:13 -0300
 ---
 
 # G3 critério — W01 @ d2822ef (painel) + 8adb545a (CLI)
