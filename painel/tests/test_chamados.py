@@ -107,6 +107,11 @@ class TestOrdemDoVeredito(unittest.TestCase):
                        "G6-tela-fb901a1.md": self.g6("FALHA", "2026-10-05 21:00 -0300")}, commit_de)
         self.assertEqual(g["estado"], "ok")
 
+    def test_r3_veredito_sem_data_legivel_nao_vence(self):
+        g = self.gate({"G6-tela-aaaaaaa.md": self.g6("PASSA", "2026-10-05 21:00 -0300"),
+                       "G6-tela-zzzzzzz.md": self.g6("FALHA", "ontem à noite")})
+        self.assertEqual(g["estado"], "ok")
+
 
 if __name__ == "__main__":
     unittest.main()
