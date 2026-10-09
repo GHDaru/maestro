@@ -4,7 +4,7 @@ papel: criterio
 objeto: painel/chamados.py @ d2822ef
 veredito: APPROVE
 por: W01
-data: 2026-10-09 09:39 -0300
+data: 2026-10-09 09:57 -0300
 data_objeto: 2026-10-09 07:43:06 -0300
 ---
 
@@ -34,14 +34,14 @@ nenhum "sem teste", nenhum gap.
 | Objeto | Código (arquivo:linha) | Teste | Falha na base (hash G2) |
 |---|---|---|---|
 | Painel | `chamados.py:118` (`dt.datetime.fromisoformat(quando) if quando else MINIMO, item["arquivo"]` — 2º e 3º elementos da tupla) | `test_chamados.py:104` (`test_empate_de_data_desempata_pelo_commit_do_arquivo`: ambos 21:00, b865c4a commit 21:05 vs fb901a1 commit 21:01 → G6 ok) | 6741315 (base 2796cbf: sem sorting por commit, alfabético pegava fb901a1 FALHA → bad) |
-| CLI | `conferir_chamado.py:128-129` (`dt.datetime.strptime(i["commit"], ...) if i["commit"] else MINIMO, i["arquivo"]` — 2º e 3º elementos da sort key) | `test_r2_cli_empate.py:35` (`test_empate_de_data_desempata_pelo_commit_do_arquivo`: mesma data 21:00, aaaaaaa PASSA commit 21:05 vs zzzzzzz FALHA commit 21:01 → PASSOU; verificado: falha na base 899b8ed5 com BARRADO, passa no verde 8adb545a com PASSOU) | 899b8ed5 (base: `validos = [i for i in itens if not i["erros"]]` sem sorting, alfabético pegava zzzzzzz FALHA → BARRADO) |
+| CLI | `conferir_chamado.py:128-129` (`dt.datetime.strptime(i["commit"], ...) if i["commit"] else MINIMO, i["arquivo"]` — 2º e 3º elementos da sort key) | `test_conferir_chamado.py` @ b776de39 (`test_r2_empate_de_data_vence_o_commit_mais_recente`: mesma data, commit mais recente vence) | 899b8ed5 (base: `validos = [i for i in itens if not i["erros"]]` sem sorting, alfabético pegava o errado → BARRADO; passa no verde 8adb545a) |
 
 ### R3 — Sem data legível = mais antigo
 
 | Objeto | Código (arquivo:linha) | Teste | Falha na base (hash G2) |
 |---|---|---|---|
-| Painel | `chamados.py:112` (`MINIMO = dt.datetime(1970, 1, 1, tzinfo=dt.timezone.utc)`); `chamados.py:118` (`data(item["data"]) or MINIMO` — None → MINIMO) | `test_chamados.py:99` (R1 — todos os vereditos válidos no teste têm data legível, exercitando o caminho normal; R3 é vacuously true: `valida` em `chamados.py:83-87` rejeita vereditos sem data legível com "falta 'data' no cabeçalho" ou "data fora do formato", então não existe veredito válido sem data legível — `or MINIMO` é fallback defensivo que nunca dispara) | já atendido na base: `valida` em 2796cbf (`chamados.py:83-87` base) já rejeitava vereditos sem data legível — R3 vacuously true |
-| CLI | `conferir_chamado.py:31` (`MINIMO = dt.datetime(1970, 1, 1, tzinfo=dt.timezone.utc)`); `conferir_chamado.py:128` (`data(...) or MINIMO`) | `test_conferir_chamado.py:25` (R1 — mesmo argumento: `valida` em `conferir_chamado.py:72-74` rejeita vereditos sem data legível, então R3 vacuously true) | já atendido na base: `valida` em 899b8ed5 (`conferir_chamado.py:72-74` base) já rejeitava vereditos sem data legível — R3 vacuously true |
+| Painel | `chamados.py:112` (`MINIMO = dt.datetime(1970, 1, 1, tzinfo=dt.timezone.utc)`); `chamados.py:118` (`data(item["data"]) or MINIMO` — None → MINIMO) | `test_chamados.py` @ 6ea2347 (`test_r3_veredito_sem_data_legivel_nao_vence`: veredito sem data legível não vence) | já atendido na base 2796cbf: o conferidor já exclui veredito sem data legível (`valida` em `chamados.py:83-87` rejeita com "falta 'data'" ou "data fora do formato") |
+| CLI | `conferir_chamado.py:31` (`MINIMO = dt.datetime(1970, 1, 1, tzinfo=dt.timezone.utc)`); `conferir_chamado.py:128` (`data(...) or MINIMO`) | `test_conferir_chamado.py` @ b776de39 (`test_r3_veredito_sem_data_legivel_nao_vence`: veredito sem data legível não vence) | já atendido na base 899b8ed5: o conferidor já exclui veredito sem data legível (`valida` em `conferir_chamado.py:72-74`) |
 
 ### R4 — Trilha em ordem de data, não de nome
 
@@ -50,11 +50,12 @@ nenhum "sem teste", nenhum gap.
 | Painel | `chamados.py:393` (`eventos.sort(key=lambda e: _utc(e["quando"]) or dt.datetime.min.replace(tzinfo=dt.timezone.utc))` — trilha ordenada por data) | `test_chamados.py:99,104` (testes R1/R2 exercitam `confere` que produz o `validos` ordenado por data; trilha herda a ordem) | já atendido na base: passa no 2796cbf — `chamados.py:384` (base) já tinha `eventos.sort(key=lambda e: _utc(e['quando']) or ...)`; o diff verde (d2822ef) não alterou a função trilha |
 | CLI | N/A — CLI não tem função trilha (`conferir_chamado.py` só tem `confere()`; a trilha é exclusiva do painel `chamados.py:356`). R4 menciona "lista de vereditos exibida na trilha", e a trilha só existe no painel | N/A por design | N/A por design |
 
-## Prova R2 CLI (teste escrito e verificado)
+## Prova R2 CLI (teste da Assistente @ b776de39)
 
 ```
-Base 899b8ed5:  BARRADO (alfabético pegava zzzzzzz FALHA)
-Verde 8adb545a: PASSOU  (commit 21:05 > 21:01, aaaaaaa PASSA vence)
+test_r2_empate_de_data_vence_o_commit_mais_recente em test_conferir_chamado.py
+Base 899b8ed5:  falha (sem sorting por commit)
+Verde 8adb545a: passa (commit mais recente vence)
 ```
 
 Sessao: W01
