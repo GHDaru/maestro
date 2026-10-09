@@ -4,7 +4,7 @@ papel: criterio
 objeto: painel/chamados.py @ d2822ef
 veredito: APPROVE
 por: W01
-data: 2026-10-09 09:57 -0300
+data: 2026-10-09 10:13 -0300
 data_objeto: 2026-10-09 07:43:06 -0300
 ---
 
@@ -47,7 +47,7 @@ nenhum "sem teste", nenhum gap.
 
 | Objeto | Código (arquivo:linha) | Teste | Falha na base (hash G2) |
 |---|---|---|---|
-| Painel | `chamados.py:393` (`eventos.sort(key=lambda e: _utc(e["quando"]) or dt.datetime.min.replace(tzinfo=dt.timezone.utc))` — trilha ordenada por data) | `test_chamados.py:99,104` (testes R1/R2 exercitam `confere` que produz o `validos` ordenado por data; trilha herda a ordem) | já atendido na base: passa no 2796cbf — `chamados.py:384` (base) já tinha `eventos.sort(key=lambda e: _utc(e['quando']) or ...)`; o diff verde (d2822ef) não alterou a função trilha |
+| Painel | `chamados.py:393` (`eventos.sort(key=lambda e: _utc(e["quando"]) or dt.datetime.min.replace(tzinfo=dt.timezone.utc))` — trilha ordenada por data) | `test_chamados.py` @ 98a62a1 (`test_r4_trilha_em_ordem_de_data_nao_de_nome`: trilha em ordem de data; mutante verificado — sem o sort, o teste falha) | já atendido na base: passa no 2796cbf — `chamados.py:384` (base) já tinha `eventos.sort(key=lambda e: _utc(e['quando']) or ...)`; o diff verde (d2822ef) não alterou a função trilha |
 | CLI | N/A — CLI não tem função trilha (`conferir_chamado.py` só tem `confere()`; a trilha é exclusiva do painel `chamados.py:356`). R4 menciona "lista de vereditos exibida na trilha", e a trilha só existe no painel | N/A por design | N/A por design |
 
 ## Prova R2 CLI (teste da Assistente @ b776de39)
