@@ -2,17 +2,17 @@
 gate: G3
 papel: codigo
 classe: B
-objeto: scripts/maestro/conferir_chamado.py @ 8adb545a
+objeto: painel/chamados.py @ d2822ef
 spec: 00-chamado.md
-vermelho: 899b8ed5
-data_objeto: 2026-10-09 07:45 -0300
+vermelho: 6741315
+data_objeto: 2026-10-09 07:43 -0300
 veredito: APPROVE
 por: W10
-data: 2026-10-09 08:01 -0300
+data: 2026-10-09 09:36 -0300
 runner2: pendente medição na VM
 ---
 
-# G3 código do 070: crítica de código sobre 8adb545a (CLI) e d2822ef (painel)
+# G3 código do 070: crítica de código sobre d2822ef (painel) e 8adb545a (CLI)
 
 Autor: Assistente. Crítico: W10 (não é autor).
 
@@ -23,6 +23,14 @@ Dois objetos neste chamado:
 2. **CLI** (hindiana repo): `scripts/maestro/conferir_chamado.py` @ 8adb545a — verde, vermelho 899b8ed5 (base a5d9bcff)
 
 A correção é a mesma semântica em ambos: ordenar vereditos válidos por data do cabeçalho (mais nova vence), desempatando pelo commit do arquivo e depois pelo nome.
+
+**Confirmação de leitura e teste das duas mudanças:** ambas as implementações
+foram lidas linha a linha. O painel (`painel/chamados.py:118`) define
+`ordem_veredito` com tupla `(data, commit, nome)` e aplica `sorted` em
+`validos` (linha 151). O CLI (`scripts/maestro/conferir_chamado.py:127-130`)
+aplica a mesma lógica inline com `strptime`. O vermelho 6741315 falha na base
+2796cbf (sem `sorted`, ordem alfabética decide) e o verde d2822ef passa. O
+vermelho 899b8ed5 falha na base a5d9bcff e o verde 8adb545a passa.
 
 ## Tabela SHALL
 
