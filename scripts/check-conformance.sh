@@ -160,7 +160,7 @@ checked=0
 #   (a) the generated skeleton — empty, or carrying a `<marker>` / `[marker]`;
 #   (b) TOO SHORT TO BE EVIDENCE. Measured, not guessed: across the 54 tail evidences in this
 #       repository the shortest legitimate one is 65 characters, and every fake found so far is
-#       20 or less (`pendente.`, `(pendente)`, `NÃO EXECUTADA.`, `n/a`, `ok`). The floor sits at
+#       20 or less (`pendente.`, `(pendente)`, `NÃO EXECUTADA.`, `n/a`, `ok`). The floor sits at  # PT-DATA (quoted fakes)
 #       40 — a wide gap on both sides — and it is the half that CANNOT be reworded around. That
 #       matters: the first version of this rule was a word list, and the independent review of
 #       cycle 063 walked through it five times — with an adverb in front, with the plural, in

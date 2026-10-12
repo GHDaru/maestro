@@ -23,6 +23,11 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
   `docs/governance/task-ledger.md`. Portão novo: `scripts/check-ledger.sh`.
 
 ### Corrigido
+- **O `check-language` estava vermelho na `main` e na `dev`** (ciclo 065). O comentário do
+  `check-conformance.sh` que cita as evidências falsas medidas (`NÃO EXECUTADA.`, `pendente.`)
+  carregava português sem o marcador `PT-DATA` — e, por ser o primeiro passo bloqueante a falhar,
+  escondia os portões depois dele na CI (`--ticked-only` e `check-ledger.sh` não chegavam a rodar).
+
 - **O README publicava a única forma do comando que uma IA não consegue rodar** (ciclo 064).
   A página tem duas seções endereçadas a uma IA, e a de instalação publicava só
   `maestro init <dir>` — que, sem terminal, **sai com código 2 e não escreve nada**
