@@ -1,0 +1,7 @@
+{
+  "name": "maestro-ledger",
+  "version": "0.1.0",
+  "description": "Task ledger: clocks in when a session receives a [[TASK]], sums every request's tokens, clocks out on [[DONE]] — append-only, in docs/records/tarefas.jsonl.",
+  "author": { "name": "GHDaru" },
+  "license": "MIT"
+}

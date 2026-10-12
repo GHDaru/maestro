@@ -9,7 +9,28 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 
 ## [Unreleased]
 
+### Adicionado
+- **O método se cobra sozinho e bate o ponto** (ciclo 064, ADR 0021). Um hook `Stop`
+  (`scripts/hooks/stop-conformance.py`) mede `check-conformance.sh --ticked-only` do **ciclo
+  mais novo** no fim de cada resposta e, com uma caixa `TAIL` marcada sem evidência, **não
+  deixa o agente parar** — uma vez; na segunda, deixa e avisa o humano, para não virar laço.
+  O livro de ponto (`docs/records/tarefas.jsonl`, só acrescenta) recebe do mod
+  `mods/maestro-ledger` — distribuído pelo marketplace, nunca instalado pelo instalador — o
+  início e o fim de cada tarefa etiquetada `[[TASK]]`/`[[DONE]]`, com os tokens de **cada
+  requisição** ao modelo e o veredito das tarefas `audit`/`review`. `scripts/report-tasks.py`
+  responde quanto cada tarefa custou, a taxa de aprovação de primeira e o custo do retrabalho.
+  O próprio ciclo foi executado e medido pelo livro. Protocolo instalável:
+  `docs/governance/task-ledger.md`. Portão novo: `scripts/check-ledger.sh`.
+
 ### Corrigido
+- **O instalador recusava atualizar o próprio Maestro** (ciclo 064). Um projeto com os
+  hooks da v0.3.0 recebia `CONFLICT` — os nossos hooks, só que mais velhos, eram
+  indistinguíveis dos de um terceiro. Novo veredito `UPGRADE` no `merge-settings.py`: troca
+  só a chave `hooks` quando ela é **exatamente** a de uma versão anterior; hooks de terceiro
+  continuam recusados. E o `check-installed.sh` passa a exigir que todo hook citado no
+  `settings.json` instalado exista e seja executável — o defeito do commit `0ac6c77`, em que o
+  `settings.json` chamava um script que o instalador não copiava.
+
 - **Nove defeitos no que o ciclo 062 e o 063 acabaram de escrever** (ciclo 063, segundo
   parecer). O `--ticked-only` **era** o portão sempre-vermelho que existe para evitar, e a
   primeira correção abriu um buraco mais barato que o que fechou: `rm qa-report.md` fazia o

@@ -110,6 +110,8 @@ method_block() {
   echo '  (`TAIL:review`, `TAIL:security`, `TAIL:mutation`, `TAIL:gate`) in `tasks.md`, with'
   echo '  the evidence in'
   echo '  `qa-report.md`. Catalogue: `docs/governance/artifacts.md`.'
+  echo '- Whoever hands out tasks tags them `[[TASK ...]]`; whoever delivers ends with'
+  echo '  `[[DONE ...]]` — see `docs/governance/task-ledger.md`.'
   echo '- **Asked "are you following the method?" — do NOT answer from memory.** Run'
   echo '  `scripts/check-conformance.sh <NNN>` and read it: memory reports intention, not fact.'
   # The enforcement sentence is printed ONLY when the harness is actually active. Claiming a
@@ -305,6 +307,12 @@ for s in new-cycle.sh promote-main.sh retro.sh record-decision.sh check-agents.s
   copy "scripts/$s"
 done
 copy "scripts/README.md"
+# The task ledger (cycle 064): Python, so outside the *.sh loop above. Both travel because
+# task-ledger.md, which is installed, tells the project to run each of them.
+# scripts/check-ledger.sh does NOT travel on purpose: it tests merge-settings.py, which is
+# installer-side plumbing and is not shipped, so it could only be red in a project.
+copy "scripts/record-task.py"
+copy "scripts/report-tasks.py"
 
 echo "── Evaluations (the baseline for judgement) ──"
 # Only the anatomy travels. The cases stay behind: each one names a target file in the
@@ -349,6 +357,7 @@ copy "docs/governance/operating-model.md"
 copy "docs/governance/glossary.md"
 copy "docs/governance/axioms.md"
 copy "docs/governance/artifacts.md"
+copy "docs/governance/task-ledger.md"
 copy "docs/records/README.md"
 
 # ── Harness: the layer that ENFORCES instead of asking ────────────────────────────────────
@@ -367,7 +376,7 @@ if [[ "$ARG_NO_HOOKS" -eq 1 ]]; then
   # hides the only thing the person needs to know (independent review of cycle 057). The files are claimed so the prune loop leaves them alone:
   # deleting the scripts while settings.json still names them pointed a third party's every
   # write at a missing command, and the summary called that "skipped" (independent review).
-  for kept in scripts/hooks/guard-immutables.py scripts/hooks/session-state.sh; do
+  for kept in scripts/hooks/guard-immutables.py scripts/hooks/session-state.sh scripts/hooks/stop-conformance.py; do
     [[ -e "$TARGET/$kept" ]] && NOW["$kept"]="${PREV[$kept]:-unmanaged}"
   done
   live=0
@@ -387,6 +396,7 @@ else
   # has no business in a target that never calls it (anti-pattern 22, the shipping half).
   copy "scripts/hooks/guard-immutables.py"
   copy "scripts/hooks/session-state.sh"
+  copy "scripts/hooks/stop-conformance.py"
 
   if escapes_via_symlink "$SETTINGS_REL"; then
     echo "  ! refused (a symlink on this path leads outside the target): $SETTINGS_REL" >&2
@@ -410,17 +420,23 @@ else
       CURRENT)
         HOOKS_ACTIVE=1; HOOKS_STATE="already current"
         echo "  = already current: $SETTINGS_REL" ;;
-      WRITE|MERGED)
+      WRITE|MERGED|UPGRADE)
         if [[ "$ARG_DRY" -eq 1 ]]; then
-          echo "  + would install: $SETTINGS_REL"; HOOKS_ACTIVE=1; HOOKS_STATE="would be installed"
+          if [[ "$MERGE_VERDICT" == UPGRADE ]]; then
+            echo "  + would upgrade: $SETTINGS_REL"; HOOKS_ACTIVE=1; HOOKS_STATE="would be upgraded from an earlier Maestro"
+          else
+            echo "  + would install: $SETTINGS_REL"; HOOKS_ACTIVE=1; HOOKS_STATE="would be installed"
+          fi
         else
           if [[ "$MERGE_VERDICT" == WRITE ]]; then payload="$(cat "$SOURCE/$SETTINGS_REL")"
-          else payload="${MERGE_OUT#MERGED$'\n'}"; fi
+          else payload="${MERGE_OUT#*$'\n'}"; fi
           if [[ "$(printf '%s\n' "$payload" | write_settings)" == ok ]]; then
-            echo "  + installed: $SETTINGS_REL"
+            if [[ "$MERGE_VERDICT" == UPGRADE ]]; then echo "  + upgraded: $SETTINGS_REL"
+            else echo "  + installed: $SETTINGS_REL"; fi
             n_new=$((n_new+1)); HOOKS_ACTIVE=1
             HOOKS_STATE="installed"
             [[ "$MERGE_VERDICT" == MERGED ]] && HOOKS_STATE="added to your settings.json"
+            [[ "$MERGE_VERDICT" == UPGRADE ]] && HOOKS_STATE="upgraded from an earlier Maestro"
           else
             echo "  ! refused: cannot write $SETTINGS_REL (permissions?) — nothing changed." >&2
             n_refused=$((n_refused+1)); HOOKS_STATE="refused (cannot write settings.json)"
@@ -576,7 +592,7 @@ if true; then
   # touch, and the first version chmod'ed every .sh in the directory.
   if [[ "$DRY" -eq 0 ]]; then
     for rel in "${!NOW[@]}"; do
-      [[ "$rel" == scripts/*.sh || "$rel" == scripts/hooks/* ]] && chmod +x "$TARGET/$rel" 2>/dev/null || true
+      [[ "$rel" == scripts/*.sh || "$rel" == scripts/*.py || "$rel" == scripts/hooks/* ]] && chmod +x "$TARGET/$rel" 2>/dev/null || true
     done
   fi
   # the decision index starts empty in a new project (history belongs to each project)
@@ -585,6 +601,9 @@ if true; then
   # target came back with one file (independent review of cycle 058).
   [[ "$ARG_DRY" -eq 1 ]] || [[ -f "$TARGET/docs/records/decisoes.jsonl" ]] \
     || { mkdir -p "$TARGET/docs/records"; : > "$TARGET/docs/records/decisoes.jsonl"; }
+  # same for the task ledger: task-ledger.md names it, so it must exist (empty) from day one
+  [[ "$ARG_DRY" -eq 1 ]] || [[ -f "$TARGET/docs/records/tarefas.jsonl" ]] \
+    || { mkdir -p "$TARGET/docs/records"; : > "$TARGET/docs/records/tarefas.jsonl"; }
 fi
 
 
@@ -609,4 +628,18 @@ cat <<'FIM'
   6. "Am I following it?":   scripts/check-conformance.sh
 
 FIM
+# OPTIONAL step, printed and never executed. `claude plugin install` writes to the USER's
+# Claude Code settings (and the marketplace registry), which live outside the target project:
+# the installer only touches files inside $TARGET, so running it would break that contract
+# and change a machine-wide setting without the owner having asked.
+if [[ "$AGENT_HARNESS" == "yes" ]]; then
+  cat <<'FIM'
+  7. OPTIONAL — task ledger (NOT run by this installer; it writes outside the project):
+       claude plugin install maestro-ledger --marketplace GHDaru/maestro --scope project
+     Records the start and end of [[TASK]]/[[DONE]]-tagged tasks, with the tokens of each
+     request. Needs Claude Code 2.1.292 or newer. Mods do not load in cloud sessions
+     (claude.ai/code) nor in Desktop WSL sessions.
+
+FIM
+fi
 echo "done."
