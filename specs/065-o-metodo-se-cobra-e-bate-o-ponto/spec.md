@@ -1,6 +1,11 @@
-# Spec 064 — O método se cobra sozinho e bate o ponto
+# Spec 065 — O método se cobra sozinho e bate o ponto
 
-- **Status**: Implementado na branch `064-auto-checagem-e-livro-de-ponto`, em correção após a revisão independente (reprovou com 3 achados bloqueantes) · **Raia**: plena · **Data**: 2026-10-12
+> **Renumerado de 064 para 065** em 2026-10-12, ao rebasear sobre a `dev`: o número 064 já era
+> o ciclo `064-capa-para-a-ia-que-instala`. O ADR 0021 e a fase F29 estavam livres e ficaram.
+> O livro `docs/records/tarefas.jsonl` é só-acréscimo: os eventos deste ciclo **continuam com
+> `cycle: "064"` e ids `064-*`** — `report-tasks.py --cycle 064` é a consulta que os acha.
+
+- **Status**: Implementado; revisão independente R1 reprovou → R2 aprovou com ressalvas, tratadas; gate humano concedido em 2026-10-12 · **Raia**: plena · **Data**: 2026-10-12
 - **Origem**: conversa do Darú com o Claude em 12/10/2026. Duas demandas:
   1. *"Eu desejo que o método se auto cheque, e não que eu pergunte."*
   2. *"Quero ver quanto estou gastando. Quando o gerente passa uma tarefa, a sessão que recebe

@@ -1,4 +1,4 @@
-# Contracts 064 — as interfaces entre partes
+# Contracts 065 — as interfaces entre partes
 
 O protocolo das etiquetas e o vocabulário vivem **uma vez**, instaláveis, em
 `docs/governance/task-ledger.md`. Aqui ficam as interfaces internas que ninguém instala.

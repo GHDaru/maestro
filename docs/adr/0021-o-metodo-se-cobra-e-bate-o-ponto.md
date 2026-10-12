@@ -1,6 +1,6 @@
 # ADR 0021 — O método se cobra sozinho e bate o ponto
 
-- **Status**: Aceito · **Data**: 2026-10-12 · **Ciclo**: 064
+- **Status**: Aceito · **Data**: 2026-10-12 · **Ciclo**: 065
 - **Supersede**: nada. **Superado por**: —
 
 ## Contexto
@@ -38,7 +38,7 @@ modelo (`turn.step`), coisa que um hook clássico não recebe.
 
 ## Consequências
 
-- O ciclo 064 foi **executado pelo próprio livro**: cada tarefa distribuída com `[[TASK]]` a
+- O ciclo 065 foi **executado pelo próprio livro**: cada tarefa distribuída com `[[TASK]]` a
   uma sessão executora, e o relatório respondeu quanto o ciclo custou. A revisão independente
   reprovou a primeira versão com 3 achados bloqueantes — dois deles no próprio mecanismo de
   cobrança (o hook cobrava trabalho em andamento de ciclos antigos) — e todos foram tratados.

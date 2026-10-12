@@ -1,4 +1,4 @@
-# Plan 064 — O método se cobra sozinho e bate o ponto
+# Plan 065 — O método se cobra sozinho e bate o ponto
 
 - **Spec**: `spec.md` · **Lane**: plena · **Date**: 2026-10-12
 

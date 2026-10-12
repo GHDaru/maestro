@@ -58,7 +58,7 @@ function common(fields: TagFields) {
   }
 }
 
-// Who may replace an open task with a different one (independent review of cycle 064): only
+// Who may replace an open task with a different one (independent review of cycle 065): only
 // the person — at the terminal, through Remote Control, or as the host of a `claude -p` run.
 // Another session's message cannot: anyone on the machine can send one, and its sender name
 // is whatever the sender wrote, so a forged [[TASK]] would otherwise steal the open task's
@@ -70,7 +70,7 @@ async function start($: EngineInterface, fields: TagFields, fromPerson: boolean)
     // The same delivery seen twice (receive + prompt) — unless it is the NEXT attempt of the
     // same task, which is new work: clock the old attempt out and the new one in.
     if ((active.fields.attempt ?? '') === (fields.attempt ?? '')) return
-    // Another session may only move a task FORWARD (second independent review of cycle 064):
+    // Another session may only move a task FORWARD (second independent review of cycle 065):
     // resending the same id with a lower or unreadable attempt would close the open one.
     const open = positiveInt(active.fields.attempt) ?? 0
     const next = positiveInt(fields.attempt) ?? 0

@@ -4,7 +4,7 @@
 //   [[DONE id=064-A01 outcome=delivered target=064-T03 verdict=rejected reason="no mutation evidence"]]
 // A value with spaces goes in double quotes, and may contain `]`. Field names are lowercase.
 //
-// Why "alone on its line", and why first/last (independent review of cycle 064): a tag
+// Why "alone on its line", and why first/last (independent review of cycle 065): a tag
 // anywhere in the text meant that quoting the protocol's own example — in a pasted document,
 // in an answer that explains it — clocked a fake task in, or closed the wrong one. The real
 // [[TASK]] heads the assignment and the real [[DONE]] closes the delivery, so the FIRST

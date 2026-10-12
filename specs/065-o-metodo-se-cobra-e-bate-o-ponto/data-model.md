@@ -1,4 +1,4 @@
-# Data model 064 — tarefa, tentativa, evento
+# Data model 065 — tarefa, tentativa, evento
 
 O livro de ponto não guarda entidades: guarda **eventos**. As entidades são derivadas na
 leitura, pelo `scripts/report-tasks.py`. Por isso o livro nunca precisa ser reescrito.

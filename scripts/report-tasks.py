@@ -5,7 +5,7 @@ Why this exists. The ledger (docs/records/tarefas.jsonl) holds only events, writ
 happened. Every entity (task, attempt, verdict) and every number is derived HERE, at read time,
 so the ledger never has to be rewritten and a new metric never needs a migration.
 
-What it reports (definitions: specs/064-*/data-model.md):
+What it reports (definitions: specs/065-*/data-model.md):
   * tokens and cost per kind, per cycle and per model (per model from `tokens_by_model`);
   * first-pass approval: tasks approved whose only attempt is 1 / tasks with a verdict;
   * rework cost: tokens and cost of attempts with attempt >= 2;
@@ -28,7 +28,7 @@ Limits, declared.
     session of a `start` of that task (whoever judged is whoever ran the audit). Others are
     counted as "verdicts from non-judges" and ignored. The verdict of a task is the LAST one that
     counts. The session check assumes distinct session ids per executor: nested sessions can
-    repeat an id (measured in cycle 064), and then it cannot tell them apart. The label itself is
+    repeat an id (measured in cycle 065), and then it cannot tell them apart. The label itself is
     not authenticated either: a session with no open task can open an audit task and judge.
   * A verdict on a task that never had a `start` has unknown attempts: listed apart, not counted.
   * A verdict whose target ends in "-cycle" (e.g. "064-cycle") is the verdict on a whole cycle,

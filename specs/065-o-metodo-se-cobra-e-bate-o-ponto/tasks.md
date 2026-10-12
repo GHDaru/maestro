@@ -1,4 +1,4 @@
-# Tasks 064 — O método se cobra sozinho e bate o ponto
+# Tasks 065 — O método se cobra sozinho e bate o ponto
 
 > Executado **pelo próprio livro de ponto**: cada tarefa abaixo foi distribuída com a etiqueta
 > `[[TASK id=064-Tn ...]]` a uma sessão executora com o mod `maestro-ledger` e o hook `Stop`

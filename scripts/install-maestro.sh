@@ -307,7 +307,7 @@ for s in new-cycle.sh promote-main.sh retro.sh record-decision.sh check-agents.s
   copy "scripts/$s"
 done
 copy "scripts/README.md"
-# The task ledger (cycle 064): Python, so outside the *.sh loop above. Both travel because
+# The task ledger (cycle 065): Python, so outside the *.sh loop above. Both travel because
 # task-ledger.md, which is installed, tells the project to run each of them.
 # scripts/check-ledger.sh does NOT travel on purpose: it tests merge-settings.py, which is
 # installer-side plumbing and is not shipped, so it could only be red in a project.

@@ -1,5 +1,9 @@
 # Passagem de sessão — Maestro, "o método se cobra sozinho e bate o ponto"
 
+> **RESOLVIDO em 2026-10-12** — a branch educacional foi cancelada; o ciclo virou **065**
+> (ADR 0021 e F29 mantidos), rebaseado sobre a `dev` e promovido com o gate do Darú. A seção 8
+> abaixo é o registro do problema, não um pendente.
+>
 > **Onde está:** `specs/064-o-metodo-se-cobra-e-bate-o-ponto/handoff.md`, na branch
 > `064-auto-checagem-e-livro-de-ponto`. Abra a sessão nessa branch e leia este arquivo primeiro.
 >

@@ -10,7 +10,7 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
-- **O método se cobra sozinho e bate o ponto** (ciclo 064, ADR 0021). Um hook `Stop`
+- **O método se cobra sozinho e bate o ponto** (ciclo 065, ADR 0021). Um hook `Stop`
   (`scripts/hooks/stop-conformance.py`) mede `check-conformance.sh --ticked-only` do **ciclo
   mais novo** no fim de cada resposta e, com uma caixa `TAIL` marcada sem evidência, **não
   deixa o agente parar** — uma vez; na segunda, deixa e avisa o humano, para não virar laço.
@@ -43,7 +43,7 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
   duas direções, com extração escopada ao cabeçalho da tabela, e **ausência da tabela é
   reprovação**: uma página que parou de publicá-la lê exatamente como um leitor que quebrou.
 
-- **O instalador recusava atualizar o próprio Maestro** (ciclo 064). Um projeto com os
+- **O instalador recusava atualizar o próprio Maestro** (ciclo 065). Um projeto com os
   hooks da v0.3.0 recebia `CONFLICT` — os nossos hooks, só que mais velhos, eram
   indistinguíveis dos de um terceiro. Novo veredito `UPGRADE` no `merge-settings.py`: troca
   só a chave `hooks` quando ela é **exatamente** a de uma versão anterior; hooks de terceiro

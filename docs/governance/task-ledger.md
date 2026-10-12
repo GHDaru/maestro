@@ -3,7 +3,7 @@
 > How a manager session and its worker sessions tag tasks, and how the `maestro-ledger` mod
 > turns those tags into an append-only record of tokens, money and attempts.
 >
-> **Version**: 1.0.0 · **Date**: 2026-10-12 · **Cycle**: 064
+> **Version**: 1.0.0 · **Date**: 2026-10-12 · **Cycle**: 065
 > · Constitution: [principles.md](principles.md) · Acronyms: [glossary](glossary.md)
 > · Operating model: [operating-model.md](operating-model.md)
 
@@ -194,7 +194,7 @@ So nobody mistakes this for full coverage:
   session can open a `kind=audit` task and issue a verdict. The report counts only verdicts whose
   `session` is that of the audit task's `start`, but that proves who ran the audit, not who typed
   the tag. The check also assumes distinct session ids per executor: in nested sessions they
-  repeat (measured in cycle 064), and then it cannot tell executors apart.
+  repeat (measured in cycle 065), and then it cannot tell executors apart.
 - **A new, empty `specs/NNN-*` directory** makes the `Stop` hook measure the new cycle, which is
   green, and so stay silent about a ticked `TAIL` box without evidence in the previous one. The
   continuous integration (CI) job, which runs `--ticked-only` over every cycle, still catches it.
