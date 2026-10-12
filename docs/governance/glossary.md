@@ -25,6 +25,9 @@
 | **EARS** | *Easy Approach to Requirements Syntax* | `WHEN ‹condition› THE SYSTEM SHALL ‹observable behaviour›` — a requirement that becomes a test almost 1:1. Absorbed from Kiro (cycle 007); lives in `verifiable-dod` and the spec template. | ADR 0008 |
 | **Eval** (*evaluation*) | Judgement baseline | Fixed input + assertions that discriminate + a dated observation, for output that cannot be compared by equality. **Not** a test (equality) and **not** a benchmark (models against each other). | `evals/` · ADR 0016 |
 | **Fitness function** | Architecture test | Checks dependency rules in continuous integration. | Ch. 9 |
+| **Task ledger** | `docs/records/tarefas.jsonl` | Append-only record, one event per line, of the tokens, cost and attempts of each tagged task. Protocol in [task-ledger.md](task-ledger.md). | Cycle 064 |
+| **Task tag** (`[[TASK]]` / `[[DONE]]`) | One-line message tag | `[[TASK id=… kind=…]]` marks a task handed out; `[[DONE id=… outcome=…]]` marks it delivered. Each tag stands alone on its line; the first `[[TASK]]` and the last `[[DONE]]` of a message count. The contract between manager and worker sessions, read by the `maestro-ledger` mod. | [task-ledger.md](task-ledger.md) |
+| **Mod** | Claude Code plugin that runs inside the Claude Code process | Subscribes to engine events (`session.receive`, `turn.step`…). `maestro-ledger` is the one Maestro ships; installed with `claude plugin install`, never by the method installer. | [task-ledger.md](task-ledger.md) |
 | **Forcing function** | Mechanism that forces | What **fails loudly** when an artifact is not kept up to date. | Ch. 8 |
 | **AI / IA** | Artificial Intelligence | The agent that executes under orchestration. | — |
 | **LLM** | *Large Language Model* | Language model; the agent's engine. | Ch. 1 · 5 |

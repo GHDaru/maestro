@@ -29,7 +29,7 @@ git clone https://github.com/GHDaru/maestro.git && cd maestro
 diferente de zero se a verificação falhar**. Instalar sem provar não conta.
 
 Toda pergunta também é flag (`--ai`, `--yes`, `--dry-run`, `--no-hooks`, `--force`), então ele
-roda em CI sem ninguém digitando. Sem terminal e sem `--yes`, ele **recusa** em vez de
+roda em CI (integração contínua, *continuous integration*) sem ninguém digitando. Sem terminal e sem `--yes`, ele **recusa** em vez de
 responder por você.
 
 O resto desta receita é o caminho longo — os mesmos passos, um comando por vez, para quem quer
@@ -186,7 +186,7 @@ meu-app/
 │   └── hooks/             guard-immutables.py · session-state.sh
 │
 ├── skills/                6 disciplinas que a IA consulta antes de agir
-├── .specify/              12 templates (spec, plan, tasks, ADR…) + o motor spec-driven
+├── .specify/              12 templates (spec, plan, tasks, ADR — registro de decisão de arquitetura…) + o motor spec-driven
 ├── docs/governance/       a constituição, o modelo operacional, o catálogo de artefatos
 ├── docs/records/          decisoes.jsonl — índice append-only, começa vazio
 ├── evals/                 base para avaliar saída não-determinística
@@ -198,6 +198,29 @@ método, e o `.claude/settings.json`, que instala hooks que **recusam** reescrev
 história — corpo de ADR já commitado, o índice de decisões e os cards datados. O
 `manifest.tsv` é o que torna reinstalar um **upgrade**: ele sabe o que escreveu, então
 distingue arquivo nosso de arquivo seu.
+
+## Livro de ponto (opcional)
+
+Só para quem usa o Claude Code e quer saber **quanto cada tarefa gastou**. É um mod, distribuído
+pelo marketplace do Maestro, que registra o início e o fim das tarefas etiquetadas
+`[[TASK]]`/`[[DONE]]`, com os tokens de cada requisição, num livro append-only.
+
+```bash
+claude plugin install maestro-ledger --marketplace GHDaru/maestro --scope project
+```
+
+O instalador **imprime** este comando e **não o executa**: `claude plugin install` grava nas
+configurações do usuário, fora do projeto-alvo, e o instalador só escreve dentro dele.
+
+Limites, ditos de antemão:
+
+- exige Claude Code **2.1.292 ou mais novo**;
+- mods **não carregam** em sessões na nuvem (claude.ai/code) nem em sessões WSL (*Windows
+  Subsystem for Linux*, o Linux dentro do Windows) do Desktop — nelas o livro simplesmente não
+  registra nada;
+- a etiqueta `[[TASK]]`/`[[DONE]]` precisa estar **sozinha na linha**: conta a primeira `[[TASK]]`
+  e a última `[[DONE]]`, e um `[[TASK]]` vindo de outra sessão não substitui uma tarefa aberta;
+- só tarefas `audit` e `review` registram veredito.
 
 ## Pronto quando
 

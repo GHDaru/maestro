@@ -21,6 +21,17 @@
           }
         ]
       }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR/scripts/hooks/stop-conformance.py\"",
+            "timeout": 120
+          }
+        ]
+      }
     ]
   }
 }

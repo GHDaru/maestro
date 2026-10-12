@@ -327,6 +327,39 @@ sys.exit(0 if "guard-immutables" in pre and "session-state" in start else 1)' "$
   else
     ok "the harness is wired: settings.json names the guard and the state hook"
   fi
+  # Every hook command named in the installed settings must exist and be executable. This is
+  # the defect of commit 0ac6c77: settings.json called stop-conformance.py and the installer
+  # never sent it, so every Stop in a project hit a missing command. The two checks above
+  # name only two hooks; this one reads whatever the file actually calls.
+  if [[ -f "$SET" ]]; then
+    hook_problems="$(python3 - "$SET" "$TARGET" <<'PYX' 2>&1 || true
+import json, os, re, sys
+settings, target = sys.argv[1], sys.argv[2]
+d = json.load(open(settings))
+seen, n = set(), 0
+for groups in d.get("hooks", {}).values():
+    for g in groups:
+        for h in g.get("hooks", []):
+            cmd = h.get("command", "")
+            m = re.search(r'\$CLAUDE_PROJECT_DIR/([^"\s]+)', cmd)
+            if not m or m.group(1) in seen:
+                continue
+            rel = m.group(1); seen.add(rel); n += 1
+            p = os.path.join(target, rel)
+            if not os.path.isfile(p):
+                print(f"MISSING {rel}")
+            elif not os.access(p, os.X_OK):
+                print(f"NOT-EXECUTABLE {rel}")
+if n == 0:
+    print("NONE no hook command found in settings.json")
+PYX
+)"
+    if [[ -z "$hook_problems" ]]; then
+      ok "every hook command named in settings.json exists and is executable (incl. Stop)"
+    else
+      while IFS= read -r l; do bad "settings.json names a hook command that is not usable in the installation — $l"; done <<<"$hook_problems"
+    fi
+  fi
   STATE_HOOK="$TARGET/scripts/hooks/session-state.sh"
   if [[ ! -x "$STATE_HOOK" ]]; then
     bad "the SessionStart hook was not installed, or is not executable (FR3)"

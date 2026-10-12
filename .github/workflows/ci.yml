@@ -93,6 +93,24 @@ jobs:
       - name: A ticked box has its evidence (blocking)
         run: scripts/check-conformance.sh --ticked-only
 
+      # The ledger gate is hermetic (fixtures in a temporary directory, no git history, no
+      # network), so it runs on every push — there is no runner on which it may be skipped.
+      - name: Task ledger and Stop hook (blocking)
+        run: scripts/check-ledger.sh
+
+      # The mod is validated by Claude Code itself, which a runner may not have. When it is
+      # missing this step says so in plain words and does NOT print a check mark: a skipped
+      # gate must never read as a passed one. The absence is also declared in qa-report.md.
+      - name: Mod maestro-ledger — validate and test (blocking when Claude Code is present)
+        run: |
+          if command -v claude >/dev/null 2>&1; then
+            claude plugin validate mods/maestro-ledger
+            claude plugin test mods/maestro-ledger
+          else
+            echo "skipped: Claude Code CLI not on this runner"
+            echo "::notice::mods/maestro-ledger was NOT validated or tested here (Claude Code CLI not on this runner)"
+          fi
+
       - name: Plugin in sync with its sources (blocking)
         run: scripts/package-plugin.sh --verify
 

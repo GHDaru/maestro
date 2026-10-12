@@ -7,12 +7,19 @@ shell can branch without parsing JSON:
     WRITE     no settings.json at the target — the caller may copy ours
     CURRENT   it already carries exactly our hooks — nothing to do, and NOT a conflict
     MERGED    no hooks configured (absent, null, {} or []) — the merged document follows
+    UPGRADE   its hooks are EXACTLY a set we shipped before (PREVIOUS_HOOKS) — the document
+              follows with only `hooks` replaced by ours; every other key is preserved
     CONFLICT  it configures DIFFERENT hooks — the caller refuses; `--snippet` prints what to add
     ERROR     unreadable, or not a JSON object — the caller refuses and changes nothing
 
 `CURRENT` exists because without it the installer conflicted with **itself**: the settings
 file is written by `cp`, so it never enters the manifest, and every re-run saw our own hooks
 and refused to upgrade them (independent review of cycle 056).
+
+`UPGRADE` exists because a project installed with Maestro v0.3.0 got CONFLICT when updating:
+its `hooks` were ours, just older, and indistinguishable from a third party's. An exact match
+against a hooks object we distributed is proof that nothing of theirs is displaced; anything
+else non-empty is still CONFLICT. Add the `hooks` of every release that changes them.
 
 Note on fidelity: the merged document is re-serialised with `indent=2`. Keys and values are
 preserved exactly; whitespace and inline formatting are not. Said plainly because the first
@@ -22,6 +29,35 @@ Usage: merge-settings.py <target-settings.json> <source-settings.json> [--snippe
 """
 import json
 import sys
+
+# The EXACT `hooks` object of each Maestro version already distributed (newest last).
+# v0.3.0 = `git show 534a088:.claude/settings.json`.
+PREVIOUS_HOOKS = [
+    {  # v0.3.0
+        "PreToolUse": [
+            {
+                "matcher": "Edit|Write|NotebookEdit|MultiEdit",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "\"$CLAUDE_PROJECT_DIR/scripts/hooks/guard-immutables.py\"",
+                    }
+                ],
+            }
+        ],
+        "SessionStart": [
+            {
+                "matcher": "startup|resume|clear|compact",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "\"$CLAUDE_PROJECT_DIR/scripts/hooks/session-state.sh\"",
+                    }
+                ],
+            }
+        ],
+    },
+]
 
 
 def load(path):
@@ -71,6 +107,12 @@ def main(argv):
         # Present-but-empty counts as "nothing configured": merging adds, it displaces nothing.
         theirs["hooks"] = ours.get("hooks", {})
         print("MERGED")
+        print(json.dumps(theirs, indent=2, ensure_ascii=False))
+        return 0
+
+    if existing in PREVIOUS_HOOKS:
+        theirs["hooks"] = ours.get("hooks", {})
+        print("UPGRADE")
         print(json.dumps(theirs, indent=2, ensure_ascii=False))
         return 0
 

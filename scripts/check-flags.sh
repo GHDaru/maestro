@@ -58,7 +58,9 @@ parser_flags_any() {  # $1 = script
 # line each, visible — instead of being hidden in a looser regex. The list growing is itself a
 # signal: it means the docs are quoting more foreign commands than they explain our own.
 #   -s   → `ln -s CLAUDE.md AGENTS.md`, the one-source tip in the recipe
-FOREIGN_FLAGS='^(-s)$'
+#   --marketplace, --scope → `claude plugin install maestro-ledger ...`, the optional ledger
+#        step in the recipe (flags of the Claude Code CLI, not of ours)
+FOREIGN_FLAGS='^(-s|--marketplace|--scope)$'
 
 documented_flags() {  # stdin = text
   # A flag in prose starts a WORD. Matching a dash anywhere turned `instá-los`, `qa-report`,

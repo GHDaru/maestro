@@ -36,6 +36,8 @@
   (`TAIL:review`, `TAIL:security`, `TAIL:mutation`, `TAIL:gate`) in `tasks.md`, with
   the evidence in
   `qa-report.md`. Catalogue: `docs/governance/artifacts.md`.
+- Whoever hands out tasks tags them `[[TASK ...]]`; whoever delivers ends with
+  `[[DONE ...]]` — see `docs/governance/task-ledger.md`.
 - **Asked "are you following the method?" — do NOT answer from memory.** Run
   `scripts/check-conformance.sh <NNN>` and read it: memory reports intention, not fact.
 - Never REWRITE what the method keeps as history: the body of a committed ADR,

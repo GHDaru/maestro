@@ -10,6 +10,11 @@
       "name": "maestro",
       "source": "./plugin/maestro",
       "description": "13 spec-driven subagents, 6 skills with their Iron Laws and the cycle commands (spec → plan → tasks → implement → DoD → gate)."
+    },
+    {
+      "name": "maestro-ledger",
+      "source": "./mods/maestro-ledger",
+      "description": "Optional mod: records the start and end of tasks tagged [[TASK]]/[[DONE]], with the tokens of each request, in an append-only ledger."
     }
   ]
 }
