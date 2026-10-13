@@ -28,4 +28,4 @@
 - [x] TAIL:review — revisão independente em contexto fresco, por quem não executou
 - [x] TAIL:security — passagem de segurança proporcional à classe de risco
 - [x] TAIL:mutation — todo portão criado ou alterado aqui, quebrado de propósito e visto reprovando
-- [ ] TAIL:gate — DoD verde -> parecer do guardião -> portão humano de merge (não delegável)
+- [x] TAIL:gate — DoD verde -> parecer do guardião -> portão humano de merge (não delegável)

@@ -96,7 +96,7 @@ installer accepts` nas três, e `✓ every README anchor into itself resolves to
 Também repetidas as três mutações da entrega anterior (id fantasma, tabela ausente, id
 esquecido), todas ainda reprovando.
 
-- **TAIL:gate** — pendente, do Steward.
+- **TAIL:gate** — portão humano concedido pelo Darú em 2026-10-13, no chat ("aprovo o gate do ciclo 064 (capa) e do 065, promova a dev para a main"): a `dev` com os três commits deste ciclo e os do ciclo 065 foi promovida para a `main` por `scripts/promote-main.sh`, que registra o gate em `decisoes.jsonl`. CI da `dev` verde no `8d38e8f`.
 
 ## Cobertura dos requisitos
 
