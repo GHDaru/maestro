@@ -17,7 +17,26 @@
 | Decisão "sessões via gateway" | `decisao-066-sessoes-via-gateway` (3 pareceres: guardião, segurança, guia) |
 | Insumos do Hindiana (Assistente + agente explorador) | `insumo-hindiana.md` |
 
+## 1b. Feito na madrugada de 20/10 (depois das suas seis respostas)
+
+| Item | Estado |
+|---|---|
+| Suas decisões registradas | `decisao-066-daru-20-10` (modelo 4.1, allowlist, plano integral, fixture, numeração) |
+| Segredos fora do repo | `.gitignore` cobre `.env` e `.claude/settings.local.json`; `settings.local.json` sem token (só gateway, modelos, allow/deny) |
+| Lançador de sessões | `scripts/multi-session.py`: `--model` por sessão, uma worktree por Worker, dry-run testado (`d5feef2`) |
+| **Ciclo 066 = painel v0** | worktree `.claude/worktrees/integra-066`, branch `integra/linha-paralela-066`, 16 commits sobre a `dev`: merge `023694b` de `a1172a2`; spec retroativa (revisada, RETURN → corrigida); ADR 0022 (rascunho promovido por `git mv`); `boundary.json` com `painel/` e `.maestro/`; fixture `exemplo.json` no lugar do dado real; plan (CC 8/8, IV violado e justificado), tasks, data-model, contracts, ux-design; qa-report com saídas reais; `check-conformance.sh 066` **verde**; `fafae7d` |
+| Cauda do 066 | review APPROVE_WITH_NOTES (notas tratadas); security classe média, **2 achados médios viram dívida do 072** (CSRF no POST, `autor` forjável via MCP — `security-pass.md`); mutação do `boundary.json` provada |
+| Medido nesta máquina | painel 12 OK; hook 34 passed; ingest da fixture lê 64 specs / 155 decisões / 143 commits; boundary, language, adr, version, links, flags verdes |
+
 ## 2. Pendências do Darú (nada disso é feito sem você)
+
+0. **Gate do ciclo 066** (`TAIL:gate` em `specs/066-painel-de-coordenacao-v0/tasks.md`) e o
+   merge de `integra/linha-paralela-066` na `dev`. **O push dessa branch está bloqueado** pelo
+   `deny: Bash(git push *)` que eu escrevi em `.claude/settings.local.json` para os Workers — ele
+   vale também para a sessão MAESTRO. Você decide: (a) excepciona esta sessão (remove a linha do
+   deny, ou muda o modo e aprova o push), ou (b) faz o push à mão:
+   `git -C .claude/worktrees/integra-066 push -u origin integra/linha-paralela-066`.
+   Aceite também as duas dívidas médias de segurança como dívida do 072.
 
 1. **Token do gateway MaaS fora do repositório.** Ponha `ANTHROPIC_AUTH_TOKEN` no bloco `env`
    de `~/.claude/settings.json` (escopo de usuário). Eu não escrevo o token: o classificador
