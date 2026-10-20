@@ -9,6 +9,17 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 
 ## [Unreleased]
 
+### Corrigido
+- **O veredito vigente é o de maior data, não o último no alfabeto** (ciclo 069; chamado 070
+  do Hindiana). O conferidor do painel escolhia o veredito em vigor pela ordem alfabética do
+  nome do arquivo, e um `G6-tela-fb901a1.md` (FALHA, mais antigo) vencia um
+  `G6-tela-b865c4a.md` (PASSA, mais novo). Agora vale a data do cabeçalho no hash certo,
+  com desempate pelo commit do arquivo e depois pelo nome (`ordem_veredito`, função pura);
+  veredito sem data legível não compete; a trilha lista os gates por data. Teste vermelho
+  antes da correção (`6741315` → `d2822ef`) — o primeiro ciclo integrado em que o Princípio IV
+  vale para a mudança principal. A pasta do chamado (`specs/070-conferidor-ordem-veredito/`,
+  dez arquivos G0–G3) entra como evidência imutável, no padrão de gates do Hindiana.
+
 ### Adicionado
 - **Chamados gate a gate no painel** (ciclo 068). O estado de cada chamado (G0–G9) é
   **derivado dos arquivos de veredito, nunca digitado**: `painel/chamados.py` aplica as regras

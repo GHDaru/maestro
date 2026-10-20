@@ -57,9 +57,11 @@
 | **UI / UX** | *User Interface / User Experience* | User interface / user experience. | Ch. 6 |
 | **WIP** | *Work In Progress* | Work in progress — limited by **human attention**. | Ch. 7 |
 | **YAGNI** | *You Aren't Gonna Need It* | Do not build the speculative; prune what does not pay for itself. | Ch. 12 |
+| **Veredito vigente** | — | Among several verdicts on the same gate, the one in force: the latest `data:` in its header on the right hash; ties by the file's commit date, then by name — never by alphabetical order. | Cycle 069 |
+| **Data legível** | — | A `data:` header the conferidor can parse (`YYYY-MM-DD HH:MM ±HHMM`); a verdict whose date is unreadable is rejected by `valida()` and never competes to be in force. | Cycle 069 |
 | **Chamado** | — | A ticket: one folder `specs/<id>/` with `00-chamado.md` and one file per gate verdict; the aggregate root of the panel (`DOM:aggregate=Chamado`, cycle 068). | Cycle 068 |
 | **Gate (G0–G9)** | — | One checkpoint of a chamado with one deliverable file; its state (ok, bad, run, falta, na) is derived from the files, never typed. | Cycle 068 |
-| **Veredito** | — | The verdict file of a gate (`Gn-<papel>-<crítico>-<hash>.md`) with a mandatory header; the latest-dated one on the right hash is the one in force. | Cycle 068 |
+| **Veredito** | — | The verdict file of a gate (`Gn-<papel>-<crítico>-<hash>.md`) with a mandatory header; the latest-dated one on the right hash is the one in force (see **Veredito vigente**, cycle 069). | Cycle 068 |
 | **Conferidor** | — | The rule set that derives a chamado's gate state (header format, author ≠ critic, date not after the file's commit, runner2 clean); pure functions in `painel/chamados.py`. | Cycle 068 |
 | **runner2** | — | The clean-clone test run of a hash on the Linux runner; counts only with 0 failed and 0 errors. | Cycle 068 |
 | **pendente:** | — | An open item declared inside a verdict; it lets the gate pass but blocks G8 (production order) until accepted. | Cycle 068 |
