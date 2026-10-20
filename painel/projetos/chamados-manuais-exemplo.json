@@ -1,0 +1,18 @@
+{
+  "_": "Fixture. Tickets that predate the per-folder standard (no specs/<id>/ with gate files) can be listed here with a hand-typed state; an entry disappears when the ticket gets its folder. The real Hindiana file stays in that project's repository (decision decisao-066-daru-20-10: no real project data in this public repository). Field names follow painel/chamados.py.",
+  "chamados": [
+    {
+      "id": "000-exemplo",
+      "tipo": "bug",
+      "titulo": "Example ticket typed by hand (no gate folder yet)",
+      "aberto_em": "01/10 09:00",
+      "escopo": "correcao",
+      "severidade": "baixa",
+      "aberto_por": "Regente",
+      "origem": "exemplo",
+      "estado": "G1",
+      "pendente": "",
+      "nota": "Replace with a real entry or delete; the panel derives everything else from specs/<id>/."
+    }
+  ]
+}
