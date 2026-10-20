@@ -46,3 +46,4 @@
 | 20/10 (decisão 1) | 76 % (ctx 83 %) | Darú escolheu (b): deny de push removido para a sessão MAESTRO (decisao-066-push-sessao-maestro); push de integra/linha-paralela-066 (56 commits) e de 066-painel-de-regencia | decisões 2–5 | gates e merge: Darú |
 | 20/10 (decisão 1, fim) | 76 % (ctx 85 %) | CI da integra/linha-paralela-066 reprovou em 7d57e27 (check-version: segunda '### Corrigido' em Unreleased, minha); fundida, 34a3232, CI VERDE | decisão 2 com o Darú | gates e merge: Darú |
 | 20/10 16:40 | 76 % (ctx 84 %) | (PACE) nada novo desde a decisão 1 | aguardando decisão 2 | gates/merge, .env/token, custo.py, G0–G9: Darú |
+| 20/10 17:10 | 77 % (ctx 84 %) | (PACE) nada novo | aguardando decisão 2 | gates/merge, .env/token, custo.py, G0–G9: Darú |
