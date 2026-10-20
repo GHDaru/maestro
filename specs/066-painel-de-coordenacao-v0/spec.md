@@ -133,7 +133,8 @@ mesmo que a adoção: um diretório. Isso é o que o separa do débito que o YAG
   `--evidencia` THE SYSTEM SHALL sair com código 2 (`valida_evento` em `server.py` levanta
   `ValueError`; `registrar.py` devolve 2 antes do `INSERT`) e não inserir linha em `eventos`.
   Lacuna declarada: o teste existente (`test_peca_sem_evidencia_e_recusada`) cobre
-  `valida_evento`, não a linha de comando; o plano acrescenta um teste da CLI.
+  `valida_evento`, não a linha de comando. O teste da CLI fica **adiado para o ciclo 072**
+  (plano §dívidas, tarefa T9): este ciclo é retroativo e não altera o código de `a1172a2`.
 - WHEN `registrar.py <fixture.json> peca --peca P1 --estado "suites aceitas" --evidencia '{"hash":"abc"}'`
   (sem `runner2`) THE SYSTEM SHALL sair com código diferente de zero.
 - WHEN `registrar.py <fixture.json> peca --peca P1 --estado "suites aceitas" --evidencia '{"hash":"abc","runner2":"r2"}' --autor X`

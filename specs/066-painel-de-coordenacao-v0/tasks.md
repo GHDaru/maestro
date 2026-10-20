@@ -41,7 +41,7 @@
 
 ## Fechamento (a fazer)
 
-- [ ] **T7** — Escrever `qa-report.md`: colar a saída de cada linha da DoD do plano (os dois
+- [x] **T7** (`qa-report.md`, saídas reais) — Escrever `qa-report.md`: colar a saída de cada linha da DoD do plano (os dois
       comandos de teste, os três `registrar.py`, os dois `sqlite3`, a dupla ingestão, o
       `git status --porcelain`, o `grep -a -c SEGREDO`, o grep de imports, o `grep` de
       `127.0.0.1`, o `GET /api/estado-ia?sessao=W04` e com sessão inexistente, os `grep proxy`,
@@ -50,11 +50,11 @@
       do Princípio IV (testes depois do código) e as notas de medição no Windows (Git Bash,
       `python3` shim, `PYTHONUTF8=1`, `core.autocrlf=false`). Critério: cada linha da DoD tem
       saída colada; `scripts/check-conformance.sh 066` verde.
-- [ ] **T8** — `ART:ux-design=yes` exige `ux-design.md` neste diretório; o semântico vive em
+- [x] **T8** (`5161449`: `ux-design.md` apontador, opção a) — `ART:ux-design=yes` exige `ux-design.md` neste diretório; o semântico vive em
       `specs/066-painel-de-regencia/ux-design.md` (ciclo 072). **Decisão do gerente/Darú**:
       (a) ponteiro de uma página para o 072, ou (b) aceitar o item vermelho no gate com a razão
       registrada no `qa-report.md`. Nenhum segundo `ux-design.md` semântico é escrito aqui.
-- [ ] **T9** — Registrar no `qa-report.md` a decisão do plano sobre o escopo não declarado
+- [x] **T9** (`qa-report.md` §cobertura e §achados) — Registrar no `qa-report.md` a decisão do plano sobre o escopo não declarado
       (`auditoria_metodo.py`, `arquitetura.html`, `roteiro-painel.md`, tipos `nota`/`recuperacao`,
       opção `--ts`) e as cinco dívidas entregues ao ciclo 072 (acoplamento Hindiana, escopo,
       teste da CLI sem `--evidencia`, `--ts`, `ux-design.md` semântico).
@@ -70,15 +70,15 @@
      Do not delete a line to say it does not apply: write `n/a: <reason>` on it.
      check-conformance.sh requires the evidence of every non-n/a step in qa-report.md. -->
 
-- [ ] **TAIL:review** — independent review in **fresh context**, by whoever did not execute
+- [x] **TAIL:review** — independent review in **fresh context**, by whoever did not execute
   (Theorem 2). Evidence: the verdict, in `qa-report.md`. Aqui: revisar a **integração**
   (`023694b` + `4919f4a`) contra a spec e o plano — a revisão de `a1172a2` já existe e é insumo,
   não substituto.
-- [ ] **TAIL:security** — security pass proportional to the risk class. Superfície: servidor
+- [x] **TAIL:security** — security pass proportional to the risk class. Superfície: servidor
   HTTP local (`127.0.0.1`, 403 fora de localhost no `POST`), ingestão que nunca abre `.env` nem
   `backups_producao/` (exceção `diario/backup.log`), fixture sem IP/token/usuário, hook que roda
   `git` em subprocess. Evidence: `qa-report.md`.
-- [ ] **TAIL:mutation** — every gate this cycle created or changed was **broken on purpose
+- [x] **TAIL:mutation** — every gate this cycle created or changed was **broken on purpose
   and seen refusing**. Portões tocados: (1) `boundary.json` é insumo de `check-boundary.sh` —
   remover `painel/` de `toolkit.owns`, ver o script ficar vermelho, restaurar; (2) o hook de
   pre-commit — commit de veredito sem `Objeto:` recusado (exit 1); (3) os triggers de

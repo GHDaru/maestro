@@ -149,7 +149,7 @@ Medido em 20/10/2026 neste worktree (`integra/linha-paralela-066`); o `qa-report
 | `grep -rin "hindiana\|Gilsiley" painel/*.py` | **registrado como dívida**, não como verde: 4 em `server.py` |
 | `scripts/check-boundary.sh`, `check-language.sh`, `check-adr.sh`, `check-version.sh`, `check-links.sh` | verdes (medido em 20/10) |
 | **mutação**: remover `painel/` de `toolkit.owns` em `boundary.json` | `check-boundary.sh` vermelho; restaurar → verde |
-| **mutação**: veredito sem linha `Objeto:` em commit | `veredito_hook.py --pre-commit` exit 1 (`test_sem_linha_objeto_rejeita`) |
+| **mutação**: veredito sem linha `Objeto:` em commit | `veredito_hook.py --pre-commit` exit 1 (recusa: `test_sem_linha_objeto_rejeita`, `test_hash_inexistente_rejeita`, `test_veredito_anterior_ao_objeto_rejeita`; aceite com carimbo válido → 0: `test_normal_aceita`, `test_hora_texto_igual_commit_aceita`, `test_hora_texto_dentro_tolerancia_aceita`) |
 | `scripts/check-conformance.sh 066` | verde após `qa-report.md` (hoje vermelho só por plan/tasks/qa-report ausentes) |
 
 <!--

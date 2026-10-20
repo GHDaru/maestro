@@ -18,9 +18,10 @@
   "specs": [
     {"nome": "maestro", "caminho": "specs"}
   ],
-  "decisoes": ["docs/records/decisoes.jsonl"],
+  "decisoes": [],
+  "decisoes_jsonl": "docs/records/decisoes.jsonl",
   "adrs": ["docs/adr/*.md"],
-  "retro": ["docs/records/decisoes.jsonl"],
+  "retro": [],
   "barra_execucoes": "evals",
   "barra_resultados": [],
   "glossario": ["docs/governance/glossary.md"],
