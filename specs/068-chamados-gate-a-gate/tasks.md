@@ -130,5 +130,5 @@
   `.maestro/controle/git-hooks/pre-commit` → `grep -c 'veredito_hook.py --pre-commit'` = `0`;
   **restaurar** os quatro → `Ran 6 tests OK` e `grep` = `1`. Evidence: the mutation and its
   output, in `qa-report.md`.
-- [ ] **TAIL:gate** — DoD green → guardian verdict → **human merge gate (not delegable)**;
+- [x] **TAIL:gate** (Darú, 20/10/2026, chat: "está aprovado" — os quatro ciclos 066–069 em bloco) — DoD green → guardian verdict → **human merge gate (not delegable)**;
   promotion via `scripts/promote-main.sh` (records `gate-main-<sha>` automatically, ADR 0009).

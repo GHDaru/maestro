@@ -109,5 +109,5 @@
   o ramo só é alcançável com `data:` ausente, caso sem teste (plano § How, decisão 3; dívida
   2). Registrar (b) como lacuna, não como verde. Evidence: the mutation and its output, in
   `qa-report.md`.
-- [ ] **TAIL:gate** — DoD green → guardian verdict → **human merge gate (not delegable)**;
+- [x] **TAIL:gate** (Darú, 20/10/2026, chat: "está aprovado" — os quatro ciclos 066–069 em bloco) — DoD green → guardian verdict → **human merge gate (not delegable)**;
   promotion via `scripts/promote-main.sh` (records `gate-main-<sha>` automatically, ADR 0009).

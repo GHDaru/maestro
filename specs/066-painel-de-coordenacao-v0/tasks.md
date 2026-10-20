@@ -84,5 +84,5 @@
   pre-commit — commit de veredito sem `Objeto:` recusado (exit 1); (3) os triggers de
   `eventos` — `UPDATE`/`DELETE` abortados. Evidence: the mutation and its output, in
   `qa-report.md`.
-- [ ] **TAIL:gate** — DoD green → guardian verdict → **human merge gate (not delegable)**;
+- [x] **TAIL:gate** (Darú, 20/10/2026, chat: "está aprovado" — os quatro ciclos 066–069 em bloco) — DoD green → guardian verdict → **human merge gate (not delegable)**;
   promotion via `scripts/promote-main.sh` (records `gate-main-<sha>` automatically, ADR 0009).

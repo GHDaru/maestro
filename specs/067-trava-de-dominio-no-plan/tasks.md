@@ -107,5 +107,5 @@
   with no reason`; (b') forma itemizada `regra_dora=edge` sem parênteses → `'regra_dora=edge'
   is edge with no reason`; (c) `MAESTRO_MIN_CYCLE_DOMAIN=abc` → exit `2`; **restaurar** o
   plano e a variável → verde. Evidence: the mutation and its output, in `qa-report.md`.
-- [ ] **TAIL:gate** — DoD green → guardian verdict → **human merge gate (not delegable)**;
+- [x] **TAIL:gate** (Darú, 20/10/2026, chat: "está aprovado" — os quatro ciclos 066–069 em bloco) — DoD green → guardian verdict → **human merge gate (not delegable)**;
   promotion via `scripts/promote-main.sh` (records `gate-main-<sha>` automatically, ADR 0009).
