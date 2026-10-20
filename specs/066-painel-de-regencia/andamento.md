@@ -43,3 +43,4 @@
 | 20/10 14:40 | 76 % (ctx 82 %) | (PACE) nada novo | — (em espera) | idem |
 | 20/10 15:10 | 76 % (ctx 82 %) | (PACE) nada novo | — (em espera) | idem |
 | 20/10 15:40 | 76 % (ctx 83 %) | (PACE) nada novo | — (em espera) | idem |
+| 20/10 (decisão 1) | 76 % (ctx 83 %) | Darú escolheu (b): deny de push removido para a sessão MAESTRO (decisao-066-push-sessao-maestro); push de integra/linha-paralela-066 (56 commits) e de 066-painel-de-regencia | decisões 2–5 | gates e merge: Darú |
