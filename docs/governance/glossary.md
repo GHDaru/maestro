@@ -57,3 +57,8 @@
 | **UI / UX** | *User Interface / User Experience* | User interface / user experience. | Ch. 6 |
 | **WIP** | *Work In Progress* | Work in progress — limited by **human attention**. | Ch. 7 |
 | **YAGNI** | *You Aren't Gonna Need It* | Do not build the speculative; prune what does not pay for itself. | Ch. 12 |
+| **Aggregate root** | — | The entity that owns an invariant and is the only entry point to change it; the plan names which one(s) a cycle touches (`DOM:aggregate=`). | Cycle 067 |
+| **Declared domain model** | — | The four decisions a plan makes explicit — aggregate root, where the invariants live, ubiquitous-language changes, ports and adapters — read by `check-conformance.sh` from cycle 067 on; silence is not a decision. | Cycle 067 |
+| **Invariant** | — | A business rule that must always hold; it lives in the domain (aggregate, value object, domain service) or, with a stated reason, at the edge (route, adapter, screen) — `DOM:invariants=`. | Cycle 067 |
+| **Port / adapter** | — | A port is the interface the domain exposes or needs; an adapter implements it for one technology (HTTP, SQLite, a CLI). The plan declares the ones a cycle changes (`DOM:ports=`). | Cycle 067 |
+| **Ubiquitous language** | — | The shared vocabulary of a bounded context, written down (this glossary) and used verbatim in code, specs and conversation; the plan declares the terms it adds or changes (`DOM:glossary=`). | Cycle 067 |
