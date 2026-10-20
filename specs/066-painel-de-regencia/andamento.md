@@ -30,3 +30,4 @@
 | 20/10 08:10 | 74 % (ctx 79 %) | (PACE) handoff 332de5e; 4 ciclos verdes; branches limpas | — (em espera) | gate/push dos 4 ciclos, .env/token, custo.py, padrão G0–G9: Darú |
 | 20/10 08:40 | 74 % (ctx 79 %) | (PACE) nada novo; janela 5 h zerada | — (em espera) | idem |
 | 20/10 09:10 | 74 % (ctx 79 %) | (PACE) nada novo | — (em espera) | idem |
+| 20/10 09:40 | 75 % (ctx 80 %) | (PACE) nada novo | — (em espera) | idem |
