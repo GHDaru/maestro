@@ -83,3 +83,53 @@ class TestPendencia(unittest.TestCase):
         aceita = g8.replace("veredito: ORDEM", "veredito: ORDEM\npendencias_aceitas: descida da 0035 nao provada")
         r = chamados.confere({"00-chamado.md": ABERTURA, "G4-vm.md": g4, "G8-ordem.md": aceita}, data_hash, True)
         self.assertEqual({g["gate"]: g for g in r["gates"]}["G8"]["estado"], "ok")
+
+
+class TestOrdemDoVeredito(unittest.TestCase):
+    """070: o veredito vigente é o de maior data, não o último na ordem alfabética."""
+
+    def g6(self, veredito, data):
+        return (f"---\ngate: G6\npapel: tela\nobjeto: src/x.py @ aaaaaaa\nveredito: {veredito}\npor: Testes\n"
+                f"data: {data}\ndata_objeto: 2026-10-05 20:36 -0300\n---\n")
+
+    def gate(self, arquivos, commit_de=None):
+        r = chamados.confere({"00-chamado.md": ABERTURA, **arquivos}, data_hash, True, commit_de)
+        return next(g for g in r["gates"] if g["gate"] == "G6")
+
+    def test_mais_novo_vence_mesmo_vindo_antes_no_alfabeto(self):
+        g = self.gate({"G6-tela-b865c4a.md": self.g6("PASSA", "2026-10-05 21:00 -0300"),
+                       "G6-tela-fb901a1.md": self.g6("FALHA", "2026-10-05 20:40 -0300")})
+        self.assertEqual(g["estado"], "ok")
+
+    def test_empate_de_data_desempata_pelo_commit_do_arquivo(self):
+        commit_de = {"G6-tela-b865c4a.md": "2026-10-05T21:05:00-03:00", "G6-tela-fb901a1.md": "2026-10-05T21:01:00-03:00"}
+        g = self.gate({"G6-tela-b865c4a.md": self.g6("PASSA", "2026-10-05 21:00 -0300"),
+                       "G6-tela-fb901a1.md": self.g6("FALHA", "2026-10-05 21:00 -0300")}, commit_de)
+        self.assertEqual(g["estado"], "ok")
+
+    def test_r4_trilha_em_ordem_de_data_nao_de_nome(self):
+        r = chamados.confere({"00-chamado.md": ABERTURA,
+                              "G6-tela-b865c4a.md": self.g6("PASSA", "2026-10-05 21:00 -0300"),
+                              "G6-tela-fb901a1.md": self.g6("FALHA", "2026-10-05 20:40 -0300")}, data_hash, True)
+        cid = "070-teste-r4"
+        guarda = (chamados._cache.get("dados"), chamados._docs.get(cid), chamados._git, chamados.custo.janela)
+        try:
+            chamados._cache["dados"] = {"chamados": [{"id": cid, "titulo": "t", "onde": r["onde"], "gates": r["gates"]}]}
+            chamados._docs[cid] = {"repo": ".", "arquivos": {"00-chamado.md": {"texto": ABERTURA}}}
+            chamados._git = lambda *a, **k: ""
+            chamados.custo.janela = lambda *a, **k: None
+            t = chamados.trilha({}, cid)
+        finally:
+            chamados._cache["dados"], _, chamados._git, chamados.custo.janela = guarda
+            chamados._docs.pop(cid, None)
+        g6 = [e["arquivo"] for e in t["eventos"] if e.get("gate") == "G6"]
+        self.assertEqual(g6, ["G6-tela-fb901a1.md", "G6-tela-b865c4a.md"])
+
+    def test_r3_veredito_sem_data_legivel_nao_vence(self):
+        g = self.gate({"G6-tela-aaaaaaa.md": self.g6("PASSA", "2026-10-05 21:00 -0300"),
+                       "G6-tela-zzzzzzz.md": self.g6("FALHA", "ontem à noite")})
+        self.assertEqual(g["estado"], "ok")
+
+
+if __name__ == "__main__":
+    unittest.main()

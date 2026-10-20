@@ -109,6 +109,15 @@ def valida(h, gate, data_hash, autores):
     return erros
 
 
+MINIMO = dt.datetime(1970, 1, 1, tzinfo=dt.timezone.utc)
+
+
+def ordem_veredito(item: dict, commit_de: dict | None) -> tuple:
+    """070: o vigente é o de maior data do cabeçalho; empate pelo commit do arquivo e depois pelo nome."""
+    quando = (commit_de or {}).get(item["arquivo"])
+    return (data(item["data"]) or MINIMO, dt.datetime.fromisoformat(quando) if quando else MINIMO, item["arquivo"])
+
+
 def confere(arquivos: dict, data_hash, tem_spec: bool, commit_de: dict | None = None) -> dict:
     """arquivos: {nome: texto} da pasta do chamado. data_hash(h) -> datetime | None."""
     ab_nome = next((n for n in sorted(arquivos) if n.startswith("00-chamado")), None)
@@ -139,7 +148,7 @@ def confere(arquivos: dict, data_hash, tem_spec: bool, commit_de: dict | None = 
                           "pendencias_aceitas": h.get("pendencias_aceitas", ""), "erros": erros})
             if data(h.get("data")):
                 datas.append(data(h["data"]))
-        validos = [i for i in itens if not i["erros"]]
+        validos = sorted((i for i in itens if not i["erros"]), key=lambda i: ordem_veredito(i, commit_de))
         est, det, falta = "falta", "sem entregável", []
         if gid == "G0" and tipo and tipo != "bug":
             est, det = "na", "não é bug"
