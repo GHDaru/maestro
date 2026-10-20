@@ -45,6 +45,8 @@
 
 ## Findings and fixes inside the cycle
 
+- **CI caught what I ran too early locally.** The push of the integration branch (20/10, after the Darú's decision 1) failed `check-version.sh` on `7d57e27`: this cycle's CHANGELOG entry opened a second `### Corrigido` under Unreleased (line 12) while the one from cycle 065 still existed (line 68); the gate requires one section per type. My local `gates-after.sh` run had passed because it ran before the 069 entry was written. Fixed by merging the two sections; re-run and pushed. Lesson for 070 and 071: run the index gates AFTER the CHANGELOG entry, not before.
+
 - **I claimed, then had to prove.** The first mutation (a) line in this file named `test_r4` as one of the two failing tests; I had inferred it from the test list instead of reading the runner output. The fresh-context review caught it from the code alone. The line now carries the observed names, and the lesson is recorded for the retrospective: a test name in a qa-report is a measurement, not a guess.
 
 - Mutation (b) survived; diagnosed as equivalent in every path through `confere()` (dead branch) and as a test gap only for a direct call of `ordem_veredito` — recorded, test proposed for 072.
