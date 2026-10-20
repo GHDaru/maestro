@@ -2,10 +2,10 @@
 """Maestro painel: append a fact that lives in no file (append-only `eventos`).
 
 Examples:
-  python registrar.py projetos/hindiana.json status --sessao W04 --estado trabalhando --texto "painel Maestro" --autor Assistente
-  python registrar.py projetos/hindiana.json deploy --estado SUCCESS --texto "railway: 603c44e" --evidencia '{"hash":"603c44e"}' --autor Office
-  python registrar.py projetos/hindiana.json peca --peca P6 --estado "suites aceitas" --evidencia '{"hash":"bf2916c","runner2":"1646+775, vitest 621"}' --autor Gerente02
-  python registrar.py projetos/hindiana.json incidente --peca D6 --texto "404 listas-mestras" --autor Office
+  python registrar.py projetos/exemplo.json status --sessao W04 --estado trabalhando --texto "painel Maestro" --autor Assistente
+  python registrar.py projetos/exemplo.json deploy --estado SUCCESS --texto "railway: 603c44e" --evidencia '{"hash":"603c44e"}' --autor Office
+  python registrar.py projetos/exemplo.json peca --peca P6 --estado "suites aceitas" --evidencia '{"hash":"bf2916c","runner2":"1646+775, vitest 621"}' --autor Gerente02
+  python registrar.py projetos/exemplo.json incidente --peca D6 --texto "404 listas-mestras" --autor Office
 """
 from __future__ import annotations
 

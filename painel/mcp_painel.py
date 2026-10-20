@@ -8,7 +8,7 @@ Tools:
 
 Claude Code config (.mcp.json):
   {"mcpServers": {"painel": {"command": "python",
-     "args": ["<maestro>/painel/mcp_painel.py", "<maestro>/painel/projetos/hindiana.json"]}}}
+     "args": ["<maestro>/painel/mcp_painel.py", "<maestro>/painel/projetos/exemplo.json"]}}}
 """
 from __future__ import annotations
 

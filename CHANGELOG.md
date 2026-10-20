@@ -10,6 +10,17 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **Painel de coordenação v0** (ciclo 066, ADR 0022). Entra no método o painel construído
+  na linha paralela do Hindiana (branch `painel-controle`, `a1172a2`, 12 commits de 01 a
+  03/10): `painel/` em Python da biblioteca padrão mais um `index.html`, só localhost, com o
+  SQLite como projeção reconstruível dos arquivos, a tabela `eventos` só de acréscimo
+  (triggers recusam UPDATE e DELETE), transição de peça só com evidência, DORA com a fonte ao
+  lado de cada número e merge rotulado como proxy; mais o hook `veredito_hook.py`, que exige
+  carimbo verificável nos arquivos de veredito. A spec é retroativa e declara os limites
+  medidos no código (testes escritos depois, acoplamento ao Hindiana, escopo não pedido). A
+  linha "Metrics dashboard — Later / YAGNI" do modelo operacional é superada em parte.
+  `painel/` e `.maestro/` entram no domínio toolkit de `boundary.json`.
+
 - **O método se cobra sozinho e bate o ponto** (ciclo 065, ADR 0021). Um hook `Stop`
   (`scripts/hooks/stop-conformance.py`) mede `check-conformance.sh --ticked-only` do **ciclo
   mais novo** no fim de cada resposta e, com uma caixa `TAIL` marcada sem evidência, **não

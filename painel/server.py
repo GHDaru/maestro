@@ -4,7 +4,7 @@
 Serves index.html and a read-mostly JSON API over the derived SQLite cache.
 The only write is POST /api/eventos (append-only; the table refuses UPDATE/DELETE).
 
-Usage: python server.py projetos/hindiana.json [--porta 8765] [--reingerir]
+Usage: python server.py projetos/exemplo.json [--porta 8765] [--reingerir]
 """
 from __future__ import annotations
 
