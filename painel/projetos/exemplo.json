@@ -90,5 +90,8 @@
       "_": "specs/<id>/ folders with 00-chamado.md; the last commit (any branch) that touched the folder in the last 14 days counts"
     }
   ],
-  "chamados_manuais": "painel/projetos/chamados-manuais-exemplo.json"
+  "chamados_manuais": "painel/projetos/chamados-manuais-exemplo.json",
+  "custo_pastas": [
+    "C--Users-ghdaru-Documents-010-PROJETOS-410-MAESTRO"
+  ]
 }

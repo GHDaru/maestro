@@ -10,6 +10,17 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **Chamados gate a gate no painel** (ciclo 068). O estado de cada chamado (G0–G9) é
+  **derivado dos arquivos de veredito, nunca digitado**: `painel/chamados.py` aplica as regras
+  do conferidor (cabeçalho obrigatório, autor ≠ crítico, data do veredito não depois do commit
+  do arquivo, o de maior data no hash certo vence, runner2 só conta com 0 falhas e 0 erros,
+  `pendente:` passa o gate mas trava o G8, classe C exige ADR e decisão do dono). Vista
+  "Tabela (board)" chamado × gate, trilha do chamado com o custo de cada passo
+  (`painel/custo.py` lê os transcripts das sessões por offset e guarda só contagens) e o fluxo
+  em BPMN. Integrado da linha paralela (`067-painel-chamados`, `db6b89c..2796cbf`); o dado
+  real do Hindiana saiu e deu lugar a uma fixture. Declarado: o BPMN não tem nó para o G8;
+  três regras sem teste nomeado; acoplamento a nomes reais no código — dívidas do 072.
+
 - **O modelo de domínio é declarado no plan, e o portão o lê** (ciclo 067, ADR 0023). O
   template do plan ganha a seção "Domain model" com quatro declarações obrigatórias, cada uma
   com motivo — `DOM:aggregate`, `DOM:invariants` (`domain`, `edge(porquê)` ou a forma itemizada),
