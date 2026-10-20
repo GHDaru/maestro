@@ -142,7 +142,7 @@ Catalogue of lifecycle artifacts, with **owner**, **gate** and **where it lives*
 | **Pull request** | Dev-agent | the forge | Merge gate (§7); **in the light lane the pull request is the artifact** | Essential |
 | Architecture diagrams | — | — | — | Later / YAGNI |
 | Heavy RFC process | — | — | — | YAGNI (the ADR covers it) |
-| Metrics dashboard | — | — | — | Later / YAGNI |
+| **Coordination panel** | session / human | `painel/` (localhost; SQLite as a rebuildable projection of the files) | Append-only `eventos`; evidence per state; never promotes | Essential since cycle 066 (ADR 0022; was "Metrics dashboard — Later / YAGNI") |
 
 ## 7. Definition of Ready and Definition of Done
 
