@@ -248,6 +248,20 @@ echo "   (floor: cycle ${FLOOR}; older cycles carry declared debt — see the ro
 for d in specs/[0-9][0-9][0-9]-*/; do
   [[ -d "$d" ]] || continue
   n="$(basename "$d" | cut -d- -f1)"
+  # Imported evidence is not a Maestro cycle. A folder that carries a Hindiana chamado
+  # (00-chamado.md plus G*-*.md verdict files) and has NO tasks.md is a chamado brought in
+  # as immutable evidence (ADR 0024: the ten G0-G9 files stay a Hindiana convention; the
+  # first one, specs/070-*, came with cycle 069). Charging it for plan/tasks/qa-report would
+  # cost a cycle's artifacts for a folder that is not a cycle. The exemption is by SHAPE, not
+  # by name, so any later import is covered the same way; and it is visible, not quiet —
+  # the folder is listed with its reason. Mutation: add a tasks.md to the folder and it is
+  # charged as a cycle again (cycle 069 qa-report records the run).
+  if [[ -f "$d/00-chamado.md" && ! -f "$d/tasks.md" ]] && compgen -G "$d/G*-*.md" >/dev/null; then
+    checked=$((checked + 1))   # inspected and found exempt — the gate did look at it
+    echo "• $(basename "$d")"
+    note "imported evidence (00-chamado.md + G*-*.md, no tasks.md): a Hindiana chamado, not a Maestro cycle — not charged (ADR 0024)"
+    continue
+  fi
   if [[ -n "$ONLY" ]]; then
     [[ "$((10#$n))" -eq "$((10#$ONLY))" ]] || continue
   else

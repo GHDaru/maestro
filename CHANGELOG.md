@@ -55,6 +55,16 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
   `docs/governance/task-ledger.md`. Portão novo: `scripts/check-ledger.sh`.
 
 ### Corrigido
+- **O portão de conformidade cobrava artefatos de ciclo de uma pasta que não é ciclo** (ciclo
+  069, decisão B1 de 21/10). `specs/070-conferidor-ordem-veredito/` é evidência importada do
+  Hindiana (`00-chamado.md` e dez arquivos `G*-*.md`), mas casa `specs/NNN-*` e o
+  `check-conformance.sh` completo a reprovava por falta de plan, tasks e qa-report — o
+  `promote-main.sh` abortaria na `dev`. O portão passa a reconhecer a pasta **pela forma**
+  (`00-chamado.md` + `G*-*.md` sem `tasks.md`), lista-a com o motivo e não a cobra; qualquer
+  chamado importado depois recebe o mesmo tratamento (ADR 0024). Mutação: um `tasks.md` na
+  pasta e ela volta a ser cobrada. Copiar os artefatos do 069 para dentro dela foi recusado:
+  duplicaria função e afirmaria evidência de um ciclo que não existe.
+
 - **O veredito vigente é o de maior data, não o último no alfabeto** (ciclo 069; chamado 070
   do Hindiana). O conferidor do painel escolhia o veredito em vigor pela ordem alfabética do
   nome do arquivo, e um `G6-tela-fb901a1.md` (FALHA, mais antigo) vencia um
