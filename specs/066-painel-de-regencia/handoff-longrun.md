@@ -41,6 +41,14 @@
 | Gauntlet-loop | **não iniciado**: o pré-requisito (painel integrado na `dev`) está cumprido; barra Jira pronta (`REG`); Kiro Crew clonado em scratchpad só leitura (18.774 arquivos, `8f828d6a`) — rodá-lo é passo da sessão fresca |
 | Esta sessão | contexto a 90 %; encerra aqui com este handoff |
 
+## 1d. Decisões A e B fechadas (21/10, 00:00–00:46)
+
+| Decisão | Resultado |
+|---|---|
+| **A — ADR 0024** (cabeçalho conferível nas evidências da cauda, opção b) | aprovado ("sim"); `docs/adr/0024-…md` Aceito, indexado, `adr-0024` em `decisoes.jsonl` (`520a1cd`, branch 066 → entra na `main` com o próximo merge desta branch). Implementação: ciclo 072 com mutação do portão |
+| **B1 — exceção do portão** | a pasta importada `specs/070-…` derrubava o `check-conformance.sh` completo; copiar os artefatos do 069 para dentro dela foi recusado (VI). O portão passa a reconhecer evidência importada **pela forma** (`00-chamado.md` + `G*-*.md` sem `tasks.md`), lista com motivo e conta como inspecionada. Mutação observada; 070 sozinho rc=0; gate completo na `dev` rc=0 (29 ciclos) — `3f590ab` |
+| **B2 — promoção** | `promote-main.sh --yes`: gate completo verde de novo, `gate-main-3f590ab` registrado, **`main` = `dev` = `ffecd70`** (61 commits) |
+
 ## 2. Pendências do Darú (nada disso é feito sem você)
 
 **Reabertas em 20/10 à noite:**
