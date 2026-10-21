@@ -28,7 +28,27 @@
 | **Ciclo 067 = trava de domínio** | merge `b5775ac` de `db6b89c`; spec, plan com os quatro `DOM:*` (primeiro acima do piso), ADR **0023** (a revisão apontou que a constituição o exige), CHANGELOG, roadmap F31, glossário +5; três mutações do bloco 3b observadas (inclusive o defeito da forma itemizada numa linha de tabela, registrado com dono); security verde; `check-conformance.sh 067` **verde**; `bb90987` |`n| **Ciclo 068 = chamados gate a gate** | merge `120a32c` do trecho `db6b89c..2796cbf`; dado real do Hindiana trocado por fixture; spec, plan com `DOM:*`, data-model, contracts, ux-design apontador; 6 + 12 testes verdes; 4 mutações; security classe média, 6 baixos (`custo.py` guarda **só contagens** — resposta à sua pergunta de privacidade; falta filtro por igualdade); review RETURN → 2 bloqueantes tratados; CHANGELOG, roadmap F32, glossário +9; conformance **verde** |`n| **Ciclo 069 = conferidor pela data** | merge `23f8325` de `aa0efd1` (chamado 070 do Hindiana; `699bddb` deixado fora, só perde arquivos); veredito vigente pela data do cabeçalho (`ordem_veredito`, função pura); 10 testes; o primeiro ciclo integrado em que o Princípio IV vale (vermelho `6741315` → verde `d2822ef`); a pasta `specs/070-conferidor-ordem-veredito/` entra como evidência imutável; security OK (um médio pré-existente: `data()` deixa `strptime` estourar); review APPROVE_WITH_NOTES, dois itens tratados (um era eu nomeando teste sem ler a saída); CHANGELOG, roadmap F33, glossário +2; conformance **verde** |`n| Cauda do 066 | review APPROVE_WITH_NOTES (notas tratadas); security classe média, **2 achados médios viram dívida do 072** (CSRF no POST, `autor` forjável via MCP — `security-pass.md`); mutação do `boundary.json` provada |
 | Medido nesta máquina | painel 12 OK; hook 34 passed; ingest da fixture lê 64 specs / 155 decisões / 143 commits; boundary, language, adr, version, links, flags verdes |
 
+## 1c. Fechamento do longrun (20/10, ~20:30) — o que mudou depois das suas decisões
+
+| Item | Estado |
+|---|---|
+| **Decisão 1** (push) | opção b: deny removido para a sessão MAESTRO; branch publicada; CI pegou um erro meu (segunda `### Corrigido`), corrigido em `34a3232` |
+| **Decisão 2** (gates + merge) | gate em bloco ("está aprovado"), quatro `TAIL:gate` marcadas (`5411e4e`); três pareceres de reversibilidade (guardião **bloqueado** pelo classificador; segurança e método responderam); salvaguardas conferidas; **`dev` = `b0c0fbb`, 60 commits, CI verde**. `gate-dev-integra-066-069` registrado |
+| **Decisão 3** (token) | você saiu do modo automático; o token do gateway foi gravado em `~/.claude/settings.json` (user-scope, fora do repo). **O `.env` de produção do Hindiana NÃO foi copiado**: a segurança o classificou como irreversível — fica com você (ver §2) |
+| **Decisão 4** (custo.py) | decidida por mim por delegação sua: aceito com dívida (filtro por igualdade no 072); `decisao-066-d4-custo-privacidade` |
+| **Decisão 5** (G0–G9) | é mudança de método → **ADR 0024 redigido como proposta** (opção b: cabeçalho conferível nas linhas de evidência, não dez arquivos) no scratchpad; veredito seu |
+| Sessões Gerente/Workers | **não abertas**: com o token no user-scope, `scripts/multi-session.py . --resume` já pode abri-las numa sessão fresca |
+| Gauntlet-loop | **não iniciado**: o pré-requisito (painel integrado na `dev`) está cumprido; barra Jira pronta (`REG`); Kiro Crew clonado em scratchpad só leitura (18.774 arquivos, `8f828d6a`) — rodá-lo é passo da sessão fresca |
+| Esta sessão | contexto a 90 %; encerra aqui com este handoff |
+
 ## 2. Pendências do Darú (nada disso é feito sem você)
+
+**Reabertas em 20/10 à noite:**
+- **`.env` do Hindiana**: copiar ou não? Recomendação da segurança: **não** copiar o de produção; se os Workers precisarem de variáveis, um `.env` só de dev, ou nenhum.
+- **ADR 0024 (proposta b)**: aprovar, alterar ou recusar. Se aprovar, o ciclo 072 o implementa com mutação do portão.
+- **Promoção `dev` → `main`**: `scripts/promote-main.sh` (seu, registra o gate); `check-conformance.sh` completo vai rodar sobre 28 ciclos e precisa dos quatro novos verdes — estão.
+- **Ciclo 070 e 071**: seção 3c; numa sessão fresca.
+- **Gauntlet-loop**: sessão fresca, com o prompt que você aprovou, agora com `dev` integrada.
 
 0. **Gate do ciclo 066** (`TAIL:gate` em `specs/066-painel-de-coordenacao-v0/tasks.md`) e o
    merge de `integra/linha-paralela-066` na `dev`. **O push dessa branch está bloqueado** pelo
