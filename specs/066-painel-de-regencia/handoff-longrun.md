@@ -49,6 +49,39 @@
 | **B1 — exceção do portão** | a pasta importada `specs/070-…` derrubava o `check-conformance.sh` completo; copiar os artefatos do 069 para dentro dela foi recusado (VI). O portão passa a reconhecer evidência importada **pela forma** (`00-chamado.md` + `G*-*.md` sem `tasks.md`), lista com motivo e conta como inspecionada. Mutação observada; 070 sozinho rc=0; gate completo na `dev` rc=0 (29 ciclos) — `3f590ab` |
 | **B2 — promoção** | `promote-main.sh --yes`: gate completo verde de novo, `gate-main-3f590ab` registrado, **`main` = `dev` = `ffecd70`** (61 commits) |
 
+## 1e. Decisão C fechada e roteiro das 7 sessões (21/10, 01:00)
+
+**C (opção a)**: sem `.env` — `decisao-066-c-sem-env`. As cinco decisões do longrun estão fechadas.
+
+**Onde está o lançador**: `scripts/multi-session.py`, **só na branch `066-painel-de-regencia`**
+(commit `d5feef2`); não está na `main` nem na `dev`. A sessão que for abrir os agentes precisa
+estar nesta branch — ou mergeá-la na `dev` primeiro (é o próximo merge natural: traz também o
+ADR 0024 e este handoff).
+
+**O que a outra sessão faz** (nesta ordem; o dry-run foi conferido em 21/10 01:00):
+
+1. `git checkout 066-painel-de-regencia && git pull` (ou mergear a branch na `dev` e usar a `dev`).
+2. Conferir, sem imprimir valores: `~/.claude/settings.json` tem `ANTHROPIC_AUTH_TOKEN` (user-scope;
+   está lá desde 20/10) e `.claude/settings.local.json` tem `ANTHROPIC_BASE_URL` + os três
+   `ANTHROPIC_DEFAULT_*_MODEL` (sem token). Se o `settings.local.json` não existir (é ignorado pelo
+   git), recriar com essas quatro chaves e a allowlist/deny mínimas — modelo em
+   `pareceres-sessoes-via-gateway.md` §2.
+3. `python scripts/multi-session.py . --dry-run` — mostra Gerente em `glm-5.3` e seis Workers em
+   `deepseek-v4.1-flash`, cada Worker numa worktree `.claude/worktrees/workerNN` (branch `w/workerNN`).
+4. `python scripts/multi-session.py . --resume` — abre as 7 no Windows Terminal em grade; cada
+   sessão sobe com `claude --name <nome> --model <modelo>` (a flag vence o settings).
+5. O Gerente recebe o despacho com `[[TASK id=072-T01 kind=implement attempt=1 cycle=072]]`
+   (protocolo em `docs/governance/task-ledger.md`); os Workers só editam dentro da própria worktree;
+   **só o Gerente faz push, e só depois do gate humano**. O mod `maestro-ledger` bate o ponto se
+   instalado (`claude plugin install maestro-ledger --marketplace GHDaru/maestro --scope project`).
+6. Para o gauntlet: o prompt aprovado (histórico de 20/10); barra = Jira `REG` em
+   `ghdaru.atlassian.net` (colunas G0–G9) + Kiro Crew (clone só leitura no scratchpad desta sessão
+   — efêmero; reclonar `github.com/kirodotdev/KiroCrew`, 18.774 arquivos, e rodar local).
+
+Limites conhecidos: o `multi-session.py` precisa de `wt.exe` (Windows Terminal) e de
+`~/.local/bin/claude.exe`; nesta máquina o reaper de memória mata processo ocioso em background
+(regra do Hindiana) — abrir as 7 só quando houver trabalho despachado.
+
 ## 2. Pendências do Darú (nada disso é feito sem você)
 
 **Reabertas em 20/10 à noite:**
