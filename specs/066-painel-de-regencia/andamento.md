@@ -54,3 +54,21 @@
 | 20/10 (decisão 2, fim) | 78 % (ctx 90 %) | MERGE na dev: b0c0fbb (60 commits: ciclos 066–069), push feito; Darú saiu do modo automático — decisão 3 vira prompt de permissão | CI da dev; token no user-scope | .env de produção: pergunta ao Darú (irreversível); D5 ADR 0024 proposta: Darú |
 | 20/10 (decisão B, achado) | 78 % (ctx 91 %) | ADR 0024 aceito (520a1cd). Medido para a promoção: dev = 60 commits sobre main, 5 pastas de spec novas + ADRs 0022/0023; check-conformance COMPLETO na dev REPROVA (29 ciclos): specs/070-conferidor-ordem-veredito/ (evidência importada do Hindiana, só spec.md) é lida como ciclo Maestro — missing plan/tasks/qa-report. promote-main.sh abortaria. O portão não tem exceção por pasta; GATE_PATHS_SKIP_RE é outra coisa. Mover a pasta quebra o painel (chamados.py varre specs/<id>/) | decisão B1 (exceção no portão, com mutação) e B2 (promoção): Darú | — |
 | 21/10 00:46 (B2 feita) | — (ctx 95 %) | promote-main.sh --yes: gate completo 29 ciclos verde, gate-main-3f590ab registrado, main = dev = ffecd70 (61 commits) | decisão C (.env) e encerramento | C: Darú |
+
+## 22/10 15:30 — as sete sessões abriram, mas falaram com o host errado
+
+- Quatro aberturas: nas três primeiras a janela do Windows Terminal foi fechada pelo Darú antes do
+  despacho; na quarta o Gerente recebeu `[[TASK 070-integracao]]` e respondeu "401 Invalid bearer
+  token" na primeira chamada.
+- Diagnóstico (antes de corrigir): o token do escopo de usuário é o mesmo da Hindiana (hash igual) e
+  o gateway responde HTTP 200 para `glm-5.3` e `deepseek-v4.1-flash` com ele. A falha estava no
+  ambiente herdado: o lançador rodou de dentro da sessão MAESTRO, que carrega
+  `ANTHROPIC_BASE_URL=https://api.anthropic.com`; os painéis herdaram isso e o `settings.local.json`
+  não prevaleceu. Correção em `scripts/multi-session.py` (18d7223): cada painel fixa a URL do
+  gateway lida do `settings.local.json` do projeto e remove `ANTHROPIC_API_KEY` herdada.
+- Dois achados de base: (a) as worktrees dos Workers não tinham `settings.local.json` (git-ignored) —
+  copiado o do projeto, sem token; (b) a branch 066 não continha a dev — merge da dev em `af6a086`,
+  conflitos de `docs/adr/README.md` e `decisoes.jsonl` resolvidos por união.
+- Decisão do Darú (15:35): "rode você mesmo, até as 17h, subagentes em Sonnet, até 100% do consumo".
+  Consumo semanal medido: 99 %, zera às 16:59. As sete ficam abertas e ociosas; relançar com o
+  lançador corrigido quando houver orçamento.
