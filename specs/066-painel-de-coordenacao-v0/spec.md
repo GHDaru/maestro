@@ -1,0 +1,213 @@
+# Spec 066 — Painel de coordenação v0 (projeção dos arquivos, só localhost)
+
+> **Spec retroativa.** O código já existe: branch `painel-controle`, ponta `a1172a2`, 12 commits
+> entre 01 e 03/10/2026, pela equipe do projeto Hindiana, instalado e em uso diário lá. Esta spec
+> registra o QUÊ e o PORQUÊ que o código obedece, para que o plano, a revisão em contexto fresco
+> e o portão humano tenham contra o que medir. Nada aqui foi inventado além do que a branch faz.
+
+- **Status**: Implementado retroativamente na branch `painel-controle` (`a1172a2`); ciclo 066 (decisão do Darú em 20/10/2026: decisao-066-daru-20-10) · **Raia**: plena · **Data**: 2026-10-19
+- **Origem**: escala do projeto Hindiana (29/09 a 01/10/2026): 16 sessões simultâneas, cerca de
+  160 worktrees, 52 desvios de método registrados em três dias, 28 decisões numa única noite. Essa
+  escala tornou obsoleta a linha "Metrics dashboard — Later / YAGNI" do
+  `docs/governance/operating-model.md` §6 (linha 145). Este ciclo a **supera em parte**, por um
+  ADR (*Architecture Decision Record*, registro de decisão de arquitetura) de número pendente — o
+  próximo livre é o 0022. Rascunho de origem: `proposta.md` e `adr-rascunho-painel.md` da
+  Hindiana Assistente (01/10/2026).
+
+> **Raia**: plena. **Ambiguidade** média (o painel entra onde o método dizia "não"; três decisões
+> só o Darú toma, ver seção final); **raio** amplo (um diretório novo no toolkit, um hook de
+> pre-commit, uma tabela que só cresce e uma superfície HTTP/MCP lida por outros agentes);
+> **irreversibilidade** baixa por desenho (apagar `painel/` e reverter três linhas de documentação
+> desfaz tudo; o único dado que não se reconstrói é a tabela `eventos`, e ela nunca é apagada).
+
+## Glossário deste ciclo
+
+| Termo | O que é aqui |
+|---|---|
+| **SQLite** (*SQL* — *Structured Query Language* — *lite*, banco de dados em um arquivo) | O arquivo `.db` local que o painel lê. Aqui ele é **projeção**, nunca fonte. |
+| **CQRS** (*Command Query Responsibility Segregation*, separação entre escrita e leitura) | O padrão que o painel segue: os arquivos recebem a escrita; o SQLite é o modelo de leitura reconstruível. |
+| **MCP** (*Model Context Protocol*, protocolo de contexto de modelo) | Protocolo pelo qual um agente consulta ferramentas. `mcp_painel.py` é um servidor MCP por entrada e saída padrão (stdio). |
+| **DORA** (*DevOps Research and Assessment*, as quatro métricas de entrega) | Frequência de deploy, tempo de entrega, taxa de falha e tempo de recuperação. O painel mostra cada número com a fonte ao lado. |
+| **HTTP** (*Hypertext Transfer Protocol*) · **JS** (*JavaScript*) · **CLI** (*command-line interface*, interface de linha de comando) | O servidor local, o único `index.html`, e o `registrar.py`. |
+| **stdlib** (biblioteca padrão do Python) | `sqlite3`, `http.server`, `subprocess`. Sem dependência externa. |
+| **Peça** | Unidade de entrega do Hindiana que atravessa o fluxo spec → red → entregue → suítes aceitas → aprovada às cegas → integrada → em produção. |
+| **Veredito** | Arquivo de veredito de auditoria do Hindiana (`.maestro/controle/`), que o hook de pre-commit obriga a carregar carimbo de tempo verificável. |
+
+## O quê e por quê
+
+### 1. O controle estava espalhado e desatualizava
+
+O estado de um projeto conduzido por dezesseis sessões vivia em dez arquivos e nas mensagens
+entre sessões: decisões, retro, barra, quadro, relatório da manhã, roteiro de ciclos. O "Estado
+atual" de cada sessão era **digitado pelo próprio agente** e envelhecia em horas. O desvio mais
+caro (teste verde que não passa pelo caminho real) e o mais perigoso (dez branches com upstream
+em `origin/main`, achadas em 01/10) eram invisíveis até alguém procurar à mão.
+
+### 2. O YAGNI do painel valia sem escala
+
+O operating-model §6 recusava um painel de métricas: "sem a quem comparar, instrumentar é débito
+prematuro". A premissa era um humano regendo poucos agentes. Com dezesseis, o custo de coordenação
+já é medido, e o "a quem comparar" existe: a barra de cada peça e o histórico do próprio projeto.
+
+### 3. O que muda — e o que NÃO muda
+
+O painel **não instrumenta código nem produção**. Ele lê o que o método já obriga a escrever
+(specs, ADRs, retro, barra, git) e reconstrói tudo do zero a cada ingestão. O descarte custa o
+mesmo que a adoção: um diretório. Isso é o que o separa do débito que o YAGNI temia.
+
+## Princípios de desenho (não se discutem — `proposta.md` §2)
+
+1. **Os arquivos são a fonte de verdade; o SQLite é projeção** reconstruível (ADR 0008, CQRS).
+2. **Só entra direto no SQLite o que não existe em arquivo nenhum**: status de sessão, sinal de
+   vida, transição de peça com evidência, deploy, incidente, recuperação. Esses fatos vão para a
+   tabela `eventos`, **só-acréscimo**: triggers recusam `UPDATE` e `DELETE`.
+3. **Sem prova parseável, a peça não muda de estado.** Cada estado exige sua evidência (entregue:
+   hash; suítes aceitas: hash + runner2; aprovada às cegas: hash + par montado por + descrição
+   factual; integrada: hash + merge; em produção: hash + deploy). Faltou, o registro é recusado.
+4. **O painel nunca promove nada** (Princípio II). Quem promove assina em `autor`.
+5. **Merge não é deploy.** DORA conta só deploy registrado; merge aparece como proxy rotulado.
+6. **Ingestão segura**: nunca abre `.env` nem backups; nunca escreve nos arquivos do projeto; não
+   guarda host, IP (*Internet Protocol*, endereço de rede), usuário ou token.
+7. **Leveza**: stdlib, um `index.html` com JS puro, sem build, **só localhost**.
+
+## Requisitos funcionais (FR, de *functional requirement*)
+
+- **FR1 — Ingestão reconstrutível.** `painel/ingest.py <projeto.json>` DEVERÁ apagar e
+  reconstruir toda tabela derivada a partir dos arquivos do projeto, preservando apenas `eventos`.
+  Duas ingestões seguidas sem mudança nos arquivos DEVERÃO produzir projeção idêntica.
+- **FR2 — Tabela `eventos` só-acréscimo.** Triggers no SQLite DEVERÃO recusar `UPDATE` e
+  `DELETE` em `eventos`. Todo evento DEVERÁ carregar `autor` e carimbo de tempo.
+- **FR3 — Registro com evidência.** `painel/registrar.py <projeto.json> peca|status|deploy ...`
+  (CLI) DEVERÁ recusar, com saída diferente de zero, qualquer transição de peça cuja `--evidencia`
+  não contenha os campos exigidos pelo estado-alvo (lista do princípio 3).
+- **FR4 — Servidor local.** `painel/server.py <projeto.json>` DEVERÁ servir só em `127.0.0.1`
+  (porta padrão 8765) o `index.html` e as rotas de leitura (`/api/...`), incluindo
+  `GET /api/estado-ia?sessao=<id>`, o estado derivado de uma sessão para a IA.
+- **FR5 — Servidor MCP.** `painel/mcp_painel.py` DEVERÁ expor por stdio a mesma leitura do
+  estado derivado, para que uma sessão consulte em vez de digitar o próprio "Estado atual".
+- **FR6 — Telas.** O `index.html` DEVERÁ mostrar: board de agentes (estado, o que faz, idade do
+  último sinal, alerta de sem sinal); fluxo de peças com selos de evidência; specs e roadmap;
+  decisões e ADRs; DORA com a fonte ao lado de cada número e "—" quando falta registro; barra,
+  defeitos e desvios; tempo por fase; higiene do git (lista de remoção **para aprovação**, nunca
+  executada); relatório de lote; documentos do projeto com idade; linguagem ubíqua.
+- **FR7 — Projeto por configuração.** Um projeto novo entra com um `painel/projetos/<nome>.json`
+  que lista os caminhos a ingerir. Nada do Hindiana fica fixo no código.
+- **FR8 — Hook de veredito.** `.maestro/controle/git-hooks/veredito_hook.py` (pre-commit)
+  DEVERÁ recusar o commit de um arquivo de veredito sem carimbo de tempo verificável, e deixar
+  passar os que o trazem.
+- **FR9 — Testes junto com o código.** `painel/tests/test_painel.py` (12 testes) e a suíte do
+  hook (34 testes) DEVERÃO cobrir, no mínimo, um teste por regra do princípio 6 e os triggers de
+  `eventos`.
+
+## Fora de escopo
+
+- Promover peça, remover worktree, fazer merge ou deploy a partir do painel — o painel lê e
+  registra; a ação é do humano.
+- Autenticação, rede, exposição fora de localhost, múltiplos usuários.
+- Medir DORA por merge, por commit ou por qualquer proxy não rotulado.
+- Instalar o painel por `install-maestro.sh` ou empacotá-lo no plugin (decisão de ciclo futuro).
+- As skills candidatas da proposta (`evidence-gate`, `critica-as-cegas`, `dora-from-git`,
+  `higiene-git`, `estado-atual-derivado`) — cada uma é ciclo próprio.
+- Arquivar ou reviver os 28 documentos parados do Hindiana — decisão do projeto, não do método.
+- Reescrever o livro (`docs/handbook/02-dora-space.md`, capítulo 08): o ADR aponta; o texto
+  do livro é ciclo editorial à parte.
+
+## Artefatos condicionais que o plano DEVERÁ declarar (`docs/governance/artifacts.md`)
+
+| Artefato | Declaração | Motivo em uma linha |
+|---|---|---|
+| `data-model.md` | `ART:data-model=yes` | A tabela `eventos` (campos, tipos de evento, evidência por estado) e as tabelas de projeção são entidades novas com relações. |
+| `contracts/` | `ART:contracts=yes` | As rotas HTTP (`/api/...`) e as ferramentas MCP são interface entre o painel e outras sessões — é o que torna o trabalho paralelo seguro. |
+| `ux-design.md` | `ART:ux-design=yes` | Tem tela: o `index.html` com onze visões. Papel semântico antes do componente; agente `ux-semantics`. |
+| `research.md` | `ART:research=no` | Nenhuma incógnita técnica: stdlib, SQLite e HTTP local já estavam decididos pelo princípio 7. |
+| `checklist.md` | `ART:checklist=no` | A DoD (*Definition of Done*, definição de pronto) abaixo cobre o que há para checar. |
+
+## Critérios de aceite
+
+- `python -m unittest discover -s painel/tests -p test_painel.py` → `Ran 12 tests`, `OK`, exit 0
+  (o `-p` isola a suíte do v0 de testes de ciclos posteriores).
+- Suíte do hook de veredito, que é **pytest** (não unittest — `test_veredito_hook.py:23`):
+  `python -m pytest .maestro/controle/git-hooks/test_veredito_hook.py -q` → `34 passed`, exit 0.
+  Esta é a única dependência fora da stdlib do ciclo, e só de teste; o painel em si não a tem.
+- WHEN `registrar.py <fixture.json> peca --peca P1 --estado entregue` é chamado **sem**
+  `--evidencia` THE SYSTEM SHALL sair com código 2 (`valida_evento` em `server.py` levanta
+  `ValueError`; `registrar.py` devolve 2 antes do `INSERT`) e não inserir linha em `eventos`.
+  Lacuna declarada: o teste existente (`test_peca_sem_evidencia_e_recusada`) cobre
+  `valida_evento`, não a linha de comando. O teste da CLI fica **adiado para o ciclo 072**
+  (plano §dívidas, tarefa T9): este ciclo é retroativo e não altera o código de `a1172a2`.
+- WHEN `registrar.py <fixture.json> peca --peca P1 --estado "suites aceitas" --evidencia '{"hash":"abc"}'`
+  (sem `runner2`) THE SYSTEM SHALL sair com código diferente de zero.
+- WHEN `registrar.py <fixture.json> peca --peca P1 --estado "suites aceitas" --evidencia '{"hash":"abc","runner2":"r2"}' --autor X`
+  THE SYSTEM SHALL sair com 0 e `SELECT COUNT(*) FROM eventos` crescer em 1.
+- `sqlite3 <db> "UPDATE eventos SET autor='x'"` → erro de trigger, exit diferente de zero;
+  `sqlite3 <db> "DELETE FROM eventos"` → erro de trigger, exit diferente de zero. Um teste em
+  `test_painel.py` prova cada um.
+- WHEN `ingest.py` roda sobre uma fixture que contém um arquivo `.env` com a string
+  `SEGREDO` e um diretório `backups_producao/` com a mesma string THE SYSTEM SHALL
+  terminar com `grep -a -c SEGREDO <db>` = 0 (o `.db` é binário). O teste existente usa
+  `iterdump` com a mesma string. Exceção declarada do código (`ingest.py:25`, `PROIBIDOS`):
+  `backups_producao/diario/backup.log` **é** lido, porque é o diário do backup, não o dado.
+- WHEN `ingest.py` roda duas vezes seguidas sobre a mesma fixture THE SYSTEM SHALL produzir
+  `.dump` idênticos nas tabelas derivadas (`diff` vazio), com `eventos` intacta.
+- `git -C <fixture> status --porcelain` antes e depois de `ingest.py` → saída idêntica (a
+  ingestão não escreve no projeto).
+- `grep -rE "^(import|from) " painel/*.py painel/tests/*.py | grep -vE "sqlite3|http|json|subprocess|os|sys|re|pathlib|datetime|argparse|unittest|hashlib|urllib|collections|typing|time|shutil|tempfile|textwrap|functools|io|socketserver|html|uuid|dataclasses|glob|logging|contextlib|statistics|fnmatch"`
+  → vazio depois de acrescentar à exclusão os módulos locais e especiais
+  `|__future__|builtins|ingest|server|mcp_painel` (só stdlib; medido em `a1172a2`).
+- `grep -nE '\("0\.0\.0\.0"|\(""\s*,' painel/server.py` → vazio e
+  `grep -c 'ThreadingHTTPServer(("127.0.0.1"' painel/server.py` = 1 (`server.py:473`; só
+  localhost. O grep anterior, com `""`, casava `or ""` e reprovava a si mesmo).
+- WHEN `GET /api/estado-ia?sessao=W04` é chamado com o servidor de pé sobre a fixture THE SYSTEM
+  SHALL responder 200 com JSON cujo objeto `voce` contém `estado`, `peca` e `proximo`
+  (`server.py:315-316`; `voce` é `null` quando a sessão não existe — isso também é critério).
+- WHEN um commit inclui um arquivo de veredito sem carimbo de tempo THE SYSTEM SHALL (pre-commit)
+  sair com código diferente de zero; com carimbo válido → 0. Os testes nomeados da suíte do hook
+  que provam cada caso ficam citados no plano (a docstring lista 11 cenários).
+- Acoplamento ao Hindiana, **declarado como limite do v0, não como critério verde**: em `a1172a2`
+  a palavra `hindiana` aparece em `registrar.py` (4), `server.py` (3) e `mcp_painel.py` (1), e
+  `server.py` fixa `"Hindiana Office"` na ordenação de papéis e `"Gilsiley"` em dois pontos.
+  O critério que vale para o ciclo seguinte é `grep -rn "hindiana\|Gilsiley" painel/*.py` → vazio
+  fora de docstrings; neste ciclo ele é medido e registrado no `qa-report.md` como dívida.
+- `grep -c "proxy" painel/server.py` ≥ 1 e `grep -c "proxy" painel/index.html` ≥ 1: merge entra
+  no DORA só como `proxy_entregas_por_repo` (`server.py:156,176`) e a tela diz "proxy, não é
+  deploy" (`index.html:437`).
+- `scripts/check-language.sh` e `scripts/check-boundary.sh` → verdes (o segundo depende da
+  decisão 2 do Darú).
+- `scripts/check-conformance.sh 066` → verde após o plano, as tasks e o `qa-report.md`.
+
+## Limites declarados
+
+- **Testes da v0 escritos depois do código** (desvio 2 da proposta, Princípio IV). Registrado
+  aqui e no ADR; a partir da v2 do Hindiana, teste vermelho antes. A spec retroativa não apaga
+  o fato — o `qa-report.md` o cita.
+- **Sem registro, o painel mostra o vazio**: board "sem registro", DORA "—". É desenho, não
+  defeito: o painel nunca inventa número.
+- **Status de sessão depende de disciplina** (quem grava: a sessão ao mudar, o loop cobra quem
+  ficou sem sinal). O painel só mostra o que foi gravado.
+- **Windows**: `http.server` e `sqlite3` funcionam; o hook de pre-commit depende de `python` no
+  caminho do Git Bash. O plano registra como foi medido.
+- **Escopo que o código traz e esta spec não pediu** (achado da revisão independente, medido em
+  `a1172a2`): `painel/auditoria_metodo.py`, `painel/arquitetura.html` (servido pelo `server.py`)
+  e `painel/docs/roteiro-painel.md`; os tipos `nota` e `recuperacao` do `registrar.py`; e a
+  opção `--ts`, que aceita um carimbo informado pelo autor e, portanto, fura o "carimbo de tempo
+  verificável" do FR2. O plano decide: declarar cada um como entregue, ou marcar para remoção
+  no ciclo seguinte. Nada disso é escondido pela spec.
+- **Acoplamento ao Hindiana** em `registrar.py`, `server.py` e `mcp_painel.py` (ver critérios):
+  dívida registrada, a pagar no ciclo do painel de regência.
+
+## Ambiguidades para o Darú
+
+Só ele decide; a spec não inventa. **Decididas em 20/10/2026** (`decisao-066-daru-20-10`):
+
+1. **Número do ciclo.** → **066**. O esqueleto local `066-painel-de-regencia` será renumerado
+   para 072 conforme o mapa de integração; o ADR é o 0022.
+2. **Fronteira.** → **Entram.** `painel/` e `.maestro/` no domínio **toolkit** de
+   `boundary.json` (ADR 0022, decisão 7).
+3. **Dado real num repositório público.** → **Fixture.** `painel/projetos/hindiana.json` é
+   substituído por `painel/projetos/exemplo.json`; o real fica no repositório do Hindiana.
+   (Medido em `a1172a2`: o arquivo não traz IP, token nem usuário, só caminhos e nomes.)
+
+<!--
+  GATE (DoR — não delegável): esta spec só vira plano depois da aprovação do Darú.
+  Handoff: spec-agent → (aprovação) → plan-architect.
+-->

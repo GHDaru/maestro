@@ -10,6 +10,38 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **Chamados gate a gate no painel** (ciclo 068). O estado de cada chamado (G0–G9) é
+  **derivado dos arquivos de veredito, nunca digitado**: `painel/chamados.py` aplica as regras
+  do conferidor (cabeçalho obrigatório, autor ≠ crítico, data do veredito não depois do commit
+  do arquivo, o de maior data no hash certo vence, runner2 só conta com 0 falhas e 0 erros,
+  `pendente:` passa o gate mas trava o G8, classe C exige ADR e decisão do dono). Vista
+  "Tabela (board)" chamado × gate, trilha do chamado com o custo de cada passo
+  (`painel/custo.py` lê os transcripts das sessões por offset e guarda só contagens) e o fluxo
+  em BPMN. Integrado da linha paralela (`067-painel-chamados`, `db6b89c..2796cbf`); o dado
+  real do Hindiana saiu e deu lugar a uma fixture. Declarado: o BPMN não tem nó para o G8;
+  três regras sem teste nomeado; acoplamento a nomes reais no código — dívidas do 072.
+
+- **O modelo de domínio é declarado no plan, e o portão o lê** (ciclo 067, ADR 0023). O
+  template do plan ganha a seção "Domain model" com quatro declarações obrigatórias, cada uma
+  com motivo — `DOM:aggregate`, `DOM:invariants` (`domain`, `edge(porquê)` ou a forma itemizada),
+  `DOM:glossary`, `DOM:ports` — e `check-conformance.sh` as lê a partir do ciclo 067 (bloco 3b;
+  piso `MAESTRO_MIN_CYCLE_DOMAIN` numérico e que só aperta, código 2 em qualquer outra coisa).
+  Origem: em 03/10 uma rodada do Hindiana entregou regras de negócio em rotas porque o plan foi
+  pulado. No painel, o DORA passa a contar só deploy de produção, e spec sem plan ou tasks fica
+  marcada. Integrado da linha paralela (`trava-dominio-plan`, `db6b89c`); defeito conhecido da
+  forma itemizada numa linha de tabela registrado no ADR com dono.
+
+- **Painel de coordenação v0** (ciclo 066, ADR 0022). Entra no método o painel construído
+  na linha paralela do Hindiana (branch `painel-controle`, `a1172a2`, 12 commits de 01 a
+  03/10): `painel/` em Python da biblioteca padrão mais um `index.html`, só localhost, com o
+  SQLite como projeção reconstruível dos arquivos, a tabela `eventos` só de acréscimo
+  (triggers recusam UPDATE e DELETE), transição de peça só com evidência, DORA com a fonte ao
+  lado de cada número e merge rotulado como proxy; mais o hook `veredito_hook.py`, que exige
+  carimbo verificável nos arquivos de veredito. A spec é retroativa e declara os limites
+  medidos no código (testes escritos depois, acoplamento ao Hindiana, escopo não pedido). A
+  linha "Metrics dashboard — Later / YAGNI" do modelo operacional é superada em parte.
+  `painel/` e `.maestro/` entram no domínio toolkit de `boundary.json`.
+
 - **O método se cobra sozinho e bate o ponto** (ciclo 065, ADR 0021). Um hook `Stop`
   (`scripts/hooks/stop-conformance.py`) mede `check-conformance.sh --ticked-only` do **ciclo
   mais novo** no fim de cada resposta e, com uma caixa `TAIL` marcada sem evidência, **não
@@ -23,6 +55,26 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
   `docs/governance/task-ledger.md`. Portão novo: `scripts/check-ledger.sh`.
 
 ### Corrigido
+- **O portão de conformidade cobrava artefatos de ciclo de uma pasta que não é ciclo** (ciclo
+  069, decisão B1 de 21/10). `specs/070-conferidor-ordem-veredito/` é evidência importada do
+  Hindiana (`00-chamado.md` e dez arquivos `G*-*.md`), mas casa `specs/NNN-*` e o
+  `check-conformance.sh` completo a reprovava por falta de plan, tasks e qa-report — o
+  `promote-main.sh` abortaria na `dev`. O portão passa a reconhecer a pasta **pela forma**
+  (`00-chamado.md` + `G*-*.md` sem `tasks.md`), lista-a com o motivo e não a cobra; qualquer
+  chamado importado depois recebe o mesmo tratamento (ADR 0024). Mutação: um `tasks.md` na
+  pasta e ela volta a ser cobrada. Copiar os artefatos do 069 para dentro dela foi recusado:
+  duplicaria função e afirmaria evidência de um ciclo que não existe.
+
+- **O veredito vigente é o de maior data, não o último no alfabeto** (ciclo 069; chamado 070
+  do Hindiana). O conferidor do painel escolhia o veredito em vigor pela ordem alfabética do
+  nome do arquivo, e um `G6-tela-fb901a1.md` (FALHA, mais antigo) vencia um
+  `G6-tela-b865c4a.md` (PASSA, mais novo). Agora vale a data do cabeçalho no hash certo,
+  com desempate pelo commit do arquivo e depois pelo nome (`ordem_veredito`, função pura);
+  veredito sem data legível não compete; a trilha lista os gates por data. Teste vermelho
+  antes da correção (`6741315` → `d2822ef`) — o primeiro ciclo integrado em que o Princípio IV
+  vale para a mudança principal. A pasta do chamado (`specs/070-conferidor-ordem-veredito/`,
+  dez arquivos G0–G3) entra como evidência imutável, no padrão de gates do Hindiana.
+
 - **O `check-language` estava vermelho na `main` e na `dev`** (ciclo 065). O comentário do
   `check-conformance.sh` que cita as evidências falsas medidas (`NÃO EXECUTADA.`, `pendente.`)
   carregava português sem o marcador `PT-DATA` — e, por ser o primeiro passo bloqueante a falhar,

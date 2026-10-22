@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Painel Maestro</title>
+<style>
+:root{
+  --bg:#f7f8f9; --surface:#fff; --surface-2:#f1f2f4; --border:#dcdfe4; --text:#172b4d; --muted:#626f86;
+  --brand:#0c66e4; --brand-weak:#e9f2ff; --ok:#1f845a; --ok-weak:#dcfff1; --warn:#a54800; --warn-weak:#fff3eb;
+  --bad:#c9372c; --bad-weak:#ffeceb; --info:#5e4db2; --info-weak:#f3f0ff; --idle:#626f86; --idle-weak:#f1f2f4;
+  --shadow:0 1px 1px rgba(9,30,66,.25),0 0 1px rgba(9,30,66,.31); --radius:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1d2125; --surface:#22272b; --surface-2:#2c333a; --border:#38414a; --text:#dee4ea; --muted:#9fadbc;
+  --brand:#579dff; --brand-weak:#1c2b41; --ok:#4bce97; --ok-weak:#1c3329; --warn:#fea362; --warn-weak:#38291e;
+  --bad:#f87168; --bad-weak:#42221f; --info:#9f8fef; --info-weak:#2b273f; --idle:#9fadbc; --idle-weak:#2c333a;
+  --shadow:0 0 0 1px #38414a;}}
+:root[data-theme="dark"]{
+  --bg:#1d2125; --surface:#22272b; --surface-2:#2c333a; --border:#38414a; --text:#dee4ea; --muted:#9fadbc;
+  --brand:#579dff; --brand-weak:#1c2b41; --ok:#4bce97; --ok-weak:#1c3329; --warn:#fea362; --warn-weak:#38291e;
+  --bad:#f87168; --bad-weak:#42221f; --info:#9f8fef; --info-weak:#2b273f; --idle:#9fadbc; --idle-weak:#2c333a;
+  --shadow:0 0 0 1px #38414a;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 -apple-system,"Segoe UI",Roboto,Ubuntu,sans-serif}
+a{color:var(--brand)}
+.app{display:grid;grid-template-columns:232px 1fr;min-height:100vh}
+nav{background:var(--surface);border-right:1px solid var(--border);padding:16px 8px;position:sticky;top:0;height:100vh;overflow:auto}
+.proj{display:flex;gap:10px;align-items:center;padding:4px 8px 16px}
+.proj .logo{width:32px;height:32px;border-radius:6px;background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:700}
+.proj b{display:block;font-size:14px}.proj small{color:var(--muted);font-size:12px}
+nav .grupo{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;padding:14px 10px 6px}
+nav button{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;color:var(--text);padding:7px 10px;border-radius:4px;font:inherit;cursor:pointer;text-align:left}
+nav button:hover{background:var(--surface-2)}
+nav button[aria-current="page"]{background:var(--brand-weak);color:var(--brand);font-weight:600}
+nav .cnt{margin-left:auto;font-size:11px;color:var(--muted)}
+main{min-width:0;padding:20px 28px 40px}
+header.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.crumb{color:var(--muted);font-size:13px}
+h1{font-size:22px;margin:2px 0 4px;font-weight:600}
+.sub{color:var(--muted);margin:0 0 16px;font-size:13px}
+.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0 16px}
+input[type=search]{border:2px solid var(--border);background:var(--surface);color:var(--text);border-radius:4px;padding:6px 10px;width:260px;font:inherit}
+input[type=search]:focus{outline:none;border-color:var(--brand)}
+.btn{border:0;border-radius:4px;padding:7px 12px;background:var(--surface-2);color:var(--text);font:inherit;font-weight:500;cursor:pointer}
+.btn:hover{filter:brightness(.96)}.btn.primary{background:var(--brand);color:#fff}
+.chip{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--border);border-radius:14px;padding:3px 10px;background:var(--surface);cursor:pointer;font-size:12px;color:var(--text)}
+.chip[aria-pressed="true"]{background:var(--brand-weak);border-color:var(--brand);color:var(--brand)}
+.board{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(250px,1fr);gap:12px;overflow-x:auto;padding-bottom:8px}
+.board.pecas{grid-auto-flow:row;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+.board.pecas .col{padding:6px}.board.pecas .card{padding:8px 9px}.board.pecas .card .titulo{font-size:13px}
+.board.pecas .card .em{font-size:12px;-webkit-line-clamp:2}
+@media (max-width:1100px){.board.pecas{grid-auto-flow:column;grid-template-columns:none;grid-auto-columns:minmax(180px,1fr)}}
+.board-cab{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;padding:0 8px 6px;position:sticky;top:0;background:var(--bg);z-index:2}
+.board-cab div{font-size:12px}
+.raia{margin-bottom:14px}.raia-t{font-size:13px;font-weight:600;margin:6px 2px 6px;display:flex;gap:8px;align-items:center}
+.roster{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+.roster{grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:6px}
+.roster .card{margin:0;border-left-width:4px}
+.card.mini{padding:7px 10px}.card.mini .l1{gap:7px}.card.mini .av{width:22px;height:22px;font-size:10px}
+.card.mini .nome{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:0 1 auto;min-width:3.2em}
+.card.mini .l1 .loz{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card.mini .idade{margin-left:auto}
+.card.mini .idade{font-size:12px;color:var(--muted);white-space:nowrap}.card.mini .idade.ruim{color:var(--bad);font-weight:600}
+.card.mini .tarefa{font-size:12.5px;color:var(--text);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.urgente{background:var(--bad-weak);border-radius:var(--radius);padding:8px 10px 10px;margin-bottom:14px}
+.urgente .raia-t{margin-top:0}
+.card.st-ok{border-left-color:transparent}.card.st-warn{border-left-color:var(--warn)}.card.st-bad{border-left-color:var(--bad)}.card.st-idle{border-left-color:var(--border)}
+.card.alerta{box-shadow:0 0 0 1px var(--bad),var(--shadow)}
+.col{background:var(--surface-2);border-radius:var(--radius);padding:8px;min-height:120px}
+.col h3{font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);margin:4px 6px 10px;display:flex;gap:6px;align-items:center}
+.col h3 .n{background:var(--surface);border-radius:10px;padding:0 7px;font-weight:600}
+.card{background:var(--surface);border-radius:4px;box-shadow:var(--shadow);padding:10px 12px;margin-bottom:8px;cursor:pointer;border-left:3px solid transparent}
+.card:hover{background:var(--surface-2)}
+.card:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
+.card .l1{display:flex;align-items:center;gap:8px}
+.card .titulo{font-weight:600}
+.card .em{margin:6px 0;font-size:13px;color:var(--text);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.card .l3{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+
+.av{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff;flex:none}
+.loz{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;border-radius:3px;padding:1px 6px;letter-spacing:.02em}
+.loz.ok{background:var(--ok-weak);color:var(--ok)}.loz.warn{background:var(--warn-weak);color:var(--warn)}
+.loz.bad{background:var(--bad-weak);color:var(--bad)}.loz.info{background:var(--info-weak);color:var(--info)}
+.loz.idle{background:var(--idle-weak);color:var(--idle)}.loz.brand{background:var(--brand-weak);color:var(--brand)}
+code.loz{text-transform:none;font-weight:600;letter-spacing:0}
+code,.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.tile{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px}
+.tile .k{font-size:12px;color:var(--muted);font-weight:600}
+.tile .v{font-size:28px;font-weight:600;margin:4px 0;font-variant-numeric:tabular-nums}
+.tile .f{font-size:12px;color:var(--muted)}
+.tile.vazio .v{color:var(--muted)}
+.panel{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);margin:16px 0;overflow:hidden}
+.panel h2{font-size:15px;margin:0;padding:12px 16px;border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:center}
+.panel .corpo{padding:12px 16px}
+table{width:100%;border-collapse:collapse}
+th{font-size:12px;text-align:left;color:var(--muted);font-weight:600;padding:8px 10px;border-bottom:2px solid var(--border);position:sticky;top:0;background:var(--surface)}
+td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover td{background:var(--surface-2)}
+.scroll{max-height:560px;overflow:auto}
+.barras{display:flex;align-items:flex-end;gap:3px;height:70px;padding-top:6px}
+.barras span{flex:1;background:var(--brand);border-radius:2px 2px 0 0;min-width:4px;position:relative}
+.barras span:hover::after{content:attr(data-t);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:var(--text);color:var(--surface);font-size:11px;padding:2px 6px;border-radius:3px;white-space:nowrap}
+.eixo{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:2px}
+.prog{height:6px;background:var(--surface-2);border-radius:3px;overflow:hidden;min-width:80px}
+.prog i{display:block;height:100%;background:var(--ok)}
+.vazio-msg{color:var(--muted);padding:20px;text-align:center;border:1px dashed var(--border);border-radius:var(--radius);background:var(--surface)}
+.aviso{background:var(--warn-weak);color:var(--warn);border-radius:var(--radius);padding:10px 14px;margin:8px 0;font-size:13px}
+.drawer{position:fixed;inset:0 0 0 auto;width:min(560px,100%);background:var(--surface);box-shadow:-4px 0 24px rgba(0,0,0,.18);transform:translateX(100%);transition:transform .18s;z-index:10;display:flex;flex-direction:column}
+.drawer.aberto{transform:none}
+.drawer header{display:flex;align-items:center;gap:10px;padding:16px 20px;border-bottom:1px solid var(--border)}
+.drawer .corpo{padding:16px 20px;overflow:auto}
+.drawer dl{display:grid;grid-template-columns:130px 1fr;gap:8px 12px;margin:0 0 16px}
+.drawer dt{color:var(--muted);font-size:12px;font-weight:600}.drawer dd{margin:0;white-space:pre-wrap;word-break:break-word}
+.fecha{margin-left:auto}
+.timeline{border-left:2px solid var(--border);margin-left:6px;padding-left:14px}
+.timeline div{margin-bottom:10px;position:relative}
+.timeline div::before{content:"";position:absolute;left:-20px;top:5px;width:10px;height:10px;border-radius:50%;background:var(--brand)}
+.legenda{font-size:12px;color:var(--muted)}
+@media (max-width:820px){.app{grid-template-columns:1fr}nav{position:static;height:auto;display:flex;flex-wrap:wrap;gap:4px}nav .grupo{display:none}nav button{width:auto}main{padding:16px}input[type=search]{width:100%}}
+
+/* chamados e gates */
+.ch-cartoes{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.ch-cartao{display:flex;flex-direction:column;align-items:flex-start;min-width:130px;border:1px solid var(--border);border-left:4px solid var(--border);background:var(--surface);border-radius:var(--radius);padding:8px 12px;cursor:pointer;font:inherit;color:var(--text);text-align:left}
+.ch-cartao b{font-size:22px;line-height:1.1;font-variant-numeric:tabular-nums}.ch-cartao span{font-size:12px;color:var(--muted)}
+.ch-cartao.bad{border-left-color:var(--bad)}.ch-cartao.warn{border-left-color:var(--warn)}.ch-cartao.info{border-left-color:var(--info)}
+.ch-cartao[aria-pressed="true"]{background:var(--brand-weak);border-color:var(--brand)}
+.ch-filtros{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:4px 0 8px;font-size:13px}
+.ch-filtros select{font:inherit;padding:4px 6px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text)}
+.ch-leg{display:flex;flex-wrap:wrap;gap:10px;margin-left:auto}.ch-leg span{display:inline-flex;align-items:center;gap:4px}
+.ch-grupo{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);margin:12px 0;overflow:hidden}
+.ch-grupo h2{font-size:13px;margin:0;padding:8px 14px;background:var(--surface-2);display:flex;gap:8px;align-items:center}
+.ch-linha{display:grid;grid-template-columns:118px 150px 52px 120px minmax(150px,1.1fr) minmax(200px,1.6fr) 40px 132px;gap:10px;align-items:center;padding:8px 14px;border-top:1px solid var(--border);cursor:pointer;font-size:13px}
+.ch-linha:hover{background:var(--surface-2)}.ch-linha.sel{background:var(--brand-weak);box-shadow:inset 3px 0 0 var(--brand)}
+.ch-linha:focus-visible{outline:2px solid var(--brand);outline-offset:-2px}
+.ch-gate b{font-family:ui-monospace,Consolas,monospace}
+.ch-idade{font-variant-numeric:tabular-nums;color:var(--muted)}.ch-idade.velho{color:var(--warn);font-weight:700}
+.ch-falta{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ch-tit{min-width:0}.ch-tit b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}.ch-tit small{color:var(--muted);font-size:11px}
+.desv{color:var(--warn);font-weight:700}
+.tag{font:600 10px ui-monospace,Consolas,monospace;border:1px solid;border-radius:3px;padding:1px 4px;text-align:center}
+.tag.bug{color:var(--bad)}.tag.melhoria{color:var(--brand)}.tag.sugestao{color:var(--muted)}
+.trilho{display:inline-flex;gap:5px;align-items:center}.trilho .fase{display:inline-flex;gap:2px}
+.seg{display:inline-block;width:8px;height:8px;border-radius:2px;border:1.5px solid var(--idle);background:transparent}
+.seg.ok{background:var(--ok);border-color:var(--ok);opacity:.55}.seg.run{background:var(--info);border-color:var(--info)}
+.seg.bad{background:var(--bad);border-color:var(--bad)}.seg.na{border-color:transparent;width:3px}
+.seg.atual{width:12px;height:12px;opacity:1}
+.ch-faltabox{background:var(--info-weak);border-radius:var(--radius);padding:10px 14px;margin:0 0 14px;font-size:13px}.ch-faltabox ul{margin:4px 0 0;padding-left:18px}
+.tl-lista{list-style:none;margin:0;padding:0;border-left:2px solid var(--border);margin-left:8px}
+.tl{position:relative;padding:4px 0 8px 18px}.tl summary{cursor:pointer;list-style:none}.tl summary::-webkit-details-marker{display:none}
+.tl-ic{position:absolute;left:-10px;top:4px;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font-size:11px;background:var(--surface);border:2px solid var(--idle);color:var(--idle)}
+.tl.ok .tl-ic{border-color:var(--ok);color:var(--ok)}.tl.run .tl-ic{border-color:var(--info);color:var(--info)}.tl.bad .tl-ic{border-color:var(--bad);color:var(--bad)}
+.tl.atual > details > summary{font-weight:600}
+.tl ul{list-style:none;margin:6px 0;padding:0;display:grid;gap:6px}
+.ch-item{border:1px solid var(--border);border-radius:var(--radius);padding:6px 10px;font-size:13px}
+.ch-item.subst{opacity:.55}.ch-item.naoconta{border-color:var(--warn)}
+.naoconta-msg{color:var(--warn);font-size:12px;font-weight:600}
+.ch-hash{font-size:12px;margin-top:6px}
+.btn.mini{padding:3px 8px;font-size:12px;margin-top:4px}
+#bpmn .hl .djs-visual > :first-child{stroke:#d97706 !important;stroke-width:5px !important}
+@media (min-width:1280px){body.com-detalhe main{margin-right:min(560px,42vw)}}
+.ch-grupo{container-type:inline-size}
+@container (max-width:1000px){.ch-linha{grid-template-columns:112px minmax(0,1fr) 48px 110px 132px}.ch-falta,.tag{display:none}.ch-tit{grid-column:1/-1;order:-1}}
+@container (max-width:620px){.ch-linha{grid-template-columns:112px minmax(0,1fr) 48px}.ch-quem,.trilho{display:none}}
+
+.ch-abas{display:flex;gap:8px;align-items:center;margin:0 0 12px}.ch-abas a{margin-left:auto}
+.tr-metricas{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.tr-metricas div{background:var(--surface-2);border-radius:var(--radius);padding:6px 10px}.tr-metricas b{display:block;font-size:17px;font-variant-numeric:tabular-nums}.tr-metricas span{font-size:11px;color:var(--muted)}
+.tr-duas{display:grid;grid-template-columns:1fr 1fr;gap:10px}.tr-tab{width:100%;border-collapse:collapse;font-size:12px}.tr-tab th,.tr-tab td{padding:3px 6px;border-bottom:1px solid var(--border);text-align:left}.tr-tab .num,.tr-linha .num{text-align:right;font-variant-numeric:tabular-nums}
+.tr-eventos{list-style:none;margin:10px 0 0;padding:0}.tr-ev{border-bottom:1px solid var(--border)}
+.tr-linha{display:grid;grid-template-columns:44px 90px 1fr 92px 64px 54px;gap:6px;align-items:center;width:100%;border:0;background:none;padding:5px 2px;font:inherit;font-size:12px;color:var(--text);text-align:left;cursor:pointer}
+.tr-linha:hover{background:var(--surface-2)}.tr-ev.naoconta .tr-linha{box-shadow:inset 3px 0 0 var(--warn)}
+.tr-doc{padding:4px 6px 10px}.tr-doc pre{white-space:pre-wrap;word-break:break-word;max-height:320px;overflow:auto;background:var(--surface-2);padding:8px;border-radius:4px;font-size:11px}
+
+.ch-vista{display:inline-flex;gap:4px;margin-left:8px}
+.mc-scroll{overflow-x:auto}
+table.mc{border-collapse:separate;border-spacing:0;width:100%;font-size:13px}
+table.mc th,table.mc td{border-bottom:1px solid var(--border);padding:6px 6px;text-align:left;vertical-align:middle}
+table.mc thead th{font-size:11px;color:var(--muted);font-weight:700;background:var(--surface);position:sticky;top:0;text-align:center;white-space:nowrap}
+table.mc thead th.mc-fixa{text-align:left}
+.mc-fixa{position:sticky;left:0;background:var(--surface);z-index:1;min-width:240px;max-width:320px;box-shadow:1px 0 0 var(--border)}
+table.mc tbody tr:hover td{background:var(--surface-2)}table.mc tbody tr.sel td{background:var(--brand-weak)}
+.mc-tit{border:0;background:none;padding:0;font:inherit;color:var(--text);text-align:left;cursor:pointer;display:block;width:100%}
+.mc-tit b{font-weight:600}.mc-tit small{display:block;color:var(--muted);font-size:11px}
+.mc-c{text-align:center;padding:4px 3px}
+.mc-cel{min-width:32px;height:26px;border-radius:5px;border:1px solid transparent;font:600 12px ui-monospace,Consolas,monospace;cursor:pointer;position:relative}
+.mc-cel.ok{background:var(--ok-weak);color:var(--ok)}.mc-cel.run{background:var(--info-weak);color:var(--info);border-color:var(--info)}
+.mc-cel.bad{background:var(--bad-weak);color:var(--bad);border-color:var(--bad)}.mc-cel.falta{background:var(--surface-2);color:var(--muted)}
+.mc-cel.na{background:transparent;color:var(--muted)}
+.mc-cel.atual{outline:2px solid var(--text);outline-offset:1px}
+.mc-cel sup{color:var(--warn);font-size:9px;position:absolute;top:-2px;right:1px}
+.mc-cel:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
+.mc-n{font-variant-numeric:tabular-nums;color:var(--muted);white-space:nowrap}
+.mc-falta{color:var(--muted);max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl.tl-foco > details > summary{background:var(--warn-weak);border-radius:4px}
+
+.pend{color:var(--warn);font-weight:700}.pend-msg{color:var(--warn);font-size:12px;font-weight:600;margin:4px 0}
+.ch-pendbox{background:var(--warn-weak);color:var(--text);border-radius:var(--radius);padding:10px 14px;margin:0 0 10px;font-size:13px}.ch-pendbox ul{margin:4px 0 0;padding-left:18px}
+.mc-cel sub{color:var(--warn);font-size:9px;position:absolute;bottom:-1px;right:1px}
+</style>
+</head>
+<body>
+<div class="app">
+  <nav aria-label="Seções">
+    <div class="proj"><div class="logo">M</div><div><b id="pnome">Maestro</b><small id="pingest">carregando…</small></div></div>
+    <div class="grupo">Agora</div>
+    <button data-v="board" aria-current="page">◧ Board de agentes <span class="cnt" id="c-board"></span></button>
+    <button data-v="pecas">▤ Fluxo de peças <span class="cnt" id="c-pecas"></span></button>
+    <button data-v="chamados">◆ Chamados e gates <span class="cnt" id="c-cham"></span></button>
+    <div class="grupo">Planejamento</div>
+    <button data-v="roadmap">⇢ Roadmap e specs <span class="cnt" id="c-specs"></span></button>
+    <button data-v="decisoes">⚖ Decisões e ADRs <span class="cnt" id="c-dec"></span></button>
+    <button data-v="processo">⇄ Fluxo do chamado (BPMN)</button>
+    <div class="grupo">Medição</div>
+    <button data-v="dora">↗ Indicadores DORA</button>
+    <button data-v="qualidade">✓ Barra, defeitos e desvios <span class="cnt" id="c-desv"></span></button>
+    <button data-v="tempo">◷ Tempo por fase</button>
+    <div class="grupo">Controle</div>
+    <button data-v="higiene">⎇ Higiene do git <span class="cnt" id="c-hig"></span></button>
+    <button data-v="lote">✎ Relatório de lote (retro)</button>
+    <div class="grupo">Conhecimento</div>
+    <button data-v="documentos">❏ Documentos do projeto <span class="cnt" id="c-docs"></span></button>
+    <button data-v="glossario">Aa Linguagem ubíqua <span class="cnt" id="c-glos"></span></button>
+    <button data-v="ia">⚙ Estado para a IA</button>
+    <button data-v="operacao">⌂ Operação: equipe, infra, CI/CD, BPMN</button>
+  </nav>
+  <main id="main" tabindex="-1"></main>
+</div>
+<aside class="drawer" id="drawer" aria-hidden="true" role="dialog" aria-label="Detalhe">
+  <header><b id="dtitulo"></b><button class="btn fecha" id="dfecha">Fechar (Esc)</button></header>
+  <div class="corpo" id="dcorpo"></div>
+</aside>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const cache = {};
+async function api(p){ const r = await fetch(p, {cache:"no-store"}); if(!r.ok) throw new Error(p+" "+r.status); return r.json(); }
+const CORES = ["#0c66e4","#1f845a","#a54800","#5e4db2","#c9372c","#206a83","#943d73","#5b7f24","#7f5f01","#ae2e24"];
+function av(n){ let h=0; for(const c of n) h=(h*31+c.charCodeAt(0))>>>0; const ini=n.replace(/^Worker/,"W").replace(/[^A-Za-z0-9]/g,"").slice(0,3); return `<span class="av" style="background:${CORES[h%CORES.length]}" aria-hidden="true">${esc(ini.slice(0,3))}</span>`; }
+const LOZ_SESSAO = {"trabalhando":"ok","esperando":"warn","sem tarefa":"bad","bloqueado":"bad","sem registro":"idle"};
+const ROTULO_PECA = {"spec":"Spec","red":"Teste vermelho","entregue":"Entregue","suites aceitas":"Suítes aceitas","aprovada as cegas":"Aprovada às cegas","integrada":"Integrada","em producao":"Em produção"};
+const ROTULO_EV = {"hash":"hash","runner2":"runner2","par_montado_por":"par montado","descricao_factual":"descrição factual","merge":"merge","deploy":"deploy","barra":"barra","mutante":"mutante","critica":"crítica"};
+const LOZ_PECA = {"spec":"idle","red":"bad","entregue":"brand","suites aceitas":"info","aprovada as cegas":"info","integrada":"ok","em producao":"ok"};
+function idade(min){ if(min==null) return "sem registro"; if(min<60) return min+" min"; if(min<1440) return Math.round(min/60)+" h"; return Math.round(min/1440)+" d"; }
+function minDesde(ts){ const t = Date.parse(ts); return isNaN(t)? null : Math.max(0, Math.round((Date.now()-t)/60000)); }
+let filtro = "";
+function casa(o){ return !filtro || JSON.stringify(o).toLowerCase().includes(filtro); }
+
+function cabecalho(crumb, titulo, sub, extra=""){
+  return `<header class="top"><span class="crumb">${esc(crumb)}</span></header><h1>${esc(titulo)}</h1><p class="sub">${sub}</p>
+  <div class="toolbar"><input type="search" id="busca" placeholder="Filtrar (sessão, peça, hash, texto)…" value="${esc(filtro)}" aria-label="Filtrar">${extra}</div>`;
+}
+function liga_busca(fn){ const b=$("#busca"); if(!b) return; b.addEventListener("input", e=>{ filtro=e.target.value.toLowerCase(); fn(true); }); }
+
+// ---------- Board de agentes (enxuto, 02/10: exceções no topo, uma linha por sessão) ----------
+const HOOK_RX = /^(turno encerrado|sess[aã]o iniciada)/i;
+async function vBoard(manterFoco){
+  const d = cache.board = await api("/api/board");
+  const equipes = cache.meta?.equipes || {};
+  const membros = new Set(Object.values(equipes).flat());
+  const todos = Object.values(d.colunas).flat().filter(c=> !membros.size || membros.has(c.sessao));  // fora das equipes (ex.: W10 encerrada) não entra
+  const comStatus = c=> /^W\d+$/.test(c.sessao);  // só workers têm status de 30 min; gerentes e Desktop não contam como "sem sinal"
+  const equipeDe = n=>{ const e = Object.entries(equipes).find(([_,m])=>m.includes(n)); return e?e[0]:"Outras"; };
+  const ordemEq = [...Object.keys(equipes), "Outras"];
+  const est = c=> LOZ_SESSAO[c.estado] ? c.estado : "sem registro";
+  const bloqueados = todos.filter(c=>c.estado==="bloqueado");
+  const semTarefa = todos.filter(c=>c.estado==="sem tarefa");
+  const semSinal = todos.filter(c=>comStatus(c) && c.parado && est(c)!=="sem registro" && c.estado!=="bloqueado");
+  const excecao = c=> c.estado==="bloqueado" || c.estado==="sem tarefa" || (comStatus(c) && c.parado && est(c)!=="sem registro");
+  const so = cache.soExcecoes !== false;
+  const tile = (k, lista, cor, dica)=>`<div class="tile" style="${lista.length?`background:var(--${cor}-weak)`:""}" title="${esc(dica)}">
+     <div class="k" style="${lista.length?`color:var(--${cor})`:""}">${esc(k)}</div>
+     <div class="v" style="${lista.length?`color:var(--${cor})`:"color:var(--muted)"}">${lista.length}</div>
+     <div class="f">${lista.length?esc(lista.map(c=>c.sessao.replace(/^Worker/,"W")).join(" · ")):"ninguém"}</div></div>`;
+  let h = cabecalho("Agora / Board de agentes","Quem precisa de ação agora",
+    `Só exceções por padrão. Sinal de vida mais velho que ${d.limiar_min} min conta como sem sinal. Clique numa linha para ver o histórico.`,
+    `<button class="chip" id="soexc" aria-pressed="${so}">Só exceções</button><span class="legenda">${d.total} sessões</span><button class="btn" id="reing">Reingerir arquivos</button>`);
+  h += `<div class="grid" style="grid-template-columns:repeat(3,minmax(0,1fr));margin-bottom:14px">
+    ${tile("Bloqueados (prompt ou humano)", bloqueados, "bad", "Estado 'bloqueado': em geral prompt de permissão ou gate humano")}
+    ${tile("Sem tarefa", semTarefa, "warn", "Estado 'sem tarefa' no último status; 2 ciclos seguidos viram alerta ao Gilsiley")}
+    ${tile("Sem sinal de vida", semSinal, "warn", "Último status mais velho que o limiar")}
+  </div>`;
+  const PRIO = {"bloqueado":0,"sem tarefa":1,"esperando":2,"trabalhando":3,"sem registro":4};
+  const linhas = todos.filter(casa).filter(c=> !so || excecao(c))
+    .sort((x,y)=>(PRIO[est(x)]-PRIO[est(y)]) || ordemEq.indexOf(equipeDe(x.sessao))-ordemEq.indexOf(equipeDe(y.sessao)) || x.sessao.localeCompare(y.sessao));
+  const fazendo = c=>{ const t = c.em || c.resumo_arquivo || ""; return HOOK_RX.test(t) ? "" : t; };
+  h += `<div class="panel"><table><thead><tr><th style="width:150px">Sessão</th><th style="width:120px">Estado</th><th>Fazendo / esperando</th><th style="width:130px">Peça</th><th style="width:90px">Há</th></tr></thead><tbody>`;
+  for(const c of linhas){
+    const k = est(c), sinal = c.parado && k!=="sem registro";
+    h += `<tr class="lin" tabindex="0" data-s="${esc(c.sessao)}" style="cursor:pointer">
+      <td><div style="display:flex;gap:8px;align-items:center">${av(c.sessao)}<div><b>${esc(c.sessao)}</b><br><span class="legenda">${esc(equipeDe(c.sessao))}</span></div></div></td>
+      <td><span class="loz ${LOZ_SESSAO[k]}">${esc(k)}</span></td>
+      <td><div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:520px" title="${esc(fazendo(c))}">${esc(fazendo(c)||"—")}</div></td>
+      <td class="mono">${esc(c.peca||"—")}</td>
+      <td style="${sinal?"color:var(--bad);font-weight:600":""}" title="${esc(c.status_ts||"")}">${idade(c.idade_min)}</td></tr>`;
+  }
+  h += `</tbody></table>${linhas.length?"":`<div class="vazio-msg">Nenhuma exceção agora. Use "Só exceções" para ver todas as sessões.</div>`}</div>`;
+  if(d.colunas["sem registro"]?.length===d.total) h += `<div class="aviso">Nenhum status registrado ainda. O loop de 30 min da Assistente grava um status por sessão com <code>registrar.py status</code>.</div>`;
+  $("#main").innerHTML = h;
+  $("#c-board").textContent = (bloqueados.length+semTarefa.length+semSinal.length) || "";
+  liga_busca(vBoard); if(manterFoco) foca();
+  $("#soexc").onclick = ()=>{ cache.soExcecoes = !so; vBoard(); };
+  $("#reing").onclick = async()=>{ $("#reing").textContent="Reingerindo…"; await fetch("/api/reingerir",{method:"POST"}); meta(); vBoard(); };
+  document.querySelectorAll("tr.lin").forEach(el=>{
+    const abre=()=>detalheSessao(todos.find(c=>c.sessao===el.dataset.s));
+    el.onclick=abre; el.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();abre();} };
+  });
+}
+function detalheSessao(c){
+  let h = `<dl><dt>Estado</dt><dd><span class="loz ${LOZ_SESSAO[c.estado]||"idle"}">${esc(c.estado)}</span></dd>
+  <dt>Fazendo</dt><dd>${esc(c.em||"—")}</dd><dt>Peça</dt><dd>${esc(c.peca||"—")}</dd>
+  <dt>Último status</dt><dd>${esc(c.status_ts||"nunca")} (${idade(c.idade_min)})</dd>
+  <dt>Evidência</dt><dd>${esc(c.evidencia||"—")}</dd><dt>Worktree</dt><dd class="mono">${esc(c.worktree||"—")}</dd>
+  <dt>Último hash</dt><dd class="mono">${esc(c.ultimo_hash||"—")}</dd><dt>Próximo passo</dt><dd>${esc(c.proximo||"—")}</dd>
+  ${(()=>{ const ct=(cache.meta?.contatos||{})[c.sessao]; return ct?`<dt>Endereço</dt><dd class="mono">${esc(ct.endereco||"—")}<br><span class="legenda">${esc(ct.tipo||"")} · SendMessage pelo nome</span></dd><dt>Pipe</dt><dd class="mono" style="font-size:11px">${esc(ct.pipe||"não conhecido (aparece quando a sessão escreve)")}</dd><dt>session_id</dt><dd class="mono" style="font-size:11px">${esc(ct.session_id||"não mapeado (vem do hook SessionStart)")}</dd>`:`<dt>Endereço</dt><dd class="legenda">sem contato registrado</dd>`; })()}
+  <dt>Arquivo de papel</dt><dd class="mono">${esc(c.arquivo_papel||"—")}<br><span class="legenda">Estado atual de ${esc(c.estado_em_arquivo||"?")}</span></dd></dl>`;
+  if(c.resumo_arquivo) h += `<h3>Estado atual (arquivo)</h3><div style="white-space:pre-wrap;font-size:13px">${esc(c.resumo_arquivo)}</div>`;
+  if(c.historico?.length) h += `<h3>Histórico de status</h3><div class="timeline">${c.historico.map(x=>`<div><b>${esc(x.estado)}</b> · ${esc(x.texto||"")}<br><span class="legenda">${esc(x.ts)} · por ${esc(x.autor)}</span></div>`).join("")}</div>`;
+  drawer(c.sessao, h);
+}
+
+// ---------- Fluxo de peças ----------
+async function vPecas(manterFoco){
+  const d = await api("/api/pecas");
+  let n = 0;
+  let h = cabecalho("Agora / Fluxo de peças","Peças por estado, só com prova",
+    `Vocabulário fechado: ${d.estados.join(" → ")}. Uma peça só muda de coluna com a evidência exigida; sem prova o registro é recusado.`);
+  h += `<div class="board pecas">`;
+  for(const k of d.estados){
+    const ps = (d.colunas[k]||[]).filter(casa); n += ps.length;
+    const ex = d.exigencias[k];
+    h += `<section class="col"><h3><span class="loz ${LOZ_PECA[k]}">${esc(ROTULO_PECA[k])}</span><span class="n">${ps.length}</span></h3>
+      <div class="legenda" style="margin:-4px 6px 8px">${ex?"exige "+ex.map(x=>ROTULO_EV[x]||x).join(" + "):"sem exigência"}</div>`;
+    const proxima = d.estados[d.estados.indexOf(k)+1];
+    const exigeProx = (d.exigencias[proxima]||[]).filter(x=>x!=="hash");
+    for(const p of ps){
+      const ev = p.evidencia||{};
+      const exige = (d.exigencias[k]||[]).filter(x=>x!=="hash");
+      const tem = exige.map(x=>`<span class="loz ${ev[x]?"ok":"bad"}" title="${esc(ev[x]||"falta")}">${ev[x]?"✓":"✗"} ${esc(ROTULO_EV[x]||x)}</span>`);
+      const extra = Object.keys(ev).filter(x=>x!=="hash" && !exige.includes(x)).map(x=>`<span class="loz idle" title="${esc(ev[x])}">${esc(ROTULO_EV[x]||x)}</span>`);
+      const falta = exigeProx.filter(x=>!ev[x]);
+      const ultimo = p.historico[p.historico.length-1];
+      const min = minDesde(p.ts), parada = min!=null && min>1440 && k!=="em producao";
+      h += `<article class="card ${parada?"alerta":""}" tabindex="0" data-p="${esc(p.peca)}"><div class="titulo">${esc(p.peca)}</div>
+        ${ultimo?.texto?`<div class="em" style="color:var(--muted)">${esc(ultimo.texto)}</div>`:""}
+        <div class="l3" style="margin:4px 0">${ev.hash?`<code class="loz idle">${esc(String(ev.hash).slice(0,7))}</code>`:`<span class="loz warn">sem hash</span>`} ${tem.join(" ")} ${extra.join(" ")}</div>
+        ${proxima?`<div class="legenda">para ${esc(ROTULO_PECA[proxima])}: ${falta.length?`falta ${falta.map(x=>esc(ROTULO_EV[x]||x)).join(", ")}`:`<span style="color:var(--ok)">pronta</span>`}</div>`:""}
+        <div class="l3" style="margin-top:6px">${av(p.sessao||"?")}<b style="color:var(--text)">${esc(p.sessao||"")}</b><span title="${esc(p.ts)}" ${parada?`style="color:var(--bad);font-weight:600"`:""}>· ${parada?"parada há":"há"} ${idade(min)}</span></div></article>`;
+    }
+    h += `</section>`;
+  }
+  h += `</div>`;
+  if(!n) h += `<div class="aviso">Nenhuma peça registrada. Quem promove é humano ou a Office: <code>python registrar.py projetos/exemplo.json peca --peca P6 --estado "suites aceitas" --evidencia '{"hash":"…","runner2":"…"}' --autor Office</code></div>`;
+  $("#main").innerHTML = h; $("#c-pecas").textContent = n || "";
+  liga_busca(vPecas); if(manterFoco) foca();
+  document.querySelectorAll(".card[data-p]").forEach(el=>el.onclick=()=>{
+    const p = Object.values(d.colunas).flat().find(x=>x.peca===el.dataset.p);
+    drawer(p.peca, `<div class="timeline">${p.historico.map(x=>`<div><span class="loz ${LOZ_PECA[x.estado]}">${esc(x.estado)}</span> ${esc(x.texto||"")}<br><code>${esc(x.evidencia||"")}</code><br><span class="legenda">${esc(x.ts)} · ${esc(x.autor)}</span></div>`).join("")}</div>`);
+  });
+}
+
+// ---------- Roadmap e specs ----------
+async function vRoadmap(manterFoco){
+  const [specs, rm] = await Promise.all([api("/api/specs"), api("/api/roadmap")]);
+  let h = cabecalho("Planejamento / Roadmap e specs","Do roadmap às tasks",
+    "Specs lidas das pastas <code>specs/NNN-*</code> de cada repositório: status do cabeçalho, tasks marcadas em <code>tasks.md</code>, presença de plan e qa-report.");
+  const porRepo = {};
+  for(const s of specs.filter(casa)) (porRepo[s.repo] ||= []).push(s);
+  for(const [repo, ss] of Object.entries(porRepo)){
+    const semQa = ss.filter(s=>!s.tem_qa).length;
+    // A spec without plan or tasks skipped the step where domain, data model and slicing are decided.
+    const semPlano = ss.filter(s=>!s.tem_plan || !s.tasks_total).length;
+    h += `<section class="panel"><h2>${esc(repo)} <span class="loz idle">${ss.length} specs</span>${semPlano?`<span class="loz bad">${semPlano} sem plan ou tasks</span>`:""}${semQa?`<span class="loz warn">${semQa} sem qa-report</span>`:""}</h2><div class="scroll"><table>
+      <thead><tr><th>#</th><th>Spec</th><th>Status</th><th>Tasks</th><th>Plan</th><th>QA</th><th>Mexida em</th></tr></thead><tbody>`;
+    for(const s of ss){
+      const pct = s.tasks_total? Math.round(s.tasks_feitas/s.tasks_total*100):0;
+      h += `<tr><td class="mono">${esc(s.numero)}</td><td>${esc(s.titulo)}<br><span class="legenda mono">${esc(s.slug)}</span></td>
+        <td>${s.status?`<span class="loz ${/implement|conclu|done|aprov/i.test(s.status)?"ok":"idle"}">${esc(s.status.slice(0,28))}</span>`:`<span class="legenda">—</span>`}</td>
+        <td>${s.tasks_total?`<div class="prog" title="${s.tasks_feitas}/${s.tasks_total}"><i style="width:${pct}%"></i></div><span class="legenda">${s.tasks_feitas}/${s.tasks_total}</span>`:`<span class="loz bad">sem tasks</span>`}</td>
+        <td>${s.tem_plan?"✓":`<span class="loz bad">falta</span>`}</td><td>${s.tem_qa?"✓":`<span class="loz warn">falta</span>`}</td><td class="legenda">${esc((s.modificado||"").slice(0,16).replace("T"," "))}</td></tr>`;
+    }
+    h += `</tbody></table></div></section>`;
+  }
+  const secoes = {};
+  for(const r of rm.filter(casa)) (secoes[r.secao] ||= {cols:r.colunas, rows:[]}).rows.push(r.linha);
+  for(const [sec, t] of Object.entries(secoes)){
+    h += `<section class="panel"><h2>Roadmap · ${esc(sec)}</h2><div class="scroll"><table><thead><tr>${t.cols.map(c=>`<th>${esc(c)}</th>`).join("")}</tr></thead><tbody>${t.rows.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div></section>`;
+  }
+  $("#main").innerHTML = h; liga_busca(vRoadmap); if(manterFoco) foca();
+}
+
+// ---------- Decisões ----------
+async function vDecisoes(manterFoco){
+  const d = await api("/api/decisoes");
+  let h = cabecalho("Planejamento / Decisões e ADRs","Quem decidiu o quê, e como desfazer","Decisões das tabelas de <code>decisoes-*.md</code> e ADRs da pasta <code>adr/</code>. Fonte de verdade: os arquivos.");
+  h += `<section class="panel"><h2>ADRs <span class="loz idle">${d.adrs.length}</span></h2><table><thead><tr><th>Data</th><th>ADR</th><th>Estado</th></tr></thead><tbody>
+    ${d.adrs.filter(casa).map(a=>`<tr><td class="mono">${esc(a.data)}</td><td>${esc(a.titulo)}<br><span class="legenda mono">${esc(a.arquivo)}</span></td><td>${esc(a.estado||"—")}</td></tr>`).join("")}</tbody></table></section>`;
+  h += `<section class="panel"><h2>Decisões <span class="loz idle">${d.decisoes.length}</span></h2><div class="scroll"><table><thead><tr><th>#</th><th>Quando</th><th>Decisão</th><th>Como desfazer</th></tr></thead><tbody>
+    ${d.decisoes.filter(casa).map(x=>`<tr data-c="${esc(x.contexto)}"><td class="mono"><b>${esc(x.id)}</b></td><td class="legenda">${esc(x.quando)}</td><td>${esc(x.titulo)}<br><span class="legenda">${esc(x.contexto.slice(0,220))}${x.contexto.length>220?"…":""}</span></td><td class="legenda">${esc(x.desfazer)}</td></tr>`).join("")}</tbody></table></div></section>`;
+  $("#main").innerHTML = h; $("#c-dec").textContent = d.decisoes.length; liga_busca(vDecisoes); if(manterFoco) foca();
+}
+
+// ---------- DORA ----------
+function barras(serie){
+  const ent = Object.entries(serie||{}); if(!ent.length) return `<div class="legenda">sem dados</div>`;
+  const max = Math.max(...ent.map(e=>e[1])), total = ent.reduce((t,e)=>t+e[1],0);
+  const dm = d=>d.slice(8,10)+"/"+d.slice(5,7);
+  return `<div class="legenda">máximo ${max}/dia · total ${total} em ${ent.length} dias com atividade</div><div class="barras" role="img" aria-label="${esc(ent.map(([d,v])=>dm(d)+": "+v).join(", "))}">${ent.map(([d,v])=>`<span style="height:${Math.max(4,v/max*100)}%" data-t="${esc(dm(d))}: ${v}"></span>`).join("")}</div><div class="eixo"><span>${dm(ent[0][0])}</span><span>${dm(ent[ent.length-1][0])}</span></div>`;
+}
+const FAIXA = { // DORA 2023 bands
+  lead:  v=> v==null?null: v<24?["elite","ok"]: v<24*7?["alta","ok"]: v<24*30?["média","warn"]:["baixa","bad"],
+  cfr:   v=> v==null?null: v<=15?["elite","ok"]: v<=30?["alta","warn"]: v<=45?["média","warn"]:["baixa","bad"],
+  mttr:  v=> v==null?null: v<1?["elite","ok"]: v<24?["alta","ok"]: v<24*7?["média","warn"]:["baixa","bad"],
+  freq:  v=> v==null?null: v>=7?["elite","ok"]: v>=1?["alta","ok"]: v>=0.25?["média","warn"]:["baixa","bad"],
+};
+function tile(titulo, valor, unidade, origem, detalhes, faixa){
+  const f = faixa ? `<span class="loz ${faixa[1]}" title="faixa DORA">${esc(faixa[0])}</span>` : "";
+  return `<div class="tile ${valor==null?"vazio":""}"><div class="k">${esc(titulo)} ${f}</div><div class="v">${valor==null?"—":esc(valor)}<small style="font-size:14px;color:var(--muted)"> ${valor==null?"":esc(unidade)}</small></div>
+    <div class="f"><b>${esc(origem)}</b></div><div class="f" style="margin-top:4px">${detalhes}</div></div>`;
+}
+async function vDora(){
+  const dias = cache.dias || 30;
+  const d = await api("/api/dora?dias="+dias); const m = d.metricas;
+  const fmt = (v,u="")=> v==null? "—" : v+u;
+  const lts = Object.entries(m.lead_time.por_repo).filter(([_,x])=>x.mediana_h>0);
+  const lt0 = lts[0];
+  const cfrDeploy = m.taxa_falha.deploys_falhos_pct, cfrBarra = m.taxa_falha.barra_reprova_pct;
+  const mttrInc = m.tempo_restauracao.incidentes_mediana_h, mttrBarra = m.tempo_restauracao.barra_reprova_ate_passa_mediana_h;
+  let h = cabecalho("Medição / DORA","As quatro métricas, com a fonte de cada número",
+    `Janela de ${dias} dias. Nenhum número é estimado. O número grande diz de onde veio; a faixa DORA só aparece quando a medida é a de verdade (produção), nunca para proxy.`,
+    [7,30,90].map(x=>`<button class="chip" aria-pressed="${x===dias}" data-d="${x}">${x} dias</button>`).join(""));
+  for(const n of d.notas) h += `<div class="aviso">${esc(n)}</div>`;
+  h += `<div class="grid">`;
+  h += tile("Frequência de deploy", m.frequencia_deploy.valor, "deploys/semana",
+    m.frequencia_deploy.valor==null ? "sem deploy registrado" : "deploys registrados (Railway)",
+    `${m.frequencia_deploy.n} com sucesso de ${m.frequencia_deploy.tentativas}<br>proxy, não é deploy: entregas na linha principal ${Object.entries(m.frequencia_deploy.proxy_entregas_por_repo).map(([r,v])=>r+" "+v+"/sem").join(", ")||"—"}`,
+    FAIXA.freq(m.frequencia_deploy.valor));
+  h += tile("Lead time até a linha principal", lt0? lt0[1].mediana_h : null, "h (mediana)", lt0? `git ${lt0[0]}: commit do autor → linha principal (${lt0[1].criterio}); não é até produção` : "sem entrega na linha principal",
+    `${lts.map(([r,x])=>`${r}: mediana ${x.mediana_h} h · p90 ${x.p90_h} h · ${x.n} entregas (${x.criterio})`).join("<br>")||"—"}`, null);
+  h += tile("Taxa de falha de mudança", cfrDeploy ?? cfrBarra, "%", cfrDeploy!=null ? "deploys falhos" : "pré-produção: voltas da barra que reprovaram",
+    `barra: ${fmt(cfrBarra,"%")} de ${m.taxa_falha.barra_n} voltas<br>commits de correção na linha principal: ${Object.entries(m.taxa_falha.correcoes_na_linha_principal_pct).map(([r,v])=>r+" "+v+"%").join(", ")}`,
+    cfrDeploy!=null ? FAIXA.cfr(cfrDeploy) : null);
+  h += tile("Tempo de restauração", mttrInc ?? mttrBarra, "h (mediana)", mttrInc!=null ? "incidentes registrados" : "pré-produção: barra REPROVA → PASSA",
+    `incidentes: ${fmt(mttrInc," h")} (${m.tempo_restauracao.incidentes_n} fechados, ${m.tempo_restauracao.incidentes_abertos} abertos)<br>barra: ${fmt(mttrBarra," h")}`,
+    mttrInc!=null ? FAIXA.mttr(mttrInc) : null);
+  h += `</div>`;
+  for(const [r,s] of Object.entries(d.entregas_por_semana)) h += `<section class="panel"><h2>Entregas na linha principal por dia · ${esc(r)}</h2><div class="corpo">${barras(s)}</div></section>`;
+  h += `<section class="panel"><h2>Deploys registrados por dia</h2><div class="corpo">${barras(m.frequencia_deploy.serie)}</div></section>`;
+  $("#main").innerHTML = h;
+  document.querySelectorAll("[data-d]").forEach(b=>b.onclick=()=>{ cache.dias=+b.dataset.d; vDora(); });
+}
+
+// ---------- Qualidade ----------
+async function vQualidade(manterFoco){
+  const d = await api("/api/qualidade");
+  const max = Math.max(1,...d.classes.map(c=>c.n));
+  let h = cabecalho("Medição / Barra, defeitos e desvios","A barra decide; a retro aprende","Execuções de <code>barra/execucoes</code>, defeitos de <code>barra-v2-resultado.md</code> e desvios de <code>retro-anotacoes.md</code>, agrupados por classe.");
+  h += `<section class="panel"><h2>Voltas da barra <span class="loz idle">${d.barra.length}</span></h2><table><thead><tr><th>Quando</th><th>Ambiente</th><th>Hash</th><th>Veredito</th><th>Passos com erro</th></tr></thead><tbody>
+    ${d.barra.filter(casa).map(b=>`<tr><td class="mono">${esc(b.quando.replace("T"," "))}</td><td>${esc(b.ambiente)}</td><td class="mono">${esc(b.hash)}</td><td><span class="loz ${b.veredito==="PASSA"?"ok":"bad"}">${esc(b.veredito)}</span></td><td>${b.passos_com_erro} de ${b.passos}</td></tr>`).join("")}</tbody></table></section>`;
+  h += `<section class="panel"><h2>Desvios de método por classe <span class="loz idle">${d.desvios.length}</span></h2><div class="corpo">
+    ${d.classes.map(c=>`<div style="display:grid;grid-template-columns:200px 1fr 40px;gap:10px;align-items:center;margin:5px 0"><span>${esc(c.classe)}</span><div class="prog" style="height:12px"><i style="width:${c.n/max*100}%;background:var(--warn)"></i></div><b>${c.n}</b></div>`).join("")}</div></section>`;
+  h += `<section class="panel"><h2>Desvios (mais recentes primeiro)</h2><div class="scroll"><table><thead><tr><th>Quando</th><th>Quem</th><th>Classe</th><th>O que houve</th><th>Candidato ao método</th></tr></thead><tbody>
+    ${d.desvios.filter(casa).map(x=>`<tr><td class="legenda">${esc(x.quando)}</td><td>${esc(x.quem)}</td><td><span class="loz warn">${esc(x.classe)}</span></td><td>${esc(x.fato)}</td><td class="legenda">${esc(x.candidato)}</td></tr>`).join("")}</tbody></table></div></section>`;
+  h += `<section class="panel"><h2>Defeitos da barra</h2><div class="scroll"><table><thead><tr><th>Volta</th><th>Defeito</th><th>Ocorrências</th><th>O que é</th><th>Com quem</th></tr></thead><tbody>
+    ${d.defeitos.filter(casa).map(x=>`<tr><td class="legenda">${esc(x.volta)}</td><td class="mono"><b>${esc(x.id)}</b></td><td>${esc(x.ocorrencias)}</td><td>${esc(x.descricao)}</td><td>${esc(x.com_quem)}</td></tr>`).join("")}</tbody></table></div></section>`;
+  $("#main").innerHTML = h; $("#c-desv").textContent = d.desvios.length; liga_busca(vQualidade); if(manterFoco) foca();
+}
+
+// ---------- Documentos ----------
+const TIPOS_DOC = {"constituicao":"Constituição e regras","linguagem-e-objetos":"Linguagem ubíqua e objetos semânticos","jornadas":"Jornadas","plano-e-roadmap":"Plano e roadmap","decisoes":"Decisões","controle-e-retro":"Controle e retro","barra-e-qualidade":"Barra e qualidade","papeis-de-sessao":"Papéis das sessões (para a IA)","infraestrutura":"Infraestrutura"};
+async function vDocumentos(manterFoco){
+  const d = await api("/api/documentos");
+  const grupos = {}; for(const x of d.documentos.filter(casa)) (grupos[x.tipo] ||= []).push(x);
+  let h = cabecalho("Conhecimento / Documentos do projeto","Os documentos que o projeto precisa manter vivos",
+    "Idade = horas desde a última mudança no arquivo. Documento parado há mais de 7 dias fica marcado: artefato de planejamento que congela é anti-padrão do Maestro.");
+  for(const [t, xs] of Object.entries(grupos)){
+    const mortos = xs.filter(x=>x.idade_h>168).length;
+    h += `<section class="panel"><h2>${esc(TIPOS_DOC[t]||t)} <span class="loz idle">${xs.length}</span>${mortos?`<span class="loz warn">${mortos} parados</span>`:""}</h2><table><thead><tr><th>Documento</th><th>Linhas</th><th>Última mudança</th></tr></thead><tbody>
+      ${xs.map(x=>`<tr><td>${esc(x.titulo)}<br><span class="legenda mono">${esc(x.caminho)}</span></td><td>${x.linhas}</td><td><span class="loz ${x.idade_h<24?"ok":x.idade_h<168?"idle":"warn"}">${x.idade_h<24?Math.round(x.idade_h)+" h":Math.round(x.idade_h/24)+" d"}</span></td></tr>`).join("")}</tbody></table></section>`;
+  }
+  const faltando = Object.keys(TIPOS_DOC).filter(t=>!grupos[t]);
+  if(faltando.length && !filtro) h += `<div class="aviso">Sem documento: ${faltando.map(t=>esc(TIPOS_DOC[t])).join(", ")}.</div>`;
+  $("#main").innerHTML = h; $("#c-docs").textContent = d.documentos.length; liga_busca(vDocumentos); if(manterFoco) foca();
+}
+async function vGlossario(manterFoco){
+  const d = await api("/api/documentos");
+  let h = cabecalho("Conhecimento / Linguagem ubíqua","Os termos que código, tela e conversa devem usar","Lido das tabelas Termo | Definição | Evitar do glossário configurado.");
+  h += `<section class="panel"><div class="scroll"><table><thead><tr><th>Termo</th><th>Definição</th><th>Evitar</th></tr></thead><tbody>
+    ${d.glossario.filter(casa).map(g=>`<tr><td><b>${esc(g.termo)}</b></td><td>${esc(g.definicao)}</td><td class="legenda">${esc(g.evitar)}</td></tr>`).join("")}</tbody></table></div></section>`;
+  $("#main").innerHTML = h; $("#c-glos").textContent = d.glossario.length; liga_busca(vGlossario); if(manterFoco) foca();
+}
+async function vIA(){
+  const d = await api("/api/estado-ia");
+  $("#main").innerHTML = cabecalho("Conhecimento / Estado para a IA","O contexto ativo que um agente lê ao abrir a sessão",
+    "Gerado do cache (estilo memory bank: activeContext + progress). Endpoint: <code>GET /api/estado-ia</code>. É derivado; a verdade são os arquivos.") +
+    `<section class="panel"><div class="corpo"><pre class="mono" style="white-space:pre-wrap;margin:0">${esc(JSON.stringify(d,null,2))}</pre></div></section>`;
+}
+
+// ---------- Higiene do git ----------
+async function vHigiene(manterFoco){
+  const d = await api("/api/higiene");
+  const ws = d.worktrees.filter(casa);
+  let h = cabecalho("Controle / Higiene do git","Worktrees, branches e riscos de push",
+    `Lido de <code>git worktree list</code> e <code>git for-each-ref</code>. ${esc(d.regra)}`,
+    `<span class="legenda">${d.total} worktrees · ${d.integradas} integradas · ${d.candidatas_remocao.length} candidatas</span>`);
+  h += `<div class="grid">
+    <div class="tile"><div class="k">Branches com upstream na produção</div><div class="v" style="color:${d.branches_upstream_producao.length?"var(--bad)":"var(--ok)"}">${d.branches_upstream_producao.length}</div><div class="f">qualquer branch ≠ main com upstream origin/main: <code>git push</code> sem refspec vai para o deploy</div></div>
+    <div class="tile"><div class="k">Worktrees com risco</div><div class="v">${d.com_risco.length}</div><div class="f">HEAD destacado, pasta sumida ou upstream na produção</div></div>
+    <div class="tile"><div class="k">Candidatas à remoção</div><div class="v">${d.candidatas_remocao.length}</div><div class="f">integradas, limpas, sem risco, fora da lista protegida</div></div>
+  </div>`;
+  if(d.branches_upstream_producao.length) h += `<div class="aviso">Upstream na produção: ${d.branches_upstream_producao.map(b=>`<code>${esc(b.repo)}:${esc(b.branch)}</code>`).join(", ")}. Correção do dono: <code>git branch --unset-upstream</code>.</div>`;
+  h += `<section class="panel"><h2>Worktrees</h2><div class="scroll"><table><thead><tr><th>Caminho</th><th>Branch</th><th>Integrada</th><th>Pendência</th><th>Último commit</th><th>Risco</th></tr></thead><tbody>
+    ${ws.map(w=>`<tr><td class="mono">${esc(w.caminho)}</td><td class="mono">${esc(w.branch||"—")}</td><td>${w.integrada?`<span class="loz ok">sim</span>`:`<span class="loz idle">não</span>`}</td>
+    <td>${w.sujeira==null?`<span class="legenda">não medida</span>`:w.sujeira?`<span class="loz warn">alterações</span>`:`<span class="legenda">limpa</span>`}</td>
+    <td class="legenda">${w.idade_d==null?"—":Math.round(w.idade_d)+" d"}</td><td>${w.risco?`<span class="loz ${/protegida/.test(w.risco)?"info":"bad"}">${esc(w.risco)}</span>`:""}</td></tr>`).join("")}</tbody></table></div></section>`;
+  h += `<section class="panel"><h2>Lista para aprovação do Gilsiley <span class="loz idle">${d.candidatas_remocao.length}</span></h2><div class="corpo"><pre class="mono" style="white-space:pre-wrap;margin:0">${esc(d.candidatas_remocao.map(w=>`git -C ${w.repo} worktree remove ${w.caminho}`).join("\n"))}</pre></div></section>`;
+  $("#main").innerHTML = h; $("#c-hig").textContent = d.com_risco.length + d.branches_upstream_producao.length || ""; liga_busca(vHigiene); if(manterFoco) foca();
+}
+
+// ---------- Tempo por fase ----------
+async function vTempo(){
+  const d = await api("/api/tempo");
+  let h = cabecalho("Medição / Tempo por fase","Quanto tempo cada fase do método consome",`Fonte: ${esc(d.fonte)}. Cada sessão marca <code>ponto.py inicio|fim &lt;rodada&gt; &lt;fase&gt;</code>.`);
+  if(!d.fechados.length && !d.abertos.length) h += `<div class="aviso">Nenhuma marcação de ponto ainda. Ordem do Gilsiley: cada gerente marca início e fim de rodada e fase com <code>python ola/ferramentas/ponto.py</code>.</div>`;
+  const max = Math.max(1,...Object.values(d.por_fase));
+  h += `<section class="panel"><h2>Horas por fase</h2><div class="corpo">${Object.entries(d.por_fase).map(([f,v])=>`<div style="display:grid;grid-template-columns:140px 1fr 60px;gap:10px;align-items:center;margin:5px 0"><span>${esc(f)}</span><div class="prog" style="height:12px"><i style="width:${v/max*100}%"></i></div><b>${v} h</b></div>`).join("")||`<span class="legenda">—</span>`}</div></section>`;
+  h += `<section class="panel"><h2>Fases abertas agora</h2><table><thead><tr><th>Rodada</th><th>Fase</th><th>Quem</th><th>Desde</th></tr></thead><tbody>${d.abertos.map(a=>`<tr><td>${esc(a.rodada)}</td><td>${esc(a.fase)}</td><td>${esc(a.quem)}</td><td class="legenda">${esc(a.ts)}</td></tr>`).join("")}</tbody></table></section>`;
+  $("#main").innerHTML = h;
+}
+
+// ---------- Relatório de lote ----------
+async function vLote(){
+  const desde = cache.desde || "";
+  const d = await api("/api/relatorio-lote"+(desde?"?desde="+encodeURIComponent(desde):""));
+  $("#main").innerHTML = cabecalho("Controle / Relatório de lote","Material para a retro, gerado dos arquivos",
+    "Evidência (barra, DORA, desvios, higiene, documentos parados) mais as três perguntas. MANTER/MUDAR/CORTAR continua humano.",
+    `<label class="legenda">desde <input type="datetime-local" id="desde" value="${esc(desde)}"></label><button class="btn" id="copia">Copiar Markdown</button>`) +
+    `<section class="panel"><div class="corpo"><pre class="mono" style="white-space:pre-wrap;margin:0" id="md">${esc(d.markdown)}</pre></div></section>`;
+  $("#desde").onchange = e=>{ cache.desde = e.target.value; vLote(); };
+  $("#copia").onclick = async()=>{ try{ await navigator.clipboard.writeText(d.markdown); $("#copia").textContent="Copiado"; }catch{ $("#copia").textContent="Selecione e copie"; } };
+}
+
+// ---------- plumbing ----------
+function drawer(titulo, html){ $("#dtitulo").textContent = titulo; $("#dcorpo").innerHTML = html; const d=$("#drawer"); d.classList.add("aberto"); d.setAttribute("aria-hidden","false"); $("#dfecha").focus(); }
+function fecha(){ cache.chAba=""; const d=$("#drawer"); d.classList.remove("aberto"); d.setAttribute("aria-hidden","true"); document.body.classList.remove("com-detalhe"); if(atual==="chamados"){ cache.chSel=""; document.querySelectorAll(".ch-linha.sel").forEach(x=>x.classList.remove("sel")); } }
+$("#dfecha").onclick = fecha; document.addEventListener("keydown", e=>{ if(e.key==="Escape") fecha(); });
+function foca(){ const b=$("#busca"); if(b){ b.focus(); b.setSelectionRange(b.value.length,b.value.length);} }
+// ---------- Chamados e gates (padrão hindiana DOCS/processo/padrao-chamado.md) ----------
+const EST = {ok:["✓","passou","ok"], run:["●","em curso","info"], bad:["✕","barrado","bad"], falta:["○","não chegou","idle"], na:["–","não se aplica","idle"]};
+const FASES = [["abertura","G0","GD","G1","G2"],["G3","G4","G5","G6"],["G7","G8","G9"]];
+const BPMN_EL = {abertura:"S_chamado", G0:"G0", GD:"GD", G1:"G1", G2:"G2", G3:"G3", G4:"G4", G5:"G5", G6:"G6", G7:"G7", G8:"T_ordem", G9:"G9"};
+const ORDEM_G = ["abertura","G0","GD","G1","G2","G3","G4","G5","G6","G7","G8","G9","entregue"];
+const est = e => EST[e] || EST.falta;
+function idade(iso){ if(!iso) return ""; const m=(Date.now()-new Date(iso))/60000; if(m<60) return Math.max(1,Math.round(m))+" min"; if(m<1440) return Math.round(m/60)+" h"; return Math.round(m/1440)+" d"; }
+function parado24(c){ return c.desde && (Date.now()-new Date(c.desde))>864e5; }
+function trilho(c){
+  const por = Object.fromEntries(c.gates.map(g=>[g.gate,g]));
+  return `<span class="trilho" aria-label="Trilho: ${esc(c.onde)}">` + FASES.map(f=>`<span class="fase">`+f.map(k=>{
+    const g = por[k] || {estado:"falta"}; const atual = k===c.onde;
+    return `<i class="seg ${g.estado}${atual?" atual":""}" title="${esc(k)} · ${esc(est(g.estado)[1])}"></i>`; }).join("")+`</span>`).join("") + `</span>`;
+}
+async function carregaChamados(forcar){
+  const d = await api("/api/chamados"+(forcar?"?atualizar=1":""));
+  cache.chamados = d; return d;
+}
+async function vChamados(){
+  if(!cache.chVista){ try{ cache.chVista = localStorage.getItem("painel-ch-vista") || "lista"; }catch{ cache.chVista = "lista"; } }
+  const d = cache.chamados && !cache.chamadosVelho ? cache.chamados : await carregaChamados();
+  cache.chamadosVelho = false;
+  const filtro = cache.chFiltro || "", quem = cache.chQuem || "", tipo = cache.chTipo || "";
+  const todos = d.chamados;
+  $("#c-cham").textContent = todos.length || "";
+  const cartoes = [
+    ["", todos.length, "abertos", ""],
+    ["bad", todos.filter(c=>c.estado_atual==="bad").length, "barrados", "bad"],
+    ["parado", todos.filter(parado24).length, "parados há mais de 24 h", "warn"],
+    ["G7", todos.filter(c=>c.onde==="G7").length, "aguardando o cliente (G7)", "info"],
+    ["G8", todos.filter(c=>c.onde==="G8").length, "aguardando a ordem (G8)", "info"],
+    ["desvio", todos.filter(c=>c.desvios>0).length, "com evidência que não conta", "warn"],
+  ];
+  const passa = c => (!filtro || (filtro==="bad"&&c.estado_atual==="bad") || (filtro==="parado"&&parado24(c)) || (filtro==="desvio"&&c.desvios>0) || c.onde===filtro)
+                    && (!quem || c.com_quem===quem) && (!tipo || c.tipo===tipo);
+  const lista = todos.filter(passa);
+  const grupos = ORDEM_G.map(g=>[g, lista.filter(c=>c.onde===g).sort((a,b)=>(a.desde||"").localeCompare(b.desde||""))]).filter(([,l])=>l.length);
+  const nomeG = Object.fromEntries(d.gates.map(g=>[g.gate,g.nome]));
+  const quens = [...new Set(todos.map(c=>c.com_quem).filter(Boolean))].sort();
+  cache.chOrdem = grupos.flatMap(([,l])=>l.map(c=>c.id));
+  $("#main").innerHTML = cabecalho("Agora / Chamados e gates", "Onde cada chamado está e o que falta",
+      "O estado vem dos arquivos de gate em specs/&lt;id&gt;/ no git, conferidos pelas regras do padrão. Linhas marcadas \"registro manual\" são anteriores ao padrão.",
+      `<button class="btn" id="ch-atualiza">${d.atualizando?"Lendo o git…":"Ler o git de novo"}</button>`) +
+    (!d.pronto ? `<div class="aviso">Lendo as pastas specs/ no git (cerca de 20 s na primeira vez)…</div>` : "") +
+    (d.erro ? `<div class="aviso">Erro ao ler o git: ${esc(d.erro)}</div>` : "") +
+    `<div class="ch-cartoes">${cartoes.map(([k,n,l,cls])=>`<button class="ch-cartao ${cls}" data-f="${k}" aria-pressed="${filtro===k&&k!==""}"><b>${n}</b><span>${esc(l)}</span></button>`).join("")}</div>
+     <div class="ch-filtros"><label>Com quem <select id="ch-quem"><option value="">Todos</option>${quens.map(q=>`<option ${q===quem?"selected":""}>${esc(q)}</option>`).join("")}</select></label>
+       <label>Tipo <select id="ch-tipo"><option value="">Todos</option>${["bug","melhoria","sugestao"].map(t=>`<option value="${t}" ${t===tipo?"selected":""}>${t==="sugestao"?"sugestão":t}</option>`).join("")}</select></label>
+       ${filtro||quem||tipo?`<button class="btn" id="ch-limpa">Limpar filtros</button>`:""}
+       <span class="ch-vista" role="group" aria-label="Vista"><button class="chip" data-vista="lista" aria-pressed="${(cache.chVista||"lista")==="lista"}">Lista por gate</button><button class="chip" data-vista="tabela" aria-pressed="${cache.chVista==="tabela"}">Tabela (board)</button></span>
+       <span class="legenda ch-leg">${Object.entries(EST).map(([k,[s,l]])=>`<span><i class="seg ${k}"></i>${s} ${l}</span>`).join("")}<span>▲ evidência que não conta</span><span>⚑ pendência aberta</span></span></div>` +
+    (cache.chVista==="tabela" ? tabelaChamados(grupos.flatMap(([,l])=>l), d.gates) : grupos.length ? grupos.map(([g,l])=>`<section class="ch-grupo"><h2>${esc(g==="entregue"?"Entregue":g+" · "+(nomeG[g]||""))} <span class="cnt">${l.length}</span></h2>
+      <div role="list">${l.map(c=>{ const [s,lab,cls]=est(c.estado_atual); return `<div role="listitem" class="ch-linha${cache.chSel===c.id?" sel":""}" data-id="${esc(c.id)}" tabindex="0">
+        <span class="loz ${cls}">${s} ${lab}</span>
+        <span class="ch-gate"><b>${esc(c.onde)}</b> ${esc(nomeG[c.onde]||"")}</span>
+        <span class="ch-idade${parado24(c)?" velho":""}">${c.desde?esc(idade(c.desde)):"—"}</span>
+        <span class="ch-quem">${esc(c.com_quem||"—")}</span>
+        <span class="ch-falta">${esc((c.falta||[])[0]||c.gates.find(x=>x.gate===c.onde)?.detalhe||"")}</span>
+        <span class="ch-tit"><b>${esc(c.titulo)}</b><small>${esc(c.id)}${c.registro==="manual"?" · registro manual":""}${c.desvios?` · <span class="desv">▲ ${c.desvios}</span>`:""}${c.pendencias?.length?` · <span class="pend">⚑ ${c.pendencias.length}</span>`:""}</small></span>
+        <span class="tag ${esc(c.tipo)}">${esc({bug:"BUG",melhoria:"MEL",sugestao:"SUG"}[c.tipo]||c.tipo)}</span>
+        ${trilho(c)}</div>`; }).join("")}</div></section>`).join("")
+      : `<div class="vazio">Nenhum chamado com esse filtro.</div>`);
+  document.querySelectorAll(".ch-cartao").forEach(b=>b.onclick=()=>{ cache.chFiltro = (cache.chFiltro===b.dataset.f?"":b.dataset.f); vChamados(); });
+  $("#ch-quem").onchange = e=>{ cache.chQuem=e.target.value; vChamados(); };
+  $("#ch-tipo").onchange = e=>{ cache.chTipo=e.target.value; vChamados(); };
+  if($("#ch-limpa")) $("#ch-limpa").onclick = ()=>{ cache.chFiltro=cache.chQuem=cache.chTipo=""; vChamados(); };
+  $("#ch-atualiza").onclick = async()=>{ await carregaChamados(true); $("#ch-atualiza").textContent="Lendo o git…"; setTimeout(()=>{cache.chamadosVelho=true; vChamados();}, 4000); };
+  document.querySelectorAll(".ch-linha").forEach(el=>{ el.onclick=()=>abreChamado(el.dataset.id); el.onkeydown=e=>{ if(e.key==="Enter") abreChamado(el.dataset.id); }; });
+  document.querySelectorAll("[data-vista]").forEach(b=>b.onclick=()=>{ cache.chVista=b.dataset.vista; try{ localStorage.setItem("painel-ch-vista", cache.chVista); }catch{} vChamados(); });
+  document.querySelectorAll(".mc-cel").forEach(b=>b.onclick=()=>{ abreChamado(b.dataset.id); focaGate(b.dataset.g); });
+  document.querySelectorAll(".mc-tit").forEach(b=>b.onclick=()=>abreChamado(b.dataset.id));
+  if(!d.pronto || d.atualizando) setTimeout(()=>{ if(atual==="chamados"){ cache.chamadosVelho=true; vChamados(); } }, 4000);
+  if(cache.chSel && todos.some(c=>c.id===cache.chSel)) abreChamado(cache.chSel, true);
+}
+function itemHtml(i, substituido){
+  const [s,,cls] = i.erros.length ? ["▲","","warn"] : ({APPROVE:["✓","","ok"],OK:["✓","","ok"],PASSA:["✓","","ok"],REPRODUZIDO:["✓","","ok"],FALHA_ESPERADA:["✓","","ok"],
+     REPROVE:["✕","","bad"],RETURN:["↩","","bad"],FALHA:["✕","","bad"],INVALIDO:["✕","","bad"]}[i.veredito] || ["●","","info"]);
+  return `<li class="ch-item${substituido?" subst":""}${i.erros.length?" naoconta":""}">
+    <div><span class="loz ${cls}">${s} ${esc(i.veredito||"sem veredito")}</span> <b>${esc(i.papel||"")}</b> ${esc(i.por)} <span class="legenda">${esc((i.data||"").slice(11,16))}</span></div>
+    <div class="mono legenda">${esc(i.arquivo)}${i.numeros?" · "+esc(i.numeros):""}${i.transcrito_por?" · transcrito por "+esc(i.transcrito_por):""}</div>
+    ${i.objeto?`<div class="mono legenda">objeto ${esc(i.objeto)}</div>`:""}
+    ${i.erros.map(e=>`<div class="naoconta-msg">Não conta: ${esc(e)}</div>`).join("")}</li>`;
+}
+
+const fmtK = n => n>=1e6 ? (n/1e6).toFixed(1)+" M" : n>=1e3 ? Math.round(n/1e3)+" mil" : String(n||0);
+async function trilhaChamado(id){
+  cache.chAba = "trilha";
+  const box = $("#ch-trilha"); box.innerHTML = `<div class="legenda">Montando a trilha (git, arquivos de gate e custo das sessões)…</div>`;
+  const t = await api("/api/chamados/"+encodeURIComponent(id)+"/trilha");
+  if(t.erro){ box.innerHTML = `<div class="aviso">${esc(t.erro)}</div>`; return; }
+  const m = t.metricas;
+  const linhasTab = (obj)=>Object.entries(obj).sort((a,b)=>b[1].saida-a[1].saida).map(([k,v])=>`<tr><td>${esc(k)}</td><td class="num">${v.eventos}</td><td class="num">${fmtK(v.saida)}</td><td class="num">${fmtK(v.cache_lido)}</td></tr>`).join("");
+  box.innerHTML = `
+    <div class="tr-metricas">
+      <div><b>${m.eventos}</b><span>passos</span></div><div><b>${m.aprovacoes}/${m.reprovacoes}</b><span>aprovações / reprovações</span></div>
+      <div><b>${m.rodadas_g3}</b><span>rodadas no G3</span></div><div><b>${m.horas_abertura_ate_ultimo_passo ?? "—"} h</b><span>da abertura ao último passo</span></div>
+      <div><b>${fmtK(m.tokens.saida)}</b><span>tokens de saída</span></div><div><b>${fmtK(m.tokens.cache_lido)}</b><span>cache lido</span></div>
+    </div>
+    <div class="tr-duas"><table class="tr-tab"><thead><tr><th>Gate</th><th>passos</th><th>saída</th><th>cache</th></tr></thead><tbody>${linhasTab(m.por_gate)}</tbody></table>
+      <table class="tr-tab"><thead><tr><th>Sessão</th><th>passos</th><th>saída</th><th>cache</th></tr></thead><tbody>${linhasTab(m.por_quem)}</tbody></table></div>
+    <div class="legenda">${esc(m.nota)}</div>
+    <ol class="tr-eventos">${t.eventos.map((e,k)=>`<li class="tr-ev${e.nao_conta?.length?" naoconta":""}">
+      <button class="tr-linha" data-k="${k}"><span class="mono">${esc((e.quando||"").slice(11,16))}</span><span>${esc(e.quem)}</span><span>${esc(e.atividade)}</span>
+        <span>${e.veredito?`<span class="loz ${["APPROVE","OK","PASSA","FALHA_ESPERADA","REPRODUZIDO"].includes(e.veredito)?"ok":["REPROVE","RETURN","FALHA","INVALIDO"].includes(e.veredito)?"bad":"info"}">${esc(e.veredito)}</span>`:""}</span>
+        <span class="mono">${esc(e.hash||"")}</span><span class="num">${e.tokens?fmtK(e.tokens.saida):""}</span></button>
+      <div class="tr-doc" hidden><div class="legenda">${esc(e.origem)}: ${esc(e.titulo||"")}${e.numeros?" · "+esc(e.numeros):""}</div>
+        ${(e.nao_conta||[]).map(x=>`<div class="naoconta-msg">Não conta: ${esc(x)}</div>`).join("")}
+        ${e.documento?`<pre class="mono">${esc(e.documento)}</pre>`:""}</div></li>`).join("")}</ol>`;
+  box.querySelectorAll(".tr-linha").forEach(b=>b.onclick=()=>{ const d=b.nextElementSibling; d.hidden=!d.hidden; });
+}
+
+function tabelaChamados(lista, gates){
+  if(!lista.length) return `<div class="vazio">Nenhum chamado com esse filtro.</div>`;
+  const nomes = Object.fromEntries(gates.map(g=>[g.gate,g.nome]));
+  const cols = gates.map(g=>g.gate);
+  return `<div class="panel"><div class="mc-scroll"><table class="mc"><thead><tr><th class="mc-fixa">Chamado</th>${cols.map(g=>`<th title="${esc(nomes[g])}">${esc(g==="abertura"?"Abert.":g)}</th>`).join("")}<th>Há</th><th>Com quem</th><th>O que falta</th></tr></thead><tbody>${lista.map(c=>{
+    const por = Object.fromEntries(c.gates.map(g=>[g.gate,g]));
+    return `<tr class="${cache.chSel===c.id?"sel":""}"><td class="mc-fixa"><button class="mc-tit" data-id="${esc(c.id)}"><span class="tag ${esc(c.tipo)}">${esc({bug:"BUG",melhoria:"MEL",sugestao:"SUG"}[c.tipo]||c.tipo)}</span> <b>${esc(c.titulo)}</b><small>${esc(c.id)}${c.registro==="manual"?" · registro manual":""}</small></button></td>${cols.map(k=>{
+      const g = por[k] || {estado:"falta", detalhe:""}; const [sim,lab] = est(g.estado); const atual = k===c.onde;
+      return `<td class="mc-c"><button class="mc-cel ${g.estado}${atual?" atual":""}${g.desvios?" desv-c":""}" data-id="${esc(c.id)}" data-g="${esc(k)}" title="${esc(k)} ${esc(nomes[k]||"")}: ${esc(lab)}${g.detalhe?" · "+esc(g.detalhe):""}" aria-label="${esc(c.id)} ${esc(k)}: ${esc(lab)}">${sim}${g.desvios?"<sup>▲</sup>":""}${(g.pendente||[]).length?"<sub>⚑</sub>":""}</button></td>`; }).join("")}
+      <td class="mc-n">${c.desde?esc(idade(c.desde)):"—"}</td><td>${esc(c.com_quem||"—")}</td><td class="mc-falta">${esc((c.falta||[])[0]||"")}</td></tr>`; }).join("")}</tbody></table></div></div>`;
+}
+function focaGate(g){
+  const li = document.querySelector(`#dcorpo .tl[data-gate="${CSS.escape(g)}"]`); if(!li) return;
+  const d = li.querySelector("details"); if(d) d.open = true;
+  li.classList.add("tl-foco"); setTimeout(()=>li.classList.remove("tl-foco"), 1600);
+  li.scrollIntoView({block:"start"});
+}
+function abreChamado(id, manter){
+  const c = (cache.chamados?.chamados||[]).find(x=>x.id===id); if(!c) return;
+  cache.chSel = id;
+  document.querySelectorAll(".ch-linha").forEach(el=>el.classList.toggle("sel", el.dataset.id===id));
+  document.querySelectorAll("table.mc tbody tr").forEach(tr=>tr.classList.toggle("sel", tr.querySelector(".mc-tit")?.dataset.id===id));
+  const ga = c.gates.find(g=>g.gate===c.onde);
+  const linhaDoTempo = c.gates.map(g=>{
+    const [s,lab,cls] = est(g.estado); const atualG = g.gate===c.onde;
+    let corpo = "";
+    if(g.itens.length){
+      const porHash = {}; g.itens.forEach(i=>{ (porHash[i.hash||"—"] ||= []).push(i); });
+      const hashes = Object.keys(porHash).sort((a,b)=>Math.max(...porHash[b].map(i=>Date.parse((i.data||"").replace(" ","T").replace(/ ([+-]\d\d)(\d\d)$/,"$1:$2"))||0)) - Math.max(...porHash[a].map(i=>Date.parse((i.data||"").replace(" ","T").replace(/ ([+-]\d\d)(\d\d)$/,"$1:$2"))||0)));
+      corpo = hashes.map((h,k)=>`<div class="ch-hash">${h!=="—"?`@ <code>${esc(h)}</code>`:""}${k>0?` <span class="legenda">substituído por ${esc(hashes[0])}</span>`:""}</div><ul>${porHash[h].map(i=>itemHtml(i,k>0)).join("")}</ul>`).join("");
+    }
+    return `<li class="tl ${g.estado}${atualG?" atual":""}" data-gate="${esc(g.gate)}"><details ${atualG?"open":""}><summary><span class="tl-ic">${s}</span><b>${esc(g.gate)}</b> ${esc(g.nome)} <span class="loz ${cls}">${esc(lab)}</span>${g.desvios?` <span class="desv">▲ ${g.desvios}</span>`:""}<div class="legenda">${esc(g.detalhe)}</div></summary>
+      ${(g.pendente||[]).map(t=>`<div class="pend-msg">⚑ Pendente: ${esc(t)}</div>`).join("")}${corpo}${g.falta?.length?`<div class="legenda">Falta: ${g.falta.map(esc).join("; ")}</div>`:""}
+      <button class="btn mini" data-bpmn="${esc(BPMN_EL[g.gate]||"")}">Ver o passo no fluxo</button></details></li>`;
+  }).join("");
+  drawer(`${c.id} · ${c.titulo}`, `<div class="ch-abas"><button class="chip" aria-pressed="true" id="aba-resumo">Resumo</button><button class="chip" aria-pressed="false" id="aba-trilha">Trilha (IA e auditoria)</button><a class="legenda" href="/api/chamados/${encodeURIComponent(c.id)}/trilha" target="_blank">JSON para IA</a></div><div id="ch-resumo">
+    <dl><dt>Tipo</dt><dd>${esc(c.tipo)}${c.escopo?" · "+esc(c.escopo):""}${c.severidade?" · "+esc(c.severidade):""}</dd>
+      <dt>Aberto</dt><dd>${esc(c.aberto_em)}${c.aberto_por?" por "+esc(c.aberto_por):""}</dd>
+      ${c.origem?`<dt>Origem</dt><dd>${esc(c.origem)}</dd>`:""}
+      <dt>Agora</dt><dd><b>${esc(c.onde)}</b> ${esc(ga?.nome||"")} · com ${esc(c.com_quem||"—")}${c.desde?" · há "+esc(idade(c.desde)):""}</dd>
+      <dt>Fonte</dt><dd class="mono">${esc(c.fonte||"")}</dd></dl>
+    ${c.pendencias?.length?`<div class="ch-pendbox"><b>⚑ Pendências abertas (travam a ordem de produção até serem aceitas no G8)</b><ul>${c.pendencias.map(x=>`<li>${esc(x.gate)}: ${esc(x.texto)}</li>`).join("")}</ul></div>`:""}
+    ${c.falta?.length?`<div class="ch-faltabox"><b>Falta para passar o ${esc(c.onde)}</b><ul>${c.falta.map(f=>`<li>${esc(f)}</li>`).join("")}</ul></div>`:""}
+    <ol class="tl-lista">${linhaDoTempo}</ol>
+    <div class="legenda">↑ ↓ trocam de chamado · Esc fecha</div></div><div id="ch-trilha" hidden></div>`);
+  $("#aba-resumo").onclick=()=>{ $("#ch-resumo").hidden=false; $("#ch-trilha").hidden=true; $("#aba-resumo").setAttribute("aria-pressed","true"); $("#aba-trilha").setAttribute("aria-pressed","false"); };
+  $("#aba-trilha").onclick=()=>{ $("#ch-resumo").hidden=true; $("#ch-trilha").hidden=false; $("#aba-resumo").setAttribute("aria-pressed","false"); $("#aba-trilha").setAttribute("aria-pressed","true"); trilhaChamado(c.id); };
+  if(cache.chAba==="trilha") $("#aba-trilha").click();
+  document.querySelectorAll("#dcorpo [data-bpmn]").forEach(b=>b.onclick=()=>{ cache.focoBpmn=b.dataset.bpmn; cache.voltaChamado=c.id; fecha(); vai("processo"); });
+  document.body.classList.add("com-detalhe");
+  if(!manter) try{ history.replaceState(null,"","#chamados/"+id); }catch{}
+}
+document.addEventListener("keydown", e=>{
+  if(atual!=="chamados" || !$("#drawer").classList.contains("aberto") || !["ArrowDown","ArrowUp"].includes(e.key)) return;
+  const o = cache.chOrdem||[]; const i = o.indexOf(cache.chSel); const n = o[i + (e.key==="ArrowDown"?1:-1)];
+  if(n){ e.preventDefault(); abreChamado(n); document.querySelector(`.ch-linha[data-id="${CSS.escape(n)}"]`)?.scrollIntoView({block:"nearest"}); }
+});
+let bpmnViewer = null;
+function carregaScript(src){ return new Promise((ok,erro)=>{ const s=document.createElement("script"); s.src=src; s.onload=ok; s.onerror=erro; document.head.appendChild(s); }); }
+async function vProcesso(){
+  $("#main").innerHTML = cabecalho("Planejamento / Fluxo do chamado", "Do chamado aberto pelo cliente à produção",
+      "BPMN 2.0 com 12 raias e 11 gates (workflow-chamado.bpmn; abre no bpmn.io e no Camunda Modeler). Losango âmbar = gate.",
+      (cache.voltaChamado?`<button class="btn" id="bp-volta">Voltar ao ${esc(cache.voltaChamado)}</button>`:"")+`<button class="btn" id="bp-fit">Ver tudo</button>`) +
+    `<div class="ch-cartoes">${Object.entries(BPMN_EL).map(([g,el])=>`<button class="chip" data-el="${el}">${g}</button>`).join("")}</div>
+     <div id="bpmn" style="height:calc(100vh - 230px);min-height:520px;background:#fff;border:1px solid var(--border);border-radius:var(--radius)"></div>`;
+  try{
+    if(!window.BpmnJS){
+      const l=document.createElement("link"); l.rel="stylesheet"; l.href="https://unpkg.com/bpmn-js@17.11.1/dist/assets/diagram-js.css"; document.head.appendChild(l);
+      await carregaScript("https://unpkg.com/bpmn-js@17.11.1/dist/bpmn-navigated-viewer.production.min.js");
+    }
+    const xml = await (await fetch("/workflow-chamado.bpmn",{cache:"no-store"})).text();
+    bpmnViewer = new BpmnJS({container:"#bpmn"}); await bpmnViewer.importXML(xml);
+    const canvas = bpmnViewer.get("canvas");
+    const foca = id=>{ const el=bpmnViewer.get("elementRegistry").get(id); if(!el) return;
+      document.querySelectorAll(".djs-element.hl").forEach(x=>x.classList.remove("hl")); canvas.addMarker(id,"hl");
+      const w=Math.max(900,$("#bpmn").clientWidth*1.1), h=Math.max(520,$("#bpmn").clientHeight*1.1); canvas.viewbox({x:el.x+el.width/2-w/2,y:el.y+el.height/2-h/2,width:w,height:h}); };
+    if(cache.focoBpmn){ foca(cache.focoBpmn); cache.focoBpmn=""; } else canvas.viewbox({x:10,y:10,width:$("#bpmn").clientWidth/0.62,height:$("#bpmn").clientHeight/0.62});
+    document.querySelectorAll("[data-el]").forEach(b=>b.onclick=()=>foca(b.dataset.el));
+    $("#bp-fit").onclick=()=>canvas.zoom("fit-viewport");
+  }catch(e){ $("#bpmn").innerHTML=`<div class="aviso">O visualizador BPMN não carregou (${esc(e.message||e)}). O arquivo está em /workflow-chamado.bpmn.</div>`; }
+  if($("#bp-volta")) $("#bp-volta").onclick=()=>{ const id=cache.voltaChamado; cache.voltaChamado=""; vai("chamados"); setTimeout(()=>abreChamado(id),300); };
+}
+
+async function vOperacao(){
+  $("#main").innerHTML = cabecalho("Operação Hindiana","Organograma, infraestrutura, CI/CD com validação de jornada e a rodada em BPMN",
+    "Visão estática mantida pela Assistente (arquitetura.html). Abre também sozinha em <code>/arquitetura.html</code>.") +
+    `<iframe src="/arquitetura.html?embed=1" title="Operação Hindiana" style="width:100%;height:calc(100vh - 180px);min-height:640px;border:1px solid var(--line, #d5dde4);border-radius:4px;background:transparent"></iframe>`;
+}
+const VIEWS = {chamados:vChamados, processo:vProcesso, operacao:vOperacao, board:vBoard, pecas:vPecas, roadmap:vRoadmap, decisoes:vDecisoes, dora:vDora, qualidade:vQualidade, documentos:vDocumentos, glossario:vGlossario, ia:vIA, higiene:vHigiene, tempo:vTempo, lote:vLote};
+let atual = "board";
+function vai(v){ fecha(); atual = v; document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-current", b.dataset.v===v?"page":"false")); if(location.hash.slice(1).split("/")[0]!==v) location.hash = v; VIEWS[v]().catch(e=>$("#main").innerHTML=`<div class="aviso">Erro: ${esc(e.message)}</div>`); }
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>vai(b.dataset.v));
+async function meta(){ const m = cache.meta = await api("/api/meta"); $("#pnome").textContent = "Maestro · "+(m.projeto||""); $("#pingest").textContent = "arquivos lidos "+(m.ingerido_em||"").slice(11,16)+" de "+(m.ingerido_em||"").slice(8,10)+"/"+(m.ingerido_em||"").slice(5,7); }
+window.addEventListener("hashchange", ()=>{ const v = location.hash.slice(1).split("/")[0]; if(v in VIEWS && v!==atual) vai(v); });
+const [inicial, inicialId] = location.hash.slice(1).split("/");
+meta().finally(()=>{ vai(inicial in VIEWS ? inicial : "board"); if(inicial==="chamados" && inicialId) cache.chSel = decodeURIComponent(inicialId); });
+setInterval(()=>{ if(atual==="board" && !document.activeElement?.matches("input")) vBoard(); }, 60000);
+</script>
+</body>
+</html>

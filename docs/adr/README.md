@@ -25,6 +25,8 @@ consequências → fontes.
 | 0020 | [MIT, e a atribuição viaja com a cópia](0020-licenca-mit-e-atribuicao-que-viaja.md) | Aceito |
 | 0021 | [O método se cobra sozinho e bate o ponto](0021-o-metodo-se-cobra-e-bate-o-ponto.md) | Aceito |
 | 0024 | [Cabeçalho conferível nas evidências da cauda](0024-cabecalho-conferivel-nas-evidencias-da-cauda.md) | Aceito |
+| 0022 | [Painel de coordenação multiagente como projeção dos arquivos](0022-painel-de-coordenacao-como-projecao-dos-arquivos.md) | Aceito |
+| 0023 | [O modelo de domínio é declarado no plan, e o portão o lê](0023-modelo-de-dominio-declarado-no-plan.md) | Aceito |
 
 > Índice consultável por máquina (append-only): [`../records/decisoes.jsonl`](../records/decisoes.jsonl) — ver [protocolo](../records/README.md).
 

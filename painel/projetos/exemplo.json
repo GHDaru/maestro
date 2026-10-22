@@ -1,0 +1,97 @@
+{
+  "_": "Example project configuration (fixture). Points the panel at the Maestro repository itself, so `python painel/server.py painel/projetos/exemplo.json` works out of the box. The real Hindiana configuration lives in that project's repository (decision decisao-066-daru-20-10: no real project data in this public repository).",
+  "projeto": "exemplo",
+  "titulo": "Maestro (example)",
+  "raiz": "../..",
+  "limiar_parado_min": 60,
+  "worktree_sujeira": true,
+  "worktree_protegidas": [],
+  "ponto": "docs/records/tarefas.jsonl",
+  "equipes": {
+    "Coordenação": [
+      "Regente",
+      "Gerente"
+    ],
+    "Workers": [
+      "Worker01",
+      "Worker02",
+      "Worker03",
+      "Worker04",
+      "Worker05",
+      "Worker06"
+    ]
+  },
+  "equipe": "docs/agents",
+  "repos": [
+    {
+      "nome": "maestro",
+      "caminho": ".",
+      "principal": "origin/main",
+      "ambiente": "producao"
+    }
+  ],
+  "specs": [
+    {
+      "nome": "maestro",
+      "caminho": "specs"
+    }
+  ],
+  "decisoes": [],
+  "decisoes_jsonl": "docs/records/decisoes.jsonl",
+  "adrs": [
+    "docs/adr/*.md"
+  ],
+  "retro": [],
+  "barra_execucoes": "evals",
+  "barra_resultados": [],
+  "glossario": [
+    "docs/governance/glossary.md"
+  ],
+  "roadmap": [
+    "docs/roadmap.md"
+  ],
+  "documentos": {
+    "constituicao": [
+      "docs/governance/principles.md",
+      "CLAUDE.md"
+    ],
+    "linguagem-e-objetos": [
+      "docs/governance/glossary.md",
+      "docs/governance/artifacts.md"
+    ],
+    "jornadas": [
+      "docs/jornada/*.md"
+    ],
+    "plano-e-roadmap": [
+      "docs/roadmap.md"
+    ],
+    "decisoes": [
+      "docs/adr/*.md",
+      "docs/records/decisoes.jsonl"
+    ],
+    "controle-e-retro": [
+      "docs/records/README.md"
+    ],
+    "barra-e-qualidade": [
+      "evals/README.md"
+    ],
+    "papeis-de-sessao": [
+      "docs/agents/*.md"
+    ],
+    "infraestrutura": [
+      "docs/receitas/instalar-o-maestro.md"
+    ]
+  },
+  "chamados": [
+    {
+      "repo": "maestro",
+      "dias": 14,
+      "pasta": "specs",
+      "_": "specs/<id>/ folders with 00-chamado.md; the last commit (any branch) that touched the folder in the last 14 days counts"
+    }
+  ],
+  "chamados_manuais": "painel/projetos/chamados-manuais-exemplo.json",
+  "custo_pastas": [
+    "C--Users-ghdaru-Documents-010-PROJETOS-410-MAESTRO"
+  ]
+}
