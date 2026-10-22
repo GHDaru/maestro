@@ -18,6 +18,7 @@ Env vars:
 from __future__ import annotations
 
 import datetime as dt
+import json
 import os
 import sqlite3
 import sys
@@ -110,7 +111,7 @@ def main() -> int:
     conn.execute(
         """INSERT INTO fila (sessao_origem, sessao_destino, payload, criada_em)
            VALUES (?, NULL, ?, ?)""",
-        (sessao, f'{{"rodada": "{rodada}", "passo": "{passo}", "resultado": "{resultado}"}}', now),
+        (sessao, json.dumps({"rodada": rodada, "passo": passo, "resultado": resultado}, ensure_ascii=False), now),
     )
     conn.commit()
 

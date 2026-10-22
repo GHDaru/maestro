@@ -212,6 +212,30 @@ class TestFilaOutboxIntegracao:
         assert fila.pendentes() == 1
 
 
+    def test_payload_invalido_nao_envenena_a_fila(self, tmp_path):
+        """Achado 2 da passagem de segurança do 070: uma linha com JSON inválido
+        não pode derrubar drenar() para sempre — é lida, marcada e devolvida com _erro."""
+        db_path = str(tmp_path / "painel.db")
+        conn = sqlite3.connect(db_path)
+        with open(SCHEMA_SQL, encoding="utf-8") as f:
+            conn.executescript(f.read())
+        conn.execute(
+            "INSERT INTO fila (sessao_origem, sessao_destino, payload, criada_em) VALUES (?, ?, ?, ?)",
+            ("a", "w09", '{"rodada": "x", "passo": "y"z}', "2026-10-22T16:50:00+00:00"),
+        )
+        conn.commit()
+        conn.close()
+
+        fila = fila_outbox.FilaOutbox(db_path)
+        fila.enfileirar(origem="b", payload={"x": 2}, destino="w09")
+        msgs = fila.drenar(destino="w09")
+        assert len(msgs) == 2
+        assert "_erro" in msgs[0].payload
+        assert msgs[1].payload["x"] == 2
+        assert fila.pendentes() == 0
+        assert fila.drenar(destino="w09") == []
+
+
 class TestW13Issue1Encoding:
     """W13 Issue 1: workflow_session_start.py deve abrir schema com encoding=utf-8."""
 

@@ -86,11 +86,18 @@ class FilaOutbox:
             msgs = []
             for r_id, r_origem, r_dest, r_payload, r_criada, r_lida in rows:
                 conn.execute("UPDATE fila SET lida_em = ? WHERE id = ?", (now, r_id))
+                try:
+                    payload = json.loads(r_payload)
+                except ValueError:
+                    # Uma linha inválida é marcada como lida e devolvida com o erro, nunca
+                    # deixada pendente: senão todo drenar() seguinte falharia na mesma linha
+                    # (passagem de segurança do ciclo 070, achado 2).
+                    payload = {"_erro": "payload não é JSON", "bruto": str(r_payload)[:200]}
                 msgs.append(FilaMensagem(
                     id=r_id,
                     sessao_origem=r_origem,
                     sessao_destino=r_dest,
-                    payload=json.loads(r_payload),
+                    payload=payload,
                     criada_em=r_criada,
                     lida_em=now,
                 ))
