@@ -1,6 +1,6 @@
-# Spec 064 — Workflow do ciclo Maestro no painel
+# Spec 070 — Workflow do ciclo Maestro no painel (escrita como 064 na linha paralela)
 
-- **Status**: Draft · **Lane**: full · **Date**: 2026-10-02
+- **Status**: Implementado retroativamente (parcial: FR2 ausente, FR3 invertido, FR1 sem branch/hash — ver plan.md § Dívidas) · **Lane**: full · **Date**: 2026-10-02 (integrada em 2026-10-22, ciclo 070)
 - **Origin**: Desejo 001 do Gilsiley, redigido pela Hindiana Assistente (.maestro/docs/desejo-001-workflow-painel.md). Desenho de referência: workflow-maestro.md.
 
 ## What and why
