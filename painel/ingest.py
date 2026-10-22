@@ -30,6 +30,8 @@ DROP TABLE IF EXISTS decisoes; DROP TABLE IF EXISTS adrs; DROP TABLE IF EXISTS d
 DROP TABLE IF EXISTS barra_execucoes; DROP TABLE IF EXISTS defeitos; DROP TABLE IF EXISTS glossario;
 DROP TABLE IF EXISTS documentos; DROP TABLE IF EXISTS specs; DROP TABLE IF EXISTS roadmap;
 DROP TABLE IF EXISTS meta; DROP TABLE IF EXISTS worktrees; DROP TABLE IF EXISTS fases;
+DROP TABLE IF EXISTS erros_leitura;
+CREATE TABLE erros_leitura (caminho TEXT, motivo TEXT, fonte TEXT);
 CREATE TABLE meta (chave TEXT PRIMARY KEY, valor TEXT);
 CREATE TABLE worktrees (repo TEXT, caminho TEXT, branch TEXT, head TEXT, upstream TEXT,
   integrada INTEGER, ultimo_commit TEXT, idade_d REAL, sujeira INTEGER, risco TEXT,
@@ -160,7 +162,11 @@ def ingere_sessoes(db, cfg):
         base = os.path.basename(arq)
         if base.upper().startswith("LEIA"):
             continue
-        txt = ler(arq)
+        try:
+            txt = ler(arq)
+        except (OSError, PermissionError) as e:
+            db.execute("INSERT INTO erros_leitura VALUES (?,?,?)", (rel(cfg, arq), str(e), "equipe"))
+            continue
         m = re.search(r"^#\s+(.+)$", txt, re.M)
         nome = norm_sessao(m.group(1) if m else base[:-3])
         bloco = re.search(r"^##\s+Estado atual\s*\(?([^)\n]*)\)?[^\n]*\n(.*?)(?=^##\s|\Z)", txt, re.M | re.S)
@@ -260,7 +266,11 @@ def ingere_git(db, cfg):
 def ingere_decisoes(db, cfg):
     n = 0
     for arq in expande(cfg.get("decisoes", [])):
-        txt = ler(arq)
+        try:
+            txt = ler(arq)
+        except (OSError, PermissionError) as e:
+            db.execute("INSERT INTO erros_leitura VALUES (?,?,?)", (rel(cfg, arq), str(e), "decisoes"))
+            continue
         for _, cab, rows in tabelas_md(txt):
             ci, ch, cd, cc, cu = (coluna(cab, "#"), coluna(cab, "hora", "quando", "data"),
                                   coluna(cab, "decis"), coluna(cab, "contexto"), coluna(cab, "como desfazer"))
@@ -275,7 +285,12 @@ def ingere_decisoes(db, cfg):
                 n += 1
     jsonl = cfg.get("decisoes_jsonl")
     if jsonl and os.path.exists(jsonl):
-        for linha in ler(jsonl).splitlines():
+        try:
+            txt_jsonl = ler(jsonl)
+        except (OSError, PermissionError) as e:
+            db.execute("INSERT INTO erros_leitura VALUES (?,?,?)", (rel(cfg, jsonl), str(e), "decisoes_jsonl"))
+            txt_jsonl = ""
+        for linha in txt_jsonl.splitlines():
             try:
                 d = json.loads(linha)
             except ValueError:
@@ -290,7 +305,11 @@ def ingere_decisoes(db, cfg):
 def ingere_adrs(db, cfg):
     n = 0
     for arq in expande(cfg.get("adrs", [])):
-        txt = ler(arq)
+        try:
+            txt = ler(arq)
+        except (OSError, PermissionError) as e:
+            db.execute("INSERT INTO erros_leitura VALUES (?,?,?)", (rel(cfg, arq), str(e), "adrs"))
+            continue
         m = re.search(r"^#\s+(.+)$", txt, re.M)
         est = re.search(r"(?im)^\**\s*(?:estado|status)\**\s*[:|]\s*\**([^\n|*]+)", txt)
         data = re.search(r"(\d{4}-\d{2}-\d{2})", os.path.basename(arq)) or re.search(r"(\d{4}-\d{2}-\d{2})", txt)
@@ -324,7 +343,12 @@ def classe_desvio(texto: str) -> str:
 def ingere_desvios(db, cfg):
     n = 0
     for arq in expande(cfg.get("retro", [])):
-        for _, cab, rows in tabelas_md(ler(arq)):
+        try:
+            txt = ler(arq)
+        except (OSError, PermissionError) as e:
+            db.execute("INSERT INTO erros_leitura VALUES (?,?,?)", (rel(cfg, arq), str(e), "retro"))
+            continue
+        for _, cab, rows in tabelas_md(txt):
             cq, cw, cf = coluna(cab, "when", "quando"), coluna(cab, "who", "quem"), coluna(cab, "what happened", "o que")
             if cq is None or cw is None or cf is None:
                 continue
@@ -346,7 +370,11 @@ def ingere_barra(db, cfg):
             rel_md = os.path.join(pasta, d, "relatorio.md")
             if not os.path.exists(rel_md):
                 continue
-            txt = ler(rel_md)
+            try:
+                txt = ler(rel_md)
+            except (OSError, PermissionError) as e:
+                db.execute("INSERT INTO erros_leitura VALUES (?,?,?)", (rel(cfg, rel_md), str(e), "barra"))
+                continue
             m = re.match(r"(\d{8})_(\d{4})_([a-z0-9]+)_([0-9a-f]+)", d)
             quando = ""
             if m:
@@ -358,7 +386,11 @@ def ingere_barra(db, cfg):
                         v.group(1) if v else "", int(p.group(1)) if p else None, int(p.group(2)) if p else None))
             n += 1
     for arq in expande(cfg.get("barra_resultados", [])):
-        txt = ler(arq)
+        try:
+            txt = ler(arq)
+        except (OSError, PermissionError) as e:
+            db.execute("INSERT INTO erros_leitura VALUES (?,?,?)", (rel(cfg, arq), str(e), "barra_resultados"))
+            continue
         for titulo, cab, rows in tabelas_md(txt):
             cd = coluna(cab, "defeito")
             if cd is None:
@@ -374,7 +406,12 @@ def ingere_barra(db, cfg):
 def ingere_glossario(db, cfg):
     n = 0
     for arq in expande(cfg.get("glossario", [])):
-        for _, cab, rows in tabelas_md(ler(arq)):
+        try:
+            txt = ler(arq)
+        except (OSError, PermissionError) as e:
+            db.execute("INSERT INTO erros_leitura VALUES (?,?,?)", (rel(cfg, arq), str(e), "glossario"))
+            continue
+        for _, cab, rows in tabelas_md(txt):
             ct, cd = coluna(cab, "termo", "term"), coluna(cab, "defini")
             if ct is None or cd is None:
                 continue
@@ -398,7 +435,8 @@ def ingere_documentos(db, cfg):
             mod = dt.datetime.fromtimestamp(st.st_mtime).astimezone()
             try:
                 txt = ler(arq)
-            except (OSError, PermissionError):
+            except (OSError, PermissionError) as e:
+                db.execute("INSERT INTO erros_leitura VALUES (?,?,?)", (rel(cfg, arq), str(e), "documentos"))
                 continue
             m = re.search(r"^#\s+(.+)$", txt, re.M)
             db.execute("INSERT OR REPLACE INTO documentos VALUES (?,?,?,?,?,?)",
@@ -419,7 +457,11 @@ def ingere_specs(db, cfg):
             spec = os.path.join(d, "spec.md")
             titulo, status = slug, ""
             if os.path.exists(spec):
-                t = ler(spec)
+                try:
+                    t = ler(spec)
+                except (OSError, PermissionError) as e:
+                    db.execute("INSERT INTO erros_leitura VALUES (?,?,?)", (rel(cfg, spec), str(e), "specs"))
+                    t = ""
                 m = re.search(r"^#\s+(.+)$", t, re.M)
                 titulo = limpa(m.group(1)) if m else slug
                 s = re.search(r"(?im)\**status\**\s*[:|]\s*\**([^\n|*·]+)", t)
@@ -427,7 +469,11 @@ def ingere_specs(db, cfg):
             tot = feitas = 0
             tasks = os.path.join(d, "tasks.md")
             if os.path.exists(tasks):
-                tt = ler(tasks)
+                try:
+                    tt = ler(tasks)
+                except (OSError, PermissionError) as e:
+                    db.execute("INSERT INTO erros_leitura VALUES (?,?,?)", (rel(cfg, tasks), str(e), "specs_tasks"))
+                    tt = ""
                 tot = len(re.findall(r"^\s*-\s*\[[ xX]\]", tt, re.M))
                 feitas = len(re.findall(r"^\s*-\s*\[[xX]\]", tt, re.M))
             mods = [os.stat(os.path.join(d, f)).st_mtime for f in os.listdir(d)] or [os.stat(d).st_mtime]
@@ -443,7 +489,12 @@ def ingere_specs(db, cfg):
 def ingere_roadmap(db, cfg):
     n = 0
     for arq in expande(cfg.get("roadmap", [])):
-        for titulo, cab, rows in tabelas_md(ler(arq)):
+        try:
+            txt = ler(arq)
+        except (OSError, PermissionError) as e:
+            db.execute("INSERT INTO erros_leitura VALUES (?,?,?)", (rel(cfg, arq), str(e), "roadmap"))
+            continue
+        for titulo, cab, rows in tabelas_md(txt):
             for r in rows:
                 n += 1
                 db.execute("INSERT INTO roadmap VALUES (?,?,?,?)",
@@ -500,7 +551,12 @@ def ingere_fases(db, cfg):
     if not arq or not os.path.exists(arq):
         return 0
     n = 0
-    for linha in ler(arq).splitlines():
+    try:
+        txt_fases = ler(arq)
+    except (OSError, PermissionError) as e:
+        db.execute("INSERT INTO erros_leitura VALUES (?,?,?)", (rel(cfg, arq), str(e), "ponto"))
+        return 0
+    for linha in txt_fases.splitlines():
         try:
             d = json.loads(linha)
         except ValueError:
@@ -557,37 +613,83 @@ def carrega_cfg(caminho):
 
 def abre(db_path):
     db = sqlite3.connect(db_path)
+    db.execute("PRAGMA journal_mode = WAL")  # FR13: WAL para escrita concorrente
     db.executescript(EVENTOS)
     return db
 
 
-def ingere(cfg, db_path):
-    inicio = agora()
-    db = abre(db_path)
-    db.executescript(DERIVADAS)
-    contagem = {}
-    for nome, fn in [("sessoes", ingere_sessoes), ("commits", ingere_git), ("decisoes", ingere_decisoes),
-                     ("adrs", ingere_adrs), ("desvios", ingere_desvios), ("barra", ingere_barra),
-                     ("glossario", ingere_glossario), ("documentos", ingere_documentos),
-                     ("specs", ingere_specs), ("roadmap", ingere_roadmap),
-                     ("worktrees", ingere_worktrees), ("fases", ingere_fases)]:
+def _copia_append_only(origem: sqlite3.Connection, destino: sqlite3.Connection) -> None:
+    """Copia eventos e ingest_log do DB original para o temporário (FR14)."""
+    destino.executescript(EVENTOS)
+    for tabela in ("eventos", "ingest_log"):
         try:
-            contagem[nome] = fn(db, cfg)
-        except PermissionError:
-            raise
-        except Exception as e:  # one broken source must not hide the others
-            contagem[nome] = f"erro: {e}"
-    db.execute("INSERT INTO meta VALUES ('projeto', ?)", (cfg.get("projeto", ""),))
-    db.execute("INSERT INTO meta VALUES ('ingerido_em', ?)", (agora().isoformat(timespec="seconds"),))
-    db.execute("INSERT INTO meta VALUES ('contagem', ?)", (json.dumps(contagem, ensure_ascii=False),))
-    db.execute("INSERT INTO meta VALUES ('limiar_parado_min', ?)", (str(cfg.get("limiar_parado_min", 60)),))
-    db.execute("INSERT INTO meta VALUES ('equipes', ?)", (json.dumps(cfg.get("equipes", {}), ensure_ascii=False),))
-    db.execute("INSERT INTO meta VALUES ('titulo', ?)", (cfg.get("titulo", cfg.get("projeto", "")),))
-    db.execute("INSERT INTO ingest_log (ts, duracao_ms, contagem) VALUES (?,?,?)",
-               (agora().isoformat(timespec="seconds"), int((agora() - inicio).total_seconds() * 1000),
-                json.dumps(contagem, ensure_ascii=False)))
-    db.commit()
-    db.close()
+            rows = origem.execute(f"SELECT * FROM {tabela}").fetchall()
+            if not rows:
+                continue
+            cols = [d[0] for d in origem.execute(f"SELECT * FROM {tabela} LIMIT 0").description]
+            placeholders = ",".join("?" * len(cols))
+            destino.executemany(f"INSERT INTO {tabela} ({','.join(cols)}) VALUES ({placeholders})", rows)
+        except sqlite3.OperationalError:
+            pass  # tabela não existe no original ainda
+
+
+def ingere(cfg, db_path):
+    """FR14: reconstrói num arquivo temporário e faz swap atómico no fim.
+
+    Se o ingest for interrompido antes do os.replace, o DB original
+    permanece intacto com a versão anterior completa.
+    """
+    inicio = agora()
+    tmp_path = db_path + ".tmp"
+
+    # Remove temp de run anterior interrompido
+    if os.path.exists(tmp_path):
+        os.unlink(tmp_path)
+
+    # Abre DB original para copiar append-only (eventos, ingest_log)
+    db_orig = None
+    if os.path.exists(db_path):
+        db_orig = sqlite3.connect(db_path)
+        db_orig.execute("PRAGMA journal_mode = WAL")
+
+    # Escreve tudo no temporário
+    db = sqlite3.connect(tmp_path)
+    try:
+        db.execute("PRAGMA journal_mode = WAL")
+        if db_orig is not None:
+            _copia_append_only(db_orig, db)
+        else:
+            db.executescript(EVENTOS)
+        db_orig and db_orig.close()
+
+        db.executescript(DERIVADAS)
+        contagem = {}
+        for nome, fn in [("sessoes", ingere_sessoes), ("commits", ingere_git), ("decisoes", ingere_decisoes),
+                         ("adrs", ingere_adrs), ("desvios", ingere_desvios), ("barra", ingere_barra),
+                         ("glossario", ingere_glossario), ("documentos", ingere_documentos),
+                         ("specs", ingere_specs), ("roadmap", ingere_roadmap),
+                         ("worktrees", ingere_worktrees), ("fases", ingere_fases)]:
+            try:
+                contagem[nome] = fn(db, cfg)
+            except PermissionError:
+                raise
+            except Exception as e:  # one broken source must not hide the others
+                contagem[nome] = f"erro: {e}"
+        db.execute("INSERT INTO meta VALUES ('projeto', ?)", (cfg.get("projeto", ""),))
+        db.execute("INSERT INTO meta VALUES ('ingerido_em', ?)", (agora().isoformat(timespec="seconds"),))
+        db.execute("INSERT INTO meta VALUES ('contagem', ?)", (json.dumps(contagem, ensure_ascii=False),))
+        db.execute("INSERT INTO meta VALUES ('limiar_parado_min', ?)", (str(cfg.get("limiar_parado_min", 60)),))
+        db.execute("INSERT INTO meta VALUES ('equipes', ?)", (json.dumps(cfg.get("equipes", {}), ensure_ascii=False),))
+        db.execute("INSERT INTO meta VALUES ('titulo', ?)", (cfg.get("titulo", cfg.get("projeto", "")),))
+        db.execute("INSERT INTO ingest_log (ts, duracao_ms, contagem) VALUES (?,?,?)",
+                   (agora().isoformat(timespec="seconds"), int((agora() - inicio).total_seconds() * 1000),
+                    json.dumps(contagem, ensure_ascii=False)))
+        db.commit()
+    finally:
+        db.close()
+
+    # FR14: swap atómico — só aqui o DB original é substituído
+    os.replace(tmp_path, db_path)
     return contagem
 
 
