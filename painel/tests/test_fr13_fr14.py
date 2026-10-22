@@ -171,6 +171,31 @@ class TestFR14SwapAtomicoViaIngere:
         assert "commits" in contagem  # git source tentou e falhou graciosa
 
 
+    def test_ingere_preserva_tabelas_do_workflow(self, tmp_path):
+        """Revisão do 070, achado 1: o ingest reconstrói as derivadas, mas as tabelas do
+        workflow (rodadas, passos, transicoes, fila), escritas pelos hooks, têm de sobreviver."""
+        db_path = str(tmp_path / "painel.db")
+        cfg = _cfg_minima(str(tmp_path))
+        ingest.ingere(cfg, db_path)
+
+        conn = sqlite3.connect(db_path)
+        with open(SCHEMA_SQL, encoding="utf-8") as f:
+            conn.executescript(f.read())
+        conn.execute("INSERT INTO rodadas (id, desejo, criada_por, aberta_em) VALUES ('r1', 'd1', 'w09', '2026-10-22T16:00:00+00:00')")
+        conn.execute("INSERT INTO passos (rodada, passo, sessao, entrada_em) VALUES ('r1', 'spec', 'w09', '2026-10-22T16:01:00+00:00')")
+        conn.execute("INSERT INTO fila (sessao_origem, sessao_destino, payload, criada_em) VALUES ('w09', NULL, '{}', '2026-10-22T16:02:00+00:00')")
+        conn.commit()
+        conn.close()
+
+        ingest.ingere(cfg, db_path)
+
+        conn = sqlite3.connect(db_path)
+        assert conn.execute("SELECT count(*) FROM rodadas").fetchone()[0] == 1
+        assert conn.execute("SELECT passo FROM passos WHERE rodada = 'r1'").fetchone()[0] == "spec"
+        assert conn.execute("SELECT count(*) FROM fila").fetchone()[0] == 1
+        conn.close()
+
+
 class TestFilaOutboxIntegracao:
     """T5: Fila outbox — testes de integração com SQLite real."""
 

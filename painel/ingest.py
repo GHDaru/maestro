@@ -619,9 +619,15 @@ def abre(db_path):
 
 
 def _copia_append_only(origem: sqlite3.Connection, destino: sqlite3.Connection) -> None:
-    """Copia eventos e ingest_log do DB original para o temporário (FR14)."""
+    """Copia para o temporário o que o ingest não reconstrói (FR14): eventos, ingest_log e as
+    tabelas do workflow (rodadas, passos, transicoes, fila), que só os hooks escrevem
+    (ciclo 070, revisão em contexto fresco, achado 1: sem isto cada ingest as apagava)."""
     destino.executescript(EVENTOS)
-    for tabela in ("eventos", "ingest_log"):
+    schema_workflow = os.path.join(os.path.dirname(os.path.abspath(__file__)), "schema_workflow.sql")
+    if os.path.exists(schema_workflow):
+        with open(schema_workflow, encoding="utf-8") as f:
+            destino.executescript(f.read())
+    for tabela in ("eventos", "ingest_log", "rodadas", "passos", "transicoes", "fila"):
         try:
             rows = origem.execute(f"SELECT * FROM {tabela}").fetchall()
             if not rows:
