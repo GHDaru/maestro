@@ -11,7 +11,7 @@
 | III. Reversibility / risk gates | ✅ SQLite append-only; reconstrução em transação; rollback = restaurar snapshot anterior. |
 | IV. Test-first / verifiable DoD | ✅ Cada FR tem acceptance criterion em EARS ou comando verificável. |
 | V. Context economy / boundary | ✅ Corta pelo boundary: backend SQLite+hooks (W09) e tela HTML+JS (W03), worktrees separadas. |
-| VI. Living artifacts | ✅ Spec, plan, tasks e código no mesmo ciclo (specs/064-workflow-painel/). |
+| VI. Living artifacts | ✅ Spec, plan, tasks e código no mesmo ciclo (specs/070-workflow-sqlite/). |
 | VII. Light governance / YAGNI | ✅ SQLite em WAL, não Redis/RabbitMQ (19 sessões numa máquina). |
 | VIII. Intelligible communication | ✅ Siglas expandidas na primeira ocorrência; legível para quem chega hoje. |
 

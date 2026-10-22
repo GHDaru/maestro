@@ -28,7 +28,7 @@ import ingest
 import fila_outbox
 
 SCHEMA_SQL = os.path.join(AQUI, "..", "schema_workflow.sql")
-HOOKS_DIR = os.path.join(AQUI, "..", "..", "scripts", "hooks")
+HOOKS_DIR = os.path.join(AQUI, "..", "hooks")
 
 
 def _cfg_minima(tmpdir: str) -> dict:

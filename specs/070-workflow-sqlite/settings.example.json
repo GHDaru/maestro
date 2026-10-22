@@ -21,7 +21,7 @@
           },
           {
             "type": "command",
-            "command": "python \"$CLAUDE_PROJECT_DIR/scripts/hooks/workflow_session_start.py\""
+            "command": "python \"$CLAUDE_PROJECT_DIR/painel/hooks/workflow_session_start.py\""
           }
         ]
       }
@@ -32,7 +32,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python \"$CLAUDE_PROJECT_DIR/scripts/hooks/workflow_stop.py\""
+            "command": "python \"$CLAUDE_PROJECT_DIR/painel/hooks/workflow_stop.py\""
           }
         ]
       }

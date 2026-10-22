@@ -13,7 +13,7 @@ Env vars esperadas:
 
 Uso em .claude/settings.json:
   "SessionStart": [{ "hooks": [{ "type": "command",
-    "command": "python \"$CLAUDE_PROJECT_DIR/scripts/hooks/workflow_session_start.py\"" }] }]
+    "command": "python \"$CLAUDE_PROJECT_DIR/painel/hooks/workflow_session_start.py\"" }] }]
 """
 from __future__ import annotations
 

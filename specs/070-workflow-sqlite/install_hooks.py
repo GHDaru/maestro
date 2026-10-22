@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Installer para os hooks do workflow 064.
+"""Installer para os hooks do workflow (ciclo 070).
 
-Copia os hooks scripts para scripts/hooks/ e mescla as entradas de hook
+Copia os hooks para painel/hooks/ e mescla as entradas de hook
 no .claude/settings.json do projeto alvo. NÃO sobrescreve hooks existentes —
 apenas adiciona os que faltam.
 
@@ -18,7 +18,7 @@ import sys
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 REPO_RAIZ = os.path.join(AQUI, "..", "..")
-HOOKS_SRC = os.path.join(REPO_RAIZ, "scripts", "hooks")
+HOOKS_SRC = os.path.join(REPO_RAIZ, "painel", "hooks")
 EXAMPLE = os.path.join(AQUI, "settings.example.json")
 
 HOOK_FILES = ["workflow_session_start.py", "workflow_stop.py"]
@@ -26,7 +26,7 @@ HOOK_FILES = ["workflow_session_start.py", "workflow_stop.py"]
 
 def instalar(projeto_dir: str) -> None:
     projeto_dir = os.path.abspath(projeto_dir)
-    hooks_dir = os.path.join(projeto_dir, "scripts", "hooks")
+    hooks_dir = os.path.join(projeto_dir, "painel", "hooks")
     settings_path = os.path.join(projeto_dir, ".claude", "settings.json")
 
     # 1. Copia os scripts de hook
@@ -35,7 +35,7 @@ def instalar(projeto_dir: str) -> None:
         src = os.path.join(HOOKS_SRC, f)
         dst = os.path.join(hooks_dir, f)
         shutil.copy2(src, dst)
-        print(f"  ✓ copiado: scripts/hooks/{f}")
+        print(f"  ✓ copiado: painel/hooks/{f}")
 
     # 2. Mescla hooks no settings.json
     with open(EXAMPLE) as f:
