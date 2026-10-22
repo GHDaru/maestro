@@ -36,7 +36,7 @@ FR (*functional requirement*, requisito funcional); ADR (*Architecture Decision 
 
 ## Decisão
 
-**(a), com três condições.** Os hooks do Claude Code gravam direto no SQLite do painel, em
+**(a), com cinco condições.** Os hooks do Claude Code gravam direto no SQLite do painel, em
 tabelas **próprias, só de acréscimo por convenção** (`rodadas`, `passos`, `transicoes`, `fila`), nunca nas tabelas
 derivadas que o ingest reconstrói. Condições:
 
@@ -48,7 +48,16 @@ derivadas que o ingest reconstrói. Condições:
 2. **Os hooks são ferramenta, não método.** Vivem em `painel/hooks/`, fora de `scripts/` (o
    instalador do Maestro) e fora do `check-language.sh`; instalam-se por opção
    (`specs/070-workflow-sqlite/install_hooks.py`), nunca pelo `setup` do método.
-3. **O painel continua sem promover.** Registrar a entrada e cobrar a saída de um passo não é
+3. **O ingest preserva o que os hooks escrevem.** `_copia_append_only` em `painel/ingest.py`
+   copia `rodadas`, `passos`, `transicoes` e `fila` para o banco reconstruído, como já fazia com
+   `eventos`; sem isso cada reconstrução apagava o workflow (achado 1 da revisão em contexto
+   fresco do 070, corrigido em `04e559c` com teste vermelho/verde).
+4. **O arquivo do banco é a fronteira de confiança.** Quem consegue escrever no SQLite consegue
+   forjar origem e destino de mensagens e pôr texto no stdout do hook `SessionStart`, que entra
+   no contexto do modelo (achados 1 e 9 da passagem de segurança). Fica aceito como risco de
+   classe média enquanto o banco é local e só processos do mesmo usuário o abrem; o hook passa
+   a imprimir só campos conhecidos e truncados no ciclo 072 (dívida 6 do plano).
+5. **O painel continua sem promover.** Registrar a entrada e cobrar a saída de um passo não é
    aprovar nada; o gate humano continua em `TAIL:gate` e em `promote-main.sh` (ADR 0009).
 
 O ADR 0022 fica em pé com uma ressalva registrada aqui: o painel é projeção dos arquivos **mais**

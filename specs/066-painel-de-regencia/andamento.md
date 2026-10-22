@@ -72,3 +72,27 @@
 - Decisão do Darú (15:35): "rode você mesmo, até as 17h, subagentes em Sonnet, até 100% do consumo".
   Consumo semanal medido: 99 %, zera às 16:59. As sete ficam abertas e ociosas; relançar com o
   lançador corrigido quando houver orçamento.
+
+## 22/10 17:05 — ciclo 070 fechado até o gate humano (sessão MAESTRO, subagentes Sonnet)
+
+- Branch `integra/linha-paralela-070` (worktree `.claude/worktrees/integra-070`), sobre `39a86ba`:
+  merge `f37bf89` de `b33bb81` (dois conflitos previstos, B prevalece no roteamento,
+  `hindiana.json` removido); hooks para `painel/hooks/` e spec renumerada em `8ef082f`;
+  artefatos do método em `5d122ec`; duas correções vermelho/verde nascidas das caudas:
+  `3d3da3b` (segurança, achado 2: payload inválido não envenena a fila) e `04e559c` (revisão,
+  achado 1: cada ingest apagava as tabelas do workflow).
+- Revisão em contexto fresco: REQUEST_CHANGES — o bloqueante foi corrigido; FR2 ausente, FR3
+  invertido, FR1 parcial e FR10 com teste autoalimentado ficaram **declarados** como parcial no
+  plano (Princípio IV em ⚠️), não vendidos como verde. Segurança: OK_WITH_FINDINGS, uma média
+  corrigida, duas aceitas como risco no ADR 0025 (cinco condições). Mutação 3/3 recusadas.
+- Portões medidos na worktree: `check-conformance.sh 070` verde (rc=0) após duas correções
+  (`DOM:invariants=none` não é valor aceito; um `[ ]` literal na linha de evidência lia como
+  esqueleto); `check-language`, `check-links`, `check-version`, `check-adr` verdes.
+  `check-boundary` e `check-install` vermelhos **por ambiente da worktree** (o shim `python3` não
+  entra no PATH do portão; `AGENTS.md` é link simbólico que a worktree no Windows materializa
+  como arquivo de texto) — rodar os dois no checkout principal depois do merge, antes do gate.
+  `--ticked-only` só acusou a linha de evidência já corrigida.
+- Aguarda o Darú: `TAIL:gate` do 070 sabendo que a spec é parcial; status do ADR 0025
+  (Proposto); merge de `integra/linha-paralela-070` em `066-painel-de-regencia` e depois na
+  `dev`. Depois: ciclo 071 (`6e9788f`, board), relançar as sete com o lançador corrigido.
+- Consumo semanal: 100 % atingido às 16:55, zerou às 17:00.
