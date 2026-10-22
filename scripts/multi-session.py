@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import argparse
 import base64
+import json
 import os
 import shutil
 import subprocess
@@ -50,10 +51,30 @@ def worktree_for(root: str, name: str, base: str, dry: bool) -> str:
     return path
 
 
-def ps_for(name: str, role: str, color: str, cwd: str, model: str) -> str:
+def gateway_url(root: str) -> str | None:
+    """ANTHROPIC_BASE_URL from the project's .claude/settings.local.json (no secret lives there).
+
+    The panes inherit the launcher's environment. When the launcher itself runs inside a
+    Claude session, that environment carries ANTHROPIC_BASE_URL=https://api.anthropic.com,
+    and the inherited value beat the settings file: every session sent the gateway token
+    to the wrong host and got "401 Invalid bearer token" (cycle 066, 22/10). Setting the
+    variable explicitly in each pane removes the dependence on who launched it.
+    """
+    path = os.path.join(root, ".claude", "settings.local.json")
+    try:
+        with open(path, encoding="utf-8-sig") as fh:
+            return json.load(fh).get("env", {}).get("ANTHROPIC_BASE_URL")
+    except (OSError, ValueError):
+        return None
+
+
+def ps_for(name: str, role: str, color: str, cwd: str, model: str, base_url: str | None = None) -> str:
     claude = f"& '{CLAUDE_EXE}' --name '{name}' --model '{model}'"
+    env_fix = f"$env:ANTHROPIC_BASE_URL = '{base_url}'; " if base_url else "Remove-Item Env:ANTHROPIC_BASE_URL -ErrorAction SilentlyContinue; "
     return (
         "Remove-Item Env:CLAUDE_CODE_CHILD_SESSION -ErrorAction SilentlyContinue; "
+        "Remove-Item Env:ANTHROPIC_API_KEY -ErrorAction SilentlyContinue; "
+        + env_fix +
         "$env:CLAUDE_CODE_FORCE_SESSION_PERSISTENCE = '1'; "
         f"Set-Location '{cwd}'; "
         f"$Host.UI.RawUI.WindowTitle = '{name} - {role} - {model}'; "
@@ -99,8 +120,11 @@ def main() -> int:
         print("error: wt.exe (Windows Terminal) not found.", file=sys.stderr)
         return 1
 
+    base_url = gateway_url(root)
+    print(f"  ANTHROPIC_BASE_URL per pane: {base_url or '(unset: inherited value removed)'}")
+
     def pane(s):
-        return f"powershell -NoExit -EncodedCommand {_encode_ps(ps_for(*s))}"
+        return f"powershell -NoExit -EncodedCommand {_encode_ps(ps_for(*s, base_url=base_url))}"
 
     def run(cmd, delay=0.6):
         os.system(cmd)
