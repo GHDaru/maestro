@@ -19,7 +19,8 @@
 
 ## `POST /api/regencia/transicao` — o arrasto propõe, não promove (FR8, FR9)
 
-Pedido:
+Pedido — **exatamente estes três campos**, sem alias (`gate`/`destino` **não** são aceitos; o contrato
+vence sobre a forma antiga do teste, que **F3 adapta**):
 
 ```json
 { "chamado": "072", "de": "G2", "para": "G3" }
@@ -31,6 +32,8 @@ Pedido:
   "dono": "<papel do GATES>", "promocao": "arquivo assinado pelo dono (068)"}}`.
 - **422** — falta o arquivo do gate de destino (ou o cabeçalho não é válido):
   `{"erro": "falta G3-*.md com cabeçalho válido"}`. **Nenhum arquivo muda** (anti-regra 1).
+- O motivo do 422 é o campo **`falta`** devolvido pela função pura `proposta_transicao(chamado, de,
+  para, arquivos)` — o adaptador HTTP **não** reimplementa a regra (corte hexagonal do plano).
 
 ## `GET /api/regencia/fila` — leitura da fila (FR11–FR15, FR20)
 
@@ -53,7 +56,16 @@ Pedido:
 - **422** — `ruling` sem `autor` humano ou sem `destinatario`: `{"erro": "ruling sem autor humano"}` /
   `{"erro": "ruling sem destinatario"}` (FR14); `pedido` sem campo obrigatório: `{"erro": "falta
   '<campo>' no pedido"}` (FR11). **Nada é gravado.**
+- **422 (FR20, ambiguidade 1a)** — `autor` **fora** de `cfg["regencia"]["pessoas"]` (a lista de pessoas
+  do projeto, em `painel/projetos/<projeto>.json`): `{"erro": "autor não é pessoa do projeto: '<nome>'"}`
+  — a recusa vale **mesmo com `registrado_por` preenchido** (a Office registra, não assume a autoria);
+  sem a chave na config: `{"erro": "config sem regencia.pessoas"}` (o painel **não** inventa a lista).
+  `ruling` para **pedido inexistente** → `{"erro": "pedido desconhecido: '<id>'"}`.
 - A resposta do `ruling` aceita o **id derivado** de um portão do regente (ex.: `"pedido": "072+T7"`).
+- **Backup (condição do gate do plano)**: antes da **primeira** escrita de cada dia, o adaptador copia
+  o arquivo para `painel/dados/backup/fila-<projeto>-<AAAA-MM-DD>.jsonl`; a resposta traz
+  `"backup": "<caminho do backup do dia>"` quando ele foi criado nessa chamada. A cópia acontece dentro
+  do **mesmo lock** da escrita — o `POST` não pode gravar antes de o backup existir.
 
 ## `GET /api/regencia/kanban` — projeção do 068 (FR1–FR7, FR10)
 
