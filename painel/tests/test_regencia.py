@@ -317,9 +317,12 @@ class TestF3TransicaoSemArquivo(_Base):
         _escreve(os.path.join(self.raiz, "specs/072-teste-f3/00-chamado.md"), ABERTURA)
         _escreve(os.path.join(self.raiz, "specs/072-teste-f3/G2-vermelho-aaaaaaa.md"),
                  _gate("G2", "FALHA_ESPERADA", por="W07"))
+        srv, url = self._sobe()
+        # W04 (V0b iii): a foto vem DEPOIS de subir o servidor — `_sobe()` cria `<raiz>/painel.db`,
+        # então fotografar antes tornaria o assert impossível por um artefato da fixture, não da
+        # transição. O intento (FR9: nenhum arquivo muda na recusa) fica preservado.
         antes = self._foto_da_arvore()
 
-        srv, url = self._sobe()
         code, resposta = self._post_json(url, "/api/regencia/transicao",
                                          {"chamado": "072-teste-f3", "de": "G2", "para": "G3"})
 
