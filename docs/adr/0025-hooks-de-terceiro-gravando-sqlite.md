@@ -1,6 +1,6 @@
 # ADR 0025 — Hooks de terceiro gravando no SQLite do painel
 
-- **Status**: Proposto · **Data**: 2026-10-22 · **Ciclo**: 070 (integra o workflow SQLite da linha paralela)
+- **Status**: Aceito com ressalva (ADR 0026) · **Data**: 2026-10-22 · **Ciclo**: 070 (integra o workflow SQLite da linha paralela)
 - **Supersede**: nada; complementa o ADR 0022 (o painel é projeção reconstruível dos arquivos). **Superado por**: —
 - **Origem**: decisão 5 e tabela § 3 de `specs/066-painel-de-regencia/plano-integracao-linha-paralela.md` (Opus, 19/10, só leitura) e o ponto de retomada § 3c do handoff do longrun. O código veio pronto da branch `w07-064-integrate` (`b33bb81`, 02/10/2026) e já rodava no Hindiana; este ADR registra a decisão de método que ele embute, para o Darú aceitar ou recusar no gate do ciclo. O handoff citava "ADR 0024" para esta decisão; o 0024 foi tomado em 20/10 pelo cabeçalho conferível, daí 0025.
 - **Implementação**: ciclo 070 (`f37bf89`, `8ef082f`); evidência em `specs/070-workflow-sqlite/qa-report.md`.
