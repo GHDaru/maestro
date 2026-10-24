@@ -48,9 +48,13 @@
   pareceres de `pareceres-sessoes-via-gateway.md` (sem segredo no repositório, uma worktree por
   Worker, token só no escopo de usuário) e pela correção do 401; os ciclos filhos carregam as
   próprias passagens.
-- [ ] **TAIL:mutation** — n/a: nenhum `scripts/check-*.sh` criado ou alterado por este ciclo
-  (`git log --oneline -- scripts/check-*.sh` sem commit "ciclo 066" desta pasta); a exceção do
-  portão para evidência importada é do ciclo 069 e foi mutada lá.
+- [x] **TAIL:mutation** — o portão lê o número do ciclo, e commits "ciclo 066" tocaram
+  `scripts/check-conformance.sh` (a isenção por forma para evidência importada, decisão B1 de
+  21/10, `3f590ab`) e `boundary.json` (ciclo 066 v0). As duas mutações foram feitas e vistas
+  recusando: a da isenção (um `tasks.md` vazio na pasta importada volta a ser cobrado) está no
+  `qa-report.md` do 069 § Findings e é espelhada no `qa-report.md` desta pasta; a do
+  `boundary.json` está no `qa-report.md` do 066 v0. Evidence: the mutation and its output, in
+  `qa-report.md`.
 - [ ] **TAIL:gate** — n/a: a pasta não promove nada por si; os gates estão nos ciclos filhos
   (`gate-dev-integra-066-069`, `gate-main-3f590ab`, `gate-070-delegado`) e a promoção seguinte
   acontece com o fechamento da rodada 1 do 072.
