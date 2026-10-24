@@ -141,6 +141,38 @@
   `TRIGGER`"; o SQLite não aceita dois eventos no mesmo gatilho, então o arquivo traz **oito**
   (dois por tabela). O comportamento fixado é idêntico; só a contagem do texto diverge.
 
+### 072-T11 — ajustes de texto pós-T03/T07 (Worker02)
+
+- **Entregue** (`[[DONE id=072-T11 outcome=delivered]]`, 24/10): commit **`573a6f5`** na `w/worker02`
+  ("ciclo 072: plano e contratos ajustados após T03/T07"), sobre a base **`6be6525`** (a task T11
+  registrada pelo regente). O HEAD estava em `d1cb955`; a worktree fez `git merge --ff-only 6be6525`
+  antes de começar (sem push). Dois arquivos, **+2/−2**: `specs/072-painel-de-regencia/contracts/rotas.md`
+  e `painel/regencia/fila.py`.
+- **O que mudou (a decisão do regente ao aceitar T03/T07):** o corpo **422** do ruling sem
+  destinatário passa a `{"erro": "ruling sem destino"}` — o **campo** do esquema continua
+  `destinatario` (é nome de campo, não mensagem). `valida_ruling` devolve `"ruling sem destino"`,
+  **sem** o híbrido `"(destinatario)"` que o Worker03 usou no T03 para manter a fatia verde
+  (divergência registrada em "### 072-T03"). Teste puro e contrato passam a dizer o **mesmo texto** —
+  a divergência fecha aqui.
+- **Evidência — o grep (2 ocorrências, uma por arquivo):**
+
+  ```
+  specs/072-painel-de-regencia/contracts/rotas.md:57:  `{"erro": "ruling sem destino"}` (FR14); `pedido` sem campo obrigatório: `{"erro": "falta
+  painel/regencia/fila.py:63:        return "ruling sem destino"
+  ```
+
+  (a única ocorrência remanescente do texto antigo é `qa-report.md:90`, na seção **histórica** do
+  T03 — não reescrita.)
+- **Evidência — verde:** `PYTHONUTF8=1 python -m pytest "painel/tests/test_regencia.py::TestF5Ruling" -q`
+  → **`1 passed in 0.26s`** (exit 0). O arquivo de testes **não foi tocado**: o teste já cobrava a
+  substring `"destino"`; o híbrido era a única mensagem que não casava com o contrato.
+- **Regressão:** suite antiga `python -m pytest painel/tests -q --ignore=painel/tests/test_regencia.py`
+  → **`48 passed in 20.67s`** (exit 0).
+- **Item 3 — verificado, nada a completar:** a tabela "Nomes fixados" do `plan.md` já traz
+  `cabecalho_fila` (linha 61) e a DoD já diz **`Ran 24 tests`** (linha 345), ambos do commit
+  **`2d9ef37`**. O diff `6be6525..573a6f5` toca **só** os dois arquivos acima — nenhuma pendência
+  de plano restou.
+
 ### 072-T04 — kanban routes and screen (Worker04)
 
 - Pending (depends on T03).
