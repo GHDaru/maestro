@@ -10,6 +10,22 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **Painel de regência, rodada 1 — kanban por gate e fila de decisões** (ciclo 072, ADR 0027).
+  Duas vistas novas sobre os arquivos que o painel já deriva: o **kanban por gate** — dez colunas
+  (G0–G9) com o cartão trazendo dono (papel + sessão), o **veredito normalizado ao lado do
+  original**, idade e selo, o marcador de independência (autor da peça ≠ quem assina) e a faixa
+  `abertura`·`GD`; e a **fila de decisões** — pedidos e *rulings* num registro JSONL **append-only
+  fora do projeto** (`painel/dados/fila-<projeto>.jsonl`), com **escritor único** (lock de módulo)
+  e **backup datado** antes da primeira escrita do dia. O domínio puro vive em `painel/regencia/`
+  (`normalizacao.py`, `kanban.py`, `fila.py` — sem `http.server`, `sqlite3` nem arquivo); as rotas
+  `GET /api/regencia/kanban`, `POST /api/regencia/transicao` e `GET/POST /api/regencia/fila` ficam
+  em `painel/server.py`, e as telas `vKanban`/`vFila` em `painel/index.html` (**T04, o kanban, ainda
+  em curso**). O parser de chamados passa a expor `autor_da_peca` ao lado de `por` (FR5). ADR 0027
+  fixa o endereço do registro e o append-only mecânico; o glossário ganha os cinco termos
+  "Cycle 072". Testes de contrato da regência em `painel/tests/test_regencia.py` (24 no gate do
+  plano, incluindo as três provas de FR16 — prefixo de bytes, AST do modo de abertura e dois `POST`
+  concorrentes).
+
 - **Workflow do ciclo em SQLite** (ciclo 070, ADR 0025). Cada rodada é uma execução de
   workflow registrada passo a passo em SQLite append-only (`painel/schema_workflow.sql`:
   `rodadas`, `passos`, `transicoes`, `fila`, modo WAL); os hooks `SessionStart` e `Stop` do
@@ -64,6 +80,16 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
   responde quanto cada tarefa custou, a taxa de aprovação de primeira e o custo do retrabalho.
   O próprio ciclo foi executado e medido pelo livro. Protocolo instalável:
   `docs/governance/task-ledger.md`. Portão novo: `scripts/check-ledger.sh`.
+
+### Modificado
+- **Append-only mecânico na base do workflow** (ciclo 072; paga a dívida 5 do 070, ADR 0027 §2).
+  `painel/schema_workflow.sql` ganha **oito** `TRIGGER` (dois por tabela — o SQLite aceita um único
+  evento por gatilho): `rodadas`, `transicoes` e `fila` recusam `UPDATE` e `DELETE`; `passos` recusa
+  `DELETE` sempre e `UPDATE` **a menos que** `saida_em IS NULL` e só nas colunas `saida_em`,
+  `resumo` e `resultado`. Esse `WHEN` libera exatamente o fechamento do passo, então
+  **`painel/hooks/workflow_stop.py` não foi tocado** (FR3 do 070 preservado). Declarado: a dívida 2
+  (`_ensure_schema` em cópias) **piora**; `fila` também recebeu um `WHEN` (o drain marca `lida_em`)
+  — emenda de texto pendente no ADR 0027.
 
 ### Corrigido
 - **O portão de conformidade cobrava artefatos de ciclo de uma pasta que não é ciclo** (ciclo
