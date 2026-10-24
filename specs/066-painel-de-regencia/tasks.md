@@ -1,16 +1,56 @@
-# Tasks 066 — <title>
+# Tasks 066 — Painel de regência: ciclo guarda-chuva da integração da linha paralela
+
+> Ciclo de **coordenação**: as tarefas abaixo são o que esta pasta produziu; o código e as caudas
+> de cada entrega estão nos ciclos filhos (066 v0, 067, 068, 069, 070; 072 em curso), cada um com
+> `tasks.md` e `qa-report.md` próprios. Siglas: ADR (*Architecture Decision Record*) · DoD
+> (*Definition of Done*) · UX (*user experience*).
 
 ## Verification first
-- [ ] T0 — define the DoD checks
 
-## Implementation
-- [ ] T1 — <...>
+- [x] **T0** — DoD definida em `plan.md § Verification`: presença dos artefatos de coordenação,
+      dry-run do lançador, conformance da pasta. Medida em 24/10/2026 (ver `qa-report.md`).
+
+## Coordenação (feito — evidência: arquivo ou hash)
+
+- [x] **T1** — `plano-integracao-linha-paralela.md`: inventário das 42 branches, mapa de
+      renumeração 066–072, estratégia e decisões 1–9 (Opus, 19/10).
+- [x] **T2** — `handoff-longrun.md` e `andamento.md`: cinco decisões do longrun fechadas com o
+      Darú; decisões A, B, C; ponto de retomada do 070; roteiro das sete sessões.
+- [x] **T3** — `ux-design.md` (agente `ux-semantics`): papéis semânticos do painel de regência,
+      anti-regras, fitness functions F1–F12; insumo da spec do 072.
+- [x] **T4** — `scripts/multi-session.py`: lançador adaptado da Hindiana (um modelo por sessão,
+      uma worktree por Worker, sem segredo); correção do 401 por herança de
+      `ANTHROPIC_BASE_URL` (**`18d7223`**); sete sessões abertas e respondendo em 24/10.
+- [x] **T5** — Insumos e pareceres datados: `pareceres-sessoes-via-gateway.md`,
+      `insumo-hindiana.md`, `insumo-prompt-setup-harness.md` (Jev, prompt de harness).
+- [x] **T6** — Decisões de método: ADR 0024 (cabeçalho conferível, decisão A), ADR 0026 (gate por
+      delegação); linhas em `docs/records/decisoes.jsonl`.
+- [x] **T7** — Rodada 1 do 072 despachada ao Gerente (24/10); gate DoR aberto por delegação
+      (`gate-072-dor-delegado`).
+
+## Dívidas declaradas
+
+1. `scripts/multi-session.py` sem teste (`gateway_url`, `ps_for`); provado só por dry-run e
+   abertura real.
+2. Colisão de nomes entre projetos ("Gerente" do Maestro × da Hindiana): o lançador deveria
+   prefixar os nomes com o projeto; até lá, endereçar com o ref do ListAgents.
 
 ## Closing tail — MANDATORY, one line each, never delete
+
 <!-- TICK ONLY WHILE WRITING THE EVIDENCE, never in advance: the box records what happened.
      Do not delete a line to say it does not apply: write `n/a: <reason>` on it.
      check-conformance.sh requires the evidence of every non-n/a step in qa-report.md. -->
-- [ ] TAIL:review — independent review in fresh context, by whoever did not execute
-- [ ] TAIL:security — security pass proportional to the risk class
-- [ ] TAIL:mutation — every gate created or changed here, broken on purpose and seen refusing
-- [ ] TAIL:gate — DoD green -> guardian verdict -> human merge gate (not delegable)
+
+- [ ] **TAIL:review** — n/a: ciclo de coordenação sem código de produto; cada ciclo filho (066 v0,
+  067, 068, 069, 070) teve revisão independente em contexto fresco registrada no próprio
+  `qa-report.md`; o lançador (dívida 1) terá revisão quando ganhar teste.
+- [ ] **TAIL:security** — n/a: a superfície deste ciclo é a do lançador, coberta pelos três
+  pareceres de `pareceres-sessoes-via-gateway.md` (sem segredo no repositório, uma worktree por
+  Worker, token só no escopo de usuário) e pela correção do 401; os ciclos filhos carregam as
+  próprias passagens.
+- [ ] **TAIL:mutation** — n/a: nenhum `scripts/check-*.sh` criado ou alterado por este ciclo
+  (`git log --oneline -- scripts/check-*.sh` sem commit "ciclo 066" desta pasta); a exceção do
+  portão para evidência importada é do ciclo 069 e foi mutada lá.
+- [ ] **TAIL:gate** — n/a: a pasta não promove nada por si; os gates estão nos ciclos filhos
+  (`gate-dev-integra-066-069`, `gate-main-3f590ab`, `gate-070-delegado`) e a promoção seguinte
+  acontece com o fechamento da rodada 1 do 072.
