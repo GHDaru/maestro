@@ -198,6 +198,17 @@ table.mc tbody tr:hover td{background:var(--surface-2)}table.mc tbody tr.sel td{
 .pend{color:var(--warn);font-weight:700}.pend-msg{color:var(--warn);font-size:12px;font-weight:600;margin:4px 0}
 .ch-pendbox{background:var(--warn-weak);color:var(--text);border-radius:var(--radius);padding:10px 14px;margin:0 0 10px;font-size:13px}.ch-pendbox ul{margin:4px 0 0;padding-left:18px}
 .mc-cel sub{color:var(--warn);font-size:9px;position:absolute;bottom:-1px;right:1px}
+
+.fila-lista{display:grid;gap:10px}
+.fila-meta{list-style:none;margin:6px 0;padding:0;font-size:13px}
+.fila-meta>li{margin:2px 0}
+.fila-opts,.fila-form-linha{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.fila-opts label{display:flex;gap:4px;align-items:center;background:var(--bg-weak,transparent);border:1px solid var(--border);border-radius:4px;padding:2px 8px}
+.fila-form{border-top:1px solid var(--border);margin-top:8px;padding-top:8px}
+.fila-form label{display:flex;flex-direction:column;font-size:12px;color:var(--muted)}
+.fila-form input{border:1px solid var(--border);border-radius:4px;padding:4px 6px;font-size:13px}
+.fila-msg{min-width:120px}.fila-msg.pend-msg{color:var(--warn)}.fila-msg.ok-msg{color:var(--ok)}
+
 </style>
 </head>
 <body>
@@ -208,6 +219,7 @@ table.mc tbody tr:hover td{background:var(--surface-2)}table.mc tbody tr.sel td{
     <button data-v="board" aria-current="page">◧ Board de agentes <span class="cnt" id="c-board"></span></button>
     <button data-v="pecas">▤ Fluxo de peças <span class="cnt" id="c-pecas"></span></button>
     <button data-v="chamados">◆ Chamados e gates <span class="cnt" id="c-cham"></span></button>
+    <button data-v="fila">⚑ Fila de decisões <span class="cnt" id="c-fila"></span></button>
     <div class="grupo">Planejamento</div>
     <button data-v="roadmap">⇢ Roadmap e specs <span class="cnt" id="c-specs"></span></button>
     <button data-v="decisoes">⚖ Decisões e ADRs <span class="cnt" id="c-dec"></span></button>
@@ -761,7 +773,96 @@ async function vOperacao(){
     "Visão estática mantida pela Assistente (arquitetura.html). Abre também sozinha em <code>/arquitetura.html</code>.") +
     `<iframe src="/arquitetura.html?embed=1" title="Operação Hindiana" style="width:100%;height:calc(100vh - 180px);min-height:640px;border:1px solid var(--line, #d5dde4);border-radius:4px;background:transparent"></iframe>`;
 }
-const VIEWS = {chamados:vChamados, processo:vProcesso, operacao:vOperacao, board:vBoard, pecas:vPecas, roadmap:vRoadmap, decisoes:vDecisoes, dora:vDora, qualidade:vQualidade, documentos:vDocumentos, glossario:vGlossario, ia:vIA, higiene:vHigiene, tempo:vTempo, lote:vLote};
+// ---------- Fila de decisões (regência; FR11–FR25) ----------
+const FONTE_FILA = "painel/fila_registro.py le()";
+function metrica(v, fonte, motivo){
+  if(v==null || v==="") return `<span class="metrica" data-fonte="${esc(fonte)}" title="${esc(motivo||"—")}">— <span class="legenda">(motivo: ${esc(motivo||"sem fonte")})</span></span>`;
+  return `<span class="metrica" data-fonte="${esc(fonte)}">${esc(v)}</span>`;
+}
+function formFila(it){
+  const id = esc(it.id);
+  return `<form class="fila-form" data-id="${id}">
+    <div class="fila-form-linha">
+      <label>autor humano (você)<input name="autor" autocomplete="off" placeholder="pessoa do projeto" required></label>
+      <label>destinatário<input name="destinatario" autocomplete="off" placeholder="para quem volta" required></label>
+      <label>escolha / texto<input name="escolha" autocomplete="off" placeholder="opção ou texto livre"></label>
+    </div>
+    <div class="fila-form-linha">
+      <button type="button" class="btn" aria-label="responder pedido ${id}" data-acao="resposta">Responder</button>
+      <button type="button" class="btn" aria-label="devolver a quem pediu o pedido ${id}" data-acao="devolucao">Devolver a quem pediu</button>
+      <span class="fila-msg legenda" role="status"></span>
+    </div>
+  </form>`;
+}
+function cardFilaPedido(it){
+  const destrava = it.destrava || [];
+  const opcoes = (it.opcoes||[]).map(o=>`<label><input type="radio" name="esc-${esc(it.id)}" value="${esc(o.id)}"> <b>${esc(o.id)}</b> — ${esc(o.descricao)}</label>`).join("");
+  return `<article class="card fila-item" data-id="${esc(it.id)}">
+    <div class="titulo"><span class="loz info">pedido de decisão</span> <b>${esc(it.id)}</b> · ${esc(it.pedido_por||"—")}</div>
+    <p>${esc(it.pergunta||"—")}</p>
+    <ul class="fila-meta">
+      <li>opções: <div class="fila-opts">${opcoes || `<span class="legenda">— (motivo: pedido sem opções)</span>`}</div></li>
+      <li>recomendação de quem pediu: <b>${esc(it.recomendacao||"—")}</b> <span class="legenda">(não é a decisão — a escolha é sua)</span></li>
+      <li>prazo: ${metrica(it.prazo, FONTE_FILA, "pedido sem prazo")}</li>
+      <li>destrava: ${metrica(destrava.length||null, FONTE_FILA, "nada declarado")} item(ns) — <span class="legenda">${esc(destrava.join(", ")||"—")}</span></li>
+      <li>destino: ${esc(it.destino||"—")} · status: ${esc(it.status||"—")}</li>
+      <li>na fila ${metrica(it.idade, FONTE_FILA, "registro sem carimbo")} <span class="legenda">${esc(it.carimbo||"")}</span></li>
+    </ul>
+    ${formFila(it)}
+  </article>`;
+}
+function cardFilaPortao(it){
+  const fonte = "painel/regencia/fila.py portoes_do_regente";
+  return `<article class="card fila-item" data-id="${esc(it.id)}">
+    <div class="titulo"><span class="loz warn">portão do regente</span> <b>${esc(it.gate||"")}</b> · <span class="mono">${esc(it.chamado||"")}</span></div>
+    <ul class="fila-meta">
+      <li>status lido do arquivo de gate: ${esc(it.status||"—")}</li>
+      <li>desde ${metrica(it.idade, fonte, "arquivo sem carimbo de commit")} <span class="legenda">${esc(it.carimbo||"")}</span></li>
+      <li>evidência: <code>${esc(it.evidencia||"—")}</code></li>
+      <li><span class="loz idle" title="a um agente este item aparece somente leitura">somente leitura para um agente</span> <span class="legenda">${esc(it.id)}</span></li>
+    </ul>
+    ${formFila(it)}
+  </article>`;
+}
+async function enviaRuling(form, tipoRuling){
+  const radio = form.querySelector("input[type=radio]:checked");
+  const corpo = {tipo:"ruling", pedido:form.dataset.id,
+    escolha:(radio && radio.value) || form.querySelector("[name=escolha]").value.trim(),
+    autor:form.querySelector("[name=autor]").value.trim(),
+    destinatario:form.querySelector("[name=destinatario]").value.trim(),
+    tipo_ruling:tipoRuling, data:new Date().toISOString()};
+  const msg = form.querySelector(".fila-msg");
+  try{
+    const r = await fetch("/api/regencia/fila", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(corpo)});
+    const resp = await r.json();
+    if(!r.ok){ msg.textContent = "não registrado: "+(resp.erro||r.status); msg.className = "fila-msg pend-msg"; return; }
+    msg.textContent = `encaminhado a ${corpo.destinatario}${resp.backup?" · backup: "+resp.backup:""}`;
+    msg.className = "fila-msg ok-msg";
+    setTimeout(vFila, 600);
+  }catch(e){ msg.textContent = "falha na rede: "+e.message; msg.className = "fila-msg pend-msg"; }
+}
+async function vFila(manterFoco){
+  const d = await api("/api/regencia/fila");
+  const itens = d.itens || [];
+  const contador = metrica((d.idade_mais_velha||{}).texto, "painel/regencia/fila.py cabecalho_fila", "fila vazia");
+  let h = cabecalho("Agora / Fila de decisões","O que está esperando por você",
+    `Pedidos de decisão e portões do regente (G7, G8, <code>TAIL:gate</code>), ordenados por <b>prazo × bloqueio</b>. O painel <b>registra</b> a decisão; nunca decide por você.`,
+    `<span class="legenda">na fila: ${metrica(itens.length, "painel/regencia/fila.py cabecalho_fila", "sem itens")} · mais velho ${contador}</span>`);
+  if(d.vazia){
+    h += `<div class="aviso" data-fonte="${esc(FONTE_FILA)}">${esc(d.mensagem||"fila vazia — nenhuma decisão registrada")}</div>
+      <p class="legenda">Fila vazia é informação: nada espera por você agora.</p>`;
+    $("#main").innerHTML = h; $("#c-fila").textContent = ""; return;
+  }
+  $("#c-fila").textContent = itens.length;
+  h += `<div class="fila-lista">${itens.map(it=>it.origem==="portao"?cardFilaPortao(it):cardFilaPedido(it)).join("")}</div>`;
+  $("#main").innerHTML = h;
+  liga_busca(vFila); if(manterFoco) foca();
+  document.querySelectorAll(".fila-form").forEach(f=>{
+    f.querySelectorAll("[data-acao]").forEach(b=> b.onclick = ()=> enviaRuling(f, b.dataset.acao));
+  });
+}
+
+const VIEWS = {chamados:vChamados, processo:vProcesso, operacao:vOperacao, fila:vFila, board:vBoard, pecas:vPecas, roadmap:vRoadmap, decisoes:vDecisoes, dora:vDora, qualidade:vQualidade, documentos:vDocumentos, glossario:vGlossario, ia:vIA, higiene:vHigiene, tempo:vTempo, lote:vLote};
 let atual = "board";
 function vai(v){ fecha(); atual = v; document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-current", b.dataset.v===v?"page":"false")); if(location.hash.slice(1).split("/")[0]!==v) location.hash = v; VIEWS[v]().catch(e=>$("#main").innerHTML=`<div class="aviso">Erro: ${esc(e.message)}</div>`); }
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>vai(b.dataset.v));

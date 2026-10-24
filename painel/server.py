@@ -19,7 +19,9 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, urlparse
 
 import chamados
+import fila_registro
 import ingest
+import regencia
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 ESTADOS_SESSAO = ("trabalhando", "esperando", "sem tarefa", "bloqueado")
@@ -408,6 +410,148 @@ def v_relatorio_lote(db, desde=None):
     return {"markdown": "\n".join(L)}
 
 
+# ---------- painel de regência: a fila de decisões (FR11–FR23, ciclo 072) ----------
+# Corte hexagonal (plano 072, §1): o comportamento puro vive em `painel/regencia/`; aqui é a
+# borda — resolve a config (`regencia.pessoas`, pedidos conhecidos) e passa o motivo da recusa
+# **como a função pura devolveu** (não duplica o texto de `contracts/rotas.md` no corpo da rota).
+
+def _n_destravados(item):
+    """FR15: quantos itens o pedido destrava — o desempate da ordem da fila."""
+    destrava = item.get("destrava")
+    if isinstance(destrava, list):
+        return len(destrava)
+    return 1 if destrava else 0
+
+
+def _pasta_do_chamado(cfg, cid):
+    """A pasta `specs/<id>/` do chamado, se existir (para ler o `tasks.md` do `TAIL:gate`)."""
+    raiz = cfg.get("raiz", ".")
+    for fonte in cfg.get("chamados", []) or []:
+        pasta = os.path.join(raiz, fonte.get("repo", "."), fonte.get("pasta", "specs").strip("/"), cid)
+        if os.path.isdir(pasta):
+            return pasta
+    return None
+
+
+def _item_tail(cfg, cid):
+    """FR20: `TAIL:gate` pendente no `tasks.md` do chamado vira item da fila (leitura simples)."""
+    pasta = _pasta_do_chamado(cfg, cid)
+    if not pasta:
+        return []
+    caminho = os.path.join(pasta, "tasks.md")
+    if not os.path.exists(caminho):
+        return []
+    try:
+        with open(caminho, encoding="utf-8") as f:
+            linhas = f.read().splitlines()
+    except OSError:
+        return []
+    if not any(l.strip().startswith("- [ ] **TAIL:gate**") for l in linhas):
+        return []
+    quando = dt.datetime.fromtimestamp(os.path.getmtime(caminho)).astimezone().isoformat(timespec="seconds")
+    return [regencia.portao_derivado(cid, "TAIL:gate", "pendente", quando)]
+
+
+def _portoes_da_fila(cfg, dados=None):
+    """FR20: itens derivados dos portões do regente — G7/G8 pendentes + o `TAIL:gate` de cada chamado."""
+    dados = dados if dados is not None else chamados.em_cache(cfg)
+    docs = getattr(chamados, "_docs", {}) or {}
+    itens = []
+    for c in dados.get("chamados", []):
+        cid = c.get("id", "")
+        arquivos = (docs.get(cid) or {}).get("arquivos") or {}
+        commit_de = {n: v.get("quando") for n, v in arquivos.items() if v.get("quando")}
+        itens.extend(regencia.portoes_do_regente(c, commit_de))
+        itens.extend(_item_tail(cfg, cid))
+    return itens
+
+
+def _pedidos_conhecidos(cfg, dados=None):
+    """FR20: os ids que um ruling pode fechar — pedidos registrados + ids derivados dos portões."""
+    ids = {l.get("id") for l in fila_registro.le(fila_registro.caminho(cfg)) if l.get("tipo") == "pedido"}
+    ids |= {i["id"] for i in _portoes_da_fila(cfg, dados)}
+    return {i for i in ids if i}
+
+
+def _item_de_pedido(pedido, agora):
+    """FR23: item da fila a partir de um pedido registrado — idade/carimbo vêm do registro."""
+    idade = regencia.idade_do_carimbo(pedido.get("criado_em"), agora) or {}
+    return {**pedido, "origem": "pedido", "somente_leitura": False, "destravados": _n_destravados(pedido),
+            "idade": idade.get("texto"), "carimbo": idade.get("carimbo"), "selo": idade.get("selo")}
+
+
+def _item_de_portao(item, agora):
+    """FR20/FR23: item derivado de portão — idade a partir do 'desde' (commit do arquivo)."""
+    idade = regencia.idade_do_carimbo(item.get("desde"), agora) or {}
+    return {**item, "idade": idade.get("texto"), "carimbo": idade.get("carimbo"), "selo": idade.get("selo")}
+
+
+def _mensagem_vazia(linhas):
+    """Fila vazia é informação: diz a hora da última decisão (contracts/rotas.md §GET /fila)."""
+    rulings = [l for l in linhas if l.get("tipo") == "ruling"]
+    if rulings:
+        quando = rulings[-1].get("registrado_em") or rulings[-1].get("data") or ""
+        if len(quando) >= 16:
+            return f"fila vazia — última decisão às {quando[11:16]}"
+    return "fila vazia — nenhuma decisão registrada"
+
+
+def v_fila(db, cfg):
+    """FR11–FR23: pedidos não fechados + portões do regente, ordenados por prazo × bloqueio."""
+    linhas = fila_registro.le(fila_registro.caminho(cfg))
+    pedidos = [l for l in linhas if l.get("tipo") == "pedido"]
+    rulings = [l for l in linhas if l.get("tipo") == "ruling"]
+    agora = dt.datetime.now().astimezone()
+    itens = [_item_de_pedido(p, agora) for p in pedidos if not regencia.sai_da_fila(p, rulings)]
+    itens += [_item_de_portao(i, agora) for i in _portoes_da_fila(cfg)]
+    itens = regencia.ordena_fila(itens, agora)
+    cab = regencia.cabecalho_fila(itens, agora)
+    vazia = not itens
+    out = {"ok": True, "itens": itens, "n": cab["n"], "vazia": vazia,
+           "destravados": sum(i.get("destravados", 0) for i in itens),
+           "idade_mais_velha": cab["idade_mais_velha"],
+           "mais_velho": (cab["idade_mais_velha"] or {}).get("carimbo"),
+           "data_fonte": "painel/fila_registro.py le() · painel/regencia/fila.py ordena_fila/cabecalho_fila"}
+    if vazia:
+        out["mensagem"] = _mensagem_vazia(linhas)
+    return out
+
+
+def acrescenta_na_fila(cfg, corpo):
+    """FR11/FR14/FR16/FR20: valida e acrescenta **um** pedido ou um ruling; devolve `(code, resposta)`.
+
+    A recusa passa adiante o texto que a função pura devolveu (`valida_pedido`/`valida_ruling`) —
+    a rota não reescreve o motivo (ADR 0027; `contracts/rotas.md` §POST /fila).
+    """
+    if not isinstance(corpo, dict):
+        return 400, {"erro": "corpo deve ser um objeto JSON"}
+    tipo = corpo.get("tipo")
+    if tipo not in ("pedido", "ruling"):
+        return 422, {"erro": "linha sem tipo: 'pedido' ou 'ruling'"}
+    registro = fila_registro.caminho(cfg)
+    agora = dt.datetime.now().astimezone().isoformat(timespec="seconds")
+    if tipo == "pedido":
+        motivo = regencia.valida_pedido(corpo)
+        if motivo:
+            return 422, {"erro": motivo}
+        linha = {**corpo, "criado_em": agora}  # carimbo do registro, nunca campo digitado (FR23)
+        registrado = {"tipo": "pedido", "id": linha.get("id")}
+    else:
+        conf = cfg.get("regencia")
+        if not isinstance(conf, dict) or not conf.get("pessoas"):
+            return 422, {"erro": "config sem regencia.pessoas"}
+        motivo = regencia.valida_ruling(corpo, conf.get("pessoas"), _pedidos_conhecidos(cfg))
+        if motivo:
+            return 422, {"erro": motivo}
+        linha = {**corpo, "registrado_em": agora, "data": agora}
+        registrado = {"tipo": "ruling", "pedido": linha.get("pedido")}
+    backup = fila_registro.acrescenta(registro, linha)
+    resposta = {"ok": True, "registrado": registrado}
+    if backup:
+        resposta["backup"] = backup
+    return 200, resposta
+
+
 ROTAS = {"/api/board": v_board, "/api/pecas": v_pecas, "/api/specs": v_specs, "/api/decisoes": v_decisoes,
          "/api/qualidade": v_qualidade, "/api/documentos": v_documentos, "/api/roadmap": v_roadmap,
          "/api/rodadas": v_rodadas,
@@ -488,6 +632,8 @@ def cria_handler(db_path, cfg):
                 return self._json(chamados.trilha(cfg, u.path.split("/")[3]))
             if u.path == "/api/chamados":
                 return self._json(chamados.em_cache(cfg, forcar="atualizar" in parse_qs(u.query)))
+            if u.path == "/api/regencia/fila":
+                return self._json(v_fila(None, cfg))
             fn = ROTAS.get(u.path)
             if not fn:
                 return self._json({"erro": "rota inexistente"}, 404)
@@ -510,6 +656,14 @@ def cria_handler(db_path, cfg):
                 return self._json({"erro": "só localhost"}, 403)
             if u.path == "/api/reingerir":
                 return self._json(ingest.ingere(cfg, db_path))
+            if u.path == "/api/regencia/fila":
+                n = int(self.headers.get("Content-Length") or 0)
+                try:
+                    corpo = json.loads(self.rfile.read(n) or b"{}")
+                except ValueError:
+                    return self._json({"erro": "corpo não é JSON válido"}, 400)
+                code, resposta = acrescenta_na_fila(cfg, corpo)
+                return self._json(resposta, code)
             if u.path != "/api/eventos":
                 return self._json({"erro": "rota inexistente"}, 404)
             n = int(self.headers.get("Content-Length") or 0)
