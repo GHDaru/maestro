@@ -142,6 +142,27 @@
 - **Depende de**: nada (paralelo a W03/W04/W05). **Não compartilha arquivo** com W04/W05 (`server.py`
   / `index.html`), então pode correr junto.
 
+### Sessão Worker02 [31f7bf] — ajustes de texto pós-T03/T07 (T11, decisão do regente)
+
+`[[TASK id=072-T11 kind=fix cycle=072 attempt=1]]`
+
+> Decisão do regente (24/10, ao aceitar T03 e T07): o texto do 422 do *ruling* sem destinatário
+> fica **"ruling sem destino"** — o contrato adapta-se ao teste F5 (que exige `destino` no
+> motivo) e ao glossário ("destino da resposta"); a função pura devolve o mesmo texto.
+
+- [ ] `specs/072-painel-de-regencia/contracts/rotas.md`: o corpo 422 passa a
+      `{"erro": "ruling sem destino"}` (o **campo** `destinatario` do esquema do ruling **não**
+      muda — é nome de campo, não mensagem).
+- [ ] `painel/regencia/fila.py`: `valida_ruling` devolve `"ruling sem destino"` (sem o híbrido
+      `"(destinatario)"` usado no T03 para manter a fatia verde).
+- [ ] Conferir — **não refazer** — que o plano já traz `cabecalho_fila` na tabela "Nomes
+      fixados" e a DoD com `Ran 24 tests` (commit `2d9ef37`); se algo tiver faltado, completar e
+      declarar.
+- Evidência: `grep -n 'ruling sem destino' specs/072-painel-de-regencia/contracts/rotas.md
+  painel/regencia/fila.py` → 2 ocorrências; `pytest painel/tests/test_regencia.py::TestF5Ruling
+  -q` → verde.
+- Commit: "ciclo 072: plano e contratos ajustados após T03/T07".
+
 ## Escopo D — jornada viva e artefatos vivos
 
 ### Sessão Worker01 [21d8d2] — ADR 0027 + índice + glossário (bloqueia W05)
