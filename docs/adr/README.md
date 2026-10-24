@@ -29,6 +29,7 @@ consequências → fontes.
 | 0024 | [Cabeçalho conferível nas evidências da cauda](0024-cabecalho-conferivel-nas-evidencias-da-cauda.md) | Aceito |
 | 0025 | [Hooks de terceiro gravando no SQLite do painel](0025-hooks-de-terceiro-gravando-sqlite.md) | Aceito com ressalva (ADR 0026) |
 | 0026 | [Gate humano por delegação de política, com crítico independente](0026-gate-humano-por-delegacao-de-politica.md) | Aceito |
+| 0027 | [O registro da fila é arquivo do painel, e o append-only é mecânico](0027-registro-da-fila-e-append-only-mecanico.md) | Aceito |
 
 > Índice consultável por máquina (append-only): [`../records/decisoes.jsonl`](../records/decisoes.jsonl) — ver [protocolo](../records/README.md).
 
