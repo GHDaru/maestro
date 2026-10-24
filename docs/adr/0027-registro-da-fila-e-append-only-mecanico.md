@@ -84,3 +84,19 @@ Trocar `cfg["fila_decisoes"]` para outro caminho não muda o código; mover a fi
 (opção c) é uma migração de leitura com o mesmo contrato de `acrescenta`. Remover os gatilhos é um
 `DROP TRIGGER` por tabela, com o teste `test_divida5_gatilho_recusa_update_e_delete` voltando a
 vermelho como aviso. Um ADR posterior supersede este.
+
+## Emenda (24/10/2026, tarefa 072-T07 — acréscimo, o texto acima não foi reescrito)
+
+Ao implementar os gatilhos, o Worker02 mostrou dois fatos que a Decisão 2 não previa:
+
+1. **`fila` também precisa do `WHEN`.** O `drenar` de `painel/fila_outbox.py` (ciclo 070) marca a
+   mensagem lida com `UPDATE fila SET lida_em`; recusar todo `UPDATE` em `fila` quebraria três
+   testes do 070 hoje verdes. Regra em vigor: `fila` recusa `DELETE` sempre e `UPDATE` a menos que
+   `lida_em IS NULL` e só na coluna `lida_em`; `rodadas` e `transicoes` continuam recusando
+   `UPDATE` e `DELETE`; `passos` como na Decisão 2.
+2. **São oito gatilhos, não quatro**: o SQLite exige um gatilho por evento (`BEFORE UPDATE` e
+   `BEFORE DELETE`) por tabela.
+
+Evidência: `specs/072-painel-de-regencia/qa-report.md` § 072-T07 (commits `61e78b5`, `d1cb955` em
+`w/worker02`; `TestDivida5Gatilho` verde; suíte do 070 com 48 e hooks com 26 verdes).
+
