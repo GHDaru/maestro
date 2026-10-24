@@ -142,7 +142,8 @@ def confere(arquivos: dict, data_hash, tem_spec: bool, commit_de: dict | None = 
                     erros.append(f"data do veredito ({h['data'][11:16]}) depois do commit do arquivo ({c_arq:%H:%M}): hora digitada")
             m = RE_OBJ.match((h.get("objeto") or "").replace("*", "").replace("`", ""))
             itens.append({"arquivo": n, "papel": h.get("papel", ""), "veredito": h.get("veredito", ""),
-                          "por": h.get("por", ""), "data": h.get("data", ""), "objeto": h.get("objeto", ""),
+                          "por": h.get("por", ""), "autor_da_peca": h.get("autor_da_peca", ""),
+                          "data": h.get("data", ""), "objeto": h.get("objeto", ""),
                           "hash": m.group(2) if m else "", "numeros": h.get("numeros", ""),
                           "transcrito_por": h.get("transcrito_por", ""), "pendente": h.get("pendente", ""),
                           "pendencias_aceitas": h.get("pendencias_aceitas", ""), "erros": erros})
