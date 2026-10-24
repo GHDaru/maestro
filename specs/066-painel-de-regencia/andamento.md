@@ -116,3 +116,13 @@ o Worker01 escreve a spec do 072.
   testes vermelhos com o Worker03.
 - Gate do 070: crítico APROVADO COM CONDIÇÕES; cumpridas as de evidência e texto; ADR 0026
   escrito; falta só o portão de ledger (rodando) para marcar o `TAIL:gate` e fazer o merge na dev.
+
+## 24/10 20:30 — gate do 070 fechado, dev integrada, promoção adiada
+
+- `TAIL:gate` do 070 aberto por delegação (`gate-070-delegado`); ADR 0025 aceito com ressalva; ADR
+  0026 escrito. Merge da branch na dev (`9b85572`), CI verde no GitHub (install e ledger passam
+  em Linux; aqui falham por symlink e subprocesso).
+- `promote-main.sh --yes` abortou na conformance completa: a pasta guarda-chuva 066 era esqueleto
+  e o 072 só tem spec. Corrigida a honestidade do 066 (`8245a36`, `656db57`: plano, tasks e
+  qa-report; mutação espelhada). Decisão por delegação: **não promover a main com o 072 pela
+  metade**; promover no fechamento da rodada 1.
