@@ -43,9 +43,25 @@
   are labeled by Worker04 in slice A — D-072-8 keeps declaring only the JS-rendering limit;
   (d) the dispatch text `task-072-t03b.md` was untracked — committed by the MAESTRO in `dd98ad6`.
 
-### 072-T09 — ADR 0027 + index line + glossary (Worker01)
+### 072-T09 — ADR 0027 + index line + glossary (Worker01 + MAESTRO)
 
-- In flight (dispatched via `task-072-t09.md`, relayed by the MAESTRO; no evidence yet).
+- **Delivered in two parts, closed 24/10** — the split is by design, not accident: worker
+  sessions cannot write under `docs/adr/` (permission rule `Edit/Write(docs/adr/**)`), and the
+  worker **refused to route around it via shell**, reporting the block instead
+  (`[[DONE id=072-T09 outcome=blocked]]` → reopened by the regent session).
+- **Glossary** (Worker01, commit `d8c63b6` on `w/worker01`, integrated in `d8aa60f`):
+  `docs/governance/glossary.md` with the five "Cycle 072" terms — regency panel, decision
+  request, ruling, normalized verdict, regent's gate. Evidence: `grep -c 'Cycle 072'
+  docs/governance/glossary.md` → **5**; `scripts/check-language.sh` → **green**.
+- **ADR 0027 + ADR index + decision index** (MAESTRO, bypass, commit `fe74587`, from the
+  committed draft `adr-0027-rascunho.md`): `docs/adr/0027-registro-da-fila-e-append-only-mecanico.md`
+  written, line added to `docs/adr/README.md`, and the `adr-0027` line appended to
+  `docs/records/decisoes.jsonl` (**171 decisions** now). Evidence: `scripts/check-adr.sh` →
+  **green (24 ADRs)**. The order held: the ADR and its index line entered **before** any code of
+  the queue register (W05), as the plan gate requires.
+- Environment notes for the record: `python3` on this machine is the Microsoft Store alias (the
+  script needs a real one in the PATH), and `scripts/check-adr.sh` here is slow (msys
+  subprocesses; a worker-side run was interrupted past 120 s — environment, not a block).
 
 ### 072-T03 — pure domain + parser FR5 (Worker03)
 
