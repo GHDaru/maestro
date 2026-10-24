@@ -91,6 +91,7 @@ def main() -> int:
     ap.add_argument("--gerente-model", default="glm-5.3")
     ap.add_argument("--worker-model", default="deepseek-v4.1-flash")
     ap.add_argument("--base", default="HEAD", help="branch/commit the Worker worktrees start from")
+    ap.add_argument("--window", default="maestro", help="Windows Terminal window name that holds the whole grid")
     ap.add_argument("--resume", action="store_true", help="actually open Windows Terminal")
     ap.add_argument("--dry-run", action="store_true", help="print the plan, open nothing")
     a = ap.parse_args()
@@ -130,17 +131,22 @@ def main() -> int:
         os.system(cmd)
         time.sleep(delay)
 
+    # One NAMED window for the whole grid. `wt -w 0` means "the most recently used window",
+    # which is whatever the user touched last — on 24/10 the Gerente opened alone and the
+    # Workers landed in another window. A window name is deterministic: the first command
+    # creates it, every later split-pane targets it by name.
     gerente, workers = sessions[0], sessions[1:]
-    run(f"wt {pane(gerente)}", 1.0)
+    win = f"-w {a.window}"
+    run(f"wt {win} new-tab {pane(gerente)}", 1.5)
     n = len(workers)
     if n >= 3:
-        run(f"wt -w 0 split-pane -H -s 0.5 {pane(workers[2])}")
+        run(f"wt {win} split-pane -H -s 0.5 {pane(workers[2])}")
         for i in range(3, n):
             j = n - i
-            run(f"wt -w 0 split-pane -V -s {j / (j + 1):.3f} {pane(workers[i])}")
-        run("wt -w 0 move-focus up", 0.3)
+            run(f"wt {win} split-pane -V -s {j / (j + 1):.3f} {pane(workers[i])}")
+        run(f"wt {win} move-focus up", 0.3)
     for w in workers[:2]:
-        run(f"wt -w 0 split-pane -V -s 0.5 {pane(w)}")
+        run(f"wt {win} split-pane -V -s 0.5 {pane(w)}")
     print(f"\n[OK] {count} session(s) opened.")
     return 0
 
