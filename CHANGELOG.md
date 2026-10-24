@@ -10,6 +10,17 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **Workflow do ciclo em SQLite** (ciclo 070, ADR 0025). Cada rodada é uma execução de
+  workflow registrada passo a passo em SQLite append-only (`painel/schema_workflow.sql`:
+  `rodadas`, `passos`, `transicoes`, `fila`, modo WAL); os hooks `SessionStart` e `Stop` do
+  Claude Code (`painel/hooks/`) registram a entrada e cobram resumo e saída; a fila outbox
+  (`painel/fila_outbox.py`) leva mensagens entre sessões sem broker; o ingest reconstrói em
+  arquivo temporário e troca no fim, e o painel avisa leitura velha e mostra erros de leitura
+  com caminho e motivo (`/api/erros`). Integrado da linha paralela (`w07-064-integrate`,
+  `b33bb81`); os hooks saíram de `scripts/hooks/` para `painel/hooks/` e o dado real do
+  Hindiana (`hindiana.json`) saiu. Declarado: FR2 e FR3 sem teste nomeado, `_ensure_schema`
+  em três cópias, instalador sem dry run — dívidas do 072.
+
 - **Chamados gate a gate no painel** (ciclo 068). O estado de cada chamado (G0–G9) é
   **derivado dos arquivos de veredito, nunca digitado**: `painel/chamados.py` aplica as regras
   do conferidor (cabeçalho obrigatório, autor ≠ crítico, data do veredito não depois do commit
