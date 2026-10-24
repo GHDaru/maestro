@@ -290,7 +290,39 @@
 
 ### 072-T10 — living artifacts of the closing (Worker01)
 
-- Pending (depends on T09).
+- **Entregue** (`[[DONE id=072-T10 outcome=delivered]]`, 24/10): artefatos vivos no commit
+  **`f9f0f0d`** na `w/worker01` ("ciclo 072: artefatos vivos do fechamento (CHANGELOG e roadmap;
+  T10)"); a evidência deste arquivo entra no commit seguinte. Base: o `git merge --ff-only 460dd8c`
+  entrou limpo a partir de `6be6525` (sem push).
+- **CHANGELOG.md** — entrada do ciclo 072 em `[Unreleased]`, **uma seção por tipo**: `### Adicionado`
+  (o painel de regência rodada 1 — kanban por gate, fila de decisões com registro JSONL append-only
+  e backup datado, parser expondo `autor_da_peca`, testes de contrato da regência) e `### Modificado`
+  (os oito gatilhos append-only do schema do workflow — dívida 5 do 070 paga). Evidência:
+  `grep -c 'ciclo 072' CHANGELOG.md` → **2** (≥ 1).
+- **docs/roadmap.md** — linha **F35 — painel de regência, rodada 1** na tabela de fases, com a
+  **rodada 2 declarada infra** (dívidas 3, 6, 7 e 10 do 070 + D-072-1..8); o cabeçalho "Atualizado"
+  passou de ciclo 065 a **ciclo 072**. Evidência: `grep -c '072' docs/roadmap.md` → **4** (≥ 1).
+- **Artefatos condicionais do plano, no mesmo PR** — todos presentes em
+  `specs/072-painel-de-regencia/`: `plan.md`, `tasks.md`, `data-model.md`, `contracts/`
+  (`esquemas.md`, `rotas.md`), `ux-design.md` (**apontador** para `specs/066-…/ux-design.md` §2.1/§2.3,
+  não reescrita), `adr-0027-rascunho.md`, `qa-report.md`. Ausentes: **nenhum** dos listados (a pasta
+  traz ainda `spec.md` e os despachos `task-072-t03b.md`/`task-072-t09.md`).
+- **Evidência — `ls -1 specs/072-painel-de-regencia/`:**
+
+  ```
+  adr-0027-rascunho.md
+  contracts
+  data-model.md
+  plan.md
+  qa-report.md
+  spec.md
+  task-072-t03b.md
+  task-072-t09.md
+  tasks.md
+  ux-design.md
+  ```
+
+  (`contracts/` → `esquemas.md`, `rotas.md`.)
 
 ## Fitness functions (DoD) — filled by Worker06 with real output
 
