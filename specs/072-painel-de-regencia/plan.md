@@ -58,6 +58,7 @@
 | `proposta_transicao` | `proposta_transicao(chamado, de, para, arquivos=None) -> {"permitido", "falta"?}` (**dict; não levanta**) | `painel/regencia/kanban.py` | **o plano vence** — hoje F2 espera `ValueError`; **F2 adapta** (W03) lendo `falta` |
 | `sai_da_fila` | `sai_da_fila(pedido, rulings) -> bool` | `painel/regencia/fila.py` | **o plano vence** |
 | `ordena_fila` | `ordena_fila(itens, agora=None) -> [item]` | `painel/regencia/fila.py` | **o plano vence** |
+| `cabecalho_fila` | `cabecalho_fila(itens, agora=None) -> {"n", "idade_mais_velha"}` | `painel/regencia/fila.py` | **o despacho T03b o fixa** (FR23) — linha acrescentada após o T03b (`42e24f4`); o teste `test_f23_cabecalho_fila_conta_e_mais_velho` consome |
 | `valida_pedido` | `valida_pedido(pedido) -> motivo \| None` | `painel/regencia/fila.py` | **o plano vence** |
 | `valida_ruling` | `valida_ruling(ruling, pessoas=None, pedidos=None) -> motivo \| None` | `painel/regencia/fila.py` | **o plano vence** — os dois últimos parâmetros são **opcionais**: F5 (1 arg) fica verde como está |
 | `portao_derivado` | `portao_derivado(chamado, gate, status, commit) -> {"id", …}`, `id = f"{chamado}+{gate}"` | `painel/regencia/fila.py` | **o plano vence** |
@@ -341,9 +342,11 @@ W03 ──┬── W04 ────────────┐
 > Comando → resultado esperado. Onde a spec do T01 fixava nomes e o T01b delegou ao plano, o comando
 > usa o caminho decidido aqui (ex.: `painel/regencia/normalizacao.py`).
 
-- `python -m unittest discover -s painel/tests -p test_regencia.py` → **`Ran 15 tests`**, `OK`, exit 0.
-  **Supersessão declarada:** a spec diz `Ran 13 tests`; o gate do plano acrescentou **duas** provas de
-  FR16 (AST do modo de abertura e concorrência), logo a linha passa a **15**. O número antigo fica
+- `python -m unittest discover -s painel/tests -p test_regencia.py` → **`Ran 24 tests`**, `OK`, exit 0.
+  **Supersessões declaradas:** a spec diz `Ran 13 tests`; o gate do plano levou a **15** (duas provas
+  de FR16 — AST do modo de abertura e concorrência); a ampliação do T03b (`42e24f4`) levou a **24** —
+  os 13 adaptados aos nomes fixados **mais 11 novos** (F2/F3/F14 em pares positivo+negativo, FR4 em
+  classe própria, FR20 em dois negativos, FR1/FR7/FR11/FR15/FR23 nomeados). Cada número antigo fica
   anotado no `qa-report.md` como superado por esta reconciliação — não é divergência silenciosa.
 - Os **13 testes nomeados de `c1eb802`** (`painel/tests/test_regencia.py`):
   `test_f1_metrica_sem_data_fonte_zero_no_html_renderizado` (FR21) ·
