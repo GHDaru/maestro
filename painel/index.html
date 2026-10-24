@@ -220,6 +220,7 @@ table.mc tbody tr:hover td{background:var(--surface-2)}table.mc tbody tr.sel td{
     <button data-v="pecas">▤ Fluxo de peças <span class="cnt" id="c-pecas"></span></button>
     <button data-v="chamados">◆ Chamados e gates <span class="cnt" id="c-cham"></span></button>
     <button data-v="fila">⚑ Fila de decisões <span class="cnt" id="c-fila"></span></button>
+    <button data-v="kanban">▦ Painel de regência <span class="cnt" id="c-kanban"></span></button>
     <div class="grupo">Planejamento</div>
     <button data-v="roadmap">⇢ Roadmap e specs <span class="cnt" id="c-specs"></span></button>
     <button data-v="decisoes">⚖ Decisões e ADRs <span class="cnt" id="c-dec"></span></button>
@@ -616,10 +617,10 @@ async function vChamados(){
   cache.chOrdem = grupos.flatMap(([,l])=>l.map(c=>c.id));
   $("#main").innerHTML = cabecalho("Agora / Chamados e gates", "Onde cada chamado está e o que falta",
       "O estado vem dos arquivos de gate em specs/&lt;id&gt;/ no git, conferidos pelas regras do padrão. Linhas marcadas \"registro manual\" são anteriores ao padrão.",
-      `<button class="btn" id="ch-atualiza">${d.atualizando?"Lendo o git…":"Ler o git de novo"}</button>`) +
+      `<button class="btn" id="ch-atualiza" aria-label="Reler o git dos chamados e gates">${d.atualizando?"Lendo o git…":"Ler o git de novo"}</button>`) +
     (!d.pronto ? `<div class="aviso">Lendo as pastas specs/ no git (cerca de 20 s na primeira vez)…</div>` : "") +
     (d.erro ? `<div class="aviso">Erro ao ler o git: ${esc(d.erro)}</div>` : "") +
-    `<div class="ch-cartoes">${cartoes.map(([k,n,l,cls])=>`<button class="ch-cartao ${cls}" data-f="${k}" aria-pressed="${filtro===k&&k!==""}"><b>${n}</b><span>${esc(l)}</span></button>`).join("")}</div>
+    `<div class="ch-cartoes">${cartoes.map(([k,n,l,cls])=>`<button class="ch-cartao ${cls}" data-f="${k}" aria-pressed="${filtro===k&&k!==""}" aria-label="Filtrar os chamados: ${esc(l)}"><b>${n}</b><span>${esc(l)}</span></button>`).join("")}</div>
      <div class="ch-filtros"><label>Com quem <select id="ch-quem"><option value="">Todos</option>${quens.map(q=>`<option ${q===quem?"selected":""}>${esc(q)}</option>`).join("")}</select></label>
        <label>Tipo <select id="ch-tipo"><option value="">Todos</option>${["bug","melhoria","sugestao"].map(t=>`<option value="${t}" ${t===tipo?"selected":""}>${t==="sugestao"?"sugestão":t}</option>`).join("")}</select></label>
        ${filtro||quem||tipo?`<button class="btn" id="ch-limpa">Limpar filtros</button>`:""}
@@ -748,7 +749,7 @@ async function vProcesso(){
   $("#main").innerHTML = cabecalho("Planejamento / Fluxo do chamado", "Do chamado aberto pelo cliente à produção",
       "BPMN 2.0 com 12 raias e 11 gates (workflow-chamado.bpmn; abre no bpmn.io e no Camunda Modeler). Losango âmbar = gate.",
       (cache.voltaChamado?`<button class="btn" id="bp-volta">Voltar ao ${esc(cache.voltaChamado)}</button>`:"")+`<button class="btn" id="bp-fit">Ver tudo</button>`) +
-    `<div class="ch-cartoes">${Object.entries(BPMN_EL).map(([g,el])=>`<button class="chip" data-el="${el}">${g}</button>`).join("")}</div>
+    `<div class="ch-cartoes">${Object.entries(BPMN_EL).map(([g,el])=>`<button class="chip" data-el="${el}" aria-label="Ir ao passo ${g} no fluxo BPMN">${g}</button>`).join("")}</div>
      <div id="bpmn" style="height:calc(100vh - 230px);min-height:520px;background:#fff;border:1px solid var(--border);border-radius:var(--radius)"></div>`;
   try{
     if(!window.BpmnJS){
@@ -862,7 +863,96 @@ async function vFila(manterFoco){
   });
 }
 
-const VIEWS = {chamados:vChamados, processo:vProcesso, operacao:vOperacao, fila:vFila, board:vBoard, pecas:vPecas, roadmap:vRoadmap, decisoes:vDecisoes, dora:vDora, qualidade:vQualidade, documentos:vDocumentos, glossario:vGlossario, ia:vIA, higiene:vHigiene, tempo:vTempo, lote:vLote};
+// ---------- Painel de regência: kanban por gate (FR1–FR7, FR10, FR21–FR25) ----------
+// Consome /api/regencia/kanban e /api/meta (frentes). Estado nunca só por cor: cada selo é um
+// sinal (`loz`), todo número traz a fonte (`data-fonte`), e "sem fonte" é "—" com o motivo.
+const LOZ_NORM = {"aprovado":"ok","devolvido":"bad","vermelho provado":"info","em curso":"info","inválido":"warn"};
+const LOZ_EST = {ok:"ok", run:"info", bad:"bad", falta:"idle", na:"idle"};
+const GATES10 = ["G0","G1","G2","G3","G4","G5","G6","G7","G8","G9"];
+function proximoGate(g){ const i = GATES10.indexOf(g); return (i>=0 && i<GATES10.length-1) ? GATES10[i+1] : ""; }
+function cartaoKanban(c){
+  const idade = c.idade || {}, ind = c.independencia || {}, f = c.fontes || {};
+  const norm = c.veredito_normalizado || "inválido";
+  const indCls = ind.vermelho ? "bad" : (ind.motivo ? "warn" : "idle");
+  const linha = 'display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;font-size:13px';
+  return `<li role="listitem" data-id="${esc(c.id)}" data-frente="${esc(c.frente||"")}" style="border:1px solid var(--border);border-left:4px solid var(--border);border-radius:var(--radius);background:var(--surface);padding:8px 10px;display:flex;flex-direction:column;gap:4px">
+    <div style="${linha}"><b>${esc(c.id)}</b>${c.frente?` <span class="loz idle">${esc(c.frente)}</span>`:""}</div>
+    <div style="${linha}"><span class="metrica" data-fonte="${esc(f.dono||"—")}">dono: ${esc(c.dono||"—")}</span>
+      <span class="metrica" data-fonte="${esc(f.sessao||"—")}">sessão: ${esc(c.sessao||"—")}</span></div>
+    <div style="${linha}"><span class="loz ${LOZ_NORM[norm]||"warn"} metrica" data-fonte="${esc(f.veredito||"—")}">${esc(norm)}</span>
+      <span class="mono legenda metrica" data-fonte="${esc(f.veredito||"—")}" title="palavra original do arquivo">original: ${esc(c.veredito||"—")}</span></div>
+    <div style="${linha}"><span class="metrica" data-fonte="${esc(f.idade||"—")}" title="${esc(idade.carimbo||"")}">${esc(idade.texto||"—")}</span>
+      <span class="loz idle metrica" data-fonte="${esc(f.selo||"—")}">selo: ${esc(c.selo||"—")}</span></div>
+    <div style="${linha}"><span class="loz ${indCls} metrica" data-fonte="${esc(f.independencia||"—")}">${esc(ind.texto||"—")}</span>
+      <span class="legenda metrica" data-fonte="${esc(f.integrado_criticado||"—")}">integrado = criticado: ${esc(c.integrado_criticado||"não conferido")}</span></div>
+    <div style="${linha}">
+      <button class="btn mini" data-arrasta="${esc(c.id)}" aria-label="arrastar o cartão ${esc(c.id)} para o próximo gate" title="arrastar propõe a transição; não promove">⇄</button>
+      <button class="btn mini" data-ev="${esc(c.id)}" aria-label="abrir evidência do cartão ${esc(c.id)}" title="abrir evidência">↗</button>
+    </div></li>`;
+}
+function todosCartoes(){ return (cache.kanban?.colunas || []).flatMap(x=>x.cartoes||[]); }
+async function vKanban(){
+  const [d, m] = await Promise.all([api("/api/regencia/kanban"), api("/api/meta")]);
+  cache.kanban = d;
+  const frentes = Object.keys((m && m.frentes) || {});
+  if(cache.kFrente == null) cache.kFrente = "";
+  const escolhida = cache.kFrente;
+  const vis = c => !escolhida || c.frente === escolhida;
+  const chips = [`<button class="chip" data-kf="" aria-pressed="${escolhida===""}">Todas as frentes</button>`]
+    .concat(frentes.map(f=>`<button class="chip" data-kf="${esc(f)}" aria-pressed="${escolhida===f}" aria-label="Filtrar pela frente ${esc(f)}">${esc(f)}</button>`)).join("");
+  let h = cabecalho("Agora / Painel de regência","Onde cada chamado está, gate a gate",
+    `Um cartão fica no <b>último gate aprovado</b>. <b>abertura</b> e <b>GD</b> são faixa acima do quadro, não coluna. Todo número diz a fonte; sem fonte, "—" com o motivo.`, chips);
+  if(d.meta && d.meta.aviso) h += `<div class="aviso">${esc(d.meta.aviso)}</div>`;
+  const fx = d.faixa || {};
+  const linhas = [].concat(
+    (fx.abertura||[]).map(x=>({k:"abertura", ...x})),
+    (fx.GD||[]).map(x=>({k:"GD", ...x}))).filter(x=>vis({frente:x.frente}));
+  h += `<section class="panel"><h2>Abertura · Risco <span class="legenda" style="font-weight:400">(pré-colunas, fora do kanban)</span></h2><div class="corpo">`;
+  h += linhas.length ? `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px">${linhas.map(x=>
+      `<div class="tile"><div class="k">${esc(x.chamado)} · ${esc(x.nome||x.k)}</div>
+        <div class="v" style="font-size:14px"><span class="loz ${LOZ_EST[x.estado]||"idle"}">${esc(x.estado||"falta")}</span></div>
+        <div class="f">${esc(x.motivo||"—")}</div></div>`).join("")}</div>`
+    : `<div class="legenda">— (motivo: nenhuma pré-coluna com fonte para esta frente)</div>`;
+  h += `</div></section>`;
+  h += `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;align-items:start">`;
+  let total = 0;
+  for(const col of d.colunas){
+    const cartoes = (col.cartoes||[]).filter(vis); total += cartoes.length;
+    h += `<section class="panel" style="margin:0"><h3 style="margin:0 0 6px">${esc(col.gate)} · ${esc(col.nome)} <span class="n metrica" data-fonte="GET /api/regencia/kanban — coluna ${esc(col.gate)} (último gate aprovado por chamado)">${cartoes.length}</span></h3>
+      <ul role="list" style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px">${cartoes.map(cartaoKanban).join("")}</ul>
+      ${cartoes.length?"":`<div class="legenda">— (motivo: nenhum chamado com veredito vigente aprovado neste gate)</div>`}</section>`;
+  }
+  h += `</div>`;
+  $("#main").innerHTML = h;
+  $("#c-kanban").textContent = total || "";
+  document.querySelectorAll("[data-kf]").forEach(b=>b.onclick=()=>{ cache.kFrente = b.dataset.kf; vKanban(); });
+  document.querySelectorAll("[data-arrasta]").forEach(b=>b.onclick=()=>{ const c = todosCartoes().find(x=>x.id===b.dataset.arrasta); if(c) transicaoKanban(c); });
+  document.querySelectorAll("[data-ev]").forEach(b=>b.onclick=()=>{ const c = todosCartoes().find(x=>x.id===b.dataset.ev); if(c) evidenciaCartao(c); });
+}
+function evidenciaCartao(c){
+  const f = c.fontes || {};
+  drawer(c.id, `<dl>
+    <dt>Frente</dt><dd>${esc(c.frente||"—")}</dd>
+    <dt>Gate (último aprovado)</dt><dd>${esc(c.gate||"—")} ${esc(c.gate_nome||"")}</dd>
+    <dt>Dono (papel) · sessão</dt><dd>${esc(c.dono||"—")} · ${esc(c.sessao||"—")}</dd>
+    <dt>Veredito</dt><dd>${esc(c.veredito_normalizado||"—")} <span class="legenda">(original: ${esc(c.veredito||"—")})</span></dd>
+    <dt>Idade no gate</dt><dd>${esc(c.idade?.texto||"—")} <span class="legenda">${esc(c.idade?.carimbo||"")}</span> · selo ${esc(c.selo||"—")}</dd>
+    <dt>Independência</dt><dd>${esc(c.independencia?.texto||"—")}</dd>
+    <dt>Integrado = criticado</dt><dd>${esc(c.integrado_criticado||"não conferido")}</dd></dl>
+    <div class="legenda">Fontes:${Object.entries(f).map(([k,v])=>`<br><b>${esc(k)}</b>: ${esc(v)}`).join("")}</div>`);
+}
+async function transicaoKanban(c){
+  const de = c.gate, para = proximoGate(c.gate);
+  if(!para){ alert("Este cartão já está no fim do fluxo (G9)."); return; }
+  try{
+    const r = await fetch("/api/regencia/transicao", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({chamado:c.id, de, para})});
+    const j = await r.json().catch(()=>({}));
+    if(!r.ok) alert("Transição recusada: " + (j.erro || ("HTTP "+r.status)));
+    else alert("Proposta registrada para " + (j.proposta?.para||para) + ". O painel não promove: quem assina o gate é o dono.");
+  }catch(e){ alert("Falha ao propor a transição: " + e.message); }
+}
+
+const VIEWS = {chamados:vChamados, kanban:vKanban, fila:vFila, processo:vProcesso, operacao:vOperacao, board:vBoard, pecas:vPecas, roadmap:vRoadmap, decisoes:vDecisoes, dora:vDora, qualidade:vQualidade, documentos:vDocumentos, glossario:vGlossario, ia:vIA, higiene:vHigiene, tempo:vTempo, lote:vLote};
 let atual = "board";
 function vai(v){ fecha(); atual = v; document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-current", b.dataset.v===v?"page":"false")); if(location.hash.slice(1).split("/")[0]!==v) location.hash = v; VIEWS[v]().catch(e=>$("#main").innerHTML=`<div class="aviso">Erro: ${esc(e.message)}</div>`); }
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>vai(b.dataset.v));
