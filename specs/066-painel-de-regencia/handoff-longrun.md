@@ -1,0 +1,176 @@
+# Longrun do ciclo 066 — estado e pendências do Darú
+
+> Escrito em 19/10/2026 23:30 pela sessão MAESTRO, quando o Darú foi descansar. Regras do
+> longrun: parar em **90 % do consumo semanal** (medido por `get_usage`; estava em 68 %);
+> acordador **PACE** a cada 30 min (cron `db780fb2`, expira em 7 dias); nada que dependa do
+> Darú é decidido por mim — vai para a lista abaixo. Toda decisão passa por especialistas em
+> contexto fresco e é registrada em `docs/records/decisoes.jsonl`.
+
+## 1. O que está feito
+
+| Item | Estado |
+|---|---|
+| Ciclos 064 (capa) e 065 (livro de ponto) | promovidos à `main` `af6fd1b`, CI verde |
+| 42 branches da linha paralela (`DriveD\maestro`) | **publicadas no GitHub** (autorizado pelo Darú) |
+| Plano de integração da linha paralela (Opus) | pronto, em `plano-integracao-linha-paralela.md` |
+| Jira como barra | site `ghdaru.atlassian.net`, projeto **Painel de Regencia (REG)**, quadro 2, colunas G0–G9 |
+| Decisão "sessões via gateway" | `decisao-066-sessoes-via-gateway` (3 pareceres: guardião, segurança, guia) |
+| Insumos do Hindiana (Assistente + agente explorador) | `insumo-hindiana.md` |
+
+## 1b. Feito na madrugada de 20/10 (depois das suas seis respostas)
+
+| Item | Estado |
+|---|---|
+| Suas decisões registradas | `decisao-066-daru-20-10` (modelo 4.1, allowlist, plano integral, fixture, numeração) |
+| Segredos fora do repo | `.gitignore` cobre `.env` e `.claude/settings.local.json`; `settings.local.json` sem token (só gateway, modelos, allow/deny) |
+| Lançador de sessões | `scripts/multi-session.py`: `--model` por sessão, uma worktree por Worker, dry-run testado (`d5feef2`) |
+| **Ciclo 066 = painel v0** | worktree `.claude/worktrees/integra-066`, branch `integra/linha-paralela-066`, 16 commits sobre a `dev`: merge `023694b` de `a1172a2`; spec retroativa (revisada, RETURN → corrigida); ADR 0022 (rascunho promovido por `git mv`); `boundary.json` com `painel/` e `.maestro/`; fixture `exemplo.json` no lugar do dado real; plan (CC 8/8, IV violado e justificado), tasks, data-model, contracts, ux-design; qa-report com saídas reais; `check-conformance.sh 066` **verde**; `fafae7d` |
+| **Ciclo 067 = trava de domínio** | merge `b5775ac` de `db6b89c`; spec, plan com os quatro `DOM:*` (primeiro acima do piso), ADR **0023** (a revisão apontou que a constituição o exige), CHANGELOG, roadmap F31, glossário +5; três mutações do bloco 3b observadas (inclusive o defeito da forma itemizada numa linha de tabela, registrado com dono); security verde; `check-conformance.sh 067` **verde**; `bb90987` |`n| **Ciclo 068 = chamados gate a gate** | merge `120a32c` do trecho `db6b89c..2796cbf`; dado real do Hindiana trocado por fixture; spec, plan com `DOM:*`, data-model, contracts, ux-design apontador; 6 + 12 testes verdes; 4 mutações; security classe média, 6 baixos (`custo.py` guarda **só contagens** — resposta à sua pergunta de privacidade; falta filtro por igualdade); review RETURN → 2 bloqueantes tratados; CHANGELOG, roadmap F32, glossário +9; conformance **verde** |`n| **Ciclo 069 = conferidor pela data** | merge `23f8325` de `aa0efd1` (chamado 070 do Hindiana; `699bddb` deixado fora, só perde arquivos); veredito vigente pela data do cabeçalho (`ordem_veredito`, função pura); 10 testes; o primeiro ciclo integrado em que o Princípio IV vale (vermelho `6741315` → verde `d2822ef`); a pasta `specs/070-conferidor-ordem-veredito/` entra como evidência imutável; security OK (um médio pré-existente: `data()` deixa `strptime` estourar); review APPROVE_WITH_NOTES, dois itens tratados (um era eu nomeando teste sem ler a saída); CHANGELOG, roadmap F33, glossário +2; conformance **verde** |`n| Cauda do 066 | review APPROVE_WITH_NOTES (notas tratadas); security classe média, **2 achados médios viram dívida do 072** (CSRF no POST, `autor` forjável via MCP — `security-pass.md`); mutação do `boundary.json` provada |
+| Medido nesta máquina | painel 12 OK; hook 34 passed; ingest da fixture lê 64 specs / 155 decisões / 143 commits; boundary, language, adr, version, links, flags verdes |
+
+## 1c. Fechamento do longrun (20/10, ~20:30) — o que mudou depois das suas decisões
+
+| Item | Estado |
+|---|---|
+| **Decisão 1** (push) | opção b: deny removido para a sessão MAESTRO; branch publicada; CI pegou um erro meu (segunda `### Corrigido`), corrigido em `34a3232` |
+| **Decisão 2** (gates + merge) | gate em bloco ("está aprovado"), quatro `TAIL:gate` marcadas (`5411e4e`); três pareceres de reversibilidade (guardião **bloqueado** pelo classificador; segurança e método responderam); salvaguardas conferidas; **`dev` = `b0c0fbb`, 60 commits, CI verde**. `gate-dev-integra-066-069` registrado |
+| **Decisão 3** (token) | você saiu do modo automático; o token do gateway foi gravado em `~/.claude/settings.json` (user-scope, fora do repo). **O `.env` de produção do Hindiana NÃO foi copiado**: a segurança o classificou como irreversível — fica com você (ver §2) |
+| **Decisão 4** (custo.py) | decidida por mim por delegação sua: aceito com dívida (filtro por igualdade no 072); `decisao-066-d4-custo-privacidade` |
+| **Decisão 5** (G0–G9) | é mudança de método → **ADR 0024 redigido como proposta** (opção b: cabeçalho conferível nas linhas de evidência, não dez arquivos) no scratchpad; veredito seu |
+| Sessões Gerente/Workers | **não abertas**: com o token no user-scope, `scripts/multi-session.py . --resume` já pode abri-las numa sessão fresca |
+| Gauntlet-loop | **não iniciado**: o pré-requisito (painel integrado na `dev`) está cumprido; barra Jira pronta (`REG`); Kiro Crew clonado em scratchpad só leitura (18.774 arquivos, `8f828d6a`) — rodá-lo é passo da sessão fresca |
+| Esta sessão | contexto a 90 %; encerra aqui com este handoff |
+
+## 1d. Decisões A e B fechadas (21/10, 00:00–00:46)
+
+| Decisão | Resultado |
+|---|---|
+| **A — ADR 0024** (cabeçalho conferível nas evidências da cauda, opção b) | aprovado ("sim"); `docs/adr/0024-…md` Aceito, indexado, `adr-0024` em `decisoes.jsonl` (`520a1cd`, branch 066 → entra na `main` com o próximo merge desta branch). Implementação: ciclo 072 com mutação do portão |
+| **B1 — exceção do portão** | a pasta importada `specs/070-…` derrubava o `check-conformance.sh` completo; copiar os artefatos do 069 para dentro dela foi recusado (VI). O portão passa a reconhecer evidência importada **pela forma** (`00-chamado.md` + `G*-*.md` sem `tasks.md`), lista com motivo e conta como inspecionada. Mutação observada; 070 sozinho rc=0; gate completo na `dev` rc=0 (29 ciclos) — `3f590ab` |
+| **B2 — promoção** | `promote-main.sh --yes`: gate completo verde de novo, `gate-main-3f590ab` registrado, **`main` = `dev` = `ffecd70`** (61 commits) |
+
+## 1e. Decisão C fechada e roteiro das 7 sessões (21/10, 01:00)
+
+**C (opção a)**: sem `.env` — `decisao-066-c-sem-env`. As cinco decisões do longrun estão fechadas.
+
+**Onde está o lançador**: `scripts/multi-session.py`, **só na branch `066-painel-de-regencia`**
+(commit `d5feef2`); não está na `main` nem na `dev`. A sessão que for abrir os agentes precisa
+estar nesta branch — ou mergeá-la na `dev` primeiro (é o próximo merge natural: traz também o
+ADR 0024 e este handoff).
+
+**O que a outra sessão faz** (nesta ordem; o dry-run foi conferido em 21/10 01:00):
+
+1. `git checkout 066-painel-de-regencia && git pull` (ou mergear a branch na `dev` e usar a `dev`).
+2. Conferir, sem imprimir valores: `~/.claude/settings.json` tem `ANTHROPIC_AUTH_TOKEN` (user-scope;
+   está lá desde 20/10) e `.claude/settings.local.json` tem `ANTHROPIC_BASE_URL` + os três
+   `ANTHROPIC_DEFAULT_*_MODEL` (sem token). Se o `settings.local.json` não existir (é ignorado pelo
+   git), recriar com essas quatro chaves e a allowlist/deny mínimas — modelo em
+   `pareceres-sessoes-via-gateway.md` §2.
+3. `python scripts/multi-session.py . --dry-run` — mostra Gerente em `glm-5.3` e seis Workers em
+   `deepseek-v4.1-flash`, cada Worker numa worktree `.claude/worktrees/workerNN` (branch `w/workerNN`).
+4. `python scripts/multi-session.py . --resume` — abre as 7 no Windows Terminal em grade; cada
+   sessão sobe com `claude --name <nome> --model <modelo>` (a flag vence o settings).
+5. O Gerente recebe o despacho com `[[TASK id=072-T01 kind=implement attempt=1 cycle=072]]`
+   (protocolo em `docs/governance/task-ledger.md`); os Workers só editam dentro da própria worktree;
+   **só o Gerente faz push, e só depois do gate humano**. O mod `maestro-ledger` bate o ponto se
+   instalado (`claude plugin install maestro-ledger --marketplace GHDaru/maestro --scope project`).
+6. Para o gauntlet: o prompt aprovado (histórico de 20/10); barra = Jira `REG` em
+   `ghdaru.atlassian.net` (colunas G0–G9) + Kiro Crew (clone só leitura no scratchpad desta sessão
+   — efêmero; reclonar `github.com/kirodotdev/KiroCrew`, 18.774 arquivos, e rodar local).
+
+Limites conhecidos: o `multi-session.py` precisa de `wt.exe` (Windows Terminal) e de
+`~/.local/bin/claude.exe`; nesta máquina o reaper de memória mata processo ocioso em background
+(regra do Hindiana) — abrir as 7 só quando houver trabalho despachado.
+
+## 2. Pendências do Darú (nada disso é feito sem você)
+
+**Reabertas em 20/10 à noite:**
+- **`.env` do Hindiana**: copiar ou não? Recomendação da segurança: **não** copiar o de produção; se os Workers precisarem de variáveis, um `.env` só de dev, ou nenhum.
+- **ADR 0024 (proposta b)**: aprovar, alterar ou recusar. Se aprovar, o ciclo 072 o implementa com mutação do portão.
+- **Promoção `dev` → `main`**: `scripts/promote-main.sh` (seu, registra o gate); `check-conformance.sh` completo vai rodar sobre 28 ciclos e precisa dos quatro novos verdes — estão.
+- **Ciclo 070 e 071**: seção 3c; numa sessão fresca.
+- **Gauntlet-loop**: sessão fresca, com o prompt que você aprovou, agora com `dev` integrada.
+
+0. **Gate do ciclo 066** (`TAIL:gate` em `specs/066-painel-de-coordenacao-v0/tasks.md`) e o
+   merge de `integra/linha-paralela-066` na `dev`. **O push dessa branch está bloqueado** pelo
+   `deny: Bash(git push *)` que eu escrevi em `.claude/settings.local.json` para os Workers — ele
+   vale também para a sessão MAESTRO. Você decide: (a) excepciona esta sessão (remove a linha do
+   deny, ou muda o modo e aprova o push), ou (b) faz o push à mão:
+   `git -C .claude/worktrees/integra-066 push -u origin integra/linha-paralela-066`.
+   Aceite também as duas dívidas médias de segurança como dívida do 072.
+
+1. **Token do gateway MaaS fora do repositório.** Ponha `ANTHROPIC_AUTH_TOKEN` no bloco `env`
+   de `~/.claude/settings.json` (escopo de usuário). Eu não escrevo o token: o classificador
+   bloqueou e os três pareceres concordam que é sua decisão (segredo = leitura sensível).
+2. **Ids de modelo no gateway.** Confirme os nomes aceitos (o Hindiana usa `glm-5.3`, `glm-5.2`,
+   `deepseek-v4.1-flash`; você pediu "deepseek 4.4 flash"). Eu não sondo o gateway.
+3. **Aceitabilidade do gateway (ADR).** Residência `ap-southeast-1`, LGPD se dados da Hindiana
+   passarem por ele; robustez a prompt injection desconhecida. Recomendação: aceitar para o
+   painel do Maestro (código público), **não** para dados pessoais da Hindiana.
+4. **Allowlist das 7 sessões.** Aprovar a lista mínima proposta em `pareceres-…md` §2
+   (deny: git push, gh, rm -rf, Remove-Item, docs/records, docs/adr, .env, settings.local.json;
+   uma worktree por Worker; só o Gerente faz push, e só após o seu gate).
+5. **Plano de integração — decisões 1–5 e 9 do plano** (resumo): `painel/` e `.maestro/`
+   entram no `boundary.json`? 068 e 069 (WhatsApp, receptor) vão para o repo da Hindiana?
+   Trocar dados reais da Hindiana por fixture (o repo é público)? 066-custeio vira só insumo?
+   Mover `scripts/hooks/workflow_*.py` para `painel/hooks/`? Apagar as branches remotas
+   depois das tags `arquivo/paralela/*`?
+6. **Numeração final.** O plano propõe 066 = painel v0 … 072 = painel de regência. O esqueleto
+   local `specs/066-painel-de-regencia` será renumerado quando você aprovar o mapa.
+7. **Jira:** o quadro REG está vazio; se quiser cartões de exemplo (um chamado por coluna),
+   autorize — é escrita na sua conta.
+8. **TAIL:gate** de cada ciclo integrado é seu, por ciclo.
+
+## 3. O que eu faço sozinho no longrun (reversível, dentro do repositório)
+
+- Spec, plan (Constitution Check) e tasks do **primeiro ciclo da integração** (painel v0 +
+  ADR 0022 a partir do rascunho), em branch própria, **sem merge**.
+- Tags `arquivo/paralela/<branch>` nas 42 pontas — **locais**, sem push.
+- `ux-design.md` do painel de regência (agente `ux-semantics`), a partir dos insumos.
+- Portões rodados e registrados; nada promovido.
+- Respostas ao PACE a cada 30 min, com consumo medido.
+
+## 3b. Por que parei antes do 070 (decisão de ritmo, 20/10 07:50)
+
+O consumo semanal estava em 74 % (limite 90 %), mas o **contexto desta sessão em 78 %**. O 070
+(workflow SQLite + hooks, linhagem A) é o ciclo com o conflito real entre as duas linhagens, e
+custaria o espaço que falta para fechar com handoff íntegro. Quatro ciclos fechados e verdes
+valem mais que um quinto pela metade. Nada do 070 foi iniciado.
+
+## 3c. Ponto de retomada exato: ciclo 070 (e 071)
+
+Tudo medido em 20/10 07:50 na worktree `.claude/worktrees/integra-066` (branch
+`integra/linha-paralela-066`, HEAD `7d57e27`, 56 commits sobre a `dev`):
+
+- **070 = workflow SQLite + hooks**: `git merge --no-ff --no-commit b33bb81`. Dois conflitos,
+  já conhecidos: (a) `painel/projetos/hindiana.json` — modify/delete; resolver por `git rm`
+  (a fixture `exemplo.json` já absorve as chaves; conferir com o mesmo diff de chaves do 068);
+  (b) `painel/index.html` — conflito de conteúdo A × B; **B prevalece** (decisão 7 do plano de
+  integração), A se adapta até os testes da linhagem A ficarem verdes. Depois do merge:
+  `git mv scripts/hooks/workflow_*.py painel/hooks/` (decisão 5: tira do instalador e do
+  `check-language`), ADR **0024** (hooks de terceiro gravando SQLite), roadmap F34, e a spec
+  retroativa parte de `specs/064-workflow-painel/` (spec, plan, tasks, ux-design já existem na
+  branch — renumerar para 070, como o 066 fez com o rascunho do ADR).
+- **071 = board/rodada navegável**: `6e9788f` **contém** `b33bb81`, então 070 e 071 podem ser um
+  merge só de `6e9788f`, se o Darú preferir um ciclo em vez de dois; a spec do 065-board está em
+  `specs/065-board-rodada-navegavel/` na branch.
+- **Padrão que funcionou nos quatro ciclos** (seguir à risca, economiza uma rodada cada):
+  1. `git merge --no-ff` → testes dos dois lados → portões de índice (`gates-after.sh`).
+  2. **Criar o `qa-report.md` esqueleto antes de qualquer mutação** — sem ele o portão para em
+     "missing qa-report" e nunca chega ao bloco 3b nem às caudas.
+  3. spec-agent → plan-architect (com `DOM:*`; sem `|`, `<` ou `[` nas células; nenhum
+     `DOM:x=` em prosa antes da tabela) → security e review em contexto fresco em paralelo.
+  4. Mutação: **mudar a condição, não o nome** (068-b foi um rename e sobreviveu); capturar os
+     nomes dos testes que falham **da saída**, nunca inferir (069: o review me pegou).
+  5. Nas caudas do qa-report, nenhum `<` nem `[` literal: o `is_placeholder` do portão os lê
+     como esqueleto (custou uma rodada em 066, 067, 068 e 069).
+  6. Tudo que atravessa PowerShell → bash vai em arquivo `.sh` no scratchpad (`|`, `$(` e `✓`
+     dentro de aspas são reescritos).
+- **Scripts prontos no scratchpad desta sessão** (efêmero; recriar se sumirem): `gate067.sh`
+  (parametrizar o número), `gates-after.sh`, `gate-all.sh`, `readlog.sh`, `mutate-dom.sh`,
+  `record_decision.py` (o `record-decision.sh` não roda do PowerShell: BOM e aspas).
+
+## 4. Como retomar
+
+Branch `066-painel-de-regencia`. Leia este arquivo, depois `plano-integracao-linha-paralela.md`
+e `pareceres-sessoes-via-gateway.md`. Decida a seção 2 na ordem; a 1 e a 4 destravam as sessões.
