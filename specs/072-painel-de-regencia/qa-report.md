@@ -147,7 +147,44 @@
 
 ### 072-T05 — decision queue: register, routes and screen (Worker05)
 
-- Pending (depends on T03 and on the ADR 0027 index line of T09).
+- **Entregue** (`[[DONE id=072-T05 outcome=delivered]]`, 24/10): código no commit **`2826278`**,
+  worktree `w/worker05` ("ciclo 072: registro, rotas e tela da fila de decisoes (FR11-FR23; T05/W05)").
+  Três arquivos: `painel/fila_registro.py` (novo, adaptador JSONL), `painel/server.py` (+154:
+  as duas rotas) e `painel/index.html` (+103: `vFila` + botão de navegação).
+- **Vermelho herdado do T03b (`42e24f4`)**: as três provas de FR16 falhavam pela razão certa —
+  `fila_registro.py` inexistente e POST `/api/regencia/fila` → 404. O pacote puro `regencia/`
+  já existia (T03), então os negativos de FR20 e o `valida_ruling` já estavam verdes.
+- **Verde — as três provas de FR16, no commit `2826278`**:
+  `PYTHONUTF8=1 python -m pytest painel/tests/test_regencia.py -q -k F14 -v` → **`3 passed, 21 deselected`**:
+  - `test_f14_registro_append_only_so_cresce` — prefixo de bytes intacto, exatamente 1 linha acrescentada;
+  - `test_f14_registro_abre_sempre_em_append` — AST: as aberturas de `fila_registro.py` são `"a"`
+    e `"r"` (leitura); **nenhuma** em `w`/`x`/`r+`;
+  - `test_f14_registro_concorrente_sem_perda` — dois POST paralelos → `[200, 200]`, duas linhas.
+- **Backup datado (ADR 0027 §4)** — demonstração (a suíte não cobre o caminho do backup): duas
+  escritas seguidas; a 1ª não acha o registro (nada a copiar) → backup `None`; a 2ª cria o backup
+  do dia e **só então** grava:
+  ```
+  backup 1a escrita: None
+  backup 2a escrita: ...\backup\fila-exemplo-2026-10-24.jsonl
+  linhas no registro: 2
+  linhas no backup: 1
+  caminho padrao: painel\dados\fila-x.jsonl
+  ```
+- **Fatia W05 medida** (arquivo inteiro, `2826278`): `python -m pytest painel/tests/test_regencia.py -q`
+  → **`20 passed, 4 failed`**. Os 4 vermelhos **não são desta fatia** (W04): F9 (três botões antigos
+  `#ch-atualiza`, `.ch-cartao`, `.botoes[data-el]` com `${…}` e sem `aria-label` — D-072-8 / fatia A),
+  F3 (`/api/regencia/transicao`), F1-dez-colunas (`/api/regencia/kanban`) e F7-frentes (`frentes`
+  em `/api/meta`). **F1 (`.metrica` com `data-fonte`) ficou verde** com o `vFila`.
+- **Regressões**: suíte antiga `python -m pytest painel/tests -q --ignore=painel/tests/test_regencia.py`
+  → **`48 passed in 13.71s`**; `python -m pytest painel/tests/test_chamados.py -q` → **`10 passed`**;
+  `python painel/chamados.py painel/projetos/exemplo.json` → **exit 0**.
+- **Divergência (V0b iii) que volta ao plano.** O `POST` **passa adiante** o texto que a função pura
+  devolveu — não hardcodei o wire de `contracts/rotas.md` na rota. Hoje `valida_ruling` devolve
+  `"ruling sem destino (destinatario)"`, então o 422 da rota diz isso, não `"ruling sem destinatario"`.
+  A T11 (W02) alinha a função pura e o contrato a `"ruling sem destino"`; quando entrar, a rota passa
+  a dizer isso **sem tocar em `server.py`** — que é o desenho (a rota não duplica a string).
+- **Limites respeitados**: a fila de teste vive no diretório temporário da fixture (`fila_decisoes`),
+  nada em `painel/dados/`; sem dado real da Hindiana; sem push/merge.
 
 ### 072-T08 — living journey (Worker01)
 
