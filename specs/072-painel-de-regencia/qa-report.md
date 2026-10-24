@@ -65,7 +65,34 @@
 
 ### 072-T03 — pure domain + parser FR5 (Worker03)
 
-- Dispatched (after the T03b integration; no evidence yet).
+- **Delivered** (`[[DONE id=072-T03 outcome=delivered]]`, 24/10): commit `da3f724` on `w/worker03`
+  ("ciclo 072: dominio puro da regencia e parser expoe autor_da_peca (FR5; T03)"). Files:
+  `painel/regencia/` (`__init__.py` reexporting all public names, `normalizacao.py`, `kanban.py`,
+  `fila.py` — pure: no `http.server`, no `sqlite3`, no `chamados`, no file) and one field added to
+  `painel/chamados.py` (`confere` exposes `autor_da_peca` in the item, next to `por` — FR5).
+  `conferir_chamado.py` untouched.
+- **Green captured at `da3f724`** (slice W03 only): `PYTHONUTF8=1 python -m pytest
+  painel/tests/test_regencia.py -q` → **15 passed, 9 failed in 5.11s**. The 15 green are exactly
+  the W03 slice: F2 (`cartao`/`proposta_transicao` dict `{permitido, falta?}`), F4-fila
+  (`sai_da_fila`), F5-ruling (`valida_ruling`), F4-independencia (`independencia`), F5-parser
+  (`confere` exposes `autor_da_peca`), F6 (`normaliza` dict), F7 (`idade_do_carimbo`), F8
+  (`sem_fonte`), F10 (`aviso_ingestao`), portão-do-regente (`portoes_do_regente`), F20-autor-fora,
+  F20-pedido-inexistente, F15 (`ordena_fila`), F23 (`cabecalho_fila`), F11 (`valida_pedido`). The 9
+  red stay red on purpose (not this slice): F1, F9, F3, three F14 and dívida5 (W04/W05/W02), plus
+  F1-dez-colunas and F7-frentes (routes of W04).
+- **Regressions**: `python -m pytest painel/tests/test_chamados.py -q` → **10 passed in 0.17s**;
+  old suite `python -m pytest painel/tests -q --ignore=painel/tests/test_regencia.py` →
+  **48 passed in 18.52s**; `python painel/chamados.py painel/projetos/exemplo.json` → **exit 0**;
+  `scripts/check-boundary.sh` → **exit 0** (`painel/` already owned by the toolkit domain, so
+  `painel/regencia/` needs no `boundary.json` change).
+- **Divergence reported by the worker (rule V0b iii), for the plan to arbitrate:** the F5 test
+  asserts the *pure* refusal reason contains the substring `"destino"`, while `contracts/rotas.md`
+  fixes the HTTP 422 body as exactly `"ruling sem destinatario"` (which does not contain
+  `"destino"`). The pure `valida_ruling` now returns `"ruling sem destino (destinatario)"` so the
+  test passes; Worker05 must emit the wire text of `contracts/rotas.md` at the route (or the plan
+  aligns the two wordings). The other FR20/F14 messages already match the contract text exactly
+  (`"ruling sem autor humano"`, `"autor não é pessoa do projeto: '…'"`, `"pedido desconhecido: '…'"`).
+
 
 ### 072-T07 — append-only triggers in the base, FR17 (Worker02)
 
