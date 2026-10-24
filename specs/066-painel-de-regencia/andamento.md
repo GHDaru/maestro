@@ -104,3 +104,15 @@ condição de um crítico em contexto fresco antes de cada decisão, e pediu que
 Cada gate aberto por delegação fica registrado em `decisoes.jsonl` e no qa-report do ciclo. As
 sete sessões estão de pé (Gerente glm-5.3, Workers deepseek-v4.1-flash, gateway respondendo);
 o Worker01 escreve a spec do 072.
+
+## 24/10 17:30 — rodada 1 do 072 retomada; gate DoR aberto por delegação
+
+- Parada de 16 h: o Worker01 commitou a spec às 00:25 (`48da92d`) mas o `[[DONE]]` não chegou ao
+  Gerente; às 02:16 mensagens da Hindiana para "Gerente" caíram no nosso (colisão de nome entre
+  projetos). Regra nova para o Gerente: endereçar sempre com o ref do ListAgents; cópia de cada
+  DONE para MAESTRO. Spec integrada em `f48a383`; worktrees alinhadas.
+- Gate DoR (ADR 0026): crítico `process-guardian` em contexto fresco, APROVADO COM CONDIÇÕES
+  (`gate-072-dor-delegado`); revisão da spec com o Worker01, plano com o Worker02 em paralelo,
+  testes vermelhos com o Worker03.
+- Gate do 070: crítico APROVADO COM CONDIÇÕES; cumpridas as de evidência e texto; ADR 0026
+  escrito; falta só o portão de ledger (rodando) para marcar o `TAIL:gate` e fazer o merge na dev.
