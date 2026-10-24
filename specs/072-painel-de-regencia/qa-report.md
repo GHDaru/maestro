@@ -143,7 +143,73 @@
 
 ### 072-T04 — kanban routes and screen (Worker04)
 
-- Pending (depends on T03).
+- **Entregue** (`[[DONE id=072-T04 outcome=delivered]]`, 24/10): código no commit **`0a9a44a`**,
+  worktree `w/worker04` ("ciclo 072: rotas e tela do kanban (T04)"). Três arquivos:
+  `painel/server.py` (+174/−6), `painel/index.html` (+98/−1), `painel/tests/test_regencia.py`
+  (+4/−3). **Separado da fila de decisões (W05)**: as funções do kanban/transição
+  (`v_kanban`, `_cartao_kanban`, `v_transicao`, `_arquivos_do_gate`) e o `vKanban` são novas,
+  ao lado das da fila — nada da W05 foi tocado. Sem push/merge/`rm -rf`.
+- **O que entrou.** (a) `GET /api/regencia/kanban` — dez colunas G0–G9 (FR1) montadas de
+  `chamados.GATES` **reusando** `chamados.em_cache`/`confere` (não há segundo conferidor); o
+  cartão traz `veredito` original **ao lado** de `veredito_normalizado` (FR3/FR10 via
+  `regencia.normaliza`), `idade`+`selo` (FR23), marcador de independência (FR4), e
+  `integrado_criticado` sempre `"não conferido"`; a **faixa `abertura`·`GD`** vem de
+  `regencia.faixa_abertura_gd` e **não vira coluna**. (b) `POST /api/regencia/transicao`
+  (corpo `{chamado, de, para}`) consome `regencia.proposta_transicao` (pura) — o adaptador
+  resolve o arquivo do gate de destino e passa o mapa `arquivos`; **não move nem grava**;
+  recusa → **422 com o campo `falta`** (FR9); a recusa fora do localhost (`painel/server.py:675`)
+  e o `ValueError`→422 seguem de pé. (c) `/api/meta` passa a expor `cfg["frentes"]` (FR7).
+  (d) `painel/index.html`: `vKanban` + botão de navegação; cartões em lista, estado nunca só
+  por cor, todo número/selo com `data-fonte` (FR21), `"—"` com `motivo:` (FR22 via
+  `regencia.sem_fonte`), botões só-ícone com `aria-label` (FR24) — **inclusive os três antigos**
+  (`#ch-atualiza`, `.ch-cartao`, `.botoes[data-el]`), como decidiu a sessão regente (D-072-8).
+- **Verde — as seis da fatia** (provas sobre o HTML **servido** pela rota `/`, não grep na fonte;
+  vermelho capturado em `42e24f4`, pelo T03b):
+
+  ```
+  $ PYTHONUTF8=1 python -m pytest "painel/tests/test_regencia.py::TestF1MetricaComFonte" \
+      "painel/tests/test_regencia.py::TestF9BotaoSoIcone" \
+      "painel/tests/test_regencia.py::TestF3TransicaoSemArquivo" \
+      "painel/tests/test_regencia.py::TestF1DezColunas" \
+      "painel/tests/test_regencia.py::TestF7FiltroPorFrente" \
+      "painel/tests/test_regencia.py::TestF10IngestaoDefasada" -v
+  ... PASSED [16%] TestF1MetricaComFonte
+  ... PASSED [33%] TestF9BotaoSoIcone
+  ... PASSED [50%] TestF3TransicaoSemArquivo
+  ... PASSED [66%] TestF1DezColunas
+  ... PASSED [83%] TestF7FiltroPorFrente
+  ... PASSED [100%] TestF10IngestaoDefasada
+  ============================== 6 passed in 2.98s ==============================
+  ```
+
+- **Arquivo inteiro** (`0a9a44a`): `PYTHONUTF8=1 python -m pytest painel/tests/test_regencia.py -q`
+  → **`21 passed, 3 failed in 4.68s`**. As 3 vermelhas são **exatamente as três F14**, todas por
+  `painel/fila_registro.py` e pela rota `/api/regencia/fila` **não existirem** (`ModuleNotFoundError`,
+  `os.path.exists` falso, `404` nos dois POST paralelos) — **é a fatia da W05, fora desta**; a
+  fatia W04 não encosta nelas.
+- **Prova de ponta a ponta** (script descartável fora da worktree, git real na fixture — não é
+  teste do repositório, é a evidência do desenho): kanban com um chamado aprovado em G0→G2 devolve
+  as dez colunas `['G0'…'G9']`, o cartão na coluna do **último gate aprovado** (`G2`), com
+  `veredito: "APPROVE"` / `veredito_normalizado: "aprovado"`, `frente: "painel"` resolvida de
+  `cfg.frentes`, `idade.carimbo`/`selo`, `independencia.texto` e `integrado_criticado`; a faixa
+  traz `abertura.estado=ok` e `GD.estado=falta` (motivo "sem entregável"). Na transição:
+  `{de:"G1", para:"G2"}` (arquivo do destino presente e válido) → **`200`**
+  `{"ok":true,"proposta":{"chamado","de","para","exige":"G2-*.md","dono","promocao"}}`;
+  `{de:"G1", para:"G5"}` (sem `G5-*.md`) → **`422`** `{"erro":"falta G5-*.md com cabeçalho válido"}`;
+  e a **foto da árvore não mudou** depois dos dois POST (`foto mudou? False`) — FR9 provado.
+- **Regressões**: suíte antiga `python -m pytest painel/tests -q --ignore=painel/tests/test_regencia.py`
+  → **`48 passed in 15.60s`**; `python -m pytest painel/tests/test_chamados.py -q` →
+  **`10 passed in 0.13s`**; `python painel/chamados.py painel/projetos/exemplo.json` → **exit 0**.
+- **Divergência declarada (regra V0b iii) — F3 era insatisfazível como escrita.** O `plan.md` marca
+  `F3 adapta (W04)`. Além do corpo/caminho já adaptados, faltava isto: o teste fotografa a árvore
+  **antes** de `self._sobe()`, mas `_sobe()` cria `<raiz>/painel.db` — então a comparação final
+  diferia **sempre**, por artefato da fixture e não da transição (medido: `iguais? False`, a única
+  diferença era `painel.db`). Adaptei minimamente: a foto passa a ser tirada **depois** de `_sobe()`,
+  preservando o intento (FR9: nenhum arquivo muda na recusa). Nenhum outro teste foi tocado; nenhum
+  `# --- FATIA W04 ---` foi necessário (as provas fixadas pelo T03b já cobriam o desenho).
+- **Achado da D-072-8, confirmado na prática.** A regra literal do `${…}` no F9 acusou também o
+  **chip de frente novo** (`<button class="chip" data-kf="${esc(f)}">`) — resolvido com
+  `aria-label` no próprio chip (não é exceção nova, é o mesmo remédio dos três antigos).
 
 ### 072-T05 — decision queue: register, routes and screen (Worker05)
 
