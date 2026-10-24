@@ -60,7 +60,7 @@ def valida_ruling(ruling, pessoas=None, pedidos=None):
     if not autor:
         return "ruling sem autor humano"
     if not destino:
-        return "ruling sem destino (destinatario)"
+        return "ruling sem destino"
     if pessoas is not None and autor not in pessoas:
         return f"autor não é pessoa do projeto: '{autor}'"
     if pedidos is not None and ruling.get("pedido") not in pedidos:

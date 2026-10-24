@@ -54,7 +54,7 @@ vence sobre a forma antiga do teste, que **F3 adapta**):
   remove linha (FR16); o `POST` do *ruling* grava `autor` **do formulário** (FR18) — o servidor **não**
   infere autoria do agente que pediu.
 - **422** — `ruling` sem `autor` humano ou sem `destinatario`: `{"erro": "ruling sem autor humano"}` /
-  `{"erro": "ruling sem destinatario"}` (FR14); `pedido` sem campo obrigatório: `{"erro": "falta
+  `{"erro": "ruling sem destino"}` (FR14); `pedido` sem campo obrigatório: `{"erro": "falta
   '<campo>' no pedido"}` (FR11). **Nada é gravado.**
 - **422 (FR20, ambiguidade 1a)** — `autor` **fora** de `cfg["regencia"]["pessoas"]` (a lista de pessoas
   do projeto, em `painel/projetos/<projeto>.json`): `{"erro": "autor não é pessoa do projeto: '<nome>'"}`
