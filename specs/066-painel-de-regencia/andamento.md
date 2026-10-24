@@ -96,3 +96,11 @@
   (Proposto); merge de `integra/linha-paralela-070` em `066-painel-de-regencia` e depois na
   `dev`. Depois: ciclo 071 (`6e9788f`, board), relançar as sete com o lançador corrigido.
 - Consumo semanal: 100 % atingido às 16:55, zerou às 17:00.
+
+## 24/10 00:20 — gates humanos delegados à sessão MAESTRO (decisão `decisao-072-gates-delegados`)
+
+O Darú delegou a esta sessão os portões DoR, plano e `TAIL:gate` dos ciclos 070 e 072, com a
+condição de um crítico em contexto fresco antes de cada decisão, e pediu que o fluxo não pare.
+Cada gate aberto por delegação fica registrado em `decisoes.jsonl` e no qa-report do ciclo. As
+sete sessões estão de pé (Gerente glm-5.3, Workers deepseek-v4.1-flash, gateway respondendo);
+o Worker01 escreve a spec do 072.
