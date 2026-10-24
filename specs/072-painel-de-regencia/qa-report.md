@@ -96,7 +96,50 @@
 
 ### 072-T07 — append-only triggers in the base, FR17 (Worker02)
 
-- Dispatched (after the T03b integration; no evidence yet).
+- **Entregue** (`[[DONE id=072-T07 outcome=delivered]]`, 24/10): código no commit **`61e78b5`**,
+  worktree `w/worker02` ("ciclo 072: append-only mecânico na base (FR17 …; W02)"). Três arquivos:
+  `painel/schema_workflow.sql` (+72), `painel/hooks/workflow_session_start.py` (+62/−1),
+  `painel/fila_outbox.py` (+71). **`painel/hooks/workflow_stop.py` não aparece no diff — não foi
+  tocado.**
+- **Verde — o teste do gatilho** (vermelho capturado em `42e24f4`, pelo T03b):
+  `PYTHONUTF8=1 python -m pytest "painel/tests/test_regencia.py::TestDivida5Gatilho" -q` →
+  **`1 passed in 0.27s`**. O arquivo de testes **não foi editado** (nada de `# --- FATIA W07 ---`):
+  a prova fixada pelo T03b já cobria o desenho, então nenhum teste novo entrou e a contagem
+  continua **`Ran 24`**, como a DoD exige. `test_regencia.py` inteiro: **`23 failed, 1 passed`** —
+  o único verde é o deste worker; os 23 seguem vermelhos **pela razão certa** (o pacote
+  `regencia/`, o adaptador e as rotas ainda não existem — W03/W04/W05 pendentes).
+- **Prova de ponta a ponta (o `WHEN` preserva o 070):** schema novo → **8 gatilhos**;
+  `CREATE TRIGGER … BEFORE UPDATE OR DELETE` → `OperationalError near "OR"` (o SQLite aceita **um**
+  evento por gatilho — medido, `sqlite_version 3.49.1`); o **hook Stop real** fecha o passo
+  (`exit=0`, `saida_em` gravado) **apesar** dos gatilhos; o **drain da fila** marca `lida_em`; e
+  `passo já fechado`, `UPDATE rodadas`, `UPDATE fila SET payload`, `DELETE FROM fila`,
+  `DELETE FROM transicoes` são **recusados** com `RAISE(ABORT, 'append-only: …')`.
+- **Regressões**: suíte antiga `python -m pytest painel/tests -q --ignore=painel/tests/test_regencia.py`
+  → **`48 passed in 22.08s`**; hooks/workflow (`test_fr13_fr14.py` + `test_workflow_schema.py` +
+  `test_workflow_painel.py`) → **`26 passed in 8.25s`**.
+- **Declaração 1 — D-072-2 piora (a dívida 2 segue não paga).** Os `CREATE TRIGGER IF NOT EXISTS`
+  entram **nas cópias** de `_ensure_schema`: as duas dos hooks e uma **nova** em `fila_outbox.py`
+  (o 070 falava em "três cópias"; no código havia duas — a terceira nasce aqui). As cópias agora
+  precisam ficar em sincronia; duplicar as sentenças é exatamente o custo declarado em D-072-2.
+- **Declaração 2 — a dívida 7 NÃO é paga e o hook não foi retocado.** `painel/hooks/workflow_stop.py`
+  fica **byte a byte** como estava. O `WHEN` de `passos` libera só o fechamento (`saida_em IS NULL`
+  e só as colunas `saida_em`/`resumo`/`resultado`), que é o que o `Stop` faz — **FR3 do 070
+  preservado pelo desenho do gatilho**, não mutilando o hook. A cobrança de verdade do `Stop` fica
+  para a rodada 2.
+- **Divergência que volta ao plano (V0b) — o `WHEN` que faltava em `fila`.** O ADR 0027 §2/§3 e o
+  `plan.md` §3(b) escrevem que `fila` recusa `UPDATE` **e** `DELETE` **sem** `WHEN`. Isso é
+  impossível de cumprir junto com o resto: o 070 tem um fechamento legítimo em `fila` — o drain
+  marca `lida_em` (`painel/fila_outbox.py:88`, `painel/hooks/workflow_session_start.py:102`) — e a
+  própria DoD do plano exige a suíte antiga verde. Sem um `WHEN` em `fila`, três testes hoje verdes
+  (`test_enfileirar_drenar`, `test_drenar_destino_especifico`, `test_payload_invalido_nao_envenena_a_fila`)
+  quebrariam. Implementei `fila` **espelhando `passos`**: o `WHEN` libera só o fechamento da leitura
+  (`lida_em`, NULL → valor) e recusa qualquer outra coluna ou linha já lida — que é **exatamente** o
+  que o teste do T03b pede (`UPDATE fila SET payload` e `DELETE` recusados) **e** o que a suíte antiga
+  pede. Declarada aqui, não silenciada: o texto do ADR 0027 §2/§3 pede emenda (a decisão de fundo —
+  append-only mecânico — não muda).
+- **Divergência menor (mesma origem): "quatro TRIGGER" são oito.** O ADR/plano dizem "quatro
+  `TRIGGER`"; o SQLite não aceita dois eventos no mesmo gatilho, então o arquivo traz **oito**
+  (dois por tabela). O comportamento fixado é idêntico; só a contagem do texto diverge.
 
 ### 072-T04 — kanban routes and screen (Worker04)
 
