@@ -99,5 +99,8 @@
   destino da fila outbox, o swap atômico do ingest e o schema das tabelas, provados pelos testes
   (cada mutação em cópia restaurada byte a byte). Evidence: the mutation and its output, in
   `qa-report.md`.
-- [ ] **TAIL:gate** — DoD green → guardian verdict → **human merge gate (not delegable)**;
-  promotion via `scripts/promote-main.sh` (records `gate-main-<sha>` automatically, ADR 0009).
+- [x] **TAIL:gate** (aberto por delegação em 24/10/2026 — `decisao-072-gates-delegados`, ADR 0026;
+  crítico `process-guardian` em contexto fresco: APPROVE_WITH_CONDITIONS, cinco condições
+  fechadas no `qa-report.md`; spec declarada parcial, não concluída) — DoD green → guardian
+  verdict → human merge gate by written delegation; promotion via `scripts/promote-main.sh`
+  (records `gate-main-<sha>` automatically, ADR 0009).

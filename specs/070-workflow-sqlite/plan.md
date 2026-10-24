@@ -17,7 +17,7 @@
 | VII. Light governance / YAGNI | ✅ Fila em SQLite WAL em vez de broker (19 sessões numa máquina); Redis Streams fica anotado para quando houver mais de uma máquina. |
 | VIII. Intelligible communication | ✅ Siglas expandidas na primeira ocorrência; termos novos entram no glossário (T14). |
 
-**No violations.**
+**One declared partial: Principle IV** (spec not fully implemented — see § Dívidas 1, 7, 8, 9). No other violation.
 
 ## Artifacts of this cycle (declare all five — silence is not a decision)
 
