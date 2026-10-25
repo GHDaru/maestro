@@ -1,7 +1,7 @@
 # Jornada 072 — Painel de regência (rodada 1)
 
 - **Spec**: `specs/072-painel-de-regencia/spec.md` · **UX**: `specs/066-painel-de-regencia/ux-design.md` §3
-  · **Capturas geradas em**: 2026-10-24 ·
+  · **Capturas geradas em**: 2026-10-24 · **regeradas em 2026-10-25** (pós-T16, `bbfab80`) ·
   **Script**: `docs/jornada/scripts/captura-072.sh` (versionado)
 
 <!-- Skill `living-journey`: documento + captura do build REAL por script + heurística DATADA, tudo
@@ -72,6 +72,23 @@ como a skill `living-journey` exige.
 > `img/072-01-kanban.png` e `img/072-02-fila.png` continuam válidas para este build, e sobrescrevê-las
 > trocaria a evidência do `1h60m` por uma foto **ainda defeituosa**, deixando o cabeçalho (que data
 > 2026-10-24) mentindo. A captura nova fica **pendente do T16**.
+
+> **A captura nova está feita (2026-10-25, pós-T16).** O **T16 foi integrado** (`bbfab80`, ancestral
+> do HEAD `d71cee6`) e a pendência declarada logo acima fica **fechada**: o
+> `docs/jornada/scripts/captura-072.sh` foi rodado de novo e regravou `img/072-01-kanban.png` e
+> `img/072-02-fila.png` a partir do **build real** — as imagens em disco agora são **deste** build.
+>
+> Medido ao vivo na página renderizada (janela de 1440×900): o banner resolve para
+> **`LEITURA VELHA: 15H35M DESDE O ÚLTIMO INGEST`** (ingestão de 935,1 min; `floor(15,58 h)=15`,
+> `round(35,1 min)=35` — coerente). O **`1H60M` impossível não aparece mais**: o **R8 está fechado**
+> neste build — o banner passa a vir pronto do servidor
+> (`painel/regencia/normalizacao.py`), não mais montado no JS. Em contrapartida, a imagem de
+> 2026-10-24 que registrava o `1H60M` foi **sobrescrita** (o script grava em nome fixo); o achado
+> segue registrado **no texto** da linha R8 acima, mas a foto do defeito não existe mais em disco.
+>
+> O **R7 não é desta rodada** e **reproduz igual**: `main` = 232 px no grid `.app`
+> (`232px 1208px`), grid do quadro = **uma** trilha de `210px`, as 10 seções G0…G9 todas em
+> `x = 28` — coluna única à esquerda, resto da tela vazio. Segue para a **rodada 2**.
 
 ## Rastreabilidade
 

@@ -1111,3 +1111,65 @@ linha nova), e o `GET` seguinte mostra a **fila vazia** — o *ruling* fechou o 
 construção: `valida_pedido` recusa id repetido e id de portão derivado, com teste (`TestF11IdDoPedido`)
 e a rota respondendo 422 (acima). A garantia não depende de confiança: o id de um pedido não colide
 com um id já registrado nem com o espaço reservado dos itens derivados.
+
+## 072-T17-captura — captura nova pós-T16 (25/10)
+
+> Tarefa do dono da jornada, **desbloqueada** pelo Gerente depois do T16. Base: `git merge --ff-only
+> d71cee6` (fast-forward, **sem push**) — HEAD `d71cee6`; `bbfab80` (T16) confirmado **ancestral de
+> HEAD** (`git merge-base --is-ancestor bbfab80 HEAD` → OK). Ambiente: `PYTHONUTF8=1`; `python3` é o
+> alias da MS Store (mesma ressalva de sempre).
+
+### O que foi feito
+
+1. **Captura regerada do build real**: `bash docs/jornada/scripts/captura-072.sh` — sobe o painel
+   (`painel/server.py painel/projetos/exemplo.json`, porta alta, derrubado ao fim), **aquece**
+   `/api/chamados` até a derivação estabilizar e fotografa o **DOM renderizado**. Regravou
+   `docs/jornada/img/072-01-kanban.png` e `docs/jornada/img/072-02-fila.png` (nomes **fixos** — as
+   imagens em disco agora são **deste** build).
+2. **Cabeçalho da jornada** passa a datar as duas gerações: `**Capturas geradas em**: 2026-10-24 ·
+   **regeradas em 2026-10-25** (pós-T16, `bbfab80`)`.
+3. **Nota nova na jornada, por acréscimo** — a tabela de 2026-10-24 e a heurística de 2026-10-25
+   ficam **intactas** (a datação é histórico; a pendência declarada é fechada por nota nova, não por
+   reescrita).
+
+### Medição ao vivo (janela de 1440×900)
+
+```text
+ingerido_em        : 2026-10-24T21:13:49-03:00
+ingerido_age_min   : 935.1 (float)
+banner_texto       : "LEITURA VELHA: 15H35M DESDE O ÚLTIMO INGEST"
+banner_display     : block
+main_w             : 232
+wrap_w             : 176
+wrap_grid          : "210px"
+n_colunas          : 10
+largura_colunas    : x=28 em todas; y de 1529 a 2416
+gates              : G0..G9
+ascendentes        : MAIN w=232 display block | DIV.app w=1440 display grid "232px 1208px"
+```
+
+### R8 — arredondamento discordante do banner → **FECHADO neste build**
+
+- 935,1 min rende `floor(15,58 h) = 15` e `round(35,1 min) = 35` → **`15h35m`**, coerente. O
+  **`1h60m` impossível não aparece mais**: o número passou a vir **pronto do servidor**
+  (`painel/regencia/normalizacao.py`, `aviso_leitura_velha`/`idade_curta`) e o painel só o exibe
+  (`painel/index.html:959–966` consome `m.leitura_velha`) — o `Math.floor`/`Math.round` sobre valor
+  fracionário saiu do JS.
+- **Honestidade sobre a evidência**: a imagem de 2026-10-24 que registrava o `1H60M` foi
+  **sobrescrita** pela regeração (o script grava em nome fixo). O achado continua registrado **no
+  texto** (linha R8 da jornada e seção `072-T17` acima), mas a foto do defeito **não existe mais em
+  disco** — declarado, não escondido.
+
+### R7 — quadro em coluna estreita → **reproduz** (destino: rodada 2)
+
+- `#main` = **232 px** dentro do grid `.app` (`232px 1208px`); grid do quadro resolve para **uma**
+  trilha de `210px`; as 10 seções G0…G9 todas em **`x = 28`** — coluna única à esquerda, resto da
+  tela vazio. Idêntico à captura de 2026-10-24. **Não é desta rodada consertar** (determinação do
+  Gerente).
+
+### Limites e resíduos
+
+- **Limites respeitados**: só a worktree; **sem push, sem merge**; sem `rm -rf`; sem
+  `.env`/`settings.local.json`.
+- **Resíduo**: os arquivos `_diag_*` (untracked) não são meus e **não foram tocados** nem
+  commitados; a sonda usada nesta medição vive em `%TEMP%`, **fora** do repositório.
