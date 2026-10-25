@@ -1111,3 +1111,11 @@ linha nova), e o `GET` seguinte mostra a **fila vazia** — o *ruling* fechou o 
 construção: `valida_pedido` recusa id repetido e id de portão derivado, com teste (`TestF11IdDoPedido`)
 e a rota respondendo 422 (acima). A garantia não depende de confiança: o id de um pedido não colide
 com um id já registrado nem com o espaço reservado dos itens derivados.
+
+## TAIL:gate — gate humano por delegação (sessão regente, 2026-10-25)
+
+- Delegação: `decisao-072-gates-delegados` (Darú, 24/10), base escrita ADR 0026.
+- Crítico em contexto fresco (`process-guardian`, Sonnet, só leitura): APPROVE_WITH_CONDITIONS — (1) configuração de exemplo sem `regencia.pessoas`, fluxo de ruling nunca exercitado; (2) captura do kanban contradizia a heurística (coluna estreita, banner 1H60M); (3) campo `chamado` sem validação de caminho; (4) registro do ciclo desatualizado (status e caixas). Fechadas em T15 (`11d295b`), T16 (`bbfab80`), T17 (`1998e3e`), T18 (`85b1b7f`), T19 (`ab32ffc`); reverificação do Worker06 em `d71cee6`: 28 testes de regência verdes, conformance 072 verde nos dois modos.
+- Verificações pedidas ao regente: `git log --oneline 42e24f4..c10c2d5` → 49 commits; `git show --stat ccbceef` → `painel/server.py`, `painel/tests/test_regencia.py`, `qa-report.md`; `def _pasta_do_chamado` → 1 ocorrência; varredura de chaves, tokens e e-mails nas linhas adicionadas do intervalo: nenhum valor de segredo (os casamentos eram texto de despacho), um único e-mail, a fixture `***@teste.invalid`; "Hindiana" em linhas adicionadas de `painel/` e `docs/jornada/`: 0.
+- Veredito do regente: TAIL:gate marcado; spec declarada parcial onde o é (D-072-1..8 e dívida do método); merge na `dev` e promoção à `main` sob a mesma delegação.
+

@@ -385,6 +385,6 @@
   fila), FR9 (transição sem arquivo), FR16 (append) e FR17 (o gatilho **com `WHEN`** — inclusive
   provando que o fechamento do passo continua passando), e **colando os nomes dos testes que falham**.
   Evidence: the mutation and its output, in `qa-report.md`.
-- [ ] **TAIL:gate** — DoD green → guardian verdict → **human merge gate (not delegable on the
+- [x] **TAIL:gate** (aberto por delegação em 2026-10-25 — `decisao-072-gates-delegados`, ADR 0026; crítico `process-guardian` em contexto fresco: APPROVE_WITH_CONDITIONS, quatro condições fechadas em `d71cee6` e reverificadas pelo Worker06; verificações de git e varredura de segredos pela sessão regente, limpas) — DoD green → guardian verdict → **human merge gate (not delegable on the
   origin; delegated this round to the regent session with an independent critic, ADR 0026)**;
   promotion via `scripts/promote-main.sh` (records `gate-main-<sha>` automatically, ADR 0009).
