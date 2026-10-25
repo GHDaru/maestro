@@ -29,10 +29,10 @@
 
 <header class="cx">
   <h1 class="rotulo" data-rotulo="caixa de entrada" data-fonte="método: specs/073-area-administrativa/confronto/mapa-de-contextos.md §6.6 (termo ratificado ‘caixa de entrada’)">caixa de entrada</h1>
-  <p class="nota">Contexto <strong>Mensageria</strong> — a visão nomeada do que chegou para uma sessão e ainda não foi lido/drenado.
-    Wireframe estático (ciclo 073, rodada 3). <span class="fonte">Fonte da ideia: método — drenagem do Outbox, <code>painel/fila_outbox.py</code>; mercado: 0 <code>sim</code> em 25 plataformas.</span></p>
+  <p class="nota" data-referencia="true">Contexto <strong>Mensageria</strong> — a visão nomeada do que chegou para uma sessão e ainda não foi lido/drenado.
+    Wireframe estático (ciclo 073, rodada 3). <span class="fonte" data-referencia="true">Fonte da ideia: método — drenagem do Outbox, <code>painel/fila_outbox.py</code>; mercado: 0 <code>sim</code> em 25 plataformas.</span></p>
   <p class="nota">Fonte do quadro: <span class="metrica" data-fonte="painel/ingest.py (ingestão do painel)" data-exemplo="true">última ingestão há 3 min (exemplo)</span>.
-    <span class="fonte">— sem fonte, a tela mostra “—” com motivo, nunca um valor inventado.</span></p>
+    <span class="fonte" data-referencia="true">— sem fonte, a tela mostra “—” com motivo, nunca um valor inventado.</span></p>
 </header>
 
 <h2>Chegaram para esta sessão</h2>
@@ -62,7 +62,7 @@
     <tr>
       <td>“Fila de decisões: um pedido te espera.”</td>
       <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Office (exemplo)</span></td>
-      <td><span class="falta rotulo" data-rotulo="colisão de nomes" data-fonte="método: mapa-de-contextos.md §7 (nome em duas refs)">— <span class="fonte">motivo: colisão de nomes em 2 refs (exemplo); endereçar por ref</span></span></td>
+      <td><span class="falta rotulo" data-rotulo="colisão de nomes" data-fonte="método: mapa-de-contextos.md §7 (nome em duas refs)">— <span class="fonte" data-referencia="true">motivo: colisão de nomes em 2 refs (exemplo); endereçar por ref</span></span></td>
       <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">não lida (exemplo)</span></td>
     </tr>
   </tbody>
@@ -75,11 +75,11 @@
     <button aria-label="drenar o outbox desta sessão" data-fonte="método: painel/fila_outbox.py (drenagem; ADR 0027 — a fila recusa DELETE, só registra a leitura)">Drenar outbox</button>
     <button aria-label="ver o livro de mensagens" data-fonte="método: specs/073-area-administrativa/confronto/confronto-decisao.md § Glossário proposto (‘livro de mensagens’)">livro de mensagens</button>
   </p>
-  <p class="fonte">A fila é <em>append-only</em>: a leitura é registrada, a mensagem nunca é apagada (ADR 0027).</p>
+  <p class="fonte" data-referencia="true">A fila é <em>append-only</em>: a leitura é registrada, a mensagem nunca é apagada (ADR 0027).</p>
 </div>
 
 <footer>
-  <p class="fonte">Fontes — método: <code>docs/governance/glossary.md</code> (Outbox, Task ledger, Portão do regente) ·
+  <p class="fonte" data-referencia="true">Fontes — método: <code>docs/governance/glossary.md</code> (Outbox, Task ledger, Portão do regente) ·
   <code>painel/fila_outbox.py</code> · <code>painel/ingest.py</code> · <code>confronto/mapa-de-contextos.md</code> §6.6 e §7 ·
   <code>specs/066-painel-de-regencia/ux-design.md</code> (F1, F7, F8, F9). Plataforma (ideia de leitura): Maestri canvas,
   <code>https://www.themaestri.app/pt-br</code> (ficha <code>pesquisa/maestri-canvas.md</code>, <code>parcial</code>).</p>

@@ -30,7 +30,7 @@
 <header class="cx">
   <h1 class="rotulo" data-rotulo="roteamento por nome/ref" data-fonte="método: specs/073-area-administrativa/confronto/confronto-decisao.md § Glossário proposto (‘roteamento por nome/ref’)">roteamento por nome/ref</h1>
   <p class="nota">Contexto <strong>Mensageria</strong> — endereçar uma mensagem a uma sessão por <strong>nome</strong> (livre, digitado)
-    resolve o nome contra as referências (<em>refs</em>) conhecidas. <span class="fonte">Fonte da ideia: método — <code>painel/ingest.py</code>
+    resolve o nome contra as referências (<em>refs</em>) conhecidas. <span class="fonte" data-referencia="true">Fonte da ideia: método — <code>painel/ingest.py</code>
     (<code>norm_sessao</code>) e <code>painel/server.py</code> (<code>contatos()</code>); plataforma: Windmill, <code>https://www.windmill.dev/</code>
     (ficha <code>pesquisa/windmill.md</code>, <code>sim</code> — roteamento por <em>tag</em>).</span></p>
   <p class="nota"><strong>Regra da tela:</strong> se um nome casa com <strong>duas refs</strong>, o roteador <strong>recusa</strong> entregar
@@ -53,7 +53,7 @@
       <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker03 (exemplo)</span></td>
       <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">1 ref (exemplo)</span></td>
       <td class="ok"><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">entrega (exemplo)</span></td>
-      <td><span class="fonte">nome único (exemplo)</span></td>
+      <td><span class="fonte" data-referencia="true">nome único (exemplo)</span></td>
     </tr>
     <tr class="recusa">
       <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Office (exemplo)</span></td>
@@ -65,7 +65,7 @@
       <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Gerente (exemplo)</span></td>
       <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">1 ref (exemplo)</span></td>
       <td class="ok"><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">entrega (exemplo)</span></td>
-      <td><span class="fonte">nome único (exemplo)</span></td>
+      <td><span class="fonte" data-referencia="true">nome único (exemplo)</span></td>
     </tr>
     <tr>
       <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">“Fila” (exemplo)</span></td>
@@ -78,7 +78,7 @@
 
 <div class="cx">
   <p class="nota"><strong>Uma ref pode receber; um nome ambíguo, não.</strong> A recusa é o comportamento nomeado: em vez de uma entrega errada silenciosa, a tela mostra as duas refs e pede o endereço explícito.
-    <span class="fonte">Prova de origem: o incidente real de nomes cruzados (<code>specs/066-painel-de-regencia/qa-report.md:35</code>) — a colisão aconteceu; aqui ela fica visível.</span></p>
+    <span class="fonte" data-referencia="true">Prova de origem: o incidente real de nomes cruzados (<code>specs/066-painel-de-regencia/qa-report.md:35</code>) — a colisão aconteceu; aqui ela fica visível.</span></p>
   <p>
     <button aria-label="resolver o nome pela ref exata" data-fonte="método: painel/ingest.py (norm_sessao) · termo ratificado ‘roteamento por nome/ref’">Endereçar pela ref</button>
     <button aria-label="ver a colisão de nomes do contexto" data-fonte="método: termo ratificado ‘colisão de nomes’ (confronto-decisao.md § Glossário proposto) · mapa-de-contextos.md §7">Ver a colisão</button>
@@ -88,7 +88,7 @@
 <h2>As cinco colisões de nome herdadas do mapa de contextos</h2>
 
 <div class="cx">
-  <p class="nota">Nenhuma é inventada: as cinco vêm do mapa de contextos (§7), com o termo que vence na linguagem ubíqua e o que fica marcado.</p>
+  <p class="nota" data-referencia="true">Nenhuma é inventada: as cinco vêm do mapa de contextos (§7), com o termo que vence na linguagem ubíqua e o que fica marcado.</p>
   <table>
     <thead>
       <tr>
@@ -97,18 +97,18 @@
       </tr>
     </thead>
     <tbody>
-      <tr><td><span class="metrica" data-fonte="método: mapa-de-contextos.md §7" data-exemplo="true">Fila (exemplo)</span></td><td><span class="fonte">fila de decisões (Regência) × fila outbox</span></td></tr>
-      <tr><td><span class="metrica" data-fonte="método: mapa-de-contextos.md §7" data-exemplo="true">Caixa de entrada (exemplo)</span></td><td><span class="fonte">a Fila do Painel (Regência) × as mensagens (Mensageria)</span></td></tr>
-      <tr><td><span class="metrica" data-fonte="método: mapa-de-contextos.md §7" data-exemplo="true">Livro de ponto (exemplo)</span></td><td><span class="fonte">Task ledger × livro de mensagens</span></td></tr>
-      <tr><td><span class="metrica" data-fonte="método: mapa-de-contextos.md §7" data-exemplo="true">Sessão / agente (exemplo)</span></td><td><span class="fonte">sessão de agente (execução) × agente (definição em <code>docs/agents/</code>)</span></td></tr>
-      <tr><td><span class="metrica" data-fonte="método: mapa-de-contextos.md §7" data-exemplo="true">Portão (exemplo)</span></td><td><span class="fonte">portão do chamado × Portão do regente</span></td></tr>
+      <tr><td><span class="metrica" data-fonte="método: mapa-de-contextos.md §7" data-exemplo="true">Fila (exemplo)</span></td><td><span class="fonte" data-referencia="true">fila de decisões (Regência) × fila outbox</span></td></tr>
+      <tr><td><span class="metrica" data-fonte="método: mapa-de-contextos.md §7" data-exemplo="true">Caixa de entrada (exemplo)</span></td><td><span class="fonte" data-referencia="true">a Fila do Painel (Regência) × as mensagens (Mensageria)</span></td></tr>
+      <tr><td><span class="metrica" data-fonte="método: mapa-de-contextos.md §7" data-exemplo="true">Livro de ponto (exemplo)</span></td><td><span class="fonte" data-referencia="true">Task ledger × livro de mensagens</span></td></tr>
+      <tr><td><span class="metrica" data-fonte="método: mapa-de-contextos.md §7" data-exemplo="true">Sessão / agente (exemplo)</span></td><td><span class="fonte" data-referencia="true">sessão de agente (execução) × agente (definição em <code>docs/agents/</code>)</span></td></tr>
+      <tr><td><span class="metrica" data-fonte="método: mapa-de-contextos.md §7" data-exemplo="true">Portão (exemplo)</span></td><td><span class="fonte" data-referencia="true">portão do chamado × Portão do regente</span></td></tr>
     </tbody>
   </table>
-  <p class="fonte">O termo do glossário tem prioridade; o rótulo antigo fica como sinônimo marcado. Ver <code>confronto-decisao.md</code> § Glossário proposto.</p>
+  <p class="fonte" data-referencia="true">O termo do glossário tem prioridade; o rótulo antigo fica como sinônimo marcado. Ver <code>confronto-decisao.md</code> § Glossário proposto.</p>
 </div>
 
 <footer>
-  <p class="fonte">Fontes — método: <code>docs/governance/glossary.md</code> (Outbox, Task ledger, Portão do regente) ·
+  <p class="fonte" data-referencia="true">Fontes — método: <code>docs/governance/glossary.md</code> (Outbox, Task ledger, Portão do regente) ·
   <code>painel/ingest.py</code> (<code>norm_sessao</code>) · <code>painel/server.py</code> (<code>contatos()</code>) ·
   <code>painel/fila_outbox.py</code> · <code>confronto/mapa-de-contextos.md</code> §7 · <code>specs/066-painel-de-regencia/qa-report.md:35</code> ·
   <code>specs/066-painel-de-regencia/ux-design.md</code> (F1, F8, F9). Plataforma: Windmill, <code>https://www.windmill.dev/</code>
