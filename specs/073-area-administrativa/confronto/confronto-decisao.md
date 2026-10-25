@@ -46,7 +46,7 @@ Cada `ENTRA` declara quais juízes serve.
 | Funcionalidade | Melhor referência (ficha) | Estado no Maestro | Lacuna | Decisão |
 |---|---|---|---|---|
 | cadastro de agentes | Portkey — Agent Registry (`portkey.md`) | **tem** — `docs/agents/README.md:14-40` (13 executáveis); `scripts/check-agents.sh` | — | **NÃO PRECISA** |
-| papéis e permissões RBAC | LiteLLM — 5 papéis (`litellm.md`) | **parcial** — RACI (`operating-model.md:67-93`); RBAC é termo de glossário (`glossary.md:13`) | **motor** RBAC — mas a autorização vive **fora** do modelo | **NÃO PRECISA** |
+| papéis e permissões RBAC (*Role-Based Access Control*) | LiteLLM — 5 papéis (`litellm.md`) | **parcial** — RACI (*Responsible, Accountable, Consulted, Informed*) (`operating-model.md:67-93`); RBAC é termo de glossário (`glossary.md:13`) | **motor** RBAC — mas a autorização vive **fora** do modelo | **NÃO PRECISA** |
 | cadastro de skills/ferramentas/modelos | LiteLLM — *Skills Registry* (`litellm.md`) | **parcial** — skills sim (`skills/<nome>/SKILL.md`); **modelos não** (escolhidos por sessão, `multi-session.py:91-92`) | registro de **modelos** | **ENTRA** |
 | chaves e segredos | LiteLLM — backends Vault/Azure/AWS (`litellm.md`) | **parcial** — política: token fora do repo (`decisoes.jsonl:155`); **sem cofre nem gate de varredura** | cofre / gate de segredos | **DEPOIS** |
 | configuração por projeto | Portainer CE — configuração por projeto (`portainer-ce.md`) | **tem** — `scripts/install-maestro.sh:492-526`; `boundary.json` (ADR 0018) | — | **NÃO PRECISA** |
@@ -60,7 +60,7 @@ Cada `ENTRA` declara quais juízes serve.
 | tarefa aberta | Claude Code (`claude-code.md`) | **parcial** — "one active task per session" (`task-ledger.md:185`); kanban por portão (`server.py:369`) | objeto "tarefa aberta" **por agente** | **ENTRA** |
 | última atividade | n8n — *Insights* (`n8n.md`) | **tem** — `painel/server.py:77,82`; `index.html:311` | — | **NÃO PRECISA** |
 | consumo por agente/sessão/modelo | Copilot Studio — o mais completo (`copilot-studio.md`) | **parcial** — por sessão (`painel/custo.py`) e por modelo (`task-ledger.md:118,127`); **por agente não** | consumo **por agente** | **ENTRA** |
-| custo | LiteLLM — custo por agente A2A (`litellm.md`) | **tem** — `cost_usd` (`task-ledger.md:129`); `report-tasks.py:254-261` | — | **NÃO PRECISA** |
+| custo | LiteLLM — custo por agente A2A (*Agent-to-Agent*) (`litellm.md`) | **tem** — `cost_usd` (`task-ledger.md:129`); `report-tasks.py:254-261` | — | **NÃO PRECISA** |
 | filas e workers | Windmill — *queues*/*worker groups* (`windmill.md`) | **tem** — fila de decisões (`painel/regencia/fila.py:95`); *outbox* SQLite (`fila_outbox.py:109`) | — | **NÃO PRECISA** |
 | rastro/replay de sessão | Temporal Web UI — History em 4 formatos (`temporal-web-ui.md`) | **parcial** — trilha por chamado (`painel/chamados.py:357`); **replay não** | **replay** de sessão | **DEPOIS** |
 | alertas | Dagster — o mais forte (`dagster.md`) | **parcial** — gates que falham e avisos inline (`check-retro.sh:61-66`, `session-state.sh:52-59`) | **subsistema** de alerta/notificação | **DEPOIS** |
@@ -70,10 +70,10 @@ Cada `ENTRA` declara quais juízes serve.
 | Funcionalidade | Melhor referência (ficha) | Estado no Maestro | Lacuna | Decisão |
 |---|---|---|---|---|
 | mensagem entre agentes | CrewAI AMP (`crewai-amp.md`) | **tem** — protocolo `[[TASK]]`/`[[DONE]]` (`task-ledger.md:28-31`); *outbox* (`fila_outbox.py:121`) | superfície **nomeada** (o método prefere artefato a chat, `comunicacao.md:6`) | **ENTRA** |
-| protocolos (A2A, MCP) | LiteLLM — A2A real (`litellm.md`) | **parcial** — MCP implementado (`painel/mcp_painel.py:2`; `glossary.md:34`); **A2A só nomeado** (`specs/066-…/ux-design.md:81`) | **A2A** construído | **ENTRA** |
-| caixa de entrada | Maestri canvas — `parcial` (melhor; **0 `sim` em 25**) | **parcial** — *drain* do outbox (`fila_outbox.py:140`), sem feição/rota **nomeada** | caixa de entrada nomeada | **ENTRA** |
+| protocolos (A2A, MCP (*Model Context Protocol*)) | LiteLLM — A2A real (`litellm.md`) | **parcial** — MCP implementado (`painel/mcp_painel.py:2`; `glossary.md:34`); **A2A só nomeado** (`specs/066-…/ux-design.md:81`) | **A2A** construído | **ENTRA** |
+| caixa de entrada | Maestri canvas — `parcial` (empatada com Claude Code; melhor por juízo — **0 `sim` em 25**) | **parcial** — *drain* do outbox (`fila_outbox.py:140`), sem feição/rota **nomeada** | caixa de entrada nomeada | **ENTRA** |
 | roteamento por nome/ref | Windmill — roteamento por *tag* (`windmill.md`) | **parcial** — destinatário por nome livre (`server.py:469`, `norm_sessao` `ingest.py:199`) | tabela de resolução de nome | **ENTRA** |
-| livro de mensagens | Maestri canvas — `parcial` (melhor; **0 `sim` em 25**) | **parcial** — registros append-only (`ingest.py:66,78`; `tarefas.jsonl`), sem livro unificado | livro de mensagens unificado | **ENTRA** |
+| livro de mensagens | Maestri canvas — `parcial` (empatada de seis; melhor por juízo — **0 `sim` em 25**) | **parcial** — registros append-only (`ingest.py:66,78`; `tarefas.jsonl`), sem livro unificado | livro de mensagens unificado | **ENTRA** |
 | colisão de nomes | Kiro Crew / Windmill — `sim` (`kiro-crew.md`, `windmill.md`) | **parcial** — incidente real (`specs/066-…/qa-report.md:35`); guarda de ids (`fila.py:52-56`) | controle de colisão de **nomes** | **ENTRA** |
 
 ---
@@ -93,9 +93,9 @@ Cada `ENTRA` declara quais juízes serve.
 | 16 | consumo por agente/sessão/modelo | **consumo por agente** *(novo; extensão de **Custo por sessão**, `glossary.md:73`)* | Administração/Gerenciamento | método: por sessão (`painel/custo.py`) e por modelo (`task-ledger.md:118,127`); plataforma: Copilot Studio:81 `sim` |
 | 21 | mensagem entre agentes | **mensagem entre agentes** *(novo)* | Intercomunicabilidade | método: `[[TASK]]`/`[[DONE]]` (`task-ledger.md:28-31`) + *outbox* (`fila_outbox.py:121`); plataforma: CrewAI AMP:86 `sim` (mas é delegação, não par a par) |
 | 22 | protocolos (A2A, MCP) | **protocolo de intercomunicação** — **MCP** no glossário (`glossary.md:34`), **A2A** a expandir | Intercomunicabilidade | método: MCP implementado (`painel/mcp_painel.py:2`); plataforma: LiteLLM:87 `sim` (A2A real) |
-| 23 | caixa de entrada | **caixa de entrada** *(novo)* | Intercomunicabilidade | método: *drain* do *outbox* (`fila_outbox.py:140`), sem nome; **mercado: 0 `sim` em 25** (melhor: Maestri canvas:88 `parcial`) |
+| 23 | caixa de entrada | **caixa de entrada** *(novo)* | Intercomunicabilidade | método: *drain* do *outbox* (`fila_outbox.py:140`), sem nome; **mercado: 0 `sim` em 25** (melhor: Maestri canvas:88 `parcial`, empatada com Claude Code — melhor por juízo) |
 | 24 | roteamento por nome/ref | **roteamento por nome/ref** *(novo)* | Intercomunicabilidade | método: `server.py:469` (`contatos()`), `ingest.py:199` (`norm_sessao`); plataforma: Windmill:89 `sim` |
-| 25 | livro de mensagens | **livro de mensagens** *(novo; análogo a **Task ledger**)* | Intercomunicabilidade | método: registros append-only (`ingest.py:66,78`); **mercado: 0 `sim` em 25** (melhor: Maestri canvas:90 `parcial`) |
+| 25 | livro de mensagens | **livro de mensagens** *(novo; análogo a **Task ledger**)* | Intercomunicabilidade | método: registros append-only (`ingest.py:66,78`); **mercado: 0 `sim` em 25** (melhor: Maestri canvas:90 `parcial`, empatada de seis — melhor por juízo) |
 | 26 | colisão de nomes | **colisão de nomes** *(novo)* | Intercomunicabilidade | método: incidente real (`specs/066-…/qa-report.md:35`); plataforma: Kiro Crew:91 `sim` |
 
 ### NÃO PRECISA — 8 (com o motivo)
@@ -104,7 +104,7 @@ Cada `ENTRA` declara quais juízes serve.
 |---|---|
 | aprovação humana | **já coberto** — é o núcleo do método (Princípio II/III: gates humanos não delegáveis; `operating-model.md:200`, ADR 0026). Reconstruir seria duplicar função já servida (Princípio VI). |
 | cadastro de agentes | **já coberto** — 13 executáveis com invariantes que os verificam (`check-agents.sh`, `check-roles.sh`); é registro, não processo vivo. Exibir já é coberto por *estado do agente vivo*. |
-| papéis e permissões RBAC | **fora do método** — papéis existem (RACI), mas a autorização vive **fora** do modelo (Princípio III; `ABAC`/`RBAC` no glossário, `:12-13`). Não se constrói motor RBAC dentro da área administrativa. |
+| papéis e permissões RBAC | **fora do método** — papéis existem (RACI), mas a autorização vive **fora** do modelo (Princípio III; ABAC (*Attribute-Based Access Control*)/RBAC no glossário, `:12-13`). Não se constrói motor RBAC dentro da área administrativa. |
 | configuração por projeto | **já coberto** — instalador grava `install-options.json`/`manifest.tsv` e a fronteira é o `boundary.json` (ADR 0018). |
 | auditoria | **já coberto** — índice append-only imutável (`record-decision.sh` + `guard-immutables.py`), com conferência por `check-adr.sh`. |
 | última atividade | **já coberto** — o painel já mostra `idade_min` e o histórico de status (`server.py:77,82`). |
