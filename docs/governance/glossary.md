@@ -76,3 +76,8 @@
 | **Invariant** | — | A business rule that must always hold; it lives in the domain (aggregate, value object, domain service) or, with a stated reason, at the edge (route, adapter, screen) — `DOM:invariants=`. | Cycle 067 |
 | **Port / adapter** | — | A port is the interface the domain exposes or needs; an adapter implements it for one technology (HTTP, SQLite, a CLI). The plan declares the ones a cycle changes (`DOM:ports=`). | Cycle 067 |
 | **Ubiquitous language** | — | The shared vocabulary of a bounded context, written down (this glossary) and used verbatim in code, specs and conversation; the plan declares the terms it adds or changes (`DOM:glossary=`). | Cycle 067 |
+| **Painel de regência** (*regency panel*) | Regency panel | The local read-model where the human sees the queue, the chamados per gate and the journey; it never promotes and never decides. | Cycle 072 |
+| **Pedido de decisão** (*decision request*) | Decision request | A question escalated to the human: id, who asked, options, recommendation, deadline, what it unblocks and the destination. | Cycle 072 |
+| **Ruling** | — | The recorded answer to a decision request — human author, date, addressee and a link to the merge/ADR; a ruling without an author or an addressee is refused. | Cycle 072 |
+| **Veredito normalizado** (*normalized verdict*) | Normalized verdict | The canonical mapping — approved / returned / red-proved / running / invalid — written **beside** the original verdict, never in its place. | Cycle 072 |
+| **Portão do regente** (*regent's gate*) | Regent's gate | G7, G8 and `TAIL:gate` — the gates only the human records; a derived item of the queue, read-only for an agent. | Cycle 072 |

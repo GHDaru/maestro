@@ -47,9 +47,18 @@ por delegação (FR14), mas a **referência ao pedido** é invariante em todo *r
 | `tipo` | texto | — | `resposta` \| `devolucao` — "devolver a quem pediu" é *ruling* **registrado** (FR12/FR13). |
 | `registrado_em` | texto (ISO-8601) | ✅ | Timestamp do acréscimo ao registro. |
 
-**Invariante (pura):** `valida_ruling(ruling)` → recusa sem `autor` **ou** sem `destinatario` (FR14);
-`sai_da_fila(pedido, rulings)` → um pedido **sem** *ruling* com `pedido == pedido.id` permanece na
-fila (FR12). Ambas vivem em `painel/regencia/fila.py`, sem HTTP nem arquivo.
+**Invariante (pura):** `valida_ruling(ruling, pessoas=None, pedidos=None)` → recusa sem `autor` **ou**
+sem `destinatario` (FR14), recusa `autor` **fora** de `pessoas` e `pedido` **fora** de `pedidos`
+(FR20); `sai_da_fila(pedido, rulings)` → um pedido **sem** *ruling* com `pedido == pedido.id`
+permanece na fila (FR12). Ambas vivem em `painel/regencia/fila.py`, sem HTTP nem arquivo.
+
+**Quem é pessoa (FR20, ambiguidade 1a)** — os dois parâmetros saem da configuração do projeto, e o
+adaptador HTTP é quem os resolve (a função pura não abre arquivo):
+
+| Chave | Onde | O que é |
+|---|---|---|
+| `regencia.pessoas` | `painel/projetos/<projeto>.json`, ao lado de `equipes` | Lista de **nomes de pessoas** — o único universo de autores humanos aceitos. Sem a chave, o painel **recusa com motivo** ("config sem regencia.pessoas") em vez de aceitar qualquer nome. |
+| *pedidos conhecidos* | as chaves `id` das linhas `tipo=pedido` **mais** os ids derivados dos portões (`072+T7`) | `ruling.pedido` fora desse conjunto → recusado (não há pedido a fechar). |
 
 ## 2. Item derivado: Portão do regente (não é entidade — é projeção)
 
@@ -84,12 +93,30 @@ distinguir o que a linha é; campos em português.
 
 **Regra de escrita (FR16, mecânica)**: o painel **só cresce** o arquivo. `painel/fila_registro.py`
 abre **sempre** `open(caminho, "a", encoding="utf-8")` e **nunca** `"w"`/`truncate`/`seek`; cada
-chamada acrescenta exatamente uma linha (`json.dumps(..., ensure_ascii=False)` + `\n`). O teste
-`test_f14_registro_append_only_so_cresce` guarda o **prefixo de bytes** de antes e prova que ficou
-**inalterado** depois — a prova de que nada foi reescrito, reordenado ou removido.
+chamada acrescenta exatamente uma linha (`json.dumps(..., ensure_ascii=False)` + `\n`), tudo sob um
+`threading.Lock` de módulo — **escritor único** no processo. Três provas (o gate do plano acrescentou
+duas às 13 nomeadas):
+
+| Teste | O que prova |
+|---|---|
+| `test_f14_registro_append_only_so_cresce` | Guarda o **prefixo de bytes** de antes e prova que ficou **inalterado** depois — nada foi reescrito, reordenado ou removido. |
+| `test_f14_registro_abre_sempre_em_append` | **Estática (AST)**: lê a árvore sintática de `painel/fila_registro.py` e recusa qualquer `open(...)` cujo modo não seja de **acrescentar**. |
+| `test_f14_registro_concorrente_sem_perda` | **Dois POST em paralelo** → **duas** linhas no arquivo, nenhuma perdida nem intercalada no meio. |
 
 **Leitura**: `le(caminho)` é tolerante — uma linha inválida (JSON quebrado) é **ignorada com aviso**,
 nunca derruba a fila; o leitor não escreve.
+
+### 3.1 Backup datado do registro (condição do gate do plano)
+
+A fila é **o único dado do regente** e é **local** (D-072-1, `painel/dados/` gitignored). Por isso
+`painel/fila_registro.py` chama `backup_datado(caminho, agora)` **antes da primeira escrita de cada
+dia**: se ainda não existe, copia o arquivo (`shutil.copy2`) para
+`painel/dados/backup/fila-<projeto>-<AAAA-MM-DD>.jsonl`, dentro do **mesmo `threading.Lock`** da
+escrita — o `POST` não grava antes de o backup do dia existir. O backup é **uma cópia por dia** (não
+um histórico por linha) porque o arquivo é append-only: a cópia do dia é o ponto de retorno, e o que
+veio depois dela é reconstruível pelo prefixo. O `README` do painel ganha o **comando manual de
+exportação** para o regente levar a fila embora. O backup **mitiga** a perda; **não** desfaz a troca
+declarada em D-072-1 — os dois ficam registrados na ADR 0027.
 
 ## 4. Projeção do kanban (entidade **nenhuma** é criada)
 
@@ -107,7 +134,7 @@ Chamado (raiz, do 068 — painel/chamados.py:121 confere)
 | `dono` (papel + sessão) | papel da tabela `GATES`; sessão do cabeçalho do gate (sem sessão → "—" com motivo). |
 | `veredito_normalizado` | `normaliza(valor, erros)` (FR10), **ao lado** do `veredito` original — nunca no lugar dele (anti-regra 6). |
 | `autor_da_peca`, `por` | **`autor_da_peca` é campo novo exposto pelo parser** (FR5, `painel/chamados.py`); `por` já existe (`:145`). Iguais → marcador vermelho (FR4); sem `autor_da_peca` → "—". |
-| `idade` | `idade_do_carimbo(quando, agora)` (FR23) — do relógio/timestamp; data digitada → selo "declarada". |
+| `idade` | `idade_do_carimbo(carimbo, agora=None, declarado=False)` (FR23) — do relógio/timestamp; data digitada → selo "declarada". |
 | `selo_evidencia` | cabeçalho do gate. |
 | `integrado = criticado` | **"não conferido"** (FR6) até existir o script versionado de `git patch-id --stable`. |
 

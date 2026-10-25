@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Protocolo de intercomunicação — Mensageria (ciclo 073, wireframe)</title>
+<style>
+  :root { color-scheme: light; }
+  body { font-family: system-ui, sans-serif; background:#f4f5f7; color:#1b1f24; margin:0; padding:24px; line-height:1.45; }
+  h1 { font-size:1.35rem; margin:0 0 4px; }
+  h2 { font-size:1rem; margin:20px 0 8px; }
+  .nota { color:#5a6270; font-size:.85rem; }
+  .cx { background:#fff; border:1px solid #cfd4dc; border-radius:6px; padding:12px 14px; margin:10px 0; }
+  .rotulo { display:block; color:#5a6270; font-size:.78rem; text-transform:lowercase; }
+  table { border-collapse:collapse; width:100%; background:#fff; border:1px solid #cfd4dc; }
+  th, td { border:1px solid #dfe3e9; padding:8px 10px; text-align:left; font-size:.9rem; vertical-align:top; }
+  th { background:#eceef2; font-weight:600; }
+  .metrica { font-variant-numeric: tabular-nums; }
+  .falta { color:#7a3d00; }
+  .ok { color:#1f5a2a; }
+  button { font:inherit; background:#eceef2; border:1px solid #b9bfc9; border-radius:5px; padding:6px 10px; cursor:pointer; }
+  .fonte { color:#6b7280; font-size:.78rem; }
+  code { background:#eceef2; padding:1px 4px; border-radius:3px; }
+  footer { margin-top:22px; font-size:.78rem; color:#6b7280; }
+</style>
+</head>
+<body>
+
+<header class="cx">
+  <h1 class="rotulo" data-rotulo="protocolo de intercomunicação" data-fonte="método: specs/073-area-administrativa/confronto/confronto-decisao.md § Glossário proposto (‘protocolo de intercomunicação’); MCP já no glossary.md">protocolo de intercomunicação</h1>
+  <p class="nota">Contexto <strong>Mensageria</strong> — o contrato pelo qual uma <strong>sessão de agente</strong> expõe e consome
+    ferramentas: <strong>MCP</strong> (*Model Context Protocol*) para o que ela <em>expõe</em>, e <strong>A2A</strong>
+    (*Agent-to-Agent*) para par a par. <span class="fonte">Fonte da ideia: método — servidor MCP do painel,
+    <code>painel/mcp_painel.py</code>; plataforma: LiteLLM, <code>https://www.litellm.ai/</code> (A2A real, ficha
+    <code>pesquisa/litellm.md</code>, <code>sim</code>).</span></p>
+</header>
+
+<h2>O que a sessão de agente EXPÕE</h2>
+
+<div class="cx">
+  <p class="nota">Servidor MCP <code>maestro-painel</code> — <strong>três</strong> ferramentas, todas listadas por <code>tools/list</code>:
+    <span class="fonte">fonte: <code>painel/mcp_painel.py</code> (lista <code>FERRAMENTAS</code>, <code>serverInfo</code>).</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th class="rotulo" data-rotulo="protocolo de intercomunicação" data-fonte="método: painel/mcp_painel.py (tools/list)">ferramenta exposta</th>
+        <th class="rotulo" data-rotulo="protocolo de intercomunicação" data-fonte="método: painel/mcp_painel.py (descrição da ferramenta)">o que faz</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code data-fonte="método: painel/mcp_painel.py:24">estado_atual</code></td>
+        <td><span class="fonte">Estado atual derivado do projeto (equipe, decisões, barra, desvios, riscos); com <code>sessao</code>, o estado daquela sessão. “Chame no início de cada sessão em vez de confiar no estado escrito à mão.”</span></td>
+      </tr>
+      <tr>
+        <td><code data-fonte="método: painel/mcp_painel.py:29">registrar_status</code></td>
+        <td><span class="fonte">Registra o status da sessão — <strong>só acrescenta</strong>; recusa estado fora da lista permitida.</span></td>
+      </tr>
+      <tr>
+        <td><code data-fonte="método: painel/mcp_painel.py:35">registrar_peca</code></td>
+        <td><span class="fonte">Registra a transição de uma peça; <strong>recusado sem a evidência exigida pelo estado</strong> (o portão vira contrato).</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="fonte">Superfície pequena de propósito: só o que o painel realmente serve hoje — nada de ferramenta nomeada sem implementação.</p>
+</div>
+
+<h2>O que a sessão de agente CONSOME</h2>
+
+<div class="cx">
+  <table>
+    <thead>
+      <tr>
+        <th class="rotulo" data-rotulo="sessão de agente" data-fonte="método: termo ratificado ‘sessão de agente’">consumidor</th>
+        <th class="rotulo" data-rotulo="protocolo de intercomunicação" data-fonte="método: painel/mcp_painel.py · painel/fila_outbox.py">consome</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">sessão de agente (exemplo)</span></td>
+        <td><span class="fonte"><code>estado_atual</code> no início da sessão (via MCP) — evita o “Estado atual” escrito à mão (<code>mcp_painel.py:26-27</code>).</span></td>
+      </tr>
+      <tr>
+        <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">sessão de agente (exemplo)</span></td>
+        <td><span class="fonte">a <strong>caixa de entrada</strong> e o <strong>outbox</strong> — as mensagens endereçadas a ela (<code>painel/fila_outbox.py</code>).</span></td>
+      </tr>
+      <tr>
+        <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">sessão de agente (exemplo)</span></td>
+        <td><span class="fonte">o <strong>livro de mensagens</strong>, quando existir, como leitura (<code>specs/066-painel-de-regencia/ux-design.md:170</code>) — hoje consumido, não fonte.</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h2>A2A — nomeado, não construído</h2>
+
+<div class="cx">
+  <p class="nota">Ligar uma sessão a outra por A2A ainda <strong>não existe</strong> no Maestro. A tela mostra “—” com o motivo, nunca um botão que finge:</p>
+  <table>
+    <thead>
+      <tr>
+        <th class="rotulo" data-rotulo="protocolo de intercomunicação" data-fonte="método: specs/066-painel-de-regencia/ux-design.md:81 (A2A só nomeado)">ligação A2A</th>
+        <th class="rotulo" data-rotulo="protocolo de intercomunicação" data-fonte="método: specs/066-painel-de-regencia/ux-design.md §8 (fora deste ciclo)">capacidade</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="falta metrica" data-fonte="método: specs/066-painel-de-regencia/ux-design.md:81" data-exemplo="true">— <span class="fonte">motivo: A2A nomeado, não construído (<code>specs/066-…/ux-design.md:81</code>; ciclo futuro)</span></span></td>
+        <td><span class="fonte">Abrir agente / ligar via A2A é ação de regência; aqui só o <strong>objeto</strong> é nomeado.</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <p>
+    <button aria-label="chamar a ferramenta estado_atual" data-fonte="método: painel/mcp_painel.py:24 (ferramenta estado_atual)">Chamar estado_atual</button>
+    <button aria-label="registrar o status da sessão" data-fonte="método: painel/mcp_painel.py:29 (ferramenta registrar_status)">Registrar status</button>
+  </p>
+  <p class="fonte">A2A por plataforma: LiteLLM é a única referência <code>sim</code> entre as 25 (ficha <code>pesquisa/litellm.md</code>) — a ideia a copiar, não a dependência.</p>
+</div>
+
+<footer>
+  <p class="fonte">Fontes — método: <code>painel/mcp_painel.py</code> (servidor <code>maestro-painel</code>, ferramentas
+  <code>estado_atual</code>/<code>registrar_status</code>/<code>registrar_peca</code>) · <code>painel/fila_outbox.py</code> ·
+  <code>docs/governance/glossary.md</code> (MCP, Outbox) · <code>confronto/mapa-de-contextos.md</code> §6.6 ·
+  <code>specs/066-painel-de-regencia/ux-design.md</code> §2 (linha A2A), §8 (F1, F8, F9). Plataforma: LiteLLM,
+  <code>https://www.litellm.ai/</code> e <code>https://docs.litellm.ai/</code> (ficha <code>pesquisa/litellm.md</code>, <code>sim</code>).</p>
+  <p class="nota">Todo elemento interativo tem <code>data-fonte</code>; todo número/estado é <code>(exemplo)</code> — wireframe, não dado real.</p>
+</footer>
+
+</body>
+</html>

@@ -4,7 +4,7 @@
 > skills, workflows, scripts). Também serve de **orientação**: se você está perdido, comece
 > por aqui. Documento vivo — atualizado a cada fase.
 >
-> **Status**: Ativo · **Versão**: **v0.3.0** (2026-08-22) · **Atualizado**: ciclo 065 · **Regra**: este mapa é
+> **Status**: Ativo · **Versão**: **v0.3.0** (2026-08-22) · **Atualizado**: ciclo 072 · **Regra**: este mapa é
 > artefato vivo — todo ciclo concluído atualiza a tabela de fases **no mesmo PR**
 > (anti-padrão 15: artefato de planejamento que congela).
 
@@ -138,6 +138,7 @@ Cada fase = **um ciclo** (uma spec, um gate). Ordem por dependência:
 | **F32 — chamados gate a gate** | o painel deriva o estado de cada chamado dos arquivos de veredito com as regras do conferidor, mostra o board chamado × gate e a trilha com custo por passo; o custo por sessão é lido dos transcripts por offset e guarda só contagens. Terceiro ciclo da integração da linha paralela | 068 | ⏳ aguarda o gate humano |
 | **F33 — conferidor pela data** | o veredito vigente passa a ser o de maior data do cabeçalho no hash certo (desempate por commit e nome), nunca o último no alfabeto; a trilha ordena por data. Primeiro ciclo integrado com par vermelho→verde real e com a pasta de gates do Hindiana como evidência | 069 | ⏳ aguarda o gate humano |
 | **F34 — workflow do ciclo em SQLite** | cada rodada é uma execução de workflow registrada passo a passo (rodadas, passos, transições) em SQLite append-only; os hooks `SessionStart` e `Stop` do Claude Code registram entrada e cobram saída; fila outbox em WAL para mensagens entre sessões sem broker; ingest com troca atômica e aviso de leitura velha (ADR 0025). Quinto ciclo da integração da linha paralela; **parcial**: FR2 ausente, FR3 invertido, FR1 sem branch/hash — o que falta é escopo do 072 | 070 | ⏳ parcial, gate por delegação (ADR 0026) |
+| **F35 — painel de regência, rodada 1** | kanban por gate e fila de decisões: dez colunas derivadas dos arquivos de veredito (nunca digitadas), veredito normalizado **ao lado** do original, idade e marcador de independência; fila de pedidos e *rulings* em registro JSONL append-only **fora do projeto**, com escritor único (lock) e backup datado; o parser de chamados expõe `autor_da_peca`; oito gatilhos append-only no schema do workflow pagam a **dívida 5 do 070** (ADR 0027). **Rodada 2 declarada infra**: dívidas 3, 6, 7 e 10 do 070 (backup/dry run do instalador, `SessionStart` no stdout, FR3 do `Stop`, troca atômica com WAL) + D-072-1..8 | 072 | 🔄 rodada 1 em curso |
 | **(contínuo) — Retrospectiva** | erro recorrente → regra versionada; **gatilho por dívida de achados** (`check-retro.sh`) desde o ciclo 034 | 017, 034 e seguintes | 🔄 |
 
 ### Gatilhos abertos (decisões adiadas, com condição de revisão)

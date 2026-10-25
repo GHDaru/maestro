@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Livro de mensagens — Mensageria (ciclo 073, wireframe)</title>
+<style>
+  :root { color-scheme: light; }
+  body { font-family: system-ui, sans-serif; background:#f4f5f7; color:#1b1f24; margin:0; padding:24px; line-height:1.45; }
+  h1 { font-size:1.35rem; margin:0 0 4px; }
+  h2 { font-size:1rem; margin:20px 0 8px; }
+  .nota { color:#5a6270; font-size:.85rem; }
+  .cx { background:#fff; border:1px solid #cfd4dc; border-radius:6px; padding:12px 14px; margin:10px 0; }
+  .rotulo { display:block; color:#5a6270; font-size:.78rem; text-transform:lowercase; }
+  table { border-collapse:collapse; width:100%; background:#fff; border:1px solid #cfd4dc; }
+  th, td { border:1px solid #dfe3e9; padding:8px 10px; text-align:left; font-size:.9rem; vertical-align:top; }
+  th { background:#eceef2; font-weight:600; }
+  .metrica { font-variant-numeric: tabular-nums; }
+  .desvio { color:#7a1f1f; background:#fbeaea; }
+  .falta { color:#7a3d00; }
+  button { font:inherit; background:#eceef2; border:1px solid #b9bfc9; border-radius:5px; padding:6px 10px; cursor:pointer; }
+  .fonte { color:#6b7280; font-size:.78rem; }
+  code { background:#eceef2; padding:1px 4px; border-radius:3px; }
+  footer { margin-top:22px; font-size:.78rem; color:#6b7280; }
+</style>
+</head>
+<body>
+
+<header class="cx">
+  <h1 class="rotulo" data-rotulo="livro de mensagens" data-fonte="método: specs/073-area-administrativa/confronto/confronto-decisao.md § Glossário proposto (‘livro de mensagens’)">livro de mensagens</h1>
+  <p class="nota">Contexto <strong>Mensageria</strong> — o registro <em>append-only</em> unificado das mensagens entre sessões.
+    <span class="fonte">Fonte da ideia: método — livro de ponto append-only, <code>docs/records/tarefas.jsonl</code> + <code>docs/governance/task-ledger.md</code>; mercado: 0 <code>sim</code> em 25.</span></p>
+  <p class="nota">Regra do livro: <strong>nunca se apaga uma linha</strong> — corrigir é acrescentar. A leitura é marcada, não removida.</p>
+</header>
+
+<div class="cx">
+  <div class="grade-linha">
+    <span class="rotulo" data-rotulo="livro de mensagens" data-fonte="método: docs/records/tarefas.jsonl (append-only)">livro de mensagens</span>
+    <span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">linhas: 5 (exemplo)</span>
+  </div>
+  <p class="fonte">Contagem na tela é métrica com fonte; valor de exemplo.</p>
+</div>
+
+<h2>Linhas registradas (da mais antiga à mais nova)</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th class="rotulo" data-rotulo="task tag" data-fonte="método: docs/governance/task-ledger.md (task tag [[TASK]]/[[DONE]])">task tag</th>
+      <th class="rotulo" data-rotulo="sessão de agente" data-fonte="método: docs/governance/task-ledger.md · termo ratificado ‘sessão de agente’">sessão de agente (remetente)</th>
+      <th class="rotulo" data-rotulo="roteamento por nome/ref" data-fonte="método: painel/ingest.py (norm_sessao) · termo ratificado ‘roteamento por nome/ref’">roteamento por nome/ref (destinatário)</th>
+      <th class="rotulo" data-rotulo="outbox" data-fonte="método: docs/governance/glossary.md (Outbox)">outbox</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">[[TASK id=073-T2-confronto]] (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Gerente (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">pretendido: Worker03 · real: Worker03 (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">drenada (exemplo)</span></td>
+    </tr>
+    <tr class="desvio">
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">[[TASK id=073-T2-mapa]] (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Gerente (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">pretendido: Worker02 · real: Worker04 (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">drenada (exemplo)</span></td>
+    </tr>
+    <tr class="desvio">
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">[[DONE id=072-R1]] (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker01 (exemplo)</span></td>
+      <td><span class="falta rotulo" data-rotulo="colisão de nomes" data-fonte="método: mapa-de-contextos.md §7 · specs/066-painel-de-regencia/qa-report.md (incidente real de nomes cruzados)">— pretendido: “Office” · real: “Office” em 2 refs (exemplo) <span class="fonte">motivo: colisão de nomes (exemplo)</span></span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">drenada (exemplo)</span></td>
+    </tr>
+    <tr>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">[[DONE id=073-T2-confronto]] (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker03 (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">pretendido: Gerente · real: Gerente (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">drenada (exemplo)</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="cx">
+  <p class="nota"><strong>Destinatário pretendido × real.</strong> O livro guarda os dois: quando diferem, a linha fica marcada (é a prova de entrega errada, hoje só visível à mão).</p>
+  <p>
+    <button aria-label="filtrar por mensagem desviada" data-fonte="método: specs/066-painel-de-regencia/ux-design.md §2.4 (‘mensagem desviada’) — objeto nomeado, agora com fonte no livro">Ver entregas erradas</button>
+    <button aria-label="abrir a caixa de entrada" data-fonte="método: termo ratificado ‘caixa de entrada’ (confronto-decisao.md § Glossário proposto)">caixa de entrada</button>
+  </p>
+</div>
+
+<footer>
+  <p class="fonte">Fontes — método: <code>docs/records/tarefas.jsonl</code> · <code>docs/governance/task-ledger.md</code> ·
+  <code>docs/governance/glossary.md</code> (Outbox, Task ledger, Task tag) · <code>confronto/mapa-de-contextos.md</code> §6.6 e §7 ·
+  <code>specs/066-painel-de-regencia/ux-design.md</code> §2.4 e §5 (F1, F7, F8, F9). Plataforma (ideia de leitura): Temporal Web UI,
+  <code>https://docs.temporal.io/web-ui</code> (ficha <code>pesquisa/temporal-web-ui.md</code>, <code>sim</code> em rastro/replay).</p>
+  <p class="nota">Todo elemento interativo tem <code>data-fonte</code>; todo número/estado é <code>(exemplo)</code>.</p>
+</footer>
+
+</body>
+</html>

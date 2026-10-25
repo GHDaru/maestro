@@ -12,6 +12,7 @@ import argparse
 import datetime as dt
 import json
 import os
+import re
 import sqlite3
 import statistics
 import sys
@@ -19,7 +20,9 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, urlparse
 
 import chamados
+import fila_registro
 import ingest
+import regencia  # painel/regencia/ — domínio puro do painel de regência (ciclo 072, corte hexagonal)
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 ESTADOS_SESSAO = ("trabalhando", "esperando", "sem tarefa", "bloqueado")
@@ -280,15 +283,21 @@ def serie(ts):
     return dict(sorted(s.items()))
 
 
-def v_meta(db):
+def v_meta(db, cfg=None):
     m = {r["chave"]: r["valor"] for r in linhas(db, "SELECT * FROM meta")}
     m["equipes"] = json.loads(m.get("equipes") or "{}")
     m["contatos"] = contatos()
+    # FR7 (072): as frentes do projeto vão para a tela do kanban; sem a chave, a tela não filtra.
+    m["frentes"] = (cfg or {}).get("frentes") or {}
     # T8: idade do ingest para o frontend avisar se >1h
     if "ingerido_em" in m:
         t = parse_ts(m["ingerido_em"])
         if t:
             m["ingerido_age_min"] = round((dt.datetime.now().astimezone() - t).total_seconds() / 60, 1)
+            # 072-T16: o número do banner de cima vem PRONTO do domínio (`aviso_leitura_velha`), o
+            # mesmo que gera o aviso de dentro da página — antes o frontend o recalculava e os dois
+            # discordavam. Vazio = ingestão fresca (o banner não aparece).
+            m["leitura_velha"] = regencia.aviso_leitura_velha(m["ingerido_em"])
     return m
 
 
@@ -298,6 +307,161 @@ def v_erros_leitura(db):
         return linhas(db, "SELECT caminho, motivo, fonte FROM erros_leitura ORDER BY rowid")
     except sqlite3.OperationalError:
         return []
+
+
+# ---------- Painel de regência (ciclo 072, W04): kanban por gate e transição ----------
+# Consome o domínio puro `painel/regencia/` (corte hexagonal do plano 072, §1) e REUSA o
+# conferidor `painel/chamados.py` — não há segundo conferidor (anti-padrão 22). Funções separadas
+# das da fila de decisões (W05) para as fatias não se cruzarem no merge.
+
+
+def _frente_do_chamado(cfg, chamado):
+    """FR7: a frente do chamado é a que lista a pasta dele em `cfg['frentes']` (``""`` se nenhuma)."""
+    cid = chamado.get("id", "")
+    for frente, pastas in (cfg.get("frentes") or {}).items():
+        for p in (pastas or []):
+            if cid and cid in str(p).split("/"):
+                return frente
+    return ""
+
+
+def _cartao_kanban(cfg, chamado):
+    """FR3/FR4/FR10/FR23: o cartão do kanban, com a fonte declarada de cada campo."""
+    base = regencia.cartao(chamado)
+    gate = base["gate"]
+    g = next((x for x in (chamado.get("gates") or []) if x.get("gate") == gate), None) or {}
+    itens = g.get("itens") or []
+    vit = itens[-1] if itens else {}
+    veredito = vit.get("veredito", "")
+    norm = regencia.normaliza(veredito, vit.get("erros"))
+    por = (vit.get("por") or "").strip()
+    autor = (vit.get("autor_da_peca") or "").strip()
+    if not autor:
+        ind = {"vermelho": False, "motivo": "sem autor_da_peca",
+               "texto": regencia.sem_fonte("cabeçalho do gate sem autor_da_peca (FR5)")}
+    elif not por:
+        ind = {"vermelho": False, "motivo": "sem por",
+               "texto": regencia.sem_fonte("cabeçalho do gate sem 'por'")}
+    else:
+        mesma = regencia.independencia(autor, por)
+        ind = {"vermelho": mesma, "motivo": "",
+               "texto": "builder = crítico (mesma pessoa)" if mesma else "builder ≠ crítico"}
+    # O conferidor marca "hora digitada" quando o veredito é assinado depois do commit do arquivo;
+    # esse é o sinal de que a data veio de campo digitado → selo "declarada" (anti-regra 5, FR23).
+    declarado = any("digitada" in str(e) for e in (vit.get("erros") or []))
+    idade = regencia.idade_do_carimbo(vit.get("data", ""), declarado=declarado)
+    return {
+        "id": chamado.get("id", ""), "titulo": chamado.get("titulo", ""),
+        "frente": _frente_do_chamado(cfg, chamado),
+        "gate": gate, "gate_nome": g.get("nome", ""),
+        "dono": g.get("dono", ""), "sessao": por,
+        "veredito": veredito, "veredito_normalizado": norm["canonico"],
+        "veredito_motivo": norm.get("motivo", ""),
+        "independencia": ind, "idade": idade, "selo": idade.get("selo", ""),
+        "integrado_criticado": "não conferido",
+        "fontes": {
+            "dono": "painel/chamados.py GATES — papel do gate (FR3)",
+            "sessao": "cabeçalho do gate (por:)",
+            "veredito": "cabeçalho YAML do gate (veredito:), conferido por painel/chamados.py (068/069)",
+            "idade": "cabeçalho do gate (data:) + relógio do sistema (regencia.idade_do_carimbo)",
+            "selo": "regencia.idade_do_carimbo (registro/relogio/declarada)",
+            "independencia": "cabeçalho do gate (autor_da_peca, por) via regencia.independencia",
+            "integrado_criticado": "git patch-id --stable (script ainda não versionado)",
+        },
+    }
+
+
+def v_kanban(db, cfg):
+    """GET /api/regencia/kanban — dez colunas G0–G9 (FR1) + a faixa abertura·GD; reusa o 068."""
+    dados = chamados.em_cache(cfg)
+    cols = [(g, nome, dono) for g, nome, dono in chamados.GATES if g not in ("abertura", "GD")]
+    colunas = {g: {"gate": g, "nome": nome, "dono": dono, "cartoes": []} for g, nome, dono in cols}
+    faixa = {"abertura": [], "GD": []}
+    for c in (dados.get("chamados") or []):
+        card = _cartao_kanban(cfg, c)
+        destino = card["gate"] if card["gate"] in colunas else (cols[0][0] if cols else "")
+        if destino in colunas:
+            colunas[destino]["cartoes"].append(card)
+        fj = regencia.faixa_abertura_gd(c.get("gates"))
+        for gk in ("abertura", "GD"):
+            if gk in fj:
+                faixa[gk].append({"chamado": card["id"], "frente": card["frente"], **fj[gk]})
+    ingerido_em = ""
+    try:
+        row = db.execute("SELECT valor FROM meta WHERE chave='ingerido_em'").fetchone()
+        ingerido_em = (row["valor"] if row else "") or ""
+    except sqlite3.OperationalError:
+        pass
+    aviso = regencia.aviso_ingestao(ingerido_em)   # FR25: >1 h → "defasado…" no cabeçalho
+    return {"ok": True,
+            "colunas": [colunas[g] for g, _n, _d in cols],
+            "faixa": faixa,
+            "frentes": sorted((cfg.get("frentes") or {}).keys()),
+            "meta": {"ingerido_em": ingerido_em, "defasado": bool(aviso), "aviso": aviso},
+            "data_fonte": "painel/chamados.py confere (veredito vigente, 069) + cabeçalhos YAML "
+                          "dos gates; lido por /api/chamados"}
+
+
+# `_pasta_do_chamado` tem UMA definição (abaixo, na seção da fila): devolve o caminho absoluto da
+# pasta `specs/<id>/` ou ``None``. Kanban/transição e fila compartilham esse único contrato — na
+# R1 do T06 havia duas definições com assinaturas diferentes, a segunda sombreava a primeira e
+# `_arquivos_do_gate` estourava um `ValueError` que virava 422 de crash para toda transição.
+
+
+def _data_hash_do_repo(cfg):
+    """`hash -> datetime` do git, na forma que o conferidor espera (igual a `le_chamados`)."""
+    cache = {}
+
+    def dh(h):
+        if h not in cache:
+            cache[h] = None
+            for fonte in (cfg.get("chamados") or []):
+                repo = os.path.join(cfg.get("raiz", "."), fonte.get("repo", "."))
+                ai = chamados._git(repo, "log", "-1", "--format=%ai", h)
+                if ai:
+                    cache[h] = dt.datetime.strptime(ai.strip(), "%Y-%m-%d %H:%M:%S %z")
+                    break
+        return cache[h]
+    return dh
+
+
+def _arquivos_do_gate(cfg, chamado, gate):
+    """Mapa `gate → {caminho, cabecalho_valido}` que a função pura `proposta_transicao` consome."""
+    pasta = _pasta_do_chamado(cfg, chamado)   # contrato único: caminho absoluto ou None
+    if not pasta or not gate:
+        return {}
+    rel = os.path.relpath(pasta, cfg.get("raiz", ".")).replace(os.sep, "/")
+    dh = _data_hash_do_repo(cfg)
+    for n in sorted(os.listdir(pasta)):
+        if n.startswith(gate + "-"):
+            try:
+                with open(os.path.join(pasta, n), encoding="utf-8") as f:
+                    txt = f.read()
+            except OSError:
+                continue
+            erros = chamados.valida(chamados.cabecalho(txt), gate, dh, set())
+            return {gate: {"caminho": f"{rel}/{n}", "cabecalho_valido": not erros,
+                           "erros": erros}}
+    return {}
+
+
+def v_transicao(cfg, corpo):
+    """POST /api/regencia/transicao — devolve `(payload, code)`; NÃO move nem grava arquivo (anti-regra 1)."""
+    corpo = corpo or {}
+    chamado, de, para = corpo.get("chamado", ""), corpo.get("de", ""), corpo.get("para", "")
+    if not _chamado_valido(chamado):
+        # 072-T16: recusa explícita. Sem ela, um `chamado` de navegação caía no "falta arquivo" e o
+        # motivo apontava para o lugar errado (e `..` chegava a listar a raiz do repositório).
+        return {"erro": f"chamado inválido: {chamado!r} — aceita letras, números, `_`, `.` e `-`, "
+                        "e nunca `.` ou `..`"}, 422
+    proposta = regencia.proposta_transicao(chamado, de, para, _arquivos_do_gate(cfg, chamado, para))
+    if not proposta.get("permitido"):
+        return {"erro": proposta.get("falta") or "transição recusada"}, 422   # FR9: 422 com o motivo
+    dono = next((d for g, _n, d in chamados.GATES if g == para), "")
+    return {"ok": True, "permitido": True, "proposta": {
+        "chamado": chamado, "de": de, "para": para,
+        "exige": proposta.get("exige") or f"{para}-*.md", "dono": dono,
+        "promocao": "arquivo assinado pelo dono (068)"}}, 200
 
 
 CFG_PATH = None
@@ -408,6 +572,171 @@ def v_relatorio_lote(db, desde=None):
     return {"markdown": "\n".join(L)}
 
 
+# ---------- painel de regência: a fila de decisões (FR11–FR23, ciclo 072) ----------
+# Corte hexagonal (plano 072, §1): o comportamento puro vive em `painel/regencia/`; aqui é a
+# borda — resolve a config (`regencia.pessoas`, pedidos conhecidos) e passa o motivo da recusa
+# **como a função pura devolveu** (não duplica o texto de `contracts/rotas.md` no corpo da rota).
+
+def _n_destravados(item):
+    """FR15: quantos itens o pedido destrava — o desempate da ordem da fila."""
+    destrava = item.get("destrava")
+    if isinstance(destrava, list):
+        return len(destrava)
+    return 1 if destrava else 0
+
+
+# 072-T16: o `chamado` é um id — letras, números, `_`, `.` e `-`; nada de separador de caminho.
+RE_CHAMADO = re.compile(r"^[\w.-]+$")
+
+
+def _chamado_valido(cid):
+    """O `chamado` vira **componente de caminho** em `_pasta_do_chamado` — aceita id, nunca navegação.
+
+    `^[\\w.-]+$` já barra separador (`/`, `\\`), então o `os.path.join` não sai da pasta; sobram
+    os dois componentes que navegam sozinhos: `..` (sobe um nível) e `.` (resolve para `specs/`).
+    Sem esta checagem, `chamado=".."` fazia `os.path.join(raiz, "specs", "..")` e o `os.listdir`
+    seguinte listava a **raiz** do repositório — achado de T06, corrigido em 072-T16. O `..` é
+    barrado como substring (nenhum id legítimo o contém).
+    """
+    cid = cid or ""
+    return bool(RE_CHAMADO.fullmatch(cid)) and ".." not in cid and cid != "."
+
+
+def _pasta_do_chamado(cfg, cid):
+    """A pasta `specs/<id>/` do chamado, se existir — ``None`` se não (contrato único, R1/T06).
+
+    Usada pela fila (`_item_tail`, que precisa só do caminho) e pelo kanban/transição
+    (`_arquivos_do_gate`, que deriva o caminho relativo com `os.path.relpath`).
+    """
+    if not _chamado_valido(cid):
+        return None
+    raiz = cfg.get("raiz", ".")
+    for fonte in cfg.get("chamados", []) or []:
+        pasta = os.path.join(raiz, fonte.get("repo", "."), fonte.get("pasta", "specs").strip("/"), cid)
+        if os.path.isdir(pasta):
+            return pasta
+    return None
+
+
+def _item_tail(cfg, cid):
+    """FR20: `TAIL:gate` pendente no `tasks.md` do chamado vira item da fila (leitura simples)."""
+    pasta = _pasta_do_chamado(cfg, cid)
+    if not pasta:
+        return []
+    caminho = os.path.join(pasta, "tasks.md")
+    if not os.path.exists(caminho):
+        return []
+    try:
+        with open(caminho, encoding="utf-8") as f:
+            linhas = f.read().splitlines()
+    except OSError:
+        return []
+    if not any(l.strip().startswith("- [ ] **TAIL:gate**") for l in linhas):
+        return []
+    quando = dt.datetime.fromtimestamp(os.path.getmtime(caminho)).astimezone().isoformat(timespec="seconds")
+    return [regencia.portao_derivado(cid, "TAIL:gate", "pendente", quando)]
+
+
+def _portoes_da_fila(cfg, dados=None):
+    """FR20: itens derivados dos portões do regente — G7/G8 pendentes + o `TAIL:gate` de cada chamado."""
+    dados = dados if dados is not None else chamados.em_cache(cfg)
+    docs = getattr(chamados, "_docs", {}) or {}
+    itens = []
+    for c in dados.get("chamados", []):
+        cid = c.get("id", "")
+        arquivos = (docs.get(cid) or {}).get("arquivos") or {}
+        commit_de = {n: v.get("quando") for n, v in arquivos.items() if v.get("quando")}
+        itens.extend(regencia.portoes_do_regente(c, commit_de))
+        itens.extend(_item_tail(cfg, cid))
+    return itens
+
+
+def _pedidos_conhecidos(cfg, dados=None):
+    """FR20: os ids que um ruling pode fechar — pedidos registrados + ids derivados dos portões."""
+    ids = {l.get("id") for l in fila_registro.le(fila_registro.caminho(cfg)) if l.get("tipo") == "pedido"}
+    ids |= {i["id"] for i in _portoes_da_fila(cfg, dados)}
+    return {i for i in ids if i}
+
+
+def _item_de_pedido(pedido, agora):
+    """FR23: item da fila a partir de um pedido registrado — idade/carimbo vêm do registro."""
+    idade = regencia.idade_do_carimbo(pedido.get("criado_em"), agora) or {}
+    return {**pedido, "origem": "pedido", "somente_leitura": False, "destravados": _n_destravados(pedido),
+            "idade": idade.get("texto"), "carimbo": idade.get("carimbo"), "selo": idade.get("selo")}
+
+
+def _item_de_portao(item, agora):
+    """FR20/FR23: item derivado de portão — idade a partir do 'desde' (commit do arquivo)."""
+    idade = regencia.idade_do_carimbo(item.get("desde"), agora) or {}
+    return {**item, "idade": idade.get("texto"), "carimbo": idade.get("carimbo"), "selo": idade.get("selo")}
+
+
+def _mensagem_vazia(linhas):
+    """Fila vazia é informação: diz a hora da última decisão (contracts/rotas.md §GET /fila)."""
+    rulings = [l for l in linhas if l.get("tipo") == "ruling"]
+    if rulings:
+        quando = rulings[-1].get("registrado_em") or rulings[-1].get("data") or ""
+        if len(quando) >= 16:
+            return f"fila vazia — última decisão às {quando[11:16]}"
+    return "fila vazia — nenhuma decisão registrada"
+
+
+def v_fila(db, cfg):
+    """FR11–FR23: pedidos não fechados + portões do regente, ordenados por prazo × bloqueio."""
+    linhas = fila_registro.le(fila_registro.caminho(cfg))
+    pedidos = [l for l in linhas if l.get("tipo") == "pedido"]
+    rulings = [l for l in linhas if l.get("tipo") == "ruling"]
+    agora = dt.datetime.now().astimezone()
+    itens = [_item_de_pedido(p, agora) for p in pedidos if not regencia.sai_da_fila(p, rulings)]
+    itens += [_item_de_portao(i, agora) for i in _portoes_da_fila(cfg)]
+    itens = regencia.ordena_fila(itens, agora)
+    cab = regencia.cabecalho_fila(itens, agora)
+    vazia = not itens
+    out = {"ok": True, "itens": itens, "n": cab["n"], "vazia": vazia,
+           "destravados": sum(i.get("destravados", 0) for i in itens),
+           "idade_mais_velha": cab["idade_mais_velha"],
+           "mais_velho": (cab["idade_mais_velha"] or {}).get("carimbo"),
+           "data_fonte": "painel/fila_registro.py le() · painel/regencia/fila.py ordena_fila/cabecalho_fila"}
+    if vazia:
+        out["mensagem"] = _mensagem_vazia(linhas)
+    return out
+
+
+def acrescenta_na_fila(cfg, corpo):
+    """FR11/FR14/FR16/FR20: valida e acrescenta **um** pedido ou um ruling; devolve `(code, resposta)`.
+
+    A recusa passa adiante o texto que a função pura devolveu (`valida_pedido`/`valida_ruling`) —
+    a rota não reescreve o motivo (ADR 0027; `contracts/rotas.md` §POST /fila).
+    """
+    if not isinstance(corpo, dict):
+        return 400, {"erro": "corpo deve ser um objeto JSON"}
+    tipo = corpo.get("tipo")
+    if tipo not in ("pedido", "ruling"):
+        return 422, {"erro": "linha sem tipo: 'pedido' ou 'ruling'"}
+    registro = fila_registro.caminho(cfg)
+    agora = dt.datetime.now().astimezone().isoformat(timespec="seconds")
+    if tipo == "pedido":
+        motivo = regencia.valida_pedido(corpo, _pedidos_conhecidos(cfg))  # FR20: id repetido/portão derivado
+        if motivo:
+            return 422, {"erro": motivo}
+        linha = {**corpo, "criado_em": agora}  # carimbo do registro, nunca campo digitado (FR23)
+        registrado = {"tipo": "pedido", "id": linha.get("id")}
+    else:
+        conf = cfg.get("regencia")
+        if not isinstance(conf, dict) or not conf.get("pessoas"):
+            return 422, {"erro": "config sem regencia.pessoas"}
+        motivo = regencia.valida_ruling(corpo, conf.get("pessoas"), _pedidos_conhecidos(cfg))
+        if motivo:
+            return 422, {"erro": motivo}
+        linha = {**corpo, "registrado_em": agora, "data": agora}
+        registrado = {"tipo": "ruling", "pedido": linha.get("pedido")}
+    backup = fila_registro.acrescenta(registro, linha)
+    resposta = {"ok": True, "registrado": registrado}
+    if backup:
+        resposta["backup"] = backup
+    return 200, resposta
+
+
 ROTAS = {"/api/board": v_board, "/api/pecas": v_pecas, "/api/specs": v_specs, "/api/decisoes": v_decisoes,
          "/api/qualidade": v_qualidade, "/api/documentos": v_documentos, "/api/roadmap": v_roadmap,
          "/api/rodadas": v_rodadas,
@@ -488,6 +817,14 @@ def cria_handler(db_path, cfg):
                 return self._json(chamados.trilha(cfg, u.path.split("/")[3]))
             if u.path == "/api/chamados":
                 return self._json(chamados.em_cache(cfg, forcar="atualizar" in parse_qs(u.query)))
+            if u.path == "/api/regencia/fila":
+                return self._json(v_fila(None, cfg))
+            if u.path == "/api/regencia/kanban":   # FR1: dez colunas + faixa abertura·GD (W04)
+                db = conecta(db_path)
+                try:
+                    return self._json(v_kanban(db, cfg))
+                finally:
+                    db.close()
             fn = ROTAS.get(u.path)
             if not fn:
                 return self._json({"erro": "rota inexistente"}, 404)
@@ -500,6 +837,8 @@ def cria_handler(db_path, cfg):
                     return self._json(fn(db, qs.get("sessao", [None])[0]))
                 if u.path == "/api/relatorio-lote":
                     return self._json(fn(db, qs.get("desde", [None])[0]))
+                if u.path == "/api/meta":   # FR7: /api/meta passa a expor as frentes do projeto
+                    return self._json(fn(db, cfg))
                 return self._json(fn(db))
             finally:
                 db.close()
@@ -510,6 +849,21 @@ def cria_handler(db_path, cfg):
                 return self._json({"erro": "só localhost"}, 403)
             if u.path == "/api/reingerir":
                 return self._json(ingest.ingere(cfg, db_path))
+            if u.path == "/api/regencia/fila":
+                n = int(self.headers.get("Content-Length") or 0)
+                try:
+                    corpo = json.loads(self.rfile.read(n) or b"{}")
+                except ValueError:
+                    return self._json({"erro": "corpo não é JSON válido"}, 400)
+                code, resposta = acrescenta_na_fila(cfg, corpo)
+                return self._json(resposta, code)
+            if u.path == "/api/regencia/transicao":   # FR8/FR9: propõe; não move nem grava (W04)
+                n = int(self.headers.get("Content-Length") or 0)
+                try:
+                    payload, code = v_transicao(cfg, json.loads(self.rfile.read(n) or b"{}"))
+                except ValueError as e:
+                    return self._json({"erro": str(e)}, 422)
+                return self._json(payload, code)
             if u.path != "/api/eventos":
                 return self._json({"erro": "rota inexistente"}, 404)
             n = int(self.headers.get("Content-Length") or 0)

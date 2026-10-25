@@ -126,3 +126,15 @@ o Worker01 escreve a spec do 072.
   e o 072 só tem spec. Corrigida a honestidade do 066 (`8245a36`, `656db57`: plano, tasks e
   qa-report; mutação espelhada). Decisão por delegação: **não promover a main com o 072 pela
   metade**; promover no fechamento da rodada 1.
+
+## 24/10 21:30 — gate do plano do 072 aberto por delegação
+
+- Worker01 (spec revisada, 25 FR, `0c71f49`), Worker02 (plano, data-model, contracts, tasks,
+  `2b36d44`) e Worker03 (13 testes vermelhos, `c1eb802`) entregaram; integrados em `4669787`.
+  Medido: 13 vermelhos pela razão certa, 48 verdes na suíte antiga.
+- Crítico do plano: APROVADO COM CONDIÇÕES (oito). A sessão regente fixou a tabela de nomes e
+  transformou as condições em duas tarefas de reconciliação (Worker02 e Worker03) seguidas da
+  implementação sem novo gate (`gate-072-plan-delegado`).
+- Rota entre sessões: o Gerente recebeu os DONE de 02 e 03, não os do 01; três envios do GATE
+  dele falharam por queda do classificador. Regra: se o envio falhar duas vezes, o GATE vai
+  commitado em `specs/072-painel-de-regencia/gate-<nome>.md`.

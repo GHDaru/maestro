@@ -27,6 +27,61 @@ AQUI = os.path.dirname(os.path.abspath(__file__))
 DB_DEFAULT = os.path.join(AQUI, "..", "..", "painel", "painel.db")
 SCHEMA_SQL = os.path.join(AQUI, "..", "..", "painel", "schema_workflow.sql")
 
+# FR17 (a dívida 5 do 070 vira requisito): append-only imposto pela base. As MESMAS
+# sentenças vivem em `painel/schema_workflow.sql`; duplicá-las nesta cópia é o preço que
+# D-072-2 declara (a dívida 2 piora — as cópias precisam ficar em sincronia). O SQLite
+# aceita um só evento por gatilho, então há dois por tabela.
+TRIGGERS_SQL = """
+CREATE TRIGGER IF NOT EXISTS rodadas_no_update
+BEFORE UPDATE ON rodadas
+BEGIN SELECT RAISE(ABORT, 'append-only: rodadas recusa UPDATE'); END;
+
+CREATE TRIGGER IF NOT EXISTS rodadas_no_delete
+BEFORE DELETE ON rodadas
+BEGIN SELECT RAISE(ABORT, 'append-only: rodadas recusa DELETE'); END;
+
+CREATE TRIGGER IF NOT EXISTS transicoes_no_update
+BEFORE UPDATE ON transicoes
+BEGIN SELECT RAISE(ABORT, 'append-only: transicoes recusa UPDATE'); END;
+
+CREATE TRIGGER IF NOT EXISTS transicoes_no_delete
+BEFORE DELETE ON transicoes
+BEGIN SELECT RAISE(ABORT, 'append-only: transicoes recusa DELETE'); END;
+
+CREATE TRIGGER IF NOT EXISTS fila_no_update
+BEFORE UPDATE ON fila
+WHEN NOT (
+  OLD.lida_em IS NULL
+  AND OLD.id IS NEW.id
+  AND OLD.sessao_origem IS NEW.sessao_origem
+  AND OLD.sessao_destino IS NEW.sessao_destino
+  AND OLD.payload IS NEW.payload
+  AND OLD.criada_em IS NEW.criada_em
+)
+BEGIN SELECT RAISE(ABORT, 'append-only: fila so aceita o fechamento da leitura (lida_em)'); END;
+
+CREATE TRIGGER IF NOT EXISTS fila_no_delete
+BEFORE DELETE ON fila
+BEGIN SELECT RAISE(ABORT, 'append-only: fila recusa DELETE'); END;
+
+CREATE TRIGGER IF NOT EXISTS passos_no_update
+BEFORE UPDATE ON passos
+WHEN NOT (
+  OLD.saida_em IS NULL
+  AND OLD.id IS NEW.id
+  AND OLD.rodada IS NEW.rodada
+  AND OLD.passo IS NEW.passo
+  AND OLD.sessao IS NEW.sessao
+  AND OLD.entrada_em IS NEW.entrada_em
+  AND OLD.evidencia_json IS NEW.evidencia_json
+)
+BEGIN SELECT RAISE(ABORT, 'append-only: passo so aceita o fechamento (saida_em, resumo, resultado)'); END;
+
+CREATE TRIGGER IF NOT EXISTS passos_no_delete
+BEFORE DELETE ON passos
+BEGIN SELECT RAISE(ABORT, 'append-only: passos recusa DELETE'); END;
+"""
+
 
 def _now() -> str:
     return dt.datetime.now(dt.timezone.utc).isoformat()
@@ -37,11 +92,16 @@ def _db_path() -> str:
 
 
 def _ensure_schema(conn: sqlite3.Connection) -> None:
-    """Cria tabelas se não existem."""
+    """Cria tabelas se não existem e aplica os gatilhos append-only (FR17).
+
+    Os gatilhos são aplicados SEMPRE (não só no banco novo): um banco vivo, que já tem as
+    tabelas, também precisa ganhar o append-only mecânico.
+    """
     tables = {r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")}
     if "rodadas" not in tables and os.path.exists(SCHEMA_SQL):
         with open(SCHEMA_SQL, encoding="utf-8") as f:
             conn.executescript(f.read())
+    conn.executescript(TRIGGERS_SQL)
 
 
 def main() -> int:
