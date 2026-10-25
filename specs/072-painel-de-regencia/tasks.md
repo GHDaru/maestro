@@ -298,14 +298,22 @@
       válidos (200 + duas linhas no JSONL, colados aqui) e um ruling com autor fora de pessoas
       (422); `valida_pedido` recusa id duplicado e id com formato de portão derivado, com teste;
       risco "ruling fecha o item errado em silêncio" registrado como fechado.
-- [ ] **T16 (Worker04, dono do kanban)**: `chamado` do POST de transição só aceita `^[\w.-]+$` e
+- [x] **T16 (Worker04, dono do kanban)**: `chamado` do POST de transição só aceita `^[\w.-]+$` e
       nunca `..` (422, com teste — hoje `chamado=".."` lista a raiz); arredondamento do aviso
       "LEITURA VELHA" unificado (banner de cima × de dentro: 1H60M contra 1 h 59 min), com teste.
-- [ ] **T17 (Worker01, dono da jornada)**: heurística datada ganha, por acréscimo, o quadro
+      **Entregue: `39c2957` + `c8632db` (evidência), integrado em `bbfab80` — decisão: FECHADA
+      (não existe D-072-9). Suíte 24→26 (2 testes novos: TestT16ChamadoNaoNavega,
+      TestT16LeituraVelhaConcorda); 26 passed + 48 passed.**
+- [x] **T17 (Worker01, dono da jornada)**: heurística datada ganha, por acréscimo, o quadro
       estreito (~190px, G0–G9 empilhados — severidade, rodada 2) e o banner 1H60M; nova captura
-      pós-T16 se o script rodar.
-- [ ] **T18 (Worker02)**: plan § Dívidas ganha a dívida do método (living-journey × docs/jornada/)
-      e a D-072-9 se o T16 declarar em vez de fechar.
+      pós-T16 se o script rodar. **Entregue: `02e434f`, integrado em `1998e3e` — bloco novo
+      "Avaliação heurística — revisitada em 2026-10-25" (+20/−0, nenhuma linha existente tocada)
+      com R7 (quadro estreito, Média, rodada 2) e R8 (banner 1H60M, Baixa, T16). Captura nova
+      declarada PENDENTE do T16 — agora desbloqueada (T16 integrado em `bbfab80`), pedida ao W01.**
+- [x] **T18 (Worker02)**: plan § Dívidas ganha a dívida do método (living-journey × docs/jornada/)
+      e a D-072-9 se o T16 declarar em vez de fechar. **Entregue: `ae1fb84` (item 1, integrado em
+      `85b1b7f`); item 2 resolvido por decisão do T16 — FECHADA, a D-072-9 não existe. T18
+      encerrado.**
 - [ ] **T19 (Gerente)**: caixas das entregas marcadas com hash de cada uma (§ "Entregas e
       hashes") e linha de status de fechamento no topo do qa-report. **Entregue.**
 - [ ] **Reverificação (Worker06, depois de T15–T18)**: as quatro condições, curto; depois
@@ -333,6 +341,9 @@
 | T13 — R2 (jornada em docs/jornada/) | `7b0c946` | qa-report § 072-T13 |
 | T14 — contagem de FR (27) | `f0c2b39` | qa-report § 072-T14 |
 | T06 attempt=2 — reverificação R1/R2 | `e0ff6f2` (HEAD `ccbceef`) | qa-report § Reverificação R1/R2 |
+| T16 — chamado sem navegação + LEITURA VELHA | `39c2957` + `c8632db` (evidência; integrado em `bbfab80`) | qa-report § 072-T16 · suíte 24→26 |
+| T17 — R7/R8 na heurística datada | `02e434f` (integrado em `1998e3e`) | qa-report § 072-T17 · captura nova pendente (desbloqueada) |
+| T18 — dívida do método no plan | `ae1fb84` (integrado em `85b1b7f`) | plan § Dívidas declaradas |
 
 ## Closing tail — MANDATORY, one line each, never delete
 

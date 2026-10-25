@@ -545,10 +545,10 @@
 
 | Check | Expected | Result |
 |---|---|---|
-| `python -m unittest discover -s painel/tests -p test_regencia.py` | `Ran 24 tests`, `OK`, exit 0 (supersessão de `Ran 13` e `Ran 15` declarada em `plan.md § Verification`) | **`Ran 24 tests in 3.874s` · `OK`** (exit 0) |
+| `python -m unittest discover -s painel/tests -p test_regencia.py` | `Ran 26 tests`, `OK`, exit 0 (supersessão de `Ran 13`, `Ran 15` e `Ran 24` declarada em `plan.md § Verification`) | **`Ran 26 tests` · `OK`** (exit 0; medido pelo Worker04 no T16, `39c2957`: 26 passed; suíte antiga isolada: 48 passed) |
 | 48 tests of the old suite (`--ignore=test_regencia.py`) | green, untouched | **`48 passed in 13.49s`** |
 | `python painel/chamados.py painel/projetos/exemplo.json` | exit 0 (FR5 only adds a field) | **`exit=0`** |
-| `python -m unittest discover -s painel/tests -p 'test_*.py'` | green (regression 068/069/070) | **`Ran 54 tests in 13.180s` · `OK`** (24 regência + 30 antigos; a suíte antiga isolada por pytest dá 48 — a diferença é **como cada runner coleta**, não cobertura nova; declarado para não haver divergência silenciosa) |
+| `python -m unittest discover -s painel/tests -p 'test_*.py'` | green (regression 068/069/070) | **`Ran 54 tests in 13.180s` · `OK`** (24 regência + 30 antigos; a suíte antiga isolada por pytest dá 48 — a diferença é **como cada runner coleta**, não cobertura nova; declarado para não haver divergência silenciosa). **Pós-T16 a conta sobe para 56** (26 regência + 30 antigos) — o T16 mediu a suíte de regência isolada (26 passed) e a antiga isolada (48 passed), verdes |
 | `ls specs/070-conferidor-ordem-veredito/` | 10 files (immutable folder) | **`10`** |
 | `ls painel/projetos/*hindiana*` | empty (fixture rule) | **`0`** |
 | `grep -rn '\.env\|settings.local.json' painel/` | no **read** path | **nenhum caminho de leitura** — os matches são docs (`arquitetura.html`, `docs/*.md`), o **guard** `PROIBIDOS` de `ingest.py:25` (regex que *recusa*), os `os.environ.get` dos hooks (variável de ambiente, não arquivo) e testes, incluindo o **negativo** `test_ler_recusa_caminho_proibido` (espera `PermissionError`) e `test_painel.py:67` (`assertFalse` de que nada abriu) |
