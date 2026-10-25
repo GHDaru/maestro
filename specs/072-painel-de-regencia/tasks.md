@@ -313,6 +313,12 @@
       "Avaliação heurística — revisitada em 2026-10-25" (+20/−0, nenhuma linha existente tocada)
       com R7 (quadro estreito, Média, rodada 2) e R8 (banner 1H60M, Baixa, T16). Captura nova
       declarada PENDENTE do T16 — agora desbloqueada (T16 integrado em `bbfab80`), pedida ao W01.**
+      **Captura entregue: `6f91826` (W01, base `d71cee6` por ff-only) — regerada do build real pós-T16;
+      o banner `1H60M` não aparece mais (`LEITURA VELHA: 15H35M`, coerente: floor(15,58h)=15,
+      round(35,1min)=35) — R8 FECHADO no build; R7 reproduz igual (232px, coluna única) e segue para a
+      rodada 2; a foto de 24/10 foi sobrescrita pela regeração (nome fixo do script) — o achado
+      permanece no texto (jornada R8 + qa-report § 072-T17-captura). Evidência: qa-report §
+      "072-T17-captura".**
 - [x] **T18 (Worker02)**: plan § Dívidas ganha a dívida do método (living-journey × docs/jornada/)
       e a D-072-9 se o T16 declarar em vez de fechar. **Entregue: `ae1fb84` (item 1, integrado em
       `85b1b7f`); item 2 resolvido por decisão do T16 — FECHADA, a D-072-9 não existe. T18
@@ -345,7 +351,7 @@
 | T14 — contagem de FR (27) | `f0c2b39` | qa-report § 072-T14 |
 | T06 attempt=2 — reverificação R1/R2 | `e0ff6f2` (HEAD `ccbceef`) | qa-report § Reverificação R1/R2 |
 | T16 — chamado sem navegação + LEITURA VELHA | `39c2957` + `c8632db` (evidência; integrado em `bbfab80`) | qa-report § 072-T16 · suíte 24→26 |
-| T17 — R7/R8 na heurística datada | `02e434f` (integrado em `1998e3e`) | qa-report § 072-T17 · captura nova pendente (desbloqueada) |
+| T17 — R7/R8 na heurística datada | `02e434f` (integrado em `1998e3e`) + captura `6f91826` | qa-report § 072-T17 · § 072-T17-captura (R8 fechado no build pós-T16) |
 | T18 — dívida do método no plan | `ae1fb84` (integrado em `85b1b7f`) | plan § Dívidas declaradas |
 | T15 — id do pedido protegido + exemplo/README | `11d295b` | qa-report § Rodada de correção 2 · `TestF11IdDoPedido` |
 

@@ -107,6 +107,15 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
   — emenda de texto pendente no ADR 0027.
 
 ### Corrigido
+- **O aviso de leitura velha não mostra mais horas impossíveis** (ciclo 072, T16 + captura de jornada).
+  O banner somava as **horas** com `Math.floor` e os **minutos** com `Math.round` sobre um valor
+  fracionário e rendia `1h60m` — horário que não existe. O número passa a vir **pronto do servidor**
+  (`painel/regencia/normalizacao.py`: `idade_defasada`/`idade_curta`/`aviso_leitura_velha`) e o painel
+  só o exibe (`m.leitura_velha`). Medido no build real pós-T16: `LEITURA VELHA: 15H35M DESDE O ÚLTIMO
+  INGEST`. A jornada 072 foi **regerada** do build real (`docs/jornada/img/072-0*.png`, 2026-10-25) e o
+  cabeçalho passa a datar as duas gerações; o quadro em **coluna estreita** (achado **R7**) fica para a
+  rodada 2.
+
 - **O id de um pedido de decisão não pode repetir nem usurpar o id do portão derivado** (ciclo
   072, condição do gate, `process-guardian` em contexto fresco). `sai_da_fila` fecha o pedido por
   **igualdade de id**: um id repetido — ou um id no formato do item derivado (`chamado+gate`, ex.
