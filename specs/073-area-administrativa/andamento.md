@@ -23,6 +23,15 @@
 - Orçamento: MAESTRO em 19% do consumo semanal, teto 40%; workers no gateway, tokens reportados por
   DONE.
 
+## Rodada 2 — confronto (passo 1: inventário do Maestro)
+
+| Task | Worker | Escopo | Estado |
+|---|---|---|---|
+| 073-T2-inventario | Worker05 | `confronto/inventario-maestro.md` — o que o Maestro já faz hoje para cada uma das 26 funcionalidades, com `arquivo:linha` | **entregue** — **tem 8 · parcial 16 · não tem 2** (de 26); só `pausar` e `retomar` faltam por inteiro |
+
+- Alimenta a coluna **"estado no Maestro"** que o W03 confronta com a matriz. `não tem` traz a força
+  declarada (afirmado × não encontrado), espelhando a normalização de notação da matriz.
+
 ## Histórico
 
 - 2026-10-24 — **073-T1-W03 entregue (Worker03)**: quatro plataformas do nicho "gateways e
@@ -66,3 +75,11 @@
   Rabo do ciclo: review e security marcados com evidência; mutation n/a (rodada documental);
   gate do regente. **Rodada 1 fechada** — DONE ao regente com a matriz; rodada 2 só depois do
   "segue".
+- 2026-10-25 — **073-T2-inventario entregue (Worker05)** — rodada 2, passo 1: o Gerente despachou o
+  **inventário do Maestro** (o que o método já faz hoje para cada uma das 26 funcionalidades). Feito
+  por cinco varreduras dirigidas (`docs/governance/`, `docs/adr/`, `docs/records/`, `docs/agents/`,
+  `docs/handbook/`, `scripts/`, `.claude/agents/`, `.claude/commands/`, `skills/`, `painel/`,
+  `.github/`, `mods/`), com evidência `arquivo:linha` em cada linha `tem`/`parcial`. Resultado:
+  `confronto/inventario-maestro.md` — **tem 8 · parcial 16 · não tem 2**; o que falta por inteiro é o
+  ciclo de vida (CONTROLE: `pausar`, `retomar`), e o Maestro é mais forte justamente onde a matriz é
+  vazia (INTERCOMUNICAÇÃO).
