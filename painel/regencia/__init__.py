@@ -33,14 +33,17 @@ from .normalizacao import (
     SELO_REGISTRO,
     SELO_RELOGIO,
     aviso_ingestao,
+    aviso_leitura_velha,
     normaliza,
     parse_instante,
     sem_fonte,
+    texto_idade,
 )
 
 __all__ = [
     # normalizacao
-    "normaliza", "sem_fonte", "aviso_ingestao", "parse_instante",
+    "normaliza", "sem_fonte", "aviso_ingestao", "aviso_leitura_velha", "texto_idade",
+    "parse_instante",
     "SELO_REGISTRO", "SELO_RELOGIO", "SELO_DECLARADA",
     # kanban
     "coluna_do_cartao", "independencia", "idade_do_carimbo", "cartao",

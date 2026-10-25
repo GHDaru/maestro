@@ -258,6 +258,15 @@ class _Base(unittest.TestCase):
         except urlreq.HTTPError as e:
             return e.code, e.read().decode("utf-8")
 
+    def _grava_meta(self, chave, valor):
+        """Escreve uma linha em `meta` no banco da fixture (072-T16: as rotas releem a cada request)."""
+        con = sqlite3.connect(os.path.join(self.raiz, "painel.db"))
+        try:
+            con.execute("INSERT OR REPLACE INTO meta (chave, valor) VALUES (?, ?)", (chave, valor))
+            con.commit()
+        finally:
+            con.close()
+
     def _foto_da_arvore(self):
         """Bytes de cada arquivo sob self.raiz, para provar que nada mudou (FR9)."""
         foto = {}
@@ -786,6 +795,94 @@ class TestF11AnatomiaDoPedido(unittest.TestCase):
         self.assertTrue(valida({**completo, "opcoes": []}), "FR11: pedido sem nenhuma opção é recusado.")
         self.assertTrue(valida({**completo, "opcoes": [{"id": "a"}]}),
                         "FR11: opção sem descrição é recusada.")
+
+
+# ---------- 072-T16: correções da rodada (id do chamado; avisos de leitura velha) ----------
+
+class TestT16ChamadoNaoNavega(_Base):
+    """072-T16(1): o `chamado` do POST /api/regencia/transicao é um **id**, não um caminho.
+
+    O adaptador monta a pasta com `os.path.join(raiz, …, chamado)`: com `chamado=".."` a pasta
+    resolvia para a **raiz** do repositório e o `os.listdir` seguinte listava o que estivesse lá —
+    inclusive um arquivo de gate válido fora de `specs/`. O id passa a aceitar só `^[\\w.-]+$` e
+    nunca `.` nem `..`, e a recusa é um 422 que acusa o chamado.
+    """
+
+    def test_t16_chamado_com_navegacao_recusa_422_e_nao_le_fora_de_specs(self):
+        hash_, quando = _repo_de_verdade(self.raiz)
+        _escreve(os.path.join(self.raiz, "specs/072-teste-t16/00-chamado.md"), ABERTURA)
+        _escreve(os.path.join(self.raiz, "specs/072-teste-t16/G2-vermelho-aaaaaaa.md"),
+                 _gate_objeto("G2", "FALHA_ESPERADA", "W07", hash_, quando))
+        # A isca: um gate de G2 com cabeçalho VÁLIDO na raiz — um nível acima de `specs/`, que é
+        # exatamente onde `chamado=".."` chegava. Se a rota respondesse 200 com este caminho, o
+        # painel estaria servindo arquivo de fora de `specs/`.
+        _escreve(os.path.join(self.raiz, "G2-armadilha-aaaaaaa.md"),
+                 _gate_objeto("G2", "FALHA_ESPERADA", "W07", hash_, quando))
+        srv, url = self._sobe()
+
+        for cid in ("..", "../..", ".", "specs/..", "a/b", "a\\b", ""):
+            code, resposta = self._post_json(url, "/api/regencia/transicao",
+                                             {"chamado": cid, "de": "G1", "para": "G2"})
+            self.assertEqual(code, 422, f"072-T16: `chamado={cid!r}` tem de ser recusado "
+                                        f"(recebido {code}: {resposta}).")
+            self.assertIn("chamado", resposta.lower(),
+                          f"072-T16: a recusa de {cid!r} acusa o CHAMADO, não a falta de arquivo — "
+                          f"o motivo aponta para o lugar certo ({resposta}).")
+            self.assertNotIn("armadilha", resposta,
+                             f"072-T16: nada de fora de `specs/` pode aparecer na resposta ({resposta}).")
+
+        # e o id legítimo segue passando: a guarda não é um bloqueio geral
+        code, resposta = self._post_json(url, "/api/regencia/transicao",
+                                         {"chamado": "072-teste-t16", "de": "G1", "para": "G2"})
+        self.assertEqual(code, 200, f"072-T16: o id legítimo continua permitido "
+                                    f"(recebido {code}: {resposta}).")
+        self.assertIs(json.loads(resposta).get("permitido"), True, resposta)
+
+
+RE_IDADE = re.compile(r"(\d+)\s*h\s*(\d+)\s*m", re.I)
+
+
+def _h_m_do_texto(texto):
+    """`(horas, minutos)` lidos de "1h59m" ou de "1 h 59 min" — a mesma leitura para as duas formas."""
+    m = RE_IDADE.search(texto or "")
+    return (int(m.group(1)), int(m.group(2))) if m else None
+
+
+class TestT16LeituraVelhaConcorda(_Base):
+    """072-T16(2): o aviso de cima (`/api/meta`) e o de dentro da página (`/api/regencia/kanban`)
+    descrevem a MESMA ingestão — logo, o mesmo número.
+
+    O de cima fazia a conta em JavaScript (`Math.round(ingerido_age_min % 60)` sobre um valor já
+    arredondado a 0,1 min): em 119,9 min de idade imprimia "1h60m" enquanto o de baixo imprimia
+    "1 h 59 min".
+    """
+
+    def test_t16_os_dois_avisos_trazem_o_mesmo_numero(self):
+        srv, url = self._sobe()
+        # 7194 s = 1 h 59 min e 54 s → "1 h 59 min". Era o caso que separava os dois avisos.
+        self._grava_meta("ingerido_em",
+                         (dt.datetime.now().astimezone() - dt.timedelta(seconds=7194)).isoformat())
+
+        topo = self._get_json(url, "/api/meta")
+        dentro = self._get_json(url, "/api/regencia/kanban")["meta"]
+
+        self.assertEqual(_h_m_do_texto(topo.get("leitura_velha")), (1, 59),
+                         f"072-T16: idade de 119,9 min = 1 h 59 min no aviso de cima "
+                         f"(recebido {topo.get('leitura_velha')!r}).")
+        self.assertEqual(_h_m_do_texto(dentro.get("aviso")), (1, 59),
+                         f"072-T16: e o aviso de dentro da página diz o mesmo "
+                         f"(recebido {dentro.get('aviso')!r}).")
+        self.assertEqual(_h_m_do_texto(topo.get("leitura_velha")), _h_m_do_texto(dentro.get("aviso")),
+                         "072-T16: dois avisos da mesma ingestão, um número só — nunca 1h60m "
+                         f"contra 1 h 59 min ({topo.get('leitura_velha')!r} × {dentro.get('aviso')!r}).")
+
+        # ingestão fresca: os dois se calam (nenhum dos banners aparece)
+        self._grava_meta("ingerido_em",
+                         (dt.datetime.now().astimezone() - dt.timedelta(minutes=30)).isoformat())
+        self.assertFalse(self._get_json(url, "/api/meta").get("leitura_velha"),
+                         "072-T16: ingestão fresca não gera aviso de leitura velha.")
+        self.assertFalse(self._get_json(url, "/api/regencia/kanban")["meta"].get("aviso"),
+                         "072-T16: e o aviso de dentro da página também se cala.")
 
 
 if __name__ == "__main__":

@@ -12,6 +12,7 @@ import argparse
 import datetime as dt
 import json
 import os
+import re
 import sqlite3
 import statistics
 import sys
@@ -293,6 +294,10 @@ def v_meta(db, cfg=None):
         t = parse_ts(m["ingerido_em"])
         if t:
             m["ingerido_age_min"] = round((dt.datetime.now().astimezone() - t).total_seconds() / 60, 1)
+            # 072-T16: o número do banner de cima vem PRONTO do domínio (`aviso_leitura_velha`), o
+            # mesmo que gera o aviso de dentro da página — antes o frontend o recalculava e os dois
+            # discordavam. Vazio = ingestão fresca (o banner não aparece).
+            m["leitura_velha"] = regencia.aviso_leitura_velha(m["ingerido_em"])
     return m
 
 
@@ -444,6 +449,11 @@ def v_transicao(cfg, corpo):
     """POST /api/regencia/transicao — devolve `(payload, code)`; NÃO move nem grava arquivo (anti-regra 1)."""
     corpo = corpo or {}
     chamado, de, para = corpo.get("chamado", ""), corpo.get("de", ""), corpo.get("para", "")
+    if not _chamado_valido(chamado):
+        # 072-T16: recusa explícita. Sem ela, um `chamado` de navegação caía no "falta arquivo" e o
+        # motivo apontava para o lugar errado (e `..` chegava a listar a raiz do repositório).
+        return {"erro": f"chamado inválido: {chamado!r} — aceita letras, números, `_`, `.` e `-`, "
+                        "e nunca `.` ou `..`"}, 422
     proposta = regencia.proposta_transicao(chamado, de, para, _arquivos_do_gate(cfg, chamado, para))
     if not proposta.get("permitido"):
         return {"erro": proposta.get("falta") or "transição recusada"}, 422   # FR9: 422 com o motivo
@@ -575,16 +585,35 @@ def _n_destravados(item):
     return 1 if destrava else 0
 
 
+# 072-T16: o `chamado` é um id — letras, números, `_`, `.` e `-`; nada de separador de caminho.
+RE_CHAMADO = re.compile(r"^[\w.-]+$")
+
+
+def _chamado_valido(cid):
+    """O `chamado` vira **componente de caminho** em `_pasta_do_chamado` — aceita id, nunca navegação.
+
+    `^[\\w.-]+$` já barra separador (`/`, `\\`), então o `os.path.join` não sai da pasta; sobram
+    os dois componentes que navegam sozinhos: `..` (sobe um nível) e `.` (resolve para `specs/`).
+    Sem esta checagem, `chamado=".."` fazia `os.path.join(raiz, "specs", "..")` e o `os.listdir`
+    seguinte listava a **raiz** do repositório — achado de T06, corrigido em 072-T16. O `..` é
+    barrado como substring (nenhum id legítimo o contém).
+    """
+    cid = cid or ""
+    return bool(RE_CHAMADO.fullmatch(cid)) and ".." not in cid and cid != "."
+
+
 def _pasta_do_chamado(cfg, cid):
     """A pasta `specs/<id>/` do chamado, se existir — ``None`` se não (contrato único, R1/T06).
 
     Usada pela fila (`_item_tail`, que precisa só do caminho) e pelo kanban/transição
     (`_arquivos_do_gate`, que deriva o caminho relativo com `os.path.relpath`).
     """
+    if not _chamado_valido(cid):
+        return None
     raiz = cfg.get("raiz", ".")
     for fonte in cfg.get("chamados", []) or []:
         pasta = os.path.join(raiz, fonte.get("repo", "."), fonte.get("pasta", "specs").strip("/"), cid)
-        if cid and os.path.isdir(pasta):
+        if os.path.isdir(pasta):
             return pasta
     return None
 

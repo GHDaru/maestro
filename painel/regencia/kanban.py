@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import datetime as dt
 
-from .normalizacao import SELO_DECLARADA, SELO_REGISTRO, parse_instante
+from .normalizacao import SELO_DECLARADA, SELO_REGISTRO, parse_instante, texto_idade
 
 # As dez colunas do kanban (FR1): G0–G9. Abertura e GD são faixa, não coluna.
 COLUNAS = [f"G{i}" for i in range(10)]
@@ -46,11 +46,9 @@ def independencia(autor_da_peca, por):
 
 
 def _texto_idade(idade):
-    """FR23: "há X h Y min" (ou "há Y min" na primeira hora)."""
-    total = int(idade.total_seconds())
-    h, resto = divmod(total, 3600)
-    m = resto // 60
-    return f"há {h} h {m} min" if h else f"há {m} min"
+    """FR23: "há X h Y min" (ou "há Y min" na primeira hora). O "há" é rótulo; a conta é de
+    `normalizacao.texto_idade` — a mesma que o aviso de leitura velha usa (072-T16)."""
+    return f"há {texto_idade(idade)}"
 
 
 def idade_do_carimbo(carimbo, agora=None, declarado=False):
