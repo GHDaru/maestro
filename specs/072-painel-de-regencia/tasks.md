@@ -12,7 +12,8 @@
 >
 > Siglas: ADR (*Architecture Decision Record*) · AST (*Abstract Syntax Tree*) · CI (*Continuous
 > Integration*) · DoD (*Definition of Done*) · FR (*functional requirement*) · HTML (*HyperText Markup
-> Language*) · JSONL (*JSON Lines*) · PR (*pull request*).
+> Language*) · JSONL (*JSON Lines*) · PR (*pull request*). Correção de contagem (T14): a spec tem
+> **27 FR** (FR1–FR27), não 25.
 
 ## Verification first
 
@@ -238,6 +239,52 @@
       fique **visível**, não silenciosa.
 - [ ] `[[DONE id=072-T06 outcome=delivered|blocked|failed]]` ao terminar.
 - **Depende de**: W03, W04, W05, W07, T08, T09, T10 integrados.
+
+## Rodada de correção — reservas R1/R2 do T06 (decisão do regente, 24/10)
+
+> Veredito do T06: **aprovado com duas reservas bloqueantes** (R1 — `_pasta_do_chamado` duplicado
+> mata FR9 na rota e F3 é vácuo; R2 — `check-boundary` vermelho com a jornada em `docs/journeys/`).
+> O regente confirmou ambas e decretou **uma** rodada de correção, sem novo gate (regra das duas
+> rodadas). A reverificação (T06 attempt=2) cobre SÓ R1 e R2.
+
+### Worker04 — R1: rota de transição sem crash, F3 com teor
+
+`[[TASK id=072-T12 kind=fix cycle=072 attempt=1]]`
+
+- [ ] Remover a definição duplicada de `_pasta_do_chamado` em `painel/server.py` (`:400` devolve
+      `(pasta, rel)`; `:582` devolve string e **sombreia** a primeira), mantendo a correta e
+      corrigindo `_arquivos_do_gate` (`:430`).
+- [ ] Tornar o F3 **não vácuo** em `painel/tests/test_regencia.py`: transição válida (de G1 para G2
+      com o arquivo G2 presente) → **200** com `{"permitido": true}`; sem o arquivo → **422** com
+      "falta" no motivo; o 422 **nunca** vem de exceção (nenhum Traceback no stderr do servidor).
+- [ ] Suíte **24/24** e antiga **48/48**.
+- Commit: "ciclo 072: R1 — rota de transição sem crash, F3 com teor".
+
+### Worker01 — R2: jornada em docs/jornada/ (boundary.json)
+
+`[[TASK id=072-T13 kind=fix cycle=072 attempt=1]]`
+
+- [ ] `git mv` de `docs/journeys/072-painel-de-regencia.md`, `scripts/` e `img/` para
+      `docs/jornada/` (mesma estrutura); corrigir todos os links e o glob em
+      `painel/projetos/exemplo.json`.
+- [ ] Rodar o bloco do check-boundary e do check-links (verdes).
+- Commit: "ciclo 072: R2 — jornada em docs/jornada/ (boundary.json)".
+
+### Worker02 — contagem de FR: 27, não 25
+
+`[[TASK id=072-T14 kind=fix cycle=072 attempt=1]]`
+
+- [ ] `spec.md` tem **27 FR** (FR1–FR27): corrigir onde o número aparece — `plan.md` e o cabeçalho
+      do `qa-report.md`, **uma linha cada**.
+- Commit citando "ciclo 072".
+
+### Worker06 — reverificação R1/R2 (após a integração dos três acima)
+
+`[[TASK id=072-T06 kind=review cycle=072 attempt=2]]`
+
+- [ ] Reverificar **SÓ R1 e R2**: reexecutar o F3 e o check-boundary; anexar ao qa-report a seção
+      "### reverificação R1/R2" com a saída. Depois: `scripts/check-conformance.sh 072` e
+      `--ticked-only` (verdes) — e o Gerente fecha com `[[DONE 072-rodada-1]]`.
 
 ## Closing tail — MANDATORY, one line each, never delete
 

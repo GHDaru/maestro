@@ -614,3 +614,8 @@ E       sqlite3.IntegrityError: append-only: passo so aceita o fechamento (saida
   só `docs/jornada/`). Correção de uma linha em `boundary.json` — fora do alcance desta entrega.
 - **Contagem de FR divergente (menor).** A moldura do ciclo (tasks.md/T06) diz "25 FR"; `spec.md`
   enumera **27** (FR1–FR27). Revisadas todas as 27; a divergência fica declarada.
+- **Dívida do método (registrada por decisão do regente, 24/10): a skill `living-journey` cita
+  `docs/journeys/` (`skills/living-journey/SKILL.md:30`) enquanto a convenção deste repositório é
+  `docs/jornada/` (pasta existente, declarada em `boundary.json`). Decisão do regente na rodada de
+  correção: a jornada do 072 **muda para `docs/jornada/`** (T13/W01) e a **skill será corrigida num
+  ciclo próprio, raia leve** — a divergência é do método, não desta rodada.**
