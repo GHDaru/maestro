@@ -245,14 +245,14 @@
      Do not delete a line to say it does not apply: write `n/a: <reason>` on it.
      check-conformance.sh requires the evidence of every non-n/a step in qa-report.md. -->
 
-- [ ] **TAIL:review** — independent review in **fresh context**, by whoever did not execute
+- [x] **TAIL:review** — independent review in **fresh context**, by whoever did not execute
   (Theorem 2). Evidence: the verdict, in `qa-report.md`. Aqui: revisar os 25 FR contra o diff
   integrado (kanban, fila, parser FR5, gatilho FR17) e contra as anti-regras 1–8.
-- [ ] **TAIL:security** — security pass proportional to the risk class. Classe **média**: duas rotas
+- [x] **TAIL:security** — security pass proportional to the risk class. Classe **média**: duas rotas
   POST novas, gatilho que passa a recusar escrita na base herdada, leitura/escrita de arquivo local
   (agora também **backup** em `painel/dados/backup/`). Evidence: the verdict, in `qa-report.md`, com as
   dívidas herdadas (D-072-3/4/5) declaradas.
-- [ ] **TAIL:mutation** — every gate this cycle created or changed was **broken on purpose and seen
+- [x] **TAIL:mutation** — every gate this cycle created or changed was **broken on purpose and seen
   refusing**, quebrando a **CONDIÇÃO** (não o nome) de FR10 (normalização), FR12 (permanência na
   fila), FR9 (transição sem arquivo), FR16 (append) e FR17 (o gatilho **com `WHEN`** — inclusive
   provando que o fechamento do passo continua passando), e **colando os nomes dos testes que falham**.
