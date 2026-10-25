@@ -7,11 +7,25 @@ FAILS when it finds:
      came from: platform + URL of the ficha, or a Maestro principle/ADR/ux-design);
   2. a label outside the glossary (allowlist extracted from
      docs/governance/glossary.md plus the 12 terms ratified in round 2);
-  3. a number without the "exemplo" mark (no invented values) — checked in
-     every text node, not only labels;
+  3. a number without the "exemplo" mark (no invented values);
   4. (ratification condition) a collision-prone term used unqualified: "fila"
      without its qualifier (decisões/outbox) and "portão" without its owner
      (chamado/regente) — the five name collisions the context map exposed.
+
+Markup contract (agreed with the screen authors — v2, after the first run over
+the real screens flagged citations as if they were metrics):
+  - `data-rotulo="<term>"`  marks a DOMAIN LABEL: the VALUE must be a glossary
+    term (validated here); the visible text is human phrasing and is not
+    re-checked. Any element carrying data-rotulo is treated as a label.
+  - `data-exemplo="true"`   marks an example VALUE (rule 3 satisfied).
+  - `data-fonte` / `data-referencia` mark a CITATION context: digits inside are
+    references (§7, ADR 0027, ciclo 073, file:line…), not metric values, so
+    rule 3 exempts them. Digit-bearing acronyms (A2A, F1, T16…) are exempt
+    everywhere.
+  - th/label/legend/h1/dt WITHOUT data-rotulo are label-checked by their text
+    (a glossary term inside, or stopwords only). h2+ are section prose; button
+    text is action phrasing — both are covered by rule 1/4 and the fresh
+    review, not by the glossary check.
 
 Usage: python verifica-prototipo.py   (from anywhere; paths are repo-relative)
 Exit 0 = every screen passes; exit 1 = findings, printed one per line.
@@ -27,10 +41,11 @@ PROTO = ROOT / "specs" / "073-area-administrativa" / "prototipo"
 GLOSSARY = ROOT / "docs" / "governance" / "glossary.md"
 
 INTERACTIVE = {"button", "a", "input", "select", "textarea"}
-LABEL_TAGS = {"button", "th", "label", "legend", "h1", "h2", "h3", "h4", "h5", "h6", "dt"}
+# h1 names the screen (domain); h2+ are section prose — not label-checked
+LABEL_TAGS = {"th", "label", "legend", "h1", "dt"}
 VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link",
         "meta", "param", "source", "track", "wbr"}
-RAW_TEXT = {"style", "script"}
+RAW_TEXT = {"style", "script", "head", "title"}
 
 # The 12 terms ratified by the regent (round 2) — also extracted from the
 # glossary once Worker01 lands them; kept here so the check is exact.
@@ -63,6 +78,8 @@ STOPWORDS = {
 
 NUMBER = re.compile(r"\d")
 WORD = re.compile(r"[\wà-ú/=-]+")
+# digit-bearing acronyms are references, not metric values (A2A, F1, T16…)
+ACRONYM = re.compile(r"\b[A-Za-z]+\d+[A-Za-z]*\b")
 
 
 def glossary_terms():
@@ -87,7 +104,8 @@ class ScreenParser(HTMLParser):
     """Collects the findings of one screen.
 
     Keeps a stack of open elements so a number is accepted when ANY ancestor
-    carries the example mark (data-exemplo, or "exemplo" inside data-fonte).
+    carries the example mark (data-exemplo) or a citation context
+    (data-fonte / data-referencia).
     """
 
     def __init__(self, path, terms):
@@ -102,9 +120,14 @@ class ScreenParser(HTMLParser):
 
     # -- tree bookkeeping --------------------------------------------------
 
+    def ancestor_attr(self, name):
+        return any(name in a for _, a, _ in self.stack)
+
     def inside_example(self):
-        return any("data-exemplo" in a or "exemplo" in a.get("data-fonte", "").lower()
-                   for _, a, _ in self.stack)
+        return self.ancestor_attr("data-exemplo")
+
+    def inside_citation(self):
+        return self.ancestor_attr("data-fonte") or self.ancestor_attr("data-referencia")
 
     def inside_raw(self):
         return any(t in RAW_TEXT for t, _, _ in self.stack)
@@ -116,7 +139,8 @@ class ScreenParser(HTMLParser):
                 f"{self.path.name}: interactive <{tag}> without data-fonte")
         if tag in VOID:
             return
-        self.stack.append([tag, a, "" if tag in LABEL_TAGS else None])
+        is_label = tag in LABEL_TAGS or "data-rotulo" in a
+        self.stack.append([tag, a, "" if is_label else None])
 
     def handle_endtag(self, tag):
         # pop up to the matching open tag (tolerates stray closers)
@@ -132,9 +156,11 @@ class ScreenParser(HTMLParser):
     def handle_data(self, data):
         if not self.stack or self.inside_raw():
             return
-        # 3. numbers must be marked as example — in every text node
-        if NUMBER.search(data) and "exemplo" not in data.lower() \
-                and not self.inside_example():
+        # 3. numbers must be marked as example — in every text node, unless
+        #    it is a citation context or a digit-bearing acronym (A2A, F1…)
+        stripped = ACRONYM.sub("", data)
+        if NUMBER.search(stripped) and "exemplo" not in data.lower() \
+                and not self.inside_example() and not self.inside_citation():
             self.findings.append(
                 f'{self.path.name}: number without the "exemplo" mark: "{data.strip()}"')
         # feed the innermost open label collector
@@ -146,17 +172,25 @@ class ScreenParser(HTMLParser):
     # -- the label rules ---------------------------------------------------
 
     def check_label(self, text, attrs):
+        rotulo = attrs.get("data-rotulo", "").strip().lower()
+        if rotulo:
+            # a declared domain label: the VALUE must be a glossary term
+            if not any(t.search(rotulo) for t in self.terms):
+                self.findings.append(
+                    f'{self.path.name}: data-rotulo outside the glossary: "{rotulo}"')
+        elif text:
+            low = text.lower()
+            # 2. label outside the glossary: no glossary term inside and at
+            #    least one word that is neither a stopword nor a number
+            if not any(t.search(low) for t in self.terms):
+                words = [w for w in WORD.findall(low)
+                         if w not in STOPWORDS and not w.isdigit()]
+                if words:
+                    self.findings.append(
+                        f'{self.path.name}: label outside the glossary: "{text}"')
         if not text:
             return
         low = text.lower()
-        # 2. label outside the glossary: no glossary term inside and at least
-        #    one word that is neither a stopword nor a number
-        if not any(t.search(low) for t in self.terms):
-            words = [w for w in WORD.findall(low)
-                     if w not in STOPWORDS and not w.isdigit()]
-            if words:
-                self.findings.append(
-                    f'{self.path.name}: label outside the glossary: "{text}"')
         # 4. collision-prone terms must be qualified
         if re.search(r"\bfila\b", low) and "decis" not in low and "outbox" not in low:
             self.findings.append(
