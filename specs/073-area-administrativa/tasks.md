@@ -10,8 +10,11 @@
       seção "Consideradas e não incluídas". **Entregue: `0c74d30`, integrado; verificado por script
       (PASS — 172/223/13/242; grupos 30/76/45/21) e conferido célula a célula nas duas correções
       do crítico.**
-- [ ] T2-inventario — Worker05: inventário do Maestro — as 26 funcionalidades com tem/parcial/não
+- [x] T2-inventario — Worker05: inventário do Maestro — as 26 funcionalidades com tem/parcial/não
       tem e evidência (arquivo:linha, script, comando) em `confronto/inventario-maestro.md`.
+      **Entregue: `bdc75cb`, integrado em `8e9ab43` — tem 8 · parcial 16 · não tem 2 (pausar/retomar);
+      força da notação espelhando a matriz (só os 2 "não tem" são "não encontrado" — piso, não prova);
+      6 citações amostradas pelo Gerente conferem exatamente.**
 - [ ] T2-confronto — Worker03: matriz 26 × {melhor referência, estado no Maestro, lacuna, decisão
       ENTRA/NÃO PRECISA/DEPOIS}; cada ENTRA com nome na linguagem ubíqua e os três critérios da
       rodada 4; nada entra sem fonte (plataforma citada OU requisito do método).
