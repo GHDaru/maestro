@@ -53,6 +53,26 @@ então fotografa. Esse comportamento virou o achado **R1** da heurística abaixo
 | R5 | **O veredito original permanece ao lado do normalizado.** O cartão mostra `INVÁLIDO` (normalizado) e o campo `original` — conforme a anti-regra 6 ("não unifica apagando"). | — | ✅ conforme |
 | R6 | **A rodada 1 não exercita o caminho do ruling no build real.** O fixture tem a fila vazia, então a concessão de G7/G8 pela fila (§3 passo 7) e o estado **"sem permissão"** (a ação do regente vista por um agente) **não** aparecem em captura. O que prova esse caminho é o teste de contrato (`painel/tests/test_regencia.py`, fatias T03b/T05), não a tela. Fica registrado para a rodada 2, quando houver chamado real na fila. | Baixa | 📝 registrado para a rodada 2 |
 
+## Avaliação heurística — revisitada em 2026-10-25
+
+Por **acréscimo**, não por reescrita: a tabela de 2026-10-24 acima fica exatamente como está (a
+datação é histórico) e esta revisão só **registra o que ela não listava**. A revisão olha a
+**mesma** captura de 2026-10-24 — que já mostrava os dois achados abaixo — junto com a medição
+feita sobre o **build real** desta rodada; a data desta heurística é **posterior** à da captura,
+como a skill `living-journey` exige.
+
+| ID | Achado | Severidade | Status |
+|---|---|---|---|
+| R7 | **O quadro não parece um quadro.** O §3 passo 5 pede as colunas **G0…G9** lado a lado, para o regente ler o fluxo de um relance. No build real elas **empilham numa coluna estreita**: medido na página renderizada (janela de 1440×900), o `<main id="main">` fica com **232 px** dentro do grid `.app` (`232px 1208px`), o invólucro do quadro fica com **176 px** e o grid do quadro resolve para **uma** trilha de `210px` (`repeat(auto-fill, minmax(210px,1fr))`, `painel/index.html:917`). Resultado: as 10 seções têm **todas `x = 28`** e `y` de 1499 a 2386 — empilhadas, não lado a lado. A captura `img/072-01-kanban.png` mostra o mesmo: coluna única à esquerda, o resto da tela vazio. | Média | 📝 registrado para a **rodada 2** — não é desta rodada consertar |
+| R8 | **O aviso de leitura velha tem arredondamento discordante.** O banner monta as horas com `Math.floor` e os minutos com `Math.round` sobre um valor **fracionário** (`painel/index.html:962`), e esse valor chega com uma casa decimal de `painel/server.py:295` (`round(…, 1)`). Com 119,6 minutos isso rende **`1h60m`** — um horário impossível, que não é 2 h nem 1 h 59 m. A captura de 2026-10-24 registra exatamente esse texto: `LEITURA VELHA: 1H60M DESDE O ÚLTIMO INGEST`; medido ao vivo nesta revisão, 829,5 min rendeu `13h50m`. | Baixa | 📝 destino: **T16 (Worker04)** — nesta worktree (`e9601ac`) o T16 ainda **não** está integrado |
+
+> **Sobre uma captura nova (2026-10-25).** O T16 mexe no banner, então uma captura *depois* dele
+> mostraria o R8 fechado. Nesta worktree o **T16 não está integrado** — `painel/index.html:962` e
+> `painel/server.py:295` seguem pré-correção — por isso **não** regenerei as imagens: as mesmas
+> `img/072-01-kanban.png` e `img/072-02-fila.png` continuam válidas para este build, e sobrescrevê-las
+> trocaria a evidência do `1h60m` por uma foto **ainda defeituosa**, deixando o cabeçalho (que data
+> 2026-10-24) mentindo. A captura nova fica **pendente do T16**.
+
 ## Rastreabilidade
 
 `spec 072` ↔ `pull request deste ciclo (w/worker01)` ↔ `test painel/tests/test_regencia.py` ↔ esta jornada.

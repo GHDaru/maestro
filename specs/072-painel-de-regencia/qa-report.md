@@ -953,3 +953,77 @@ exit=0
 **R1 ✅ e R2 ✅ — as duas reservas bloqueantes do attempt=1 estão levantadas.** O restante do veredito do
 attempt=1 (FR13/FR19 parciais por JS, D-072-8; dívidas D-072-1..8 e D-072-3/4/5 declaradas) **fica de
 pé**, como o Gerente determinou.
+
+## 072-T17 — dois achados que a captura mostrava e a tabela não listava (25/10)
+
+> Gate do 072 aprovado **com condições**; esta é a tarefa do dono da jornada. Base: `git merge --ff-only
+> e9601ac` (fast-forward, sem push) — HEAD `e9601ac`. Ambiente: `PYTHONUTF8=1`; `python3` é o alias da
+> MS Store (mesma ressalva de sempre).
+
+### O que foi feito
+
+1. **Acréscimo à heurística datada** de `docs/jornada/072-painel-de-regencia.md`, **sem editar linha
+   existente** — o diff contra `e9601ac` é **só adição**, em **um único hunk** (`+20`, `-0`):
+
+   ```
+   $ git diff --numstat e9601ac -- docs/jornada/072-painel-de-regencia.md
+   20      0       docs/jornada/072-painel-de-regencia.md
+   $ git diff e9601ac -- docs/jornada/072-painel-de-regencia.md | grep -c '^-[^-]'
+   0
+   $ git diff e9601ac -- docs/jornada/072-painel-de-regencia.md | grep '^@@'
+   @@ -53,6 +53,26 @@   # o bloco novo entra antes de "## Rastreabilidade"; nenhuma linha é reescrita
+   ```
+
+   Novo bloco **`## Avaliação heurística — revisitada em 2026-10-25`** (data ≥ captura de 2026-10-24,
+   como a skill `living-journey` manda), com **R7** e **R8** e uma nota sobre a captura. A tabela de
+   2026-10-24 (R1–R6) e o cabeçalho (que data as capturas de 2026-10-24) ficam **intactos** — a datação
+   é histórico.
+
+2. **Evidência medida no build real** (sonda sobre o painel renderizado, 1440×900; `painel/server.py
+   painel/projetos/exemplo.json`, porta alta, derrubado ao fim):
+
+   ```
+   ingerido_age_min   : 829.5 (float)
+   main_w             : 232
+   wrap_w             : 176
+   wrap_grid          : "210px"
+   n_colunas          : 10
+   largura_colunas    : x=28 em todas; y de 1499 a 2386
+   gates              : G0..G9
+   ascendentes        : MAIN w=232 display block | DIV.app w=1440 display grid "232px 1208px"
+   banner_texto       : "LEITURA VELHA: 13H55M DESDE O ÚLTIMO INGEST" (display block)
+   ```
+
+### R7 — o quadro renderiza como coluna estreita, G0…G9 empilhados → severidade **Média**, destino **rodada 2**
+
+- O §3 passo 5 pede as colunas **G0…G9 lado a lado**. No build real elas **empilham**: `#main` fica com
+  **232 px** dentro do grid `.app` (`232px 1208px`), o invólucro do quadro com **176 px**, e o grid do
+  quadro (`repeat(auto-fill, minmax(210px,1fr))`, `painel/index.html:917`) resolve para **uma** trilha de
+  `210px`. As 10 seções ficam todas em `x = 28`, com `y` crescendo 1499→2386 — empilhadas.
+- A captura **`img/072-01-kanban.png`** mostra o mesmo (coluna única à esquerda, resto da tela vazio) —
+  **não** foi preciso gerar imagem nova para evidenciar.
+- **Não é desta rodada consertar** (determinação do Gerente). Registrado com severidade e destino.
+
+### R8 — banner "LEITURA VELHA: 1H60M" (arredondamento discordante) → severidade **Baixa**, destino **T16 (Worker04)**
+
+- `painel/index.html:962` soma **horas** com `Math.floor` e **minutos** com `Math.round` sobre um valor
+  **fracionário**; o valor vem com **uma casa decimal** de `painel/server.py:295` (`round(…, 1)`). Com
+  **119,6 min** isso rende **`1h60m`** — horário impossível (não é 2 h nem 1 h 59 m). A captura de
+  2026-10-24 registra exatamente esse texto; medido ao vivo nesta revisão, 829,5 min rendeu `13h50m`.
+- **T16 ainda não integrado nesta worktree**: `git log --all` não tem commit de T16/banner e
+  `painel/index.html:962` / `painel/server.py:295` seguem **pré-correção**; topo de `w/worker04` = `ae1fb84`.
+
+### Captura nova (2026-10-25) → **pendente do T16** (não gerada)
+
+A condição era "captura nova **depois do T16**". Como o T16 **não está integrado**, **não** rodei o
+`captura-072.sh`: ele sobrescreve `img/072-01-kanban.png` e `img/072-02-fila.png` em **nomes fixos** —
+regerar agora trocaria a evidência do `1h60m` por uma foto **ainda defeituosa** e deixaria o cabeçalho
+(que data 2026-10-24) mentindo. As imagens atuais **seguem válidas para este build** (código inalterado).
+Declaro a captura pós-T16 **pendente**, não fingida.
+
+### Limites e resíduos
+
+- **Limites respeitados**: só a worktree; **sem push, sem merge**; sem `rm -rf`; sem
+  `.env`/`settings.local.json`.
+- **Resíduo (não rastreado, não commitado, não apagado)**: os arquivos `_diag_*` na worktree continuam no
+  disco — a remoção segue pendente por permissão, conforme a observação da tarefa.
