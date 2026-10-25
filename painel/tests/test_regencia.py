@@ -29,11 +29,14 @@ procurou, para o implementador casar com a tabela do plano.
 from __future__ import annotations
 
 import ast
+import contextlib
 import datetime as dt
+import io
 import json
 import os
 import re
 import sqlite3
+import subprocess
 import sys
 import tempfile
 import threading
@@ -130,6 +133,33 @@ def _gate(gid, veredito, por="W13", papel="", data="2026-10-05 21:00 -0300",
     p = f"papel: {papel}\n" if papel else ""
     return (f"---\ngate: {gid}\n{p}objeto: {objeto}\nveredito: {veredito}\npor: {por}\n"
             f"data: {data}\ndata_objeto: {data_objeto}\n{extra}---\n")
+
+
+def _repo_de_verdade(raiz):
+    """Cria um repositório git REAL na fixture e devolve `(hash_curto, quando)`.
+
+    O conferidor (`chamados._git` → `git log -1 --format=%ai <hash>`) resolve o hash do
+    `objeto` contra o git da raiz. Sem repo real nenhum cabeçalho de gate fica válido, e sem
+    cabeçalho válido não há como provar a transição PERMITIDA (F3/FR8) pela rota — o teste
+    antigo só olhava o 422 e por isso passava até com o crash (R1/T06).
+    """
+    def g(*args):
+        return subprocess.run(
+            ["git", "-C", raiz, "-c", "user.email=teste@teste.invalid",
+             "-c", "user.name=Teste", "-c", "commit.gpgsign=false", *args],
+            capture_output=True, text=True, check=True).stdout.strip()
+
+    g("init", "-q")
+    _escreve(os.path.join(raiz, "src", "x.py"), "print(1)\n")
+    g("add", "-A")
+    g("commit", "-qm", "objeto do gate")
+    return g("rev-parse", "HEAD")[:7], g("log", "-1", "--format=%ai")
+
+
+def _gate_objeto(gid, veredito, por, hash_, quando, papel=""):
+    """Cabeçalho de gate apontando para um `objeto` que EXISTE no repo (senão `valida` recusa)."""
+    return _gate(gid, veredito, por=por, papel=papel, data=quando,
+                 objeto=f"src/x.py @ {hash_}", data_objeto=quando)
 
 
 def _chamado_ate_g2():
@@ -311,25 +341,61 @@ class TestF2CartaoEmGn(unittest.TestCase):
 
 # ---------- F3: transição sem evidência devolve 422 e não toca arquivo algum ----------
 
-class TestF3TransicaoSemArquivo(_Base):
-    def test_f3_transicao_sem_arquivo_devolve_422(self):
-        """F3 (FR9): POST /api/regencia/transicao sem arquivo de gate de destino válido → 422 com motivo."""
+class TestF3Transicao(_Base):
+    """F3 (FR8/FR9), corrigida na R1/072-T12: o teste tinha de provar as DUAS metades.
+
+    Antes ele só olhava `422` + um corpo com "motivo|erro|falta" — e o 422 de crash (a rota
+    estourava `ValueError` em `_arquivos_do_gate` e o `except ValueError` do `do_POST` o
+    convertia em recusa) satisfazia a asserção. Ou seja: a F3 passava com a rota quebrada e
+    não provava nada. Agora ela exige a transição **permitida** respondendo 200 e, na recusa,
+    exige que ela seja **decidida**, não um `ValueError` disfarçado.
+    """
+
+    def test_f3_transicao_valida_permite_e_ausente_recusa_sem_excecao(self):
+        """F3 (FR8/FR9): com o arquivo do gate de destino e cabeçalho válido → 200 `permitido: true`;
+        sem o arquivo → 422 com "falta" no motivo — e o 422 nunca vem de exceção."""
+        hash_, quando = _repo_de_verdade(self.raiz)
         _escreve(os.path.join(self.raiz, "specs/072-teste-f3/00-chamado.md"), ABERTURA)
+        _escreve(os.path.join(self.raiz, "specs/072-teste-f3/G1-spec-W13.md"),
+                 _gate_objeto("G1", "APPROVE", "W13", hash_, quando))
         _escreve(os.path.join(self.raiz, "specs/072-teste-f3/G2-vermelho-aaaaaaa.md"),
-                 _gate("G2", "FALHA_ESPERADA", por="W07"))
+                 _gate_objeto("G2", "FALHA_ESPERADA", "W07", hash_, quando))
+
         srv, url = self._sobe()
         # W04 (V0b iii): a foto vem DEPOIS de subir o servidor — `_sobe()` cria `<raiz>/painel.db`,
         # então fotografar antes tornaria o assert impossível por um artefato da fixture, não da
         # transição. O intento (FR9: nenhum arquivo muda na recusa) fica preservado.
         antes = self._foto_da_arvore()
 
-        code, resposta = self._post_json(url, "/api/regencia/transicao",
-                                         {"chamado": "072-teste-f3", "de": "G2", "para": "G3"})
+        erro = io.StringIO()
+        with contextlib.redirect_stderr(erro):
+            # METADE 1 — de G1 para G2 com o arquivo G2 presente e de cabeçalho válido: PERMITIDO.
+            code_ok, resp_ok = self._post_json(
+                url, "/api/regencia/transicao",
+                {"chamado": "072-teste-f3", "de": "G1", "para": "G2"})
+            # METADE 2 — de G2 para G5 sem arquivo de G5 na pasta: RECUSA decidida.
+            code_no, resp_no = self._post_json(
+                url, "/api/regencia/transicao",
+                {"chamado": "072-teste-f3", "de": "G2", "para": "G5"})
 
-        self.assertEqual(code, 422, "FR9: transição sem evidência responde 422 com o motivo "
-                                    f"(recebido {code}: {resposta}).")
-        self.assertTrue(any(t in resposta.lower() for t in ("motivo", "erro", "falta")), resposta)
-        self.assertEqual(self._foto_da_arvore(), antes, "FR9: nenhum arquivo muda na recusa.")
+        self.assertEqual(code_ok, 200, "FR8: transição válida (G1→G2, arquivo de G2 presente e "
+                                       f"válido) responde 200 (recebido {code_ok}: {resp_ok}).")
+        self.assertIs(json.loads(resp_ok).get("permitido"), True,
+                      f"FR8: a transição permitida devolve `permitido: true` ({resp_ok}).")
+
+        self.assertEqual(code_no, 422, "FR9: transição sem evidência responde 422 com o motivo "
+                                       f"(recebido {code_no}: {resp_no}).")
+        corpo_no = json.loads(resp_no)
+        self.assertIn("falta", json.dumps(corpo_no, ensure_ascii=False).lower(),
+                      f"FR9: o motivo do 422 acusa a falta do arquivo ({resp_no}).")
+
+        # O ponto da R1: o 422 tem de ser recusa DECIDIDA. Se a rota estourar, o `except ValueError`
+        # do `do_POST` responde 422 igual — então o que separa os dois casos não é o código HTTP, é
+        # o servidor não ter imprimido um traceback.
+        self.assertNotIn("Traceback", erro.getvalue(),
+                         "FR9/R1: o 422 é recusa decidida, não exceção não tratada — nenhum "
+                         f"Traceback pode aparecer no stderr do servidor:\n{erro.getvalue()}")
+        self.assertEqual(self._foto_da_arvore(), antes, "FR9: nenhum arquivo muda na transição.")
 
 
 # ---------- F4: pedido sem ruling nunca sai da fila ----------

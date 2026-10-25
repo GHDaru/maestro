@@ -397,15 +397,10 @@ def v_kanban(db, cfg):
                           "dos gates; lido por /api/chamados"}
 
 
-def _pasta_do_chamado(cfg, chamado):
-    """Resolve a pasta `specs/<id>/` do chamado nas fontes de `cfg['chamados']` (adaptador)."""
-    raiz = cfg.get("raiz", ".")
-    for fonte in (cfg.get("chamados") or []):
-        rel = os.path.join(fonte.get("repo", "."), fonte.get("pasta", "specs").strip("/")).replace("\\", "/")
-        pasta = os.path.join(raiz, rel.replace("/", os.sep), chamado)
-        if chamado and os.path.isdir(pasta):
-            return pasta, rel
-    return None, None
+# `_pasta_do_chamado` tem UMA definição (abaixo, na seção da fila): devolve o caminho absoluto da
+# pasta `specs/<id>/` ou ``None``. Kanban/transição e fila compartilham esse único contrato — na
+# R1 do T06 havia duas definições com assinaturas diferentes, a segunda sombreava a primeira e
+# `_arquivos_do_gate` estourava um `ValueError` que virava 422 de crash para toda transição.
 
 
 def _data_hash_do_repo(cfg):
@@ -427,9 +422,10 @@ def _data_hash_do_repo(cfg):
 
 def _arquivos_do_gate(cfg, chamado, gate):
     """Mapa `gate → {caminho, cabecalho_valido}` que a função pura `proposta_transicao` consome."""
-    pasta, rel = _pasta_do_chamado(cfg, chamado)
+    pasta = _pasta_do_chamado(cfg, chamado)   # contrato único: caminho absoluto ou None
     if not pasta or not gate:
         return {}
+    rel = os.path.relpath(pasta, cfg.get("raiz", ".")).replace(os.sep, "/")
     dh = _data_hash_do_repo(cfg)
     for n in sorted(os.listdir(pasta)):
         if n.startswith(gate + "-"):
@@ -439,7 +435,7 @@ def _arquivos_do_gate(cfg, chamado, gate):
             except OSError:
                 continue
             erros = chamados.valida(chamados.cabecalho(txt), gate, dh, set())
-            return {gate: {"caminho": f"{rel}/{chamado}/{n}", "cabecalho_valido": not erros,
+            return {gate: {"caminho": f"{rel}/{n}", "cabecalho_valido": not erros,
                            "erros": erros}}
     return {}
 
@@ -452,7 +448,7 @@ def v_transicao(cfg, corpo):
     if not proposta.get("permitido"):
         return {"erro": proposta.get("falta") or "transição recusada"}, 422   # FR9: 422 com o motivo
     dono = next((d for g, _n, d in chamados.GATES if g == para), "")
-    return {"ok": True, "proposta": {
+    return {"ok": True, "permitido": True, "proposta": {
         "chamado": chamado, "de": de, "para": para,
         "exige": proposta.get("exige") or f"{para}-*.md", "dono": dono,
         "promocao": "arquivo assinado pelo dono (068)"}}, 200
@@ -580,11 +576,15 @@ def _n_destravados(item):
 
 
 def _pasta_do_chamado(cfg, cid):
-    """A pasta `specs/<id>/` do chamado, se existir (para ler o `tasks.md` do `TAIL:gate`)."""
+    """A pasta `specs/<id>/` do chamado, se existir — ``None`` se não (contrato único, R1/T06).
+
+    Usada pela fila (`_item_tail`, que precisa só do caminho) e pelo kanban/transição
+    (`_arquivos_do_gate`, que deriva o caminho relativo com `os.path.relpath`).
+    """
     raiz = cfg.get("raiz", ".")
     for fonte in cfg.get("chamados", []) or []:
         pasta = os.path.join(raiz, fonte.get("repo", "."), fonte.get("pasta", "specs").strip("/"), cid)
-        if os.path.isdir(pasta):
+        if cid and os.path.isdir(pasta):
             return pasta
     return None
 
