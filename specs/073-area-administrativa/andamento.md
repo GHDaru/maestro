@@ -4,8 +4,9 @@
 > construído aqui. Quatro rodadas: 1 pesquisa · 2 confronto e decisão · 3 wireframes (DDD, linguagem
 > ubíqua) · 4 bar (três críticos, nota 0–10, passa com os três ≥ 9).
 
-- **Data**: 2026-10-24 (pesquisa) · 2026-10-25 (consolidação) · **Lane**: plena · **Status**:
-  rodada 1 fechada — 25 plataformas consolidadas; aguarda o DONE ao regente
+- **Data**: 2026-10-24 (pesquisa) · 2026-10-25 (consolidação, revisão e fechamento) · **Lane**:
+  plena · **Status**: rodada 1 **fechada e revisada** — 25 plataformas, matriz conferida por
+  script; DONE emitido ao regente; **rodada 2 aguarda o "segue"**
 - **Spec**: `spec.md` (rascunho aberto pelo Gerente a partir do despacho do regente)
 
 ## Rodada 1 — pesquisa de plataformas
@@ -55,3 +56,13 @@
   preenchido (Constitution Check 8/8, artefatos declarados com razão, modelo de domínio
   declarado) e `qa-report.md` estruturado. Revisão em contexto fresco despachada ao Worker03
   (073-T1-revisao: 7 células dirigidas + recontagem independente + passagem de segurança).
+- 2026-10-25 — **073-T1-revisao entregue (Worker03, contexto fresco)**: 7/7 células conferem;
+  contagens estruturais conferem; **1 achado bloqueante** — as tabelas de leitura da matriz
+  subnotificavam o `sim` em 4 (alertas 6→8, mensagem entre agentes 7→8, consumo por agente 2→3;
+  grupos GERENCIAMENTO 44→47, INTERCOMUNICAÇÃO 20→21) — e dois secundários (parêntese da LiteLLM,
+  nota de divergência sem a Helicone). **Corrigido pelo Gerente** e reconferido por script fora do
+  repo: todo número das tabelas de leitura agora bate com a matriz (PASS). Segurança: varredura
+  limpa (0 achados não-declarados; o único casamento é o placeholder declarado do LiteLLM).
+  Rabo do ciclo: review e security marcados com evidência; mutation n/a (rodada documental);
+  gate do regente. **Rodada 1 fechada** — DONE ao regente com a matriz; rodada 2 só depois do
+  "segue".

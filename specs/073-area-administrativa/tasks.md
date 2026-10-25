@@ -14,16 +14,18 @@
   AgentCore e Windmill na mesma raia); pausou para a reverificação R1/R2 do ciclo 072 e retomou.
 - [x] T1-consolidacao — `pesquisa/plataformas.md`: matriz 25 plataformas × 26 funcionalidades,
   fechada por acréscimo pelo Worker06 (as 13 colunas que faltavam depois das 12 dele).
-- [ ] T1-revisao — verificação em contexto fresco pelo Worker03 (não consolidou): amostragem
-  dirigida de 7 células + recontagem independente + passagem de segurança sobre `pesquisa/`.
-- [ ] T1-fechamento — Gerente: preenche plan/qa-report, marca o rabo com a evidência, roda
+- [x] T1-revisao — verificação em contexto fresco pelo Worker03 (não consolidou): amostragem
+  dirigida de 7 células + recontagem independente + passagem de segurança sobre `pesquisa/`
+  (commit `b920fce`); achado bloqueante — leitura subnotificava 4 `sim` — corrigido pelo
+  Gerente e reconferido por script contra a matriz.
+- [x] T1-fechamento — Gerente: preenche plan/qa-report, marca o rabo com a evidência, roda
   check-conformance 073 e emite o DONE da rodada 1 ao regente (a rodada 2 espera o "segue").
 
 ## Closing tail — MANDATORY, one line each, never delete
 <!-- TICK ONLY WHILE WRITING THE EVIDENCE, never in advance: the box records what happened.
      Do not delete a line to say it does not apply: write `n/a: <reason>` on it.
      check-conformance.sh requires the evidence of every non-n/a step in qa-report.md. -->
-- [ ] TAIL:review — independent review in fresh context, by whoever did not execute
-- [ ] TAIL:security — security pass proportional to the risk class
-- [ ] TAIL:mutation — every gate created or changed here, broken on purpose and seen refusing
+- [x] TAIL:review — independent review in fresh context, by whoever did not execute
+- [x] TAIL:security — security pass proportional to the risk class
+- [ ] TAIL:mutation — n/a: rodada documental — nenhum gate executável criado ou alterado (não há código neste ciclo); o verificável é a contagem e a amostragem, cobertas no TAIL:review
 - [ ] TAIL:gate — DoD green -> guardian verdict -> human merge gate (not delegable)

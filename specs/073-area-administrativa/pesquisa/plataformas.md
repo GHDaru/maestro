@@ -43,14 +43,16 @@ Siglas expandidas na primeira ocorrência: **RBAC** (*Role-Based Access Control*
 (*Large Language Model*) · **UI** (*User Interface*) · **OSS** (*Open Source Software*) · **SSO**
 (*Single Sign-On*) · **PTY** (*Pseudo-Terminal*).
 
-> **Divergência de notação entre as duas gerações de ficha** (declarada, não corrigida por conta
-> própria). As 12 fichas do Worker06 marcam "sem fonte" com `—` e reservam `não` para a ausência
-> **afirmada** pela fonte. As 13 fichas do Worker03/Worker05 **não usam `—`**: o Worker03 deixa a
-> célula **em branco** e o Worker05 escreve **`não`** para "nada achei". Nesta matriz, célula em
-> branco virou `—` (é o que a legenda manda) e `não` foi transcrito como a ficha escreveu. Efeito a
-> lembrar na leitura: nas colunas do Worker05, um `não` costuma significar **"não encontrei"**, não
-> "a fonte afirma que não existe". As duas leituras são conformes ao FR3 (nenhuma célula sem fonte
-> vira "sim"); o que muda é a força do veredito. **Decisão de normalizar fica com o dono da rodada.**
+> **Divergência de notação entre as duas gerações de ficha** (declarada; normalização deferida ao
+> preâmbulo da rodada 2 pelo Gerente). As 12 fichas do Worker06 marcam "sem fonte" com `—` e
+> reservam `não` para a ausência **afirmada** pela fonte. As 13 fichas do Worker03/Worker05 **não
+> usam `—`**: o Worker03 deixa a célula **em branco** (21 células — e na Helicone escreve `não`
+> para "nada achei" em ao menos duas: auditoria e caixa de entrada) e o Worker05 escreve
+> **`não`** para "nada achei". Nesta matriz, célula em branco virou `—` (é o que a legenda manda)
+> e `não` foi transcrito como a ficha escreveu. Efeito a lembrar na leitura: nas colunas do
+> Worker05 — e nas duas células citadas da Helicone —, um `não` costuma significar
+> **"não encontrei"**, não "a fonte afirma que não existe". As duas leituras são conformes ao FR3
+> (nenhuma célula sem fonte vira "sim"); o que muda é a força do veredito.
 
 ## A matriz
 
@@ -93,14 +95,20 @@ Siglas expandidas na primeira ocorrência: **RBAC** (*Role-Based Access Control*
 
 ## Leitura da matriz (o que os números dizem)
 
+> **Corrigido em 25/10** após a reverificação em contexto fresco (Worker03, ver qa-report §
+> "Reverificação em contexto fresco"): as tabelas de leitura subnotificavam o `sim` em 4 (alertas
+> 6→8, mensagem entre agentes 7→8, consumo por agente 2→3; total 170→174). As células da matriz
+> estavam certas — o erro era só das contagens desta seção. Números atuais conferidos por script
+> contra a matriz.
+
 **Por grupo** — `sim` sobre o total de células do grupo, nas 25 plataformas:
 
 | Grupo | `sim` | Células | Aproveitamento | Leitura |
 |---|---|---|---|---|
 | ADMINISTRAÇÃO | 76 | 150 | **51%** | o que o mercado sabe fazer: cadastro, RBAC, segredos, por projeto, auditoria |
-| GERENCIAMENTO | 44 | 200 | **22%** | metade é observabilidade; "agentes vivos" e consumo por agente quase não existem |
+| GERENCIAMENTO | 47 | 200 | **23,5%** | metade é observabilidade; "agentes vivos" e consumo por agente quase não existem |
 | CONTROLE | 30 | 150 | **20%** | ciclo de vida é o buraco: pausar tem 3 `sim` em 25 |
-| INTERCOMUNICAÇÃO | 20 | 150 | **13%** | **o grupo mais fraco** — e é exatamente o que o Maestro já opera a mão |
+| INTERCOMUNICAÇÃO | 21 | 150 | **14%** | **o grupo mais fraco** — e é exatamente o que o Maestro já opera a mão |
 
 **Por funcionalidade** — contagem de `sim` nas 25 plataformas, do mais coberto ao menos:
 
@@ -110,14 +118,12 @@ Siglas expandidas na primeira ocorrência: **RBAC** (*Role-Based Access Control*
 | papéis e permissões RBAC · cadastro de skills/ferramentas/modelos · chaves e segredos | 13 cada | a base de administração é commodity |
 | cadastro de agentes · auditoria | 11 cada | o "cadastro de agentes" é **registro**, quase nunca processo vivo |
 | custo | 9 | custo de *token* é comum; custo de operação de agente, não |
-| aprovação humana · rastro/replay de sessão | 8 cada | human-in-the-loop existe onde há grafo de execução |
-| mensagem entre agentes | 7 | e quase toda é delegação dentro do processo, não mensagem entre pares |
-| limites de orçamento e de taxa | 6 | orçamento por chave/projeto, raramente por agente |
-| lista de agentes vivos com estado · alertas · roteamento por nome/ref | 6 cada | |
+| aprovação humana · rastro/replay de sessão · alertas · mensagem entre agentes | 8 cada | human-in-the-loop existe onde há grafo de execução; e a mensagem entre agentes é quase toda delegação dentro do processo, não mensagem entre pares |
+| limites de orçamento e de taxa · lista de agentes vivos com estado · roteamento por nome/ref | 6 cada | orçamento por chave/projeto, raramente por agente |
 | políticas allow/deny/ask · protocolos (A2A, MCP) · última atividade | 5 cada | |
 | subir/derrubar sessão ou agente · retomar · tarefa aberta · filas e workers | 4 cada | |
-| pausar | 3 | |
-| consumo por agente/sessão/modelo · colisão de nomes | 2 cada | consumo por agente só em **Copilot Studio** e **Claude Code** |
+| pausar · consumo por agente/sessão/modelo | 3 cada | consumo por agente em **Copilot Studio**, **Claude Code** e **LiteLLM** |
+| colisão de nomes | 2 | |
 | **caixa de entrada** · **livro de mensagens** | **0 cada** | **nenhuma** das 25 entrega |
 
 **Por plataforma** — uma linha cada (as 12 primeiras são da fatia do Worker06):

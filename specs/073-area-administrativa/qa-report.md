@@ -1,7 +1,9 @@
 # QA report 073 — Área administrativa do Maestro (rodada 1: pesquisa de plataformas)
 
-- **Date**: 2026-10-24 (fichas) · 2026-10-25 (consolidação e fechamento) · **Lane**: plena ·
-  **Verdict**: pending (fecha com a revisão em contexto fresco)
+- **Date**: 2026-10-24 (fichas) · 2026-10-25 (consolidação, revisão e fechamento) · **Lane**:
+  plena · **Verdict**: approved (rodada 1) — 7/7 células conferem, contagens estruturais
+  conferem, 1 achado bloqueante (subnotificação de 4 `sim` nas tabelas de leitura) corrigido e
+  reconferido por script; segurança limpa
 
 ## Fitness functions (DoD)
 | Check | Expected | Result |
@@ -12,14 +14,31 @@
 | Linhas com contagem de células ≠ 27 | 0 | **0** |
 | Células da matriz | 25 × 26 = 650 | **650** |
 | Fichas com tabela fixa completa | 25 × 26 = 650 | **650** — 629 com veredito explícito + 21 células em branco (convertidas em `—` na matriz) |
+| Tabelas de leitura × matriz (script fora do repo, pós-correção) | todo número confere | **PASS** — sim 174 · parcial 221 · não 156 · — 99; grupos CONTROLE 30 · ADMINISTRAÇÃO 76 · GERENCIAMENTO 47 · INTERCOMUNICAÇÃO 21 |
 | `scripts/check-conformance.sh 073` | verde nos dois modos | (preenchido no fechamento da rodada) |
 
 ## Closing tail — the evidence
 <!-- One entry per non-n/a TAIL token. What was OBSERVED, never the intention restated. -->
-- TAIL:review — (preenchido no fechamento: revisão em contexto fresco pelo Worker03, que não consolidou)
-- TAIL:security — (preenchido no fechamento: varredura de segredos/credenciais/dados pessoais sobre pesquisa/)
+- TAIL:review — Worker03, contexto fresco (não consolidou; amostragem escolhida pelo Gerente):
+  7/7 células conferem contra as fichas com caminho:linha; contagens estruturais conferem
+  (27/26/0/650); **1 achado bloqueante** — as tabelas de leitura subnotificavam o `sim` em 4
+  (alertas 6→8, mensagem entre agentes 7→8, consumo por agente 2→3; total 170→174; grupos
+  GERENCIAMENTO 44→47 e INTERCOMUNICAÇÃO 20→21) — **corrigido pelo Gerente** (commit próprio) e
+  **reconferido por script**: todo número das tabelas de leitura agora bate com a matriz
+  (PASS — sim 174 · parcial 221 · não 156 · — 99); dois secundários corrigidos na mesma família
+  (parêntese da LiteLLM em `:120`; nota de divergência estendida à Helicone). Evidência completa
+  na seção "Reverificação em contexto fresco", abaixo.
+- TAIL:security — Worker03, varredura sobre `pesquisa/` (28 arquivos, 14 padrões, PNG lidos como
+  bytes e **olhados**): **0 achados fora da lista declarada**; 1 casamento —
+  `sk-local-demo-073-nao-e-segredo` em `litellm.md:18` — é placeholder local declarado na própria
+  ficha; capturas só mostram tela de login vazia; nenhuma conta externa criada; a única execução
+  real é a LiteLLM local com chave descartável. **Limpo.**
 - TAIL:mutation — n/a: rodada documental — nenhum gate executável foi criado ou alterado neste ciclo (não há código); o veredito verificável da rodada é a contagem e a amostragem contra as fichas, cobertas no TAIL:review
-- TAIL:gate — (do regente: o "segue" para a rodada 2 — confronto com o Maestro e decisão do que entra)
+- TAIL:gate — o gate humano da rodada 1 é o **"segue" do regente para a rodada 2** (confronto
+  com o Maestro e decisão do que entra); sem ele, nada avança. A rodada 1 não promove nada —
+  sem push, sem merge em dev/main, sem promote-main — e o DONE com a matriz foi entregue ao
+  regente (por SendMessage, ou commitado como fallback se a sessão MAESTRO seguir fora de
+  alcance).
 
 ## Requirement coverage
 - FR1: **presente** — 25 fichas em `pesquisa/`, cada uma com URL, data da visita, o que foi aberto
