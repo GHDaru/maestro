@@ -15,9 +15,12 @@
       **Entregue: `bdc75cb`, integrado em `8e9ab43` — tem 8 · parcial 16 · não tem 2 (pausar/retomar);
       força da notação espelhando a matriz (só os 2 "não tem" são "não encontrado" — piso, não prova);
       6 citações amostradas pelo Gerente conferem exatamente.**
-- [ ] T2-confronto — Worker03: matriz 26 × {melhor referência, estado no Maestro, lacuna, decisão
+- [x] T2-confronto — Worker03: matriz 26 × {melhor referência, estado no Maestro, lacuna, decisão
       ENTRA/NÃO PRECISA/DEPOIS}; cada ENTRA com nome na linguagem ubíqua e os três critérios da
       rodada 4; nada entra sem fonte (plataforma citada OU requisito do método).
+      **Entregue: `eb40d89` (ff) — ENTRA 13 · NÃO PRECISA 8 · DEPOIS 5, contagem conferida por
+      script pelo Gerente; INTERCOMUNICAÇÃO 6 ENTRA de 6; 12 termos propostos, 8 reusados do
+      glossário; nenhum ENTRA sobre célula `—`.**
 - [ ] T2-mapa — Worker02 (se livre) ou Worker03: mapa de contextos delimitados em
       `confronto/mapa-de-contextos.md`, com diagrama.
 - [ ] T2-fechamento — Gerente: revisão fresca do confronto (quem não escreveu), conformance 073
