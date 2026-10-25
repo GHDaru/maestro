@@ -289,6 +289,24 @@
       "### reverificação R1/R2" com a saída. Depois: `scripts/check-conformance.sh 072` e
       `--ticked-only` (verdes) — e o Gerente fecha com `[[DONE 072-rodada-1]]`.
 
+## Rodada de correção 2 — condição do gate (process-guardian, contexto fresco)
+
+> O gate do 072 foi aprovado **com condições**. Esta é a condição do dono da fila (Worker05).
+
+### Worker05 — o id do pedido protegido (risco fechado)
+
+`[[TASK id=072-T15 kind=fix cycle=072 attempt=1]]`
+
+- [x] `painel/projetos/exemplo.json`: `regencia.pessoas` (nomes fictícios), `fila_decisoes` (caminho
+      padrão) e `frentes`.
+- [x] `painel/README.md`: documenta as três chaves.
+- [x] Build real: 1 `POST` de pedido e 1 de *ruling* válidos (200; duas linhas no `JSONL`) + 1
+      *ruling* com autor fora de `pessoas` (422) — saídas coladas no `qa-report.md`.
+- [x] `valida_pedido` recusa id duplicado e id no formato de portão derivado (`chamado+gate`), com
+      teste (`TestF11IdDoPedido`).
+- [x] Risco "ruling fecha o item errado em silêncio" registrado como **FECHADO** no `qa-report.md`.
+- Suíte: regência **26** (24 + 2 novos) · antiga **48**. Commit citando "ciclo 072".
+
 ## Closing tail — MANDATORY, one line each, never delete
 
 <!-- TICK ONLY WHILE WRITING THE EVIDENCE, never in advance: the box records what happened.

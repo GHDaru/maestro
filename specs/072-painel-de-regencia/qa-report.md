@@ -892,3 +892,80 @@ exit=0
 **R1 ✅ e R2 ✅ — as duas reservas bloqueantes do attempt=1 estão levantadas.** O restante do veredito do
 attempt=1 (FR13/FR19 parciais por JS, D-072-8; dívidas D-072-1..8 e D-072-3/4/5 declaradas) **fica de
 pé**, como o Gerente determinou.
+
+## Rodada de correção 2 — condição do gate (072-T15, Worker05)
+
+> O gate do 072 foi **aprovado com condições** (crítico `process-guardian`, contexto fresco). Esta é a
+> condição do dono da fila. **Risco tratado: "um ruling fecha o item errado em silêncio".**
+
+### O risco, e por que ele existia
+
+`sai_da_fila(pedido, rulings)` fecha um pedido quando existe um *ruling* com `pedido == id` — a
+igualdade de **id** é o único critério. Se um pedido pudesse **repetir** um id já registrado, ou
+assumir o id de um **item derivado** de portão (`chamado+gate`, ex. `072+T7` — `portao_derivado`),
+um *ruling* fecharia o **item errado** — e nada na tela acusaria: a fila apenas encolheria. Fechado
+por construção nesta rodada.
+
+### O que mudou
+
+- **Domínio puro** (`painel/regencia/fila.py`): `valida_pedido(pedido, ids_conhecidos=None)` agora
+  recusa (a) id já ocupado → `"id já registrado: '<id>'"`; (b) id no formato de portão derivado
+  (contém `+`) → `"id no formato de portão derivado (chamado+gate): '<id>'"`. `None` desliga as duas
+  checagens (teste puro de 1 arg segue válido).
+- **Adaptador** (`painel/server.py`): a rota `POST /api/regencia/fila` passa
+  `_pedidos_conhecidos(cfg)` (pedidos registrados + ids derivados dos portões) a `valida_pedido`; a
+  recusa sai como **422** com o motivo da função pura (ADR 0027).
+- **Configuração de exemplo** (`painel/projetos/exemplo.json`): ganha `regencia.pessoas`
+  (`["Ana Exemplo", "Beto Exemplo"]`, fictícios), `fila_decisoes` (`painel/dados/fila-exemplo.jsonl`,
+  o caminho padrão) e `frentes` (mapa `frente → [pastas]`).
+- **`painel/README.md`**: seção "Regência: a fila de decisões" documenta as três chaves.
+- **Teste** (`painel/tests/test_regencia.py`, `TestF11IdDoPedido`): função pura (id duplicado e id de
+  portão) + rota (segundo `POST` com o mesmo id → 422, sem nova linha no registro).
+
+### Build real — saídas coladas
+
+Comando: `python painel/server.py painel/projetos/exemplo.json --porta 8799` (POST de fora do
+`127.0.0.1` é recusado por desenho; o registro `fila-exemplo.jsonl` estava ausente no início — duas
+linhas, nenhuma anterior).
+
+```text
+== POST pedido ==
+{"ok": true, "registrado": {"tipo": "pedido", "id": "D-exemplo-01"}}
+HTTP 200
+== POST ruling (valido, autor em pessoas) ==
+{"ok": true, "registrado": {"tipo": "ruling", "pedido": "D-exemplo-01"}, "backup": "...\\painel\\dados\\backup\\fila-exemplo-2026-10-25.jsonl"}
+HTTP 200
+== POST ruling (autor fora de pessoas) ==
+{"erro": "autor não é pessoa do projeto: 'Office'"}
+HTTP 422
+== GET /api/regencia/fila ==
+{"ok": true, "itens": [], "n": 0, "vazia": true, "destravados": 0, "idade_mais_velha": null, "mais_velho": null, "data_fonte": "painel/fila_registro.py le() · painel/regencia/fila.py ordena_fila/cabecalho_fila", "mensagem": "fila vazia — última decisão às 11:11"}
+== JSONL (painel/dados/fila-exemplo.jsonl) ==
+{"tipo": "pedido", "id": "D-exemplo-01", "pedido_por": "W05/sess", "pergunta": "Aprovar a rodada 1?", "opcoes": [{"id": "a", "descricao": "sim"}, {"id": "b", "descricao": "nao"}], "recomendacao": "a", "prazo": "2026-10-30T12:00:00-03:00", "destrava": ["073"], "destino": "Regente", "status": "aguardando", "criado_em": "2026-10-25T11:11:43-03:00"}
+{"tipo": "ruling", "id": "R-exemplo-01", "pedido": "D-exemplo-01", "escolha": "a", "autor": "Ana Exemplo", "destinatario": "W05", "texto": "aprovado", "registrado_em": "2026-10-25T11:11:44-03:00", "data": "2026-10-25T11:11:44-03:00"}
+```
+
+Leitura da saída: o pedido entra (200), o *ruling* válido entra e traz o **backup datado** do dia
+(200), o *ruling* de autor fora de `pessoas` é recusado com o motivo da função pura (422, nenhuma
+linha nova), e o `GET` seguinte mostra a **fila vazia** — o *ruling* fechou o pedido certo, e o
+"última decisão às 11:11" é o mesmo carimbo da segunda linha. Um pedido cujo id repetisse o de outro
+(ou imitasse `chamado+gate`) não chegaria a entrar: é o que o teste prova.
+
+### Suíte
+
+| Comando | Resultado |
+|---|---|
+| `python -m pytest painel/tests/test_regencia.py -q` | **`26 passed`** (24 do gate + os 2 novos de `TestF11IdDoPedido`) |
+| `python -m pytest painel/tests --ignore=painel/tests/test_regencia.py -q` | **`48 passed`** |
+
+> **Supersessão declarada:** a contagem da regência sobe de **24 → 26** por causa da condição do gate
+> (item 4 exige teste). A frase "24 no gate do plano" do CHANGELOG registra o estado de então e é
+> história.
+
+### Risco — status
+
+**`ruling fecha o item errado em silêncio` → FECHADO** (condição do gate, 072-T15). Fechado por
+construção: `valida_pedido` recusa id repetido e id de portão derivado, com teste (`TestF11IdDoPedido`)
+e a rota respondendo 422 (acima). A garantia não depende de confiança: o id de um pedido não colide
+com um id já registrado nem com o espaço reservado dos itens derivados.
+
