@@ -12,8 +12,8 @@
 # Capturar sem esperar produz uma foto FALSA de "vazio". O script consulta `/api/chamados`
 # até a derivação parar de estar vazia (ou estourar o limite) e só então fotografa.
 #
-# Uso:  bash docs/journeys/scripts/captura-072.sh
-# Saída: docs/journeys/img/072-01-kanban.png, docs/journeys/img/072-02-fila.png
+# Uso:  bash docs/jornada/scripts/captura-072.sh
+# Saída: docs/jornada/img/072-01-kanban.png, docs/jornada/img/072-02-fila.png
 #
 # Requisitos no host: python (3.x) com o pacote `playwright`; um navegador Chromium já
 # instalado — usa o Edge do sistema via canal (`PW_CHANNEL=msedge`), então não precisa baixar
@@ -27,7 +27,7 @@ PORTA="${PORTA:-8791}"
 PY="${PY:-python}"
 PW_CHANNEL="${PW_CHANNEL:-msedge}"
 ESPERA_S="${ESPERA_S:-90}"
-OUT="$ROOT/docs/journeys/img"
+OUT="$ROOT/docs/jornada/img"
 LOG="${TMPDIR:-/tmp}/captura-072-servidor.log"
 
 mkdir -p "$OUT"

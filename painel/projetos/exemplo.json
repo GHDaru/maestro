@@ -60,8 +60,7 @@
       "docs/governance/artifacts.md"
     ],
     "jornadas": [
-      "docs/jornada/*.md",
-      "docs/journeys/*.md"
+      "docs/jornada/*.md"
     ],
     "plano-e-roadmap": [
       "docs/roadmap.md"

@@ -2,7 +2,7 @@
 
 - **Spec**: `specs/072-painel-de-regencia/spec.md` · **UX**: `specs/066-painel-de-regencia/ux-design.md` §3
   · **Capturas geradas em**: 2026-10-24 ·
-  **Script**: `docs/journeys/scripts/captura-072.sh` (versionado)
+  **Script**: `docs/jornada/scripts/captura-072.sh` (versionado)
 
 <!-- Skill `living-journey`: documento + captura do build REAL por script + heurística DATADA, tudo
      no mesmo pull request. Uma heurística datada antes das capturas é documentação vencida.
