@@ -286,7 +286,52 @@
 
 ### 072-T08 — living journey (Worker01)
 
-- Pending (depends on T09 and on the screens of T04/T05).
+- **Entregue** (`[[DONE id=072-T08 outcome=delivered]]`, 24/10): `docs/journeys/072-painel-de-regencia.md`
+  (a jornada do regente, cobrindo **as duas telas** — Kanban e Fila —, a partir do §3 do
+  `specs/066-painel-de-regencia/ux-design.md`), o script versionado
+  `docs/journeys/scripts/captura-072.sh` e duas capturas **do build real**. Base desta seção: `2d4a8c5`.
+- **O ambiente renderizou** — o plano B da D-072-7 **não** foi necessário. Script sobe o painel de
+  verdade (`painel/server.py painel/projetos/exemplo.json`, porta 8791, derrubado no fim por `trap`)
+  e fotografa o DOM com Playwright + Edge do sistema (`PW_CHANNEL=msedge`, headless), 1440×900.
+  Saída da execução que gerou as imagens:
+  ```
+  == subindo o painel real em http://127.0.0.1:8791 (fixture exemplo) ==
+  == esperando a derivação aquecer (até 90s) ==
+    derivação estabilizada com 1 chamado(s) em 2.1s
+  == capturando as duas telas com o navegador (msedge) ==
+  ok: ...\docs\journeys\img\072-01-kanban.png  (Painel de regência)
+  ok: ...\docs\journeys\img\072-02-fila.png  (Fila de decisões)
+  == pronto: capturas em ...\docs\journeys\img ==
+  ```
+- **A captura é real, não uma foto de "vazio" (verificação por medição, não por leitura de olho).**
+  A derivação é preguiçosa/assíncrona: sem aquecer, a 1ª consulta devolve lista vazia. Prova do DOM
+  aquecido (subiu o servidor, aqueceu e leu `#main` no navegador):
+  ```
+  API kanban total: 1
+  G0 · Reprodução 1
+  000-exemplo
+  dono: —   sessão: —   INVÁLIDO   original: —   —
+  SELO: REGISTRO
+  — (MOTIVO: CABEÇALHO DO GATE SEM AUTOR_DA_PECA (FR5))
+  integrado = criticado: não conferido
+  contem 000-exemplo: True
+  ```
+  E a Fila declara o vazio: `fila vazia — nenhuma decisão registrada`, contador `0`.
+- **Achado R1 (novo) — derivação preguiçosa sem estado "carregando".** O §3 manda cara própria para
+  o estado **carregando**; hoje o servidor frio mostra um "vazio" falso. Severidade **Média**,
+  registrado para a **rodada 2** na heurística da jornada. O script contorna aquecendo antes de
+  fotografar (regeneração é o teste do próprio script — skill `living-journey`); a tela ainda não.
+- **Jornada viva ligada (F11)**: documento + capturas por script versionado + heurística datada em
+  **2026-10-24** (≥ data das capturas), com severidade e destino por achado. R2–R5 conformes
+  (vazio declarado, "—" com motivo, não marca "conferido", veredito original ao lado do normalizado);
+  R6 (ruling no build real) registrado — o caminho é provado por contrato (T03b/T05), não pela tela.
+- **Artefato vivo atualizado no mesmo PR**: `painel/projetos/exemplo.json` — o glob
+  `documentos.jornadas` passa a incluir `docs/journeys/*.md`.
+- **Limites respeitados**: só a worktree; sem push/merge/rm -rf; sem `.env`/`settings.local.json`;
+  fixture sem dado real; servidor em porta alta, derrubado ao fim.
+- **Nota de ambiente conhecida**: `scripts/check-links.sh` chama `python3`, que nesta máquina é o
+  alias da MS Store (não executa). Rodei o equivalente com o interpretador real (`python` 3.12.10) e
+  declarei; nenhum link relativo desta entrega ficou sem resolver.
 
 ### 072-T10 — living artifacts of the closing (Worker01)
 
