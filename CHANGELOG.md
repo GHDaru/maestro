@@ -10,6 +10,14 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **O protótipo ganha o seu índice** (ciclo 073, `073-T3-readme-navegacao`):
+  `specs/073-area-administrativa/prototipo/README.md` põe as **7 telas da árvore** (4 da Mensageria, 3
+  da Administração — mais as 4 do Workflow em entrega) contra os **13 `ENTRA`** (as funcionalidades que
+  entram), o **contexto dono**, os **juízes da rodada 4** e o **lugar de cada tela na navegação do
+  painel** — Regência e Chamados intactos, e a **colisão "caixa de entrada" × "Fila de decisões"**
+  declarada onde a navegação a encontraria. Traz o estado medido do verificador: **7 telas · 45
+  achados**, só duas classes (40 de citação sem atributo, 5 de `th` de domínio sem `data-rotulo`),
+  zero de `data-fonte` e zero de colisão.
 - **Os 12 termos ratificados entram no glossário** (ciclo 073, `073-T3-glossario`): doze entradas novas
   com a coluna **Cycle 073** (`sessão de agente`, `estado do agente vivo`, `tarefa aberta`, `consumo
   por agente`, `limite de orçamento`, `catálogo de skills/ferramentas/modelos`, `mensagem entre
