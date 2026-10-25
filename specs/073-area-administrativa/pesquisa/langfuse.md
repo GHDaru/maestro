@@ -28,18 +28,18 @@ SDK (*Software Development Kit*).
 
 | Funcionalidade | Veredito | Fonte |
 |---|---|---|
-| subir/derrubar sessão ou agente | não — plataforma de observabilidade; não sobe nem derruba agente | `langfuse.com/docs` (visto 24/10) não descreve controle de execução |
-| pausar | não — não descrito | `langfuse.com/docs` (visto 24/10) |
-| retomar | não — não descrito | `langfuse.com/docs` (visto 24/10) |
-| limites de orçamento e de taxa | não — não há limite configurável; há alertas por limiar de métrica | `langfuse.com/docs` (visto 24/10) não descreve limite de orçamento |
-| políticas allow/deny/ask | não — não descrito | `langfuse.com/docs` (visto 24/10) |
+| subir/derrubar sessão ou agente | — | `langfuse.com/docs` (visto 24/10) não descreve controle de execução |
+| pausar | — | `langfuse.com/docs` (visto 24/10) |
+| retomar | — | `langfuse.com/docs` (visto 24/10) |
+| limites de orçamento e de taxa | — | `langfuse.com/docs` (visto 24/10) não descreve limite de orçamento |
+| políticas allow/deny/ask | — | `langfuse.com/docs` (visto 24/10) |
 | aprovação humana | parcial — há *annotation queues* e rotulagem manual (revisão humana), não portão de aprovação de execução | `langfuse.com/docs` (visto 24/10): "annotation queues", "manual labeling" |
 
 ### ADMINISTRAÇÃO
 
 | Funcionalidade | Veredito | Fonte |
 |---|---|---|
-| cadastro de agentes | não — não há catálogo de agentes | `langfuse.com/docs` (visto 24/10) |
+| cadastro de agentes | — | `langfuse.com/docs` (visto 24/10) |
 | papéis e permissões RBAC | sim — "Requests are checked via RBAC before any query runs"; SSO/SCIM | `langfuse.com/security` (visto 24/10) |
 | cadastro de skills/ferramentas/modelos | parcial — gestão de *prompts* (versão/labels) e playground; sem registro de ferramentas | `langfuse.com/docs` (visto 24/10): prompt management |
 | chaves e segredos | sim — "API keys are project-scoped" | `langfuse.com/security` (visto 24/10) |
@@ -50,12 +50,12 @@ SDK (*Software Development Kit*).
 
 | Funcionalidade | Veredito | Fonte |
 |---|---|---|
-| lista de agentes vivos com estado | não — mostra traces/sessões, não agentes vivos com estado atual | `langfuse.com/docs` (visto 24/10) |
-| tarefa aberta | não — não descrito | `langfuse.com/docs` (visto 24/10) |
+| lista de agentes vivos com estado | — | `langfuse.com/docs` (visto 24/10) |
+| tarefa aberta | — | `langfuse.com/docs` (visto 24/10) |
 | última atividade | parcial — *timeline view* de traces e sessões com carimbos de tempo | `langfuse.com/docs` (visto 24/10): "traces, a timeline view for debugging latency" |
 | consumo por agente/sessão/modelo | parcial — custo/uso por `userId` e métricas de sessão; quebra por modelo não consta da página | `langfuse.com/docs` (visto 24/10): "monitor costs and usage per user" |
 | custo | sim — "Quality, cost, and latency metrics" no dashboard | `langfuse.com/docs` (visto 24/10) |
-| filas e workers | não — não descrito | `langfuse.com/docs` (visto 24/10) |
+| filas e workers | — | `langfuse.com/docs` (visto 24/10) |
 | rastro/replay de sessão | parcial — *Sessions* rastreiam o workflow multi-passo e há *timeline view*; "no dedicated replay feature is documented here" | `langfuse.com/docs` (visto 24/10) |
 | alertas | sim — notificação por Slack, GitHub Actions ou Webhook quando a métrica cruza o limiar | `langfuse.com/docs` (visto 24/10) |
 
@@ -63,9 +63,9 @@ SDK (*Software Development Kit*).
 
 | Funcionalidade | Veredito | Fonte |
 |---|---|---|
-| mensagem entre agentes | não — não descrito | `langfuse.com/docs` (visto 24/10) |
+| mensagem entre agentes | — | `langfuse.com/docs` (visto 24/10) |
 | protocolos (A2A; MCP) | parcial — só um *MCP server* para configurar/consultar o projeto ("Halo"); nem A2A | `langfuse.com/docs` (visto 24/10) |
-| caixa de entrada | não — não descrito | `langfuse.com/docs` (visto 24/10) |
-| roteamento por nome/ref | não — não descrito | `langfuse.com/docs` (visto 24/10) |
-| livro de mensagens | não — não descrito | `langfuse.com/docs` (visto 24/10) |
-| colisão de nomes | não — não descrito | `langfuse.com/docs` (visto 24/10) |
+| caixa de entrada | — | `langfuse.com/docs` (visto 24/10) |
+| roteamento por nome/ref | — | `langfuse.com/docs` (visto 24/10) |
+| livro de mensagens | — | `langfuse.com/docs` (visto 24/10) |
+| colisão de nomes | — | `langfuse.com/docs` (visto 24/10) |

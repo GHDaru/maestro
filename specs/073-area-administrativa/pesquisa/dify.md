@@ -26,11 +26,11 @@ Acrônimos: LLM (*Large Language Model*), LLMOps (*Large Language Model Operatio
 | Funcionalidade | Veredito | Fonte |
 |---|---|---|
 | subir/derrubar sessão ou agente | não — a aplicação roda ao ser publicada/usada; não há subir/derrubar de agente pela UI | `docs.dify.ai/en/introduction` (visto 24/10) |
-| pausar | não — não descrito | `docs.dify.ai/en/introduction` (visto 24/10) |
-| retomar | não — não descrito | `docs.dify.ai/en/introduction` (visto 24/10) |
-| limites de orçamento e de taxa | não — não descrito nas fontes vistas | `docs.dify.ai/en/introduction` (visto 24/10) |
-| políticas allow/deny/ask | não — não descrito nas fontes vistas | `docs.dify.ai/en/introduction` (visto 24/10) |
-| aprovação humana | não — não descrito nas fontes vistas | `docs.dify.ai/en/introduction` (visto 24/10) |
+| pausar | — | `docs.dify.ai/en/introduction` (visto 24/10): não descrito |
+| retomar | — | `docs.dify.ai/en/introduction` (visto 24/10): não descrito |
+| limites de orçamento e de taxa | — | `docs.dify.ai/en/introduction` (visto 24/10): não descrito nas fontes vistas |
+| políticas allow/deny/ask | — | `docs.dify.ai/en/introduction` (visto 24/10): não descrito nas fontes vistas |
+| aprovação humana | — | `docs.dify.ai/en/introduction` (visto 24/10): não descrito nas fontes vistas |
 
 ### ADMINISTRAÇÃO
 
@@ -41,28 +41,28 @@ Acrônimos: LLM (*Large Language Model*), LLMOps (*Large Language Model Operatio
 | cadastro de skills/ferramentas/modelos | sim — modelos (centenas), ferramentas via Marketplace/MCP/APIs e desenvolvimento de *plugins* | `docs.dify.ai/en/introduction` + README (visto 24/10) |
 | chaves e segredos | parcial — "Backend-as-a-Service"/"corresponding APIs" (chaves de API implícitas); gestão de chaves não descrita | `docs.dify.ai/en/introduction` (visto 24/10) |
 | configuração por projeto | sim — "one collaborative workspace" como escopo de trabalho | `docs.dify.ai/en/introduction` (visto 24/10) |
-| auditoria | não — não descrito nas fontes vistas | `docs.dify.ai/en/introduction` (visto 24/10) |
+| auditoria | — | `docs.dify.ai/en/introduction` (visto 24/10): não descrito nas fontes vistas |
 
 ### GERENCIAMENTO
 
 | Funcionalidade | Veredito | Fonte |
 |---|---|---|
-| lista de agentes vivos com estado | não — não descrito nas fontes vistas | `docs.dify.ai/en/introduction` (visto 24/10) |
-| tarefa aberta | não — não descrito nas fontes vistas | `docs.dify.ai/en/introduction` (visto 24/10) |
+| lista de agentes vivos com estado | — | `docs.dify.ai/en/introduction` (visto 24/10): não descrito nas fontes vistas |
+| tarefa aberta | — | `docs.dify.ai/en/introduction` (visto 24/10): não descrito nas fontes vistas |
 | última atividade | sim — LLMOps: "Monitor and analyze application logs and performance over time" | `docs.dify.ai/en/introduction` (visto 24/10) |
 | consumo por agente/sessão/modelo | parcial — logs e observabilidade terceirizada (Langfuse/LangSmith/Phoenix/Opik) | `docs.dify.ai/en/introduction` (visto 24/10) |
 | custo | parcial — via integrações de observabilidade citadas; métrica de custo própria não descrita | `docs.dify.ai/en/introduction` (visto 24/10) |
-| filas e workers | não — não descrito nas fontes vistas | `docs.dify.ai/en/introduction` (visto 24/10) |
+| filas e workers | — | `docs.dify.ai/en/introduction` (visto 24/10): não descrito nas fontes vistas |
 | rastro/replay de sessão | parcial — logs + observabilidade externa; *replay* nativo não citado | `docs.dify.ai/en/introduction` (visto 24/10) |
-| alertas | não — não descrito nas fontes vistas | `docs.dify.ai/en/introduction` (visto 24/10) |
+| alertas | — | `docs.dify.ai/en/introduction` (visto 24/10): não descrito nas fontes vistas |
 
 ### INTERCOMUNICAÇÃO
 
 | Funcionalidade | Veredito | Fonte |
 |---|---|---|
-| mensagem entre agentes | não — não descrito nas fontes vistas | `docs.dify.ai/en/introduction` (visto 24/10) |
+| mensagem entre agentes | — | `docs.dify.ai/en/introduction` (visto 24/10): não descrito nas fontes vistas |
 | protocolos (A2A; MCP) | parcial — suporte a MCP (conectar ferramentas); A2A não citado | `docs.dify.ai/en/introduction` (visto 24/10) |
-| caixa de entrada | não — não descrito | `docs.dify.ai/en/introduction` (visto 24/10) |
-| roteamento por nome/ref | não — não descrito | `docs.dify.ai/en/introduction` (visto 24/10) |
-| livro de mensagens | não — não descrito | `docs.dify.ai/en/introduction` (visto 24/10) |
-| colisão de nomes | não — não descrito | `docs.dify.ai/en/introduction` (visto 24/10) |
+| caixa de entrada | — | `docs.dify.ai/en/introduction` (visto 24/10): não descrito |
+| roteamento por nome/ref | — | `docs.dify.ai/en/introduction` (visto 24/10): não descrito |
+| livro de mensagens | — | `docs.dify.ai/en/introduction` (visto 24/10): não descrito |
+| colisão de nomes | — | `docs.dify.ai/en/introduction` (visto 24/10): não descrito |

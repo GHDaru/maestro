@@ -38,8 +38,8 @@
 | Funcionalidade | Resposta | Fonte (URL + o que foi visto) |
 |---|---|---|
 | Subir/derrubar sessão ou agente | parcial | `guides/agents.md`: sessões são recursos com ciclo de vida ("An Agents API session, an SDK session, a Responses conversation, and a sandbox are different resources", com contabilização e limpeza); `introducing-agentkit`: Agent Builder permite **preview runs** e versionamento. Não há "subir/derrubar agente" como processo |
-| Pausar | não | nenhuma página aberta documenta pausar execução (nem no Agent Builder, nem no Agents SDK) |
-| Retomar |  | nenhuma página aberta |
+| Pausar | — | nenhuma página aberta documenta pausar execução (nem no Agent Builder, nem no Agents SDK) |
+| Retomar | — | nenhuma página aberta |
 | Limites de orçamento e de taxa | sim | `spend-limits.md`: limite de organização ("across all projects") e de projeto, "Enforce a hard limit" → **429** `organization_spend_limit_exceeded` / `project_spend_limit_exceeded`, "Spend alert" notifica sem capar; `rate-limits.md`: "RPM", "RPD", "TPM", "TPD", "IPM", definidos "at the organization level and at the project level, not user level", com *tiers* (Free/Build/Launch/Grow) e `Retry-After` |
 | Políticas allow/deny/ask | parcial | `introducing-agentkit`: Guardrails — "an open-source, modular safety layer" (mascarar PII, detectar *jailbreak*); `openai-agents-python`: guardrails validam entrada/saída do agente; `guides/rbac.md`: níveis `Read`, `Write`, `Request`, `Use`, `Manage`. Não há taxonomia allow/deny/ask explícita |
 | Aprovação humana | parcial | `openai-agents-python`: "Human in the loop: Built-in mechanisms for involving humans during agent runs"; `introducing-agentkit`: nó "User approval" no canvas do Agent Builder (beta) |
@@ -59,8 +59,8 @@
 
 | Funcionalidade | Resposta | Fonte (URL + o que foi visto) |
 |---|---|---|
-| Lista de agentes vivos com estado | não | `guides/agents.md` cita "Agents API observability and usage" (observabilidade e uso), mas nenhuma página aberta lista agentes vivos com estado |
-| Tarefa aberta |  | nenhuma página aberta |
+| Lista de agentes vivos com estado | — | `guides/agents.md` cita "Agents API observability and usage" (observabilidade e uso), mas nenhuma página aberta lista agentes vivos com estado |
+| Tarefa aberta | — | nenhuma página aberta |
 | Última atividade | parcial | `openai-agents-python`: "Tracing: Built-in tracing for visualizing, debugging, and monitoring workflows"; `introducing-agentkit`: "Trace grading — run end-to-end assessments of agentic workflows" — dá para ver a última execução, não a atividade de um agente vivo |
 | Consumo por agente/sessão/modelo | parcial | `help.openai.com`: "Usage Dashboard" (visível se "Visible to organization owners") e "Model usage" por projeto; `openai-agents-python` lista o recurso "Usage"; `rate-limits.md`: limites por modelo. Por **agente** não aparece |
 | Custo | sim | `spend-limits.md` (gasto por organização e por projeto, alerta e limite rígido), `help.openai.com` (Usage Dashboard), `guides/admin-apis.md` ("Spend limits", "spend alerts") |
@@ -74,10 +74,10 @@
 |---|---|---|
 | Mensagem entre agentes | parcial | `openai-agents-python`: "Handoffs … letting agents delegate to other agents for specific tasks"; `guides/agents.md`: o runner do SDK "handles the agent loop and handoffs" e cita "multi-agent orchestration" — delegação dentro do processo, não mensageria entre agentes independentes |
 | Protocolos (A2A; MCP) | parcial | MCP **sim**: `guides/llms.txt` ("MCP servers", "MCP connections", "Secure MCP Tunnel", "Add custom MCP server"), `openai-agents-python` ("MCP server tool calling"); **A2A não aparece** em nenhuma página aberta |
-| Caixa de entrada |  | nenhuma página aberta |
-| Roteamento por nome/ref | não | `openai-agents-python`: *handoffs* entregam a um objeto de agente no código; nenhuma página aberta mostra roteamento por nome/ref num registro |
+| Caixa de entrada | — | nenhuma página aberta |
+| Roteamento por nome/ref | — | `openai-agents-python`: *handoffs* entregam a um objeto de agente no código; nenhuma página aberta mostra roteamento por nome/ref num registro |
 | Livro de mensagens | parcial | `openai-agents-python` / `guides/agents.md`: "a Responses conversation" e "Sessions" guardam o histórico de contexto de uma conversa (memória persistente), não um livro de mensagens entre agentes |
-| Colisão de nomes |  | nenhuma página aberta |
+| Colisão de nomes | — | nenhuma página aberta |
 
 ## Observações para a rodada 2
 

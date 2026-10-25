@@ -25,43 +25,43 @@ Protocol*), A2A (*Agent-to-Agent*), OSS (*Open Source Software*).
 | Funcionalidade | Veredito | Fonte |
 |---|---|---|
 | subir/derrubar sessão ou agente | não — observabilidade/avaliação; não sobe nem derruba agente | `arize.com/docs/phoenix` (visto 24/10) |
-| pausar | não — não descrito | `arize.com/docs/phoenix` (visto 24/10) |
-| retomar | não — não descrito | `arize.com/docs/phoenix` (visto 24/10) |
-| limites de orçamento e de taxa | não — não descrito | `arize.com/docs/phoenix` (visto 24/10) |
-| políticas allow/deny/ask | não — não descrito | `arize.com/docs/phoenix` (visto 24/10) |
-| aprovação humana | não — há anotação humana (rotulagem), não portão de aprovação | `arize.com/docs/phoenix` (visto 24/10) não descreve aprovação |
+| pausar | — | `arize.com/docs/phoenix` (visto 24/10): não descrito |
+| retomar | — | `arize.com/docs/phoenix` (visto 24/10): não descrito |
+| limites de orçamento e de taxa | — | `arize.com/docs/phoenix` (visto 24/10): não descrito |
+| políticas allow/deny/ask | — | `arize.com/docs/phoenix` (visto 24/10): não descrito |
+| aprovação humana | — | `arize.com/docs/phoenix` (visto 24/10) não descreve aprovação: há anotação humana (rotulagem), não portão de aprovação |
 
 ### ADMINISTRAÇÃO
 
 | Funcionalidade | Veredito | Fonte |
 |---|---|---|
 | cadastro de agentes | não — não há catálogo de agentes | `arize.com/docs/phoenix` (visto 24/10) |
-| papéis e permissões RBAC | não — não descrito nas fontes vistas | `arize.com/docs/phoenix` (visto 24/10) |
+| papéis e permissões RBAC | — | `arize.com/docs/phoenix` (visto 24/10): não descrito nas fontes vistas |
 | cadastro de skills/ferramentas/modelos | parcial — *prompt management* e avaliadores; sem registro de ferramentas/modelos | `arize.com/docs/phoenix` (visto 24/10) |
-| chaves e segredos | não — não descrito nas fontes vistas | `arize.com/docs/phoenix` (visto 24/10) |
-| configuração por projeto | não — não descrito nas fontes vistas | `arize.com/docs/phoenix` (visto 24/10) |
-| auditoria | não — não descrito nas fontes vistas | `arize.com/docs/phoenix` (visto 24/10) |
+| chaves e segredos | — | `arize.com/docs/phoenix` (visto 24/10): não descrito nas fontes vistas |
+| configuração por projeto | — | `arize.com/docs/phoenix` (visto 24/10): não descrito nas fontes vistas |
+| auditoria | — | `arize.com/docs/phoenix` (visto 24/10): não descrito nas fontes vistas |
 
 ### GERENCIAMENTO
 
 | Funcionalidade | Veredito | Fonte |
 |---|---|---|
 | lista de agentes vivos com estado | não — mostra traces/spans, não agentes vivos | `arize.com/docs/phoenix` (visto 24/10) |
-| tarefa aberta | não — não descrito | `arize.com/docs/phoenix` (visto 24/10) |
+| tarefa aberta | — | `arize.com/docs/phoenix` (visto 24/10): não descrito |
 | última atividade | parcial — traces com carimbos de tempo | `arize.com/docs/phoenix` (visto 24/10) |
-| consumo por agente/sessão/modelo | não — não descrito nas fontes vistas | `arize.com/docs/phoenix` (visto 24/10) |
-| custo | não — não descrito nas fontes vistas | `arize.com/docs/phoenix` (visto 24/10) |
-| filas e workers | não — não descrito | `arize.com/docs/phoenix` (visto 24/10) |
+| consumo por agente/sessão/modelo | — | `arize.com/docs/phoenix` (visto 24/10): não descrito nas fontes vistas |
+| custo | — | `arize.com/docs/phoenix` (visto 24/10): não descrito nas fontes vistas |
+| filas e workers | — | `arize.com/docs/phoenix` (visto 24/10): não descrito |
 | rastro/replay de sessão | sim — *Span Replay* reproduz/inspeciona um passo do trace; rastreio completo | `arize.com/docs/phoenix` (visto 24/10) |
-| alertas | não — não descrito nas fontes vistas | `arize.com/docs/phoenix` (visto 24/10) |
+| alertas | — | `arize.com/docs/phoenix` (visto 24/10): não descrito nas fontes vistas |
 
 ### INTERCOMUNICAÇÃO
 
 | Funcionalidade | Veredito | Fonte |
 |---|---|---|
-| mensagem entre agentes | não — não descrito | `arize.com/docs/phoenix` (visto 24/10) |
-| protocolos (A2A; MCP) | não — nem A2A nem MCP citados nesta fonte | `arize.com/docs/phoenix` (visto 24/10) não descreve |
-| caixa de entrada | não — não descrito | `arize.com/docs/phoenix` (visto 24/10) |
-| roteamento por nome/ref | não — não descrito | `arize.com/docs/phoenix` (visto 24/10) |
-| livro de mensagens | não — não descrito | `arize.com/docs/phoenix` (visto 24/10) |
-| colisão de nomes | não — não descrito | `arize.com/docs/phoenix` (visto 24/10) |
+| mensagem entre agentes | — | `arize.com/docs/phoenix` (visto 24/10): não descrito |
+| protocolos (A2A; MCP) | — | `arize.com/docs/phoenix` (visto 24/10) não descreve: nem A2A nem MCP citados nesta fonte |
+| caixa de entrada | — | `arize.com/docs/phoenix` (visto 24/10): não descrito |
+| roteamento por nome/ref | — | `arize.com/docs/phoenix` (visto 24/10): não descrito |
+| livro de mensagens | — | `arize.com/docs/phoenix` (visto 24/10): não descrito |
+| colisão de nomes | — | `arize.com/docs/phoenix` (visto 24/10): não descrito |

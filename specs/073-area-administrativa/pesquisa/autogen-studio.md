@@ -25,8 +25,8 @@ Object Notation*).
 | subir/derrubar sessão ou agente | parcial — rodar *times* no Playground; sem subir/derrubar agente pela UI | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
 | pausar | sim — "ability to pause or stop execution" no Playground | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
 | retomar | parcial — o controle pause/stop é descrito; retomar explicitamente, não | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
-| limites de orçamento e de taxa | não — não descrito | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
-| políticas allow/deny/ask | não — não descrito | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
+| limites de orçamento e de taxa | — | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
+| políticas allow/deny/ask | — | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
 | aprovação humana | parcial — `UserProxyAgent` permite participação humana no diálogo, não um portão de aprovação | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
 
 ### ADMINISTRAÇÃO
@@ -34,11 +34,11 @@ Object Notation*).
 | Funcionalidade | Veredito | Fonte |
 |---|---|---|
 | cadastro de agentes | sim — *Team Builder* monta agentes por arrastar-e-soltar ou JSON declarativo | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
-| papéis e permissões RBAC | não — não descrito | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
+| papéis e permissões RBAC | — | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
 | cadastro de skills/ferramentas/modelos | sim — configuração de ferramentas e modelos no Team Builder; *Gallery* importa componentes da comunidade | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
 | chaves e segredos | parcial — modelos são configurados no Team Builder (implica credencial); gestão de chaves não descrita | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
 | configuração por projeto | parcial — o time é uma especificação declarativa (JSON) versionável; "projeto" não formalizado | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
-| auditoria | não — não descrito | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
+| auditoria | — | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
 
 ### GERENCIAMENTO
 
@@ -47,19 +47,19 @@ Object Notation*).
 | lista de agentes vivos com estado | parcial — grafo de transição de controle e sessões do Playground, não agentes vivos com estado | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
 | tarefa aberta | parcial — tarefas aparecem na execução do time no Playground | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
 | última atividade | parcial — streaming de mensagens em tempo real na execução | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
-| consumo por agente/sessão/modelo | não — não descrito | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
-| custo | não — não descrito | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
-| filas e workers | não — não descrito | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
+| consumo por agente/sessão/modelo | — | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
+| custo | — | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
+| filas e workers | — | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
 | rastro/replay de sessão | parcial — mensagens em tempo real; *replay* não é citado | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
-| alertas | não — não descrito | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
+| alertas | — | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
 
 ### INTERCOMUNICAÇÃO
 
 | Funcionalidade | Veredito | Fonte |
 |---|---|---|
 | mensagem entre agentes | sim — times trocam mensagens; grafo de transição de controle mostra o fluxo; `UserProxyAgent` no diálogo | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
-| protocolos (A2A; MCP) | não — nem A2A nem MCP são citados nesta página | `.../autogenstudio-user-guide/index.html` (visto 24/10) não descreve |
-| caixa de entrada | não — não descrito | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
+| protocolos (A2A; MCP) | — | `.../autogenstudio-user-guide/index.html` (visto 24/10) não descreve |
+| caixa de entrada | — | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
 | roteamento por nome/ref | parcial — o time roteia mensagens entre os agentes conforme o grafo | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
 | livro de mensagens | parcial — a sessão no Playground mostra as mensagens trocadas (streaming) | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
-| colisão de nomes | não — não descrito | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
+| colisão de nomes | — | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
