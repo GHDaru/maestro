@@ -1,5 +1,25 @@
 # Tasks 073 — Área administrativa do Maestro (rodada 1: pesquisa de plataformas)
 
+## Rodada 2 — confronto com o Maestro e decisão do que entra (25/10, mandato do regente)
+
+`[[TASK id=073-rodada-2 kind=implement cycle=073 attempt=1]]`
+
+- [x] T2-preambulo — Worker06: normalização da força do `não`/`—` entre as gerações de ficha (regra
+      na legenda; nenhuma célula `—`→`sim`), correções da amostragem do crítico (Maestri 5 `—` em
+      CONTROLE; INTERCOMUNICAÇÃO 14%; Temporal "agentes vivos"/"tarefa aberta" `sim`→`parcial`) e
+      seção "Consideradas e não incluídas". **Entregue: `0c74d30`, integrado; verificado por script
+      (PASS — 172/223/13/242; grupos 30/76/45/21) e conferido célula a célula nas duas correções
+      do crítico.**
+- [ ] T2-inventario — Worker05: inventário do Maestro — as 26 funcionalidades com tem/parcial/não
+      tem e evidência (arquivo:linha, script, comando) em `confronto/inventario-maestro.md`.
+- [ ] T2-confronto — Worker03: matriz 26 × {melhor referência, estado no Maestro, lacuna, decisão
+      ENTRA/NÃO PRECISA/DEPOIS}; cada ENTRA com nome na linguagem ubíqua e os três critérios da
+      rodada 4; nada entra sem fonte (plataforma citada OU requisito do método).
+- [ ] T2-mapa — Worker02 (se livre) ou Worker03: mapa de contextos delimitados em
+      `confronto/mapa-de-contextos.md`, com diagrama.
+- [ ] T2-fechamento — Gerente: revisão fresca do confronto (quem não escreveu), conformance 073
+      nos dois modos, andamento, `[[DONE 073-rodada-2]]` ao regente. **Rodada 3 só com o "segue".**
+
 ## Verification first
 - [x] T0 — define the DoD checks — critérios de aceite FR1–FR4 na `spec.md` (ficha por plataforma
   com fonte, matriz consolidada, nenhuma célula sem fonte vira "sim", `andamento.md` a cada DONE);
