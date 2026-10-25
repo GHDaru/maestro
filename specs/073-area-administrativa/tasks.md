@@ -25,7 +25,9 @@
       E mutação 9/9 (mesmo falso-positivo de substring que o smoke test do Gerente achou — "Mod" ⊂
       "motor" — corrigido antes de entregar); interpretações declaradas (moldura × domínio; F2–F7
       e F10–F12 n/a). Fitness do Gerente (v3): 23 achados (18 citação-sem-atributo + 5 rótulo de
-      domínio sem data-rotulo) — correção attempt=2 despachada.**
+      domínio sem data-rotulo) — correção attempt=2 entregue (`7147f50`, integrada em `01b55f6`):
+      `data-referencia` na migalha/rodapé + `data-rotulo` nos th e no h1 (→OPA); fit073 e mut073
+      re-rodados PASS; **verde nas 3 telas**.**
 - [ ] T3-telas-workflow — Worker05: contexto Workflow de sessões — sessão de agente
       (subir/derrubar), estado do agente vivo, tarefa aberta, consumo por agente; última atividade
       como coluna existente (NÃO PRECISA).
@@ -36,8 +38,9 @@
       livro de mensagens append-only com desvio marcado, roteamento que RECUSA nome ambíguo e
       mostra a colisão + tabela das cinco colisões do §7, protocolo com o que a sessão expõe/consome
       e A2A como "—" com motivo). Self-check do W03: 4 arquivos, 0 falas. Fitness do Gerente (v3):
-      22 achados, TODOS da classe citação-sem-atributo — correção attempt=2 despachada (contrato
-      data-referencia/data-fonte).**
+      22 achados, TODOS da classe citação-sem-atributo — correção attempt=2 entregue (`ccf574c`,
+      integrada em `1354240`): `data-referencia` nas citações, só atributos (35/35); **verde nas
+      4 telas**.**
 - [ ] T3-readme-navegacao — Worker01: `prototipo/README.md` (telas × ENTRA × contexto dono ×
       juízes) e o lugar de cada tela na navegação do painel existente (Regência e Chamados ficam
       como estão).

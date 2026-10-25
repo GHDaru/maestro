@@ -483,3 +483,16 @@ Verificação re-executada:
 
 Sincronização: a worktree foi para `853a1d5` (`git merge --ff-only`) apenas para trazer o script do
 gate, que não existia na minha linha.
+
+### Verde intermediário do Gerente — 7 telas, 0 achados (25/10)
+
+Com as DUAS correções integradas (W03 `ccf574c` → `1354240`; W04 `7147f50` → `01b55f6`), o gate
+re-executado na árvore integrada:
+
+```text
+-- verifica-prototipo: 7 screen(s), 0 finding(s)   [exit 0]
+```
+
+As 7 telas (4 Mensageria + 3 Administração) passam nas quatro regras. Faltam as telas do Workflow
+(W05) e o README/navegação (W01); a rodada final sobre as 13, com a saída colada aqui, acontece no
+T3-fechamento — e a mutação do W02 quebra este script de propósito antes disso.
