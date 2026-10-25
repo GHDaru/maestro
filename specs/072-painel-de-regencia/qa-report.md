@@ -415,9 +415,9 @@
 ## Closing tail — the evidence
 
 - **TAIL:review** — independent review in fresh context (Worker06, who did not execute), of the
-  integrated diff against `plan.md`, the **25 FR** of `spec.md`, the "Nomes fixados" table and the
+  integrated diff against `plan.md`, the **27 FR** (FR1–FR27) of `spec.md`, the "Nomes fixados" table and the
   anti-rules 1–8 of `specs/066-painel-de-regencia/ux-design.md` §4. **Verdict: approved with two
-  blocking reservations** — the 25-FR coverage table below. Two defects found, both **anti-pattern 23**
+  blocking reservations** — the 27-FR coverage table below. Two defects found, both **anti-pattern 23**
   ("a new door, and the old guard never told"): (1) `_pasta_do_chamado` is defined **twice** in
   `painel/server.py` (W04 line 400, W05 line 582) and the later **shadows** the earlier, so the
   transition route (`v_transicao`) **always crashes and never implements FR9**; (2) `docs/journeys/`

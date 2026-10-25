@@ -1,7 +1,7 @@
 # Plan 072 — Painel de regência, rodada 1: kanban por gate e fila de decisões
 
 - **Spec**: `specs/072-painel-de-regencia/spec.md` — **revisão T01b** (condições C1–C8 do gate DoR
-  incorporadas; **25 FR** em EARS; 13 testes nomeados; duas ambiguidades decididas pelo Darú) ·
+  incorporadas; **27 FR** (FR1–FR27) em EARS; 13 testes nomeados; duas ambiguidades decididas pelo Darú) ·
   **Raia**: plena · **Data**: 2026-10-24 · **Status**: **aprovado COM CONDIÇÕES** no gate do plano
   (delegado ao crítico independente — ADR 0026) e **reconciliado com os testes** em `c1eb802`
   (`painel/tests/test_regencia.py`, 465 linhas), que passam a ser a autoridade das assinaturas.
@@ -29,7 +29,7 @@
 
 | Principle | Compliance |
 |---|---|
-| I. Spec-driven | ✅ A spec revisada (25 FR) precede o código; este plano existe antes de qualquer linha de `painel/regencia/`. A tela consome o `ux-design.md` do 066 (§2.1/§2.3), que é input, não descrição. |
+| I. Spec-driven | ✅ A spec revisada (**27 FR** — FR1–FR27) precede o código; este plano existe antes de qualquer linha de `painel/regencia/`. A tela consome o `ux-design.md` do 066 (§2.1/§2.3), que é input, não descrição. |
 | II. Human-governed orchestration | ✅ O painel **lê e registra**, nunca promove nem decide (anti-regras 1 e 2). O *ruling* exige autor humano (FR14); a delegação guarda `registrado_por` sem confundir autoria. FR17 impõe append-only **mecânico** no workflow herdado — quem recusa é a base, não a convenção. |
 | III. Reversibility / risk-proportional gates | ✅ Texto versionado em `painel/` + `git revert`; nada de ambiente, migração ou arquivo de gate movido. **Exceção declarada**: FR17 mexe no schema do 070 — risco **médio** (a base passa a recusar escrita), com *rollback* = `git revert`; sem bloco de irreversibilidade (nada fora do repositório, nenhum dado real). O gatilho é desenhado com `WHEN` para **não** quebrar o fechamento de passo do 070 (FR3). A rodada 2 fica declarada **infra**. |
 | IV. Test-first / verifiable DoD | ✅ **13 testes nomeados já existem** (`c1eb802`) e são a régua: cada Worker deixa **verde a sua fatia** (Princípio IV na forma mais forte — o vermelho precede o verde e já está no repositório). As regras puras nascem antes do adaptador HTTP; **F1 e F9 são teste sobre o HTML renderizado**, não `grep` no fonte (condição do gate). A cauda `TAIL:mutation` quebra a **condição** de FR9, FR12, FR10 e do gatilho de FR17 e cola os nomes dos testes que falham. |
