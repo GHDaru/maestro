@@ -24,14 +24,19 @@
 - Orçamento: MAESTRO em 19% do consumo semanal, teto 40%; workers no gateway, tokens reportados por
   DONE.
 
-## Rodada 2 — confronto (passo 1: inventário do Maestro)
+## Rodada 2 — confronto (passos 1–2)
 
 | Task | Worker | Escopo | Estado |
 |---|---|---|---|
 | 073-T2-inventario | Worker05 | `confronto/inventario-maestro.md` — o que o Maestro já faz hoje para cada uma das 26 funcionalidades, com `arquivo:linha` | **entregue** — **tem 8 · parcial 16 · não tem 2** (de 26); só `pausar` e `retomar` faltam por inteiro |
+| 073-T2-confronto | Worker03 | `confronto/confronto-decisao.md` — matriz 26 × {melhor referência, estado no Maestro, lacuna, decisão} | **entregue** — **ENTRA 13 · NÃO PRECISA 8 · DEPOIS 5**; INTERCOMUNICAÇÃO decidiu primeiro (6 `ENTRA` de 6) |
 
 - Alimenta a coluna **"estado no Maestro"** que o W03 confronta com a matriz. `não tem` traz a força
   declarada (afirmado × não encontrado), espelhando a normalização de notação da matriz.
+- A decisão do que entra (passo 2) cruza a matriz com esta coluna: `ENTRA` exige **fonte citada**
+  (plataforma com ficha **ou** requisito do método) e nunca se apoia em célula `—`; `NÃO PRECISA`
+  cobre o que o método já tem por inteiro e o que contraria o método; `DEPOIS` guarda a lacuna real
+  com o gatilho declarado.
 
 ## Histórico
 
@@ -92,3 +97,11 @@
   `confronto/inventario-maestro.md` — **tem 8 · parcial 16 · não tem 2**; o que falta por inteiro é o
   ciclo de vida (CONTROLE: `pausar`, `retomar`), e o Maestro é mais forte justamente onde a matriz é
   vazia (INTERCOMUNICAÇÃO).
+- 2026-10-25 — **073-T2-confronto entregue (Worker03)** — rodada 2, passo 2: o **confronto e a
+  decisão do que entra**. `confronto/confronto-decisao.md` cruza as 26 funcionalidades com a melhor
+  referência entre as 25 (com a ficha), o estado no Maestro (herdado do inventário) e a decisão:
+  **ENTRA 13 · NÃO PRECISA 8 · DEPOIS 5**. Intercomunicação decidiu primeiro — **6 `ENTRA` de 6**
+  (onde o mercado é vazio e o método opera à mão). Cada `ENTRA` traz nome na linguagem ubíqua,
+  juízes da rodada 4 e fonte citada (plataforma com ficha **ou** requisito do método); **nenhum
+  `ENTRA` se apoia em célula `—`**. Fecha com os totais e a **lista de 12 termos propostos** para o
+  glossário. Sem push, sem merge.
