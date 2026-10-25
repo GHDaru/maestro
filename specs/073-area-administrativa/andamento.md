@@ -49,3 +49,9 @@
   26 linhas, 0 linhas com contagem de células errada) e 4 células sorteadas conferidas contra as
   fichas com caminho:linha. Achado declarado: as 13 fichas novas **não usam `—`** (W03 deixa em
   branco, W05 escreve `não` para "nada achei") — normalizar é decisão do dono da rodada.
+- 2026-10-25 — **Gerente**: notação do consolidador **ratificada** (branco → `—`, `não`
+  transcrito, divergência declarada na legenda; FR3 preservado); **normalização deferida ao
+  preâmbulo da rodada 2**, onde a força do veredito passa a decidir no confronto. `plan.md`
+  preenchido (Constitution Check 8/8, artefatos declarados com razão, modelo de domínio
+  declarado) e `qa-report.md` estruturado. Revisão em contexto fresco despachada ao Worker03
+  (073-T1-revisao: 7 células dirigidas + recontagem independente + passagem de segurança).

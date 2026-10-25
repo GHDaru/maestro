@@ -1,21 +1,36 @@
-# QA report 073 — <title>
+# QA report 073 — Área administrativa do Maestro (rodada 1: pesquisa de plataformas)
 
-- **Date**: 2026-10-24 · **Lane**: <...> · **Verdict**: <pending>
+- **Date**: 2026-10-24 (fichas) · 2026-10-25 (consolidação e fechamento) · **Lane**: plena ·
+  **Verdict**: pending (fecha com a revisão em contexto fresco)
 
 ## Fitness functions (DoD)
 | Check | Expected | Result |
 |---|---|---|
-|  |  |  |
+| `scripts/check-cycle.sh 073` | lane justificada | **ok** — "lane 'full' with rationale" (justificativa dos três fatores no spec, commit `b186214`) |
+| Colunas da matriz (`pesquisa/plataformas.md`) | 2 + 25 = 27 | **27** (medido por script sobre o arquivo, Worker06) |
+| Linhas de funcionalidade | 26 | **26**, na ordem da tabela fixa da spec |
+| Linhas com contagem de células ≠ 27 | 0 | **0** |
+| Células da matriz | 25 × 26 = 650 | **650** |
+| Fichas com tabela fixa completa | 25 × 26 = 650 | **650** — 629 com veredito explícito + 21 células em branco (convertidas em `—` na matriz) |
+| `scripts/check-conformance.sh 073` | verde nos dois modos | (preenchido no fechamento da rodada) |
 
 ## Closing tail — the evidence
 <!-- One entry per non-n/a TAIL token. What was OBSERVED, never the intention restated. -->
-- TAIL:review — <who reviewed, fresh context, verdict, what was done with the findings>
-- TAIL:security — <the pass and its result, or the n/a reason mirrored from tasks.md>
-- TAIL:mutation — <the gate broken on purpose, the command, the refusal it printed>
-- TAIL:gate — <what awaits the human, or the recorded gate-main-<sha>>
+- TAIL:review — (preenchido no fechamento: revisão em contexto fresco pelo Worker03, que não consolidou)
+- TAIL:security — (preenchido no fechamento: varredura de segredos/credenciais/dados pessoais sobre pesquisa/)
+- TAIL:mutation — n/a: rodada documental — nenhum gate executável foi criado ou alterado neste ciclo (não há código); o veredito verificável da rodada é a contagem e a amostragem contra as fichas, cobertas no TAIL:review
+- TAIL:gate — (do regente: o "segue" para a rodada 2 — confronto com o Maestro e decisão do que entra)
 
 ## Requirement coverage
-- FR1: <...>
+- FR1: **presente** — 25 fichas em `pesquisa/`, cada uma com URL, data da visita, o que foi aberto
+  de verdade (docs, repositório, demo, execução local) e a tabela fixa de 26 funcionalidades.
+- FR2: **presente** — `pesquisa/plataformas.md` consolida as 25 plataformas (27 colunas de
+  cabeçalho, 26 linhas de dados, 650 células), fechada por acréscimo.
+- FR3: **presente** — toda célula se apoia na ficha da coluna; célula sem fonte ficou `—` (as 21
+  em branco do Worker03 foram convertidas na matriz); nenhuma célula sem fonte virou "sim"
+  (amostragem dirigida no fechamento).
+- FR4: **presente** — `andamento.md` atualizado a cada DONE (quatro linhas da rodada 1 em
+  **entregue** + histórico datado).
 
 ## Pending gate
 - dev -> main promotion awaits human approval.
@@ -61,3 +76,14 @@ encontrei"**, não "a fonte afirma que não existe" — é mais fraco que o `nã
 é violado (nenhuma célula sem fonte virou "sim"), mas a **força** do veredito difere entre as duas
 gerações de ficha. Normalizar é decisão do dono da rodada; a nota está repetida em
 `plataformas.md`, para quem ler a matriz sem ler este relatório.
+
+### Decisão do Gerente (25/10) — notação ratificada, normalização deferida
+
+O tratamento do consolidador está **ratificado**: célula em branco vira `—` (é o que a legenda
+manda), `não` é transcrito como a ficha escreveu, e a divergência fica declarada na legenda da
+matriz. O FR3 está preservado — nenhuma célula sem fonte virou "sim" — e a nota avisa o leitor
+sobre a força do veredito. **Normalizar** (reclassificar o `não` do Worker05 entre "ausência
+afirmada pela fonte" e "não encontrei", célula a célula, relendo as 9 fichas) fica como
+**tarefa de preâmbulo da rodada 2**: é no confronto com o Maestro que a força do veredito passa
+a decidir, e reclassificar agora seria gastar ficha antes de saber se a rodada 2 precisa da
+distinção.
