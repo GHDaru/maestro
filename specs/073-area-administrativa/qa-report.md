@@ -433,3 +433,28 @@ skills/ferramentas/modelos". Re-executado: PASS nos dois scripts.
 
 Nada fora de `specs/073-area-administrativa/prototipo/` foi escrito; sem push, sem merge, sem
 código de produto, sem segredo; siglas expandidas na 1ª ocorrência (verificado pelo R7).
+
+### Correção do gate `verifica-prototipo` (attempt=2, 25/10)
+
+A fitness function do protótipo (`prototipo/verifica-prototipo.py`, v3) acusou **23 achados nas 3
+telas** — nenhum era valor inventado; todos eram de **marcação**. As duas classes e a correção:
+
+| Classe | Achados | Correção (só atributo) |
+|---|---|---|
+| dígito de citação fora de contexto de citação | 18 (6 por tela: a `p.migalha` "ciclo 073, rodada 3" e os 5 blocos de rodapé com `fonte: … §4 / §7`) | `data-referencia="true"` na `p.migalha` e no `<footer class="rodape">` — ancestral isenta os descendentes |
+| rótulo de domínio sem `data-rotulo` | 5 | `data-rotulo` nos `<th>` do orçamento (Teto → `limite de orçamento`; Consumo → `consumo por agente`; Restante → `limite de orçamento`; Efeito ao estourar → `limite de orçamento`) e no `<h1>` da política (→ `OPA`) |
+
+**Nenhum texto visível foi alterado** — só atributos. Os `class="exemplo"` com "exemplo:" no texto
+já passavam pela regra do número (contrato §2) e ficaram como estavam.
+
+Verificação re-executada:
+
+- `python specs/073-area-administrativa/prototipo/verifica-prototipo.py` → total do protótipo
+  **45 → 22 achados**: as 23 minhas zeradas (**0 achado em `administracao-*.html`**); os 22
+  restantes são das 4 telas da Mensageria (W03), não destas telas.
+- auto-checagem própria re-rodada **só nas 3 telas** (cópia em diretório temporário): `fit073.py`
+  **PASS** (R1–R9 verdes) e `mut073.py` **PASS** (9/9 mutações acusadas) — os atributos novos não
+  afrouxaram nenhuma regra própria.
+
+Sincronização: a worktree foi para `853a1d5` (`git merge --ff-only`) apenas para trazer o script do
+gate, que não existia na minha linha.
