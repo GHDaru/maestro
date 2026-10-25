@@ -373,6 +373,56 @@
 
   (`contracts/` → `esquemas.md`, `rotas.md`.)
 
+### 072-T14 — contagem corrigida (Worker02)
+
+- **Entregue** (`[[DONE id=072-T14 outcome=delivered]]`, 24/10): commit **`f0c2b39`** na `w/worker02`
+  ("ciclo 072: contagem de FR corrigida (27, nao 25; T14)"), sobre a base **`ee9b3a9`** (a rodada de
+  correção registrada pelo regente; `git merge --ff-only ee9b3a9`, de `2d4a8c5` para cá, sem push).
+  O `tasks.md` **não foi tocado** (a correção do regente em `ee9b3a9` é dele) e a seção "### FR por
+  FR"/"## Requirement coverage" do W06 **não foi reescrita** — corrijo só as linhas de **contagem**.
+- **Onde o número vivia, e o que ficou:** `spec.md` enumera **27 FR (FR1–FR27)**; a moldura dizia
+  "25 FR" em **quatro linhas vivas** — `plan.md` **duas** (l. 4, o cabeçalho da spec; e l. 32, a tabela
+  do *Constitution Check*) e `qa-report.md` **duas** (l. 418 e l. 420, ambas na bala do `TAIL:review`:
+  a contagem e a referência à tabela de cobertura). As quatro passam a **27 FR (FR1–FR27)**.
+  **Desvio do "uma linha cada" do `tasks.md` §T14, declarado (regra V0b):** o `plan.md` tinha **duas**
+  menções, não uma — deixar a segunda seria conservar o erro de contagem no documento vivo; e o
+  `qa-report.md` pedia as duas linhas da mesma bala (corrigir a primeira e deixar "25-FR coverage
+  table" na segunda produziria um par incoerente). Portanto: **4 linhas, não 2**.
+- **Evidência — greps (saída real, medida imediatamente antes deste append):**
+
+  ```
+  $ grep -rn '25 FR' specs/072-painel-de-regencia/
+  specs/072-painel-de-regencia/qa-report.md:447:> **Nota de contagem**: a moldura do ciclo (tasks.md/T06) fala em "25 FR"; `spec.md` enumera **27**
+  specs/072-painel-de-regencia/qa-report.md:615:- **Contagem de FR divergente (menor).** A moldura do ciclo (tasks.md/T06) diz "25 FR"; `spec.md`
+  specs/072-painel-de-regencia/tasks.md:9:> `spec.md` — **revisão T01b**, 25 FR. Os **13 testes já existem** (`c1eb802`,
+  specs/072-painel-de-regencia/tasks.md:225:      plano, os 25 FR e a tabela **"Nomes fixados"**: veredito no `qa-report.md`. Procurar os
+  specs/072-painel-de-regencia/tasks.md:296:  (Theorem 2). Evidence: the verdict, in `qa-report.md`. Aqui: revisar os 25 FR contra o diff
+
+  $ grep -c '27 FR' specs/072-painel-de-regencia/plan.md specs/072-painel-de-regencia/qa-report.md
+  specs/072-painel-de-regencia/plan.md:2
+  specs/072-painel-de-regencia/qa-report.md:2
+
+  $ grep -n '27 FR' specs/072-painel-de-regencia/plan.md specs/072-painel-de-regencia/qa-report.md
+  specs/072-painel-de-regencia/plan.md:4:  incorporadas; **27 FR** (FR1–FR27) em EARS; 13 testes nomeados; …
+  specs/072-painel-de-regencia/plan.md:32:| I. Spec-driven | ✅ A spec revisada (**27 FR** — FR1–FR27) precede o código; …
+  specs/072-painel-de-regencia/qa-report.md:418:  integrated diff against `plan.md`, the **27 FR** (FR1–FR27) of `spec.md`, …
+  specs/072-painel-de-regencia/qa-report.md:453:> restante das 27 FR está implementado e provado.
+  ```
+
+  **As 5 ocorrências de "25 FR" que restam — nenhuma é contagem viva, todas declaradas:**
+  `tasks.md` **3** (l. 9, 225, 296 — o regente mandou "não a toque"); `qa-report.md` **2** (l. 447 e
+  l. 615 — **citações históricas** da divergência *medida* pelo W06 na revisão em contexto fresco:
+  "a moldura do ciclo … fala em '25 FR'"; reescrevê-las falsificaria o registro do que foi achado).
+  Zero linhas de **contagem** com o número antigo.
+- **Nota de honestidade sobre o próprio grep (auto-referência):** esta seção **cita** o token ao colar
+  a saída, então um `grep '25 FR'` rodado **depois** dela soma as ocorrências que estão **aqui dentro**
+  (o mesmo vale para o `grep -c '27 FR'`, que sobe acima de 2 em `qa-report.md`). Por isso as saídas
+  acima são as medidas **antes do append** — é o número que vale para o critério do T14, e os 2 em
+  cada arquivo (em vez de 1) são exatamente as linhas extras que declarei no desvio.
+- **Sem regressão e sem teste tocado:** correção de texto em `specs/`; o diff `ee9b3a9..f0c2b39` traz
+  **só** `plan.md` e `qa-report.md` (4 inserções / 4 remoções) — nenhum arquivo de `painel/` foi
+  alterado (nenhuma linha de código ou de teste).
+
 ## Fitness functions (DoD) — filled by Worker06 with real output
 
 > Ambiente: Windows, `PYTHONUTF8=1`, `python` 3.12.10 (o `python3` desta máquina é o alias da MS Store
@@ -419,9 +469,9 @@
 ## Closing tail — the evidence
 
 - **TAIL:review** — independent review in fresh context (Worker06, who did not execute), of the
-  integrated diff against `plan.md`, the **25 FR** of `spec.md`, the "Nomes fixados" table and the
+  integrated diff against `plan.md`, the **27 FR** (FR1–FR27) of `spec.md`, the "Nomes fixados" table and the
   anti-rules 1–8 of `specs/066-painel-de-regencia/ux-design.md` §4. **Verdict: approved with two
-  blocking reservations** — the 25-FR coverage table below. Two defects found, both **anti-pattern 23**
+  blocking reservations** — the 27-FR coverage table below. Two defects found, both **anti-pattern 23**
   ("a new door, and the old guard never told"): (1) `_pasta_do_chamado` is defined **twice** in
   `painel/server.py` (W04 line 400, W05 line 582) and the later **shadows** the earlier, so the
   transition route (`v_transicao`) **always crashes and never implements FR9**; (2) `docs/journeys/`
