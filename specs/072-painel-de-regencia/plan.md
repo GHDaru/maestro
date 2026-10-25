@@ -445,6 +445,13 @@ rodada as encosta sem as resolver por inteiro** — e por isso as **declara** em
   **não** conta como texto de botão. Se o JS quebrar em execução, os testes **não** pegam — é captura
   de jornada (FR26) e revisão humana que pegam, não a suíte. Declarado para não vender cobertura que
   não existe.
+- **Dívida do método — a skill `living-journey` cita `docs/journeys/`, o repositório usa `docs/jornada/`**
+  (já registrada no `qa-report.md`; decisão do regente, 24/10). A skill fixa o **plural** em inglês
+  (`skills/living-journey/SKILL.md:30`); a convenção deste repositório é o **singular** (`docs/jornada/`
+  — pasta existente, declarada em `boundary.json` e trilho do livro). Decisão: a jornada do 072
+  **migrou** para `docs/jornada/` (T13/W01 — o repositório venceu) e a **skill será corrigida num ciclo
+  próprio, raia leve**. **Não é `D-072-x`**: não nasceu nesta rodada — é dívida do **método**, e a
+  correção não pertence ao 072.
 
 > **Adaptação do F3 aprovada pelo regente (24/10, por delegação — ADR 0026):** como escrita no T03b, o
 > F3 era insatisfazível — a foto da árvore era tirada **antes** de `_sobe()`, que cria `<raiz>/painel.db`,
