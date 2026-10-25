@@ -65,6 +65,9 @@ RATIFIED = [
 ]
 
 # Generic UI words a label may consist of without citing any glossary term.
+# The "moldura" (interface frame) vocabulary declared by the screen authors
+# (Worker04's interpretation 2) lives here; a NEW domain word is NOT added here
+# — it gets a data-rotulo or it flags.
 STOPWORDS = {
     "novo", "nova", "abrir", "fechar", "buscar", "salvar", "cancelar", "voltar",
     "exemplo", "exemplos", "sim", "não", "nao", "ok", "detalhes", "mais",
@@ -74,6 +77,9 @@ STOPWORDS = {
     "na", "aos", "às", "the", "of", "and", "new", "open", "close", "save",
     "cancel", "back", "details", "more", "name", "date", "state", "action",
     "filter", "sort", "example", "yes", "no", "none",
+    # interface frame ("moldura") words — declared, not domain
+    "tipo", "consultar", "filtrar", "regra", "objeto", "efeito", "onde", "vive",
+    "invariante", "verifica", "quem", "decide", "hoje", "aplicar", "moldura",
 }
 
 NUMBER = re.compile(r"\d")
