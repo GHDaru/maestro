@@ -957,9 +957,12 @@ let atual = "board";
 function vai(v){ fecha(); atual = v; document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-current", b.dataset.v===v?"page":"false")); if(location.hash.slice(1).split("/")[0]!==v) location.hash = v; VIEWS[v]().catch(e=>$("#main").innerHTML=`<div class="aviso">Erro: ${esc(e.message)}</div>`); }
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>vai(b.dataset.v));
 async function meta(){ const m = cache.meta = await api("/api/meta"); $("#pnome").textContent = "Maestro · "+(m.projeto||""); $("#pingest").textContent = "arquivos lidos "+(m.ingerido_em||"").slice(11,16)+" de "+(m.ingerido_em||"").slice(8,10)+"/"+(m.ingerido_em||"").slice(5,7);
-  // T8: aviso de leitura velha se >1h
+  // T8: aviso de leitura velha se >1h. 072-T16: o número vem pronto do servidor
+  // (`m.leitura_velha`, de `regencia.aviso_leitura_velha`) — antes era recalculado aqui com
+  // `Math.round(min%60)` sobre um valor já em minutos e imprimia "1h60m" onde o aviso de dentro
+  // da página dizia "1 h 59 min": dois avisos da mesma ingestão, dois números.
   const avisoVelho = $("#aviso-velho");
-  if(m.ingerido_age_min > 60){ const h = Math.floor(m.ingerido_age_min/60); avisoVelho.innerHTML = `<span class="loz warn">leitura velha: ${h}h${Math.round(m.ingerido_age_min%60)}m desde o último ingest</span>`; avisoVelho.style.display = "block"; }
+  if(m.leitura_velha){ avisoVelho.innerHTML = `<span class="loz warn">leitura velha: ${m.leitura_velha} desde o último ingest</span>`; avisoVelho.style.display = "block"; }
   else avisoVelho.style.display = "none";
   // T9: erros de leitura
   try{ const erros = await api("/api/erros"); const avisoErro = $("#aviso-erro"); if(erros.length){ avisoErro.innerHTML = erros.map(e=>`<div class="aviso">Não leu <code>${esc(e.caminho)}</code>: ${esc(e.motivo)}</div>`).join(""); avisoErro.style.display = "block"; } else avisoErro.style.display = "none"; }catch{} }
