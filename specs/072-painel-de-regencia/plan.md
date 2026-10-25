@@ -34,7 +34,7 @@
 | III. Reversibility / risk-proportional gates | ✅ Texto versionado em `painel/` + `git revert`; nada de ambiente, migração ou arquivo de gate movido. **Exceção declarada**: FR17 mexe no schema do 070 — risco **médio** (a base passa a recusar escrita), com *rollback* = `git revert`; sem bloco de irreversibilidade (nada fora do repositório, nenhum dado real). O gatilho é desenhado com `WHEN` para **não** quebrar o fechamento de passo do 070 (FR3). A rodada 2 fica declarada **infra**. |
 | IV. Test-first / verifiable DoD | ✅ **13 testes nomeados já existem** (`c1eb802`) e são a régua: cada Worker deixa **verde a sua fatia** (Princípio IV na forma mais forte — o vermelho precede o verde e já está no repositório). As regras puras nascem antes do adaptador HTTP; **F1 e F9 são teste sobre o HTML renderizado**, não `grep` no fonte (condição do gate). A cauda `TAIL:mutation` quebra a **condição** de FR9, FR12, FR10 e do gatilho de FR17 e cola os nomes dos testes que falham. |
 | V. Context economy / boundary | ✅ Corte hexagonal: regras puras numa fronteira só (`painel/regencia/`, sem HTTP nem arquivo) e adaptadores em `painel/server.py` + `painel/fila_registro.py` (JSONL) e `painel/index.html` (tela). O kanban **reusa** `confere`/`ordem_veredito` do 068 — não há segundo conferidor (anti-padrão 22). `painel/regencia/` fica dentro de `painel/`, que já está no `boundary.json`. |
-| VI. Living artifacts / traceability | ✅ No mesmo PR: `spec.md`, `plan.md`, `tasks.md`, `data-model.md`, `contracts/`, `ux-design.md` (apontador), `docs/journeys/072-*.md`, `qa-report.md`, glossário (5 termos), ADR 0026 + 0027, `CHANGELOG.md` e `docs/roadmap.md`. Cadeia spec ↔ PR ↔ testes ↔ jornada. |
+| VI. Living artifacts / traceability | ✅ No mesmo PR: `spec.md`, `plan.md`, `tasks.md`, `data-model.md`, `contracts/`, `ux-design.md` (apontador), `docs/jornada/072-*.md`, `qa-report.md`, glossário (5 termos), ADR 0026 + 0027, `CHANGELOG.md` e `docs/roadmap.md`. Cadeia spec ↔ PR ↔ testes ↔ jornada. |
 | VII. Light governance / YAGNI | ✅ Sem broker/big-bang: a fila é JSONL append-only; o gatilho de FR17 são quatro `TRIGGER` curtos no schema que já existe. `abertura`/`GD` não viram coluna (faixa acima do kanban). Dívida 2 do 070 **não** é paga (declarada). |
 | VIII. Intelligible communication | ✅ Primeira ocorrência de cada sigla expandida; os cinco termos novos entram em `docs/governance/glossary.md` (inglês, ADR 0014). |
 
@@ -157,7 +157,7 @@ painel/chamados.py               (estendido, FR5) expõe autor_da_peca no item d
 painel/schema_workflow.sql       (estendido, FR17) quatro TRIGGER (com WHEN em passos)
 painel/hooks/workflow_stop.py    (INTOCADO, FR17) o gatilho com WHEN preserva o fechamento do passo
 painel/tests/test_regencia.py    os 13 testes de c1eb802 + os apensados por W03/W04/W05/W07
-docs/journeys/072-*.md           (FR26) jornada viva + script versionado de captura
+docs/jornada/072-*.md           (FR26) jornada viva + script versionado de captura
 ```
 
 O plano **fixa os nomes de módulo e de rota** (a spec revisada delegou: "os nomes de módulo/rota
@@ -306,17 +306,20 @@ rota responde com motivo ("config sem `regencia.pessoas`") em vez de aceitar qua
    **não é tocado**. **Adapta** `test_divida5_gatilho_recusa_update_e_delete`: `UPDATE passos` **com
    `saida_em IS NULL` e só nas colunas liberadas passa** (é o fechamento do passo), `UPDATE passos`
    **já fechado** e `DELETE` são recusados; `rodadas`/`transicoes`/`fila` recusam `UPDATE` e `DELETE`.
-5. **Jornada viva (Worker01, depois de W09).** `docs/journeys/072-*.md` + script versionado de captura
+5. **Jornada viva (Worker01, depois de W09).** `docs/jornada/072-*.md` + script versionado de captura
    + heurística **datada ≥** a data da captura (skill `living-journey`, F11). Se o ambiente não
    renderizar, entregar o script e a heurística com a captura **declarada como pendente** — nunca
-   inventar imagem.
+   inventar imagem. *(Caminho corrigido em T13: a T08 criou em `docs/journeys/` seguindo a skill; a
+   convenção do repositório — `docs/jornada/`, declarada em `boundary.json` — venceu por decisão do
+   regente.)*
 6. **Revisão e segurança em contexto fresco + `qa-report.md` (Worker06)**, com a **mutação** de FR9,
    FR12, FR10 e do gatilho (nomeando os testes que falham).
 7. **Fecha o ciclo (Worker01).** `data-model.md`, `contracts/`, o apontador `ux-design.md`, os cinco
    termos no glossário, ADR 0026/0027 em `docs/adr/` + `README` dos ADRs, `CHANGELOG.md`,
-   `docs/roadmap.md` e a correção do glob `documentos.jornadas` da fixture (`docs/jornada/*.md` →
-   somar `docs/journeys/*.md`, porque a skill/spec usam o plural em inglês:
-   `skills/living-journey/SKILL.md:30`).
+   `docs/roadmap.md` e a correção do glob `documentos.jornadas` da fixture. *(Supersessão declarada
+   em T13: o plano original somaria `docs/journeys/*.md` porque a skill usa o plural em inglês
+   — `skills/living-journey/SKILL.md:30`; a decisão do regente na correção R2 mantém o glob em
+   `docs/jornada/*.md` e registra a divergência da skill como dívida do método.)*
 
 **Ordem (dependências reais, não preferência).**
 
@@ -381,7 +384,7 @@ W03 ──┬── W04 ────────────┐
 - QUANDO o painel acrescenta uma linha ao registro da fila → o **prefixo de bytes** anterior fica inalterado (FR16) e o **backup do dia** existe em `painel/dados/backup/` (condição do gate).
 - QUANDO `meta.ingerido_em` é antigo (> 1 h) → "defasado" no cabeçalho (FR25).
 - QUANDO um chamado tem G7/G8/`TAIL:gate` pendente → item de fila com id derivado (chamado+gate), status do arquivo e marcador no cartão (FR20).
-- `ls docs/journeys/072-*.md` → existe; `grep -c 'F11' docs/journeys/072-*.md` → `≥ 1` (FR26).
+- `ls docs/jornada/072-*.md` → existe; `grep -c 'F11' docs/jornada/072-*.md` → `≥ 1` (FR26).
 - `grep -rn '\.env\|settings.local.json' painel/` → nenhum caminho de **leitura** de `.env`/`settings.local.json` (FR27).
 - `python painel/chamados.py painel/projetos/exemplo.json` → exit 0 (o conferidor 068/069 não mudou de comportamento; só o parser **acrescentou** um campo, FR5).
 - `python -m unittest discover -s painel/tests -p 'test_*.py'` → verde (regressão de 068/069/070).

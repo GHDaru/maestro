@@ -188,8 +188,9 @@ está na seção "Herdado do 070".
 - **FR25 — Ingestão defasada é anunciada.** QUANDO `meta.ingerido_em` tem mais de 1 h, O SISTEMA
   DEVERÁ anunciar **"defasado"** no cabeçalho (F10).
 - **FR26 — Jornada viva.** QUANDO a rodada mexe na tela, O SISTEMA DEVERÁ manter
-  `docs/journeys/072-*.md` com capturas geradas por **script versionado** e heurística **datada ≥** a
-  data da captura (F11; skill `living-journey`).
+  `docs/jornada/072-*.md` com capturas geradas por **script versionado** e heurística **datada ≥** a
+  data da captura (F11; skill `living-journey`). *(Caminho corrigido em T13 — a convenção do
+  repositório, `docs/jornada/`, vence; a skill é a dívida do método.)*
 - **FR27 — Nunca abre `.env` nem guarda host/token.** QUANDO o painel ingere ou registra,
   O SISTEMA DEVERÁ **não** abrir `.env`, **não** ler `settings.local.json` e **não** gravar host nem
   token; o registro da fila é arquivo do painel, **fora do projeto lido** (F12; v0 §2.6).
@@ -311,7 +312,7 @@ Esta spec **não** carrega os tokens `DOM:*`; o plano os declara. O que o plano 
 - WHEN `meta.ingerido_em` é antigo (> 1 h) THE SYSTEM SHALL anunciar "defasado" no cabeçalho (F10).
 - WHEN um chamado tem G7/G8/`TAIL:gate` pendente THE SYSTEM SHALL criar o item da fila com id derivado
   (chamado+gate), ler o status do arquivo e pôr o marcador no cartão (FR20).
-- `ls docs/journeys/072-*.md` → existe; `grep -c 'F11' docs/journeys/072-*.md` → `≥ 1` (FR26).
+- `ls docs/jornada/072-*.md` → existe; `grep -c 'F11' docs/jornada/072-*.md` → `≥ 1` (FR26).
 - `grep -rn '\.env\|settings.local.json' painel/` → nenhum caminho de **leitura** de `.env`/`settings.local.json`
   pela ingestão/registro (FR27).
 - Regressão do 069: `ls specs/070-conferidor-ordem-veredito/` → **10** arquivos (nove de gate —

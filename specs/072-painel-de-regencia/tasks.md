@@ -269,6 +269,9 @@
       `painel/projetos/exemplo.json`.
 - [ ] Rodar o bloco do check-boundary e do check-links (verdes).
 - Commit: "ciclo 072: R2 — jornada em docs/jornada/ (boundary.json)".
+- Nota do Gerente (24/10, ressalva do W01 aceita): os **comandos de evidência da DoD** em
+  `plan.md` §Verification e `spec.md` §Acceptance criteria passam a apontar `docs/jornada/` — o
+  texto histórico do T08 acima fica como está (registra o despacho como foi feito).
 
 ### Worker02 — contagem de FR: 27, não 25
 
