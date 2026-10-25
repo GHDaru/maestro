@@ -10,6 +10,15 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **Os 12 termos ratificados entram no glossário** (ciclo 073, `073-T3-glossario`): doze entradas novas
+  com a coluna **Cycle 073** (`sessão de agente`, `estado do agente vivo`, `tarefa aberta`, `consumo
+  por agente`, `limite de orçamento`, `catálogo de skills/ferramentas/modelos`, `mensagem entre
+  agentes`, `protocolo de intercomunicação`, `caixa de entrada`, `livro de mensagens`, `roteamento por
+  nome/ref`, `colisão de nomes`), resolvendo as **cinco colisões de nome** do mapa de contextos §7
+  ("fila", "caixa de entrada", "livro de ponto", "sessão" × "agente", "portão"). Acréscimo puro —
+  nenhuma entrada existente reescrita; a allowlist que a fitness function do protótipo extrai do
+  glossário vai de **74 a 86** termos.
+
 - **Área administrativa, rodadas 1–2 — pesquisa de plataformas e confronto** (ciclo 073). A
   rodada 1 pesquisou **25 plataformas** (ficha por plataforma com fonte, `specs/073-area-administrativa/pesquisa/`)
   e consolidou a matriz **25 × 26 = 650 células** com fonte por célula (`—` = nenhuma fonte
