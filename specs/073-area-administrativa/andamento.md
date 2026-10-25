@@ -13,8 +13,8 @@
 |---|---|---|---|
 | 073-T1-W03 | Worker03 | Gateways e consoles de LLM: LiteLLM Proxy Admin UI, Portkey, OpenAI Platform, Helicone | despachada |
 | 073-T1-W05 | Worker05 | Observabilidade e orquestração de agentes: AgentOps, Langfuse, LangSmith/LangGraph, CrewAI Enterprise (AMP), AutoGen Studio, Dify, Flowise | **entregue** — 9 arquivos (7 do despacho + 2 extras do mesmo nicho: Arize Phoenix, Comet Opik) |
-| 073-T1-W06 | Worker06 | Controle de processos e governança: Temporal Web UI, Portainer CE, Prefect/Dagster, Copilot Studio/Agent 365, n8n, ecossistema Claude (Claude Code, Maestri canvas, Kiro Crew) | despachada (pausa quando o 072 chamar para a reverificação R1/R2) |
-| consolidação | Gerente (ou quem terminar primeiro) | `pesquisa/plataformas.md` — matriz funcionalidade × plataforma | pendente |
+| 073-T1-W06 | Worker06 | Controle de processos e governança: Temporal Web UI, Portainer CE, Prefect/Dagster, Copilot Studio/Agent 365, n8n, ecossistema Claude (Claude Code, Maestri canvas, Kiro Crew) | **entregue 24/10** — 12 fichas (as do despacho + AWS Bedrock AgentCore e Windmill, na mesma raia); pausou para a reverificação R1/R2 do 072 e retomou |
+| consolidação | Gerente (ou quem terminar primeiro) | `pesquisa/plataformas.md` — matriz funcionalidade × plataforma | **parcial** — Worker06 publicou a matriz com as **12** plataformas do seu escopo; faltam as colunas de W03 e W05 (a estrutura recebe por acréscimo) |
 
 - Critérios de aceite da rodada 1: ver `spec.md` §Acceptance criteria (arquivo por plataforma com
   fonte, matriz consolidada, nenhuma célula sem fonte, andamento atualizado a cada DONE).
@@ -30,3 +30,9 @@
   `dify.md`, `flowise.md`, `arize-phoenix.md`, `comet-opik.md` — cada um com URL, data da visita
   (24/10), o que foi aberto de verdade (docs/repositório; demo do Langfuse não aberta por exigir
   conta) e a tabela fixa (26 itens) com fonte por célula. Nada rodou local; sem capturas.
+- 2026-10-24 — **073-T1-W06 entregue**: 12 fichas de plataforma em `pesquisa/` (26 funcionalidades
+  cada, célula sem fonte fica `—`) + `pesquisa/plataformas.md` (matriz consolidada parcial).
+  Nada rodou localmente (`docker` e `temporal` ausentes; `demo.portainer.io` recusou conexão) —
+  pesquisa 100% documental, nenhuma conta externa criada.
+- 2026-10-24 — 072-T06 chamou no meio do 073: reverificação R1/R2 feita antes (attempt=2, commit
+  `e0ff6f2`) e a pesquisa retomada depois.
