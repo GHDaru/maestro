@@ -246,3 +246,76 @@ ADMINISTRAÇÃO **76**/150 · GERENCIAMENTO **45**/200 (22,5%) · INTERCOMUNICA�
 contagem de células ≠ 27, 650 células; toda contagem das tabelas de leitura bate com a matriz.
 Script de medição fora do repositório (`%TEMP%\wf073_check.py`). Nada da evidência da rodada 1 foi
 reescrito — normalização e correções entraram **por acréscimo**.
+
+## Revisão em contexto fresco do confronto (073-T2-revisao-confronto, 25/10)
+
+Worker05, contexto próprio — **não escrevi o confronto** (foi o Worker03). Declaro, por
+transparência, que sou **autor de um dos insumos** (o inventário): a amostragem abaixo confere o
+confronto contra a **matriz** e contra **fontes externas** (o incidente do 066), não contra juízo
+próprio. Objeto: `confronto/confronto-decisao.md` (commit `eb40d89`), contra
+`pesquisa/plataformas.md` (pós-preâmbulo, normalizada) e `confronto/inventario-maestro.md`.
+Amostragem dirigida pelo Gerente (não auto-selecionada). **Nada foi corrigido** — os achados estão
+**reportados**; corrigir é decisão do dono da rodada.
+
+### 1. Amostragem dirigida — 6 linhas
+
+| # | Linha (decisão) | Verificação pedida | Confere? |
+|---|---|---|---|
+| 1 | caixa de entrada = **ENTRA** | fonte = requisito do método (`fila_outbox.py:140`); melhor referência citada = Maestri canvas `parcial`; nenhuma das 25 colunas `sim` | **confere** — `plataformas.md:88` não tem `sim`; ressalva: a Maestri **empata** com o Claude Code (ambas `parcial`) — ver Achado 2 |
+| 2 | colisão de nomes = **ENTRA** | incidente cita `specs/066-painel-de-regencia/qa-report.md:35`; Kiro Crew e Windmill `sim` | **confere** — `:35` diz exatamente o afirmado ("'Gerente' … 24/10 … 16 h … endereçar por ref … debt 2"); `plataformas.md:91` Kiro Crew = `sim`, Windmill = `sim` |
+| 3 | pausar = **DEPOIS** | respeita a força do veredito (`não encontrado`, piso); gatilho coerente com o ENTRA de limite de orçamento | **confere** — o inventário marca `pausar` como `não tem (não encontrado)`; limites é ENTRA com lacuna "limite executável", e o gatilho de pausar é esse teto |
+| 4 | RBAC = **NÃO PRECISA** (fora do método) | justificativa (autorização fora do modelo, Princípio III) contra `principles.md:37` e o glossário | **confere** — `principles.md:37` "Declarative policy `allow / deny / ask`; authorization lives outside the model."; `glossary.md:12` ABAC / `:13` RBAC |
+| 5 | consumo por agente = **ENTRA** | Copilot Studio `sim` na linha; estado `parcial` confere com o inventário | **confere** — `plataformas.md:81` Copilot Studio = `sim`; o inventário marca `parcial` (por sessão sim, por agente não) |
+| 6 | subir/derrubar = **ENTRA** | fonte dupla (método + plataforma), sem célula `—` | **confere** — `specs/072-…/spec.md:229` "Controle de PID — subir/derrubar sessão (risco alto; spec própria)"; `multi-session.py:140` (o "subir"); `plataformas.md:66` Claude Code = `sim` |
+
+**6/6 conferem** (a 1ª com a ressalva de empate, Achado 2).
+
+### 2. Recontagem das 26 decisões, por grupo (× §Totais)
+
+| Grupo | ENTRA | NÃO PRECISA | DEPOIS | Declarado no arquivo | Confere? |
+|---|---|---|---|---|---|
+| CONTROLE (6) | 3 | 1 | 2 | "3 ENTRA · 1 NÃO PRECISA · 2 DEPOIS" | ✅ |
+| ADMINISTRAÇÃO (6) | 1 | 4 | 1 | "1 ENTRA de 6" | ✅ |
+| GERENCIAMENTO (8) | 3 | 3 | 2 | "3 ENTRA de 8" | ✅ |
+| INTERCOMUNICAÇÃO (6) | 6 | 0 | 0 | "6 ENTRA de 6" | ✅ |
+| **Total (26)** | **13** | **8** | **5** | **13 · 8 · 5** | ✅ |
+
+Os nomes listados na tabela §Totais batem, um a um, com a decisão de cada linha da matriz de decisão.
+
+### 3. Regra 2 — nenhum `ENTRA` se apoia em célula `—`
+
+Conferência dos 13 `ENTRA` contra a coluna citada: subir→Claude Code `sim` (`:66`) · limites→OpenAI
+Platform `sim` (`:69`) · políticas→Agent 365 `sim` (`:70`) · skills→LiteLLM `sim` (`:74`) · lista de
+vivos→Claude Code `sim` (`:78`) · tarefa aberta→Claude Code `sim` (`:79`) · consumo→Copilot Studio
+`sim` (`:81`) · mensagem→CrewAI AMP `sim` (`:86`) · protocolos→LiteLLM `sim` (`:87`) · caixa de
+entrada→método + Maestri `parcial` (`:88`) · roteamento→Windmill `sim` (`:89`) · livro→método +
+Maestri `parcial` (`:90`) · colisão→Kiro Crew `sim` (`:91`). **Nenhum `—`.** **PASS.**
+
+### 4. Achado — Princípio VIII (Iron Law): quatro siglas com a 1ª ocorrência nua
+
+**RBAC** (`:49`), **RACI** (`:49`), **A2A** (`:63`) e **MCP** (`:73`) aparecem **sem expansão** na
+primeira ocorrência do documento; a expansão só existe na lista final de siglas (`:172-174`). A
+Iron Law do Princípio VIII exige a expansão **na primeira ocorrência**, e a contagem reinicia a cada
+documento — a lista final não sana a primeira. **Violação.** Correção editorial trivial (antecipar a
+expansão para `:49`/`:63`/`:73`). **Reportado, não corrigido.** (ADR `:15`, YAGNI `:21` e OPA `:89`
+estão corretos — expandidos na 1ª ocorrência.)
+
+### 5. Achado (secundário) — "melhor referência" não é única pela matriz
+
+Nas linhas **caixa de entrada** (`:74`) e **livro de mensagens** (`:76`), o rótulo "melhor" (Maestri
+canvas) **não se lê da matriz**: caixa de entrada é **empate** Maestri × Claude Code (ambas `parcial`,
+`plataformas.md:88`); livro de mensagens é **empate de seis** (`Maestri, AgentCore, Windmill, LiteLLM,
+OpenAI Platform, AutoGen Studio`, todas `parcial`, `:90`). A escolha da Maestri canvas é **defensável**
+pela nota da própria plataforma — a única cuja intercomunicação é por PTY, "com caixa de entrada e
+livro de mensagens parciais" (`plataformas.md:164-166`) —, mas o rótulo deveria ser "empatada (melhor
+por juízo)", não fato da matriz. **Não bloqueante**: a base do `ENTRA` é o requisito do método e a
+célula citada **não** é `—` (a Regra 2 segue satisfeita).
+
+### 6. Resumo da revisão
+
+- **6/6** amostras conferem (a 1ª com a ressalva do empate).
+- Recontagem **13/8/5** confere; por grupo, confere; §Totais bate com as linhas.
+- **Regra 2: PASS** — nenhum `ENTRA` sobre célula `—`.
+- **1 achado bloqueante (Princípio VIII)**: RBAC/RACI/A2A/MCP nuas na 1ª ocorrência; e **1
+  secundário** (rótulo "melhor"). Ambos **reportados, não corrigidos**.
+- **Limites**: revisão read-only; nada construído; nada de ferramenta nova entrou no repositório.
