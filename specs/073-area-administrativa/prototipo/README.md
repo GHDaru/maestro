@@ -29,10 +29,10 @@
 | `administracao-catalogo.html` | 9 · **catálogo de skills/ferramentas/modelos** | Administração | ADMINISTRAÇÃO | Administração/Gerenciamento | **neste ramo** (`5ce4a5f`, Worker04) |
 | `administracao-politicas.html` | 5 · **política declarativa (allow/deny/ask)** | Administração | CONTROLE | Controle · Administração/Gerenciamento | **neste ramo** (`5ce4a5f`, Worker04) |
 | `administracao-orcamento.html` | 4 · **limite de orçamento** | Administração | CONTROLE | Controle | **neste ramo** (`5ce4a5f`, Worker04) |
-| *(arquivo a declarar pelo Worker05)* | 1 · **sessão de agente** (subir/derrubar) | Workflow de sessões | CONTROLE | Controle · Administração/Gerenciamento | **não entregue** |
-| *(idem)* | 13 · **estado do agente vivo** | Workflow de sessões | GERENCIAMENTO | Administração/Gerenciamento · Controle | **não entregue** |
-| *(idem)* | 14 · **tarefa aberta** | Workflow de sessões | GERENCIAMENTO | Administração/Gerenciamento | **não entregue** |
-| *(idem)* | 16 · **consumo por agente** | Workflow de sessões | GERENCIAMENTO | Administração/Gerenciamento | **não entregue** |
+| *(arquivo a declarar pelo Worker05)* | 1 · **sessão de agente** (subir/derrubar) | Workflow de sessões | CONTROLE | Controle · Administração/Gerenciamento | **em entrega** |
+| *(idem)* | 13 · **estado do agente vivo** | Workflow de sessões | GERENCIAMENTO | Administração/Gerenciamento · Controle | **em entrega** |
+| *(idem)* | 14 · **tarefa aberta** | Workflow de sessões | GERENCIAMENTO | Administração/Gerenciamento | **em entrega** |
+| *(idem)* | 16 · **consumo por agente** | Workflow de sessões | GERENCIAMENTO | Administração/Gerenciamento | **em entrega** |
 
 **Os 13 `ENTRA` cabem em 11 telas** — dois deles não têm tela própria de propósito:
 
