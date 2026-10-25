@@ -1,5 +1,38 @@
 # Tasks 073 — Área administrativa do Maestro (rodada 1: pesquisa de plataformas)
 
+## Rodada 3 — wireframes das 13 ENTRA sobre o mapa de contextos (25/10, mandato do regente)
+
+`[[TASK id=073-rodada-3 kind=implement cycle=073 attempt=1]]`
+
+> Rodada 2 ACEITA; os 12 termos RATIFICADOS com a condição de que a entrada do glossário resolva as
+> cinco colisões de nome do mapa. Entrega em `specs/073-area-administrativa/prototipo/`.
+
+- [ ] T3-glossario — Worker01: os 12 termos em `docs/governance/glossary.md` (inglês, coluna
+      "Cycle 073"), resolvendo as cinco colisões (sessão de agente × agente; fila de decisões ×
+      fila outbox; livro de mensagens × livro de ponto; caixa de entrada como objeto da
+      Mensageria; portão do chamado reaproveitado pela Regência via camada anticorrupção).
+- [ ] T3-telas-administracao — Worker04: contexto Administração — catálogo de
+      skills/ferramentas/modelos (ENTRA), políticas allow/deny/ask (ENTRA), limites de orçamento
+      (ENTRA); cadastro de agentes e papéis aparece como registro existente (NÃO PRECISA), sem
+      funcionalidade nova.
+- [ ] T3-telas-workflow — Worker05: contexto Workflow de sessões — sessão de agente
+      (subir/derrubar), estado do agente vivo, tarefa aberta, consumo por agente; última atividade
+      como coluna existente (NÃO PRECISA).
+- [ ] T3-telas-mensageria — Worker03 (prioridade): contexto Mensageria — caixa de entrada, livro
+      de mensagens, roteamento por nome/ref com a colisão de nomes VISÍVEL, protocolo de
+      intercomunicação (A2A/MCP).
+- [ ] T3-readme-navegacao — Worker01: `prototipo/README.md` (telas × ENTRA × contexto dono ×
+      juízes) e o lugar de cada tela na navegação do painel existente (Regência e Chamados ficam
+      como estão).
+- [ ] T3-fitness — Gerente: script que percorre os HTML e falha se houver elemento interativo sem
+      `data-fonte`, rótulo fora do glossário (glossary.md + os 12) ou número sem a marca "exemplo";
+      saída colada no qa-report.
+- [ ] T3-revisao — Worker02: revisão em contexto fresco das telas contra o mapa e as colisões;
+      mutação — quebrar o script da fitness function e vê-lo acusar.
+- [ ] T3-seguranca — Worker06: segurança documental e conformance 073 nos dois modos.
+- [ ] T3-fechamento — Gerente: andamento, `[[DONE 073-rodada-3]]` ao regente (e commitado) com a
+      lista de telas, o resultado do script e os tokens. **Rodada 4 só com o "segue".**
+
 ## Rodada 2 — confronto com o Maestro e decisão do que entra (25/10, mandato do regente)
 
 `[[TASK id=073-rodada-2 kind=implement cycle=073 attempt=1]]`
