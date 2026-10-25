@@ -344,6 +344,7 @@ célula citada **não** é `—` (a Regra 2 segue satisfeita).
   regente), sem código, sem contas externas, sem dados pessoais; os insumos são arquivos do próprio
   repositório já varridos na rodada 1.
 
+<<<<<<< HEAD
 ## Rodada 3 — fitness function do protótipo (Gerente, 25/10)
 
 **`prototipo/verifica-prototipo.py`** (commit `fa4ee3e`) — o gate executável dos wireframes, com as
@@ -367,3 +368,68 @@ operacional"); a tela boa, **0 achados**. O smoke test **achou um falso-negativo
 Sem telas reais o script **falha por design** ("no screens found", exit 1) — a rodada verde sobre as
 13 telas e a saída colada aqui acontecem no **T3-fechamento**; a mutação do Worker02 quebra este
 script de propósito (TAIL:mutation da rodada).
+
+## Rodada 3 — telas da Administração (Worker04, 25/10)
+
+**Escopo:** `T3-telas-administracao` — três wireframes estáticos em
+`specs/073-area-administrativa/prototipo/`, as três `ENTRA` que o mapa §6.5 põe na Administração:
+
+| Arquivo | ENTRA (`confronto-decisao.md`) | Nome na linguagem ubíqua | Juiz(es) da rodada 4 |
+|---|---|---|---|
+| `administracao-catalogo.html` | cadastro de skills/ferramentas/modelos | catálogo de skills/ferramentas/modelos | Administração/Gerenciamento |
+| `administracao-politicas.html` | políticas allow/deny/ask | política declarativa (allow/deny/ask) | Controle · Administração/Gerenciamento |
+| `administracao-orcamento.html` | limites de orçamento e de taxa | limite de orçamento | Controle |
+
+Cadastro de agentes e papéis **não** é tela nova: aparece como **coluna de contexto somente-leitura**
+no catálogo, com `data-fonte` em `docs/agents/README.md` + `scripts/check-agents.sh` — sem
+funcionalidade nova, conforme o mandato do regente.
+
+### Formato entregue
+
+- um arquivo HTML **estático** por tela; zero `<script>`, zero recurso externo (`http`), sem servidor;
+- CSS mínimo em cinza, "caixas e rótulos" (tokens em `:root`, ~30 linhas, repetido por arquivo);
+- **todo** elemento de bloco e **todo** controle com `data-fonte`, que nomeia a plataforma (ficha em
+  `pesquisa/`) ou o requisito do método (princípio, ADR, ux-design);
+- **nenhum número inventado**: ilustrativo → `exemplo`; vivo → `—` com `motivo`; real → selo
+  `declarado` (método) ou `referência` (plataforma) com a fonte.
+
+### Auto-checagem (mesmas regras do `T3-fitness` do Gerente)
+
+Script `%TEMP%\w04check\fit073.py` (fora do repositório), nove regras — R1 interativo com
+`data-fonte` · R2 `.metrica` com `data-fonte` (`F1`) · R3 travessão-valor com `motivo` (`F8`) · R4
+número sem marca `exemplo` · R5 rótulo fora do glossário/ratificados/moldura · R6 termo da lista
+"Evitar" (`ux-design 066` §5) · R7 sigla expandida na 1ª ocorrência (Princípio VIII) · R8
+script/externo · R9 link relativo quebrado.
+
+Saída: **`RESULTADO: PASS — 3 arquivos, todas as regras verdes`** (R1–R9 `medido=0 esperado=0` nos
+três arquivos). Vocabulário carregado do próprio repositório: 74 termos do glossário + 12 propostos
+ratificados.
+
+### Mutação da auto-checagem (prova de que não é vazia)
+
+`%TEMP%\w04check\mut073.py` — quebra **uma** regra de cada vez numa cópia temporária e roda o MESMO
+`fit073.py` sobre a cópia, exigindo a acusação da regra correspondente. Saída:
+**`RESULTADO: PASS — 9 mutações, cada uma acusada pela sua regra`** (9/9).
+
+Um **ponto cego** apareceu e foi corrigido antes da entrega: a primeira versão do R5 aceitava o
+rótulo "Motor de custódia de credenciais" porque o termo `Mod` casava como **substring** de
+"motor". O R5 passou a exigir **fronteira de palavra** (`mod` não casa dentro de `motor`), mantendo
+a segunda via (rótulo curto contido num termo) só para casos legítimos como "Skill" ⊂ "catálogo de
+skills/ferramentas/modelos". Re-executado: PASS nos dois scripts.
+
+### Interpretações declaradas
+
+1. **"plataforma e URL da ficha em `pesquisa/`"** → o `data-fonte` nomeia a plataforma e o
+   **caminho da ficha** em `pesquisa/`, que traz a URL externa dentro dela; o HTML não duplica a
+   ficha nem o link externo.
+2. **A regra de rótulo incide sobre nomes de objeto** (`<span class="rotulo">`, `<h3>`):
+   glossário + 12 ratificados + linguagem ubíqua do mapa §6.5 (Agente, Skill, ferramenta, Projeto,
+   Fronteira). Palavras de moldura de interface (Controle, Escopo, Estado, Consultar, Nome, Tipo…)
+   são declaradas **como moldura** no rodapé de cada tela, não como vocabulário de domínio.
+3. **`F1`, `F8`, `F9`** do `ux-design` 066 valem; **`F2`–`F7` e `F10`–`F12` são n/a** neste
+   protótipo (supõem servidor e API) — declarado no rodapé de cada tela, não omitido.
+
+### Limites
+
+Nada fora de `specs/073-area-administrativa/prototipo/` foi escrito; sem push, sem merge, sem
+código de produto, sem segredo; siglas expandidas na 1ª ocorrência (verificado pelo R7).
