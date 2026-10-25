@@ -4,6 +4,12 @@
 - **Origin**: demanda do regente (sessão MAESTRO, 24/10) — pesquisar e propor, **sem construir
   software**, a área administrativa do Maestro: agentes e papéis, cadastro de skills, subir e
   derrubar sessões, estado e consumo dos agentes vivos, intercomunicação entre sessões.
+- **Lane**: plena — justificativa pelos três fatores: **ambiguidade de nome** alta (o que é a
+  "área administrativa" só se delimita com a pesquisa; a tabela fixa de funcionalidades existe
+  para fixar o vocabulário antes de decidir), **raio de explosão** alto (a decisão orienta todos
+  os ciclos futuros da superfície administrativa — é escolha de fundação, não de detalhe) e
+  **irreversibilidade** baixa no artefato (nenhum software nasce aqui), mas o ciclo carrega o
+  jogo completo de artefatos e o **bar de três críticos** da rodada 4 — o formato de raia plena.
 
 ## What and why
 
