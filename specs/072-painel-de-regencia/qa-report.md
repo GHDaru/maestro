@@ -286,10 +286,11 @@
 
 ### 072-T08 — living journey (Worker01)
 
-- **Entregue** (`[[DONE id=072-T08 outcome=delivered]]`, 24/10): `docs/journeys/072-painel-de-regencia.md`
+- **Entregue** (`[[DONE id=072-T08 outcome=delivered]]`, 24/10): `docs/jornada/072-painel-de-regencia.md`
   (a jornada do regente, cobrindo **as duas telas** — Kanban e Fila —, a partir do §3 do
   `specs/066-painel-de-regencia/ux-design.md`), o script versionado
-  `docs/journeys/scripts/captura-072.sh` e duas capturas **do build real**. Base desta seção: `2d4a8c5`.
+  `docs/jornada/scripts/captura-072.sh` e duas capturas **do build real**. Base desta seção: `2d4a8c5`.
+  *(Caminhos em `docs/jornada/` — singular — desde a correção R2/T13; antes, `docs/journeys/`.)*
 - **O ambiente renderizou** — o plano B da D-072-7 **não** foi necessário. Script sobe o painel de
   verdade (`painel/server.py painel/projetos/exemplo.json`, porta 8791, derrubado no fim por `trap`)
   e fotografa o DOM com Playwright + Edge do sistema (`PW_CHANNEL=msedge`, headless), 1440×900.
@@ -299,9 +300,9 @@
   == esperando a derivação aquecer (até 90s) ==
     derivação estabilizada com 1 chamado(s) em 2.1s
   == capturando as duas telas com o navegador (msedge) ==
-  ok: ...\docs\journeys\img\072-01-kanban.png  (Painel de regência)
-  ok: ...\docs\journeys\img\072-02-fila.png  (Fila de decisões)
-  == pronto: capturas em ...\docs\journeys\img ==
+  ok: ...\docs\jornada\img\072-01-kanban.png  (Painel de regência)
+  ok: ...\docs\jornada\img\072-02-fila.png  (Fila de decisões)
+  == pronto: capturas em ...\docs\jornada\img ==
   ```
 - **A captura é real, não uma foto de "vazio" (verificação por medição, não por leitura de olho).**
   A derivação é preguiçosa/assíncrona: sem aquecer, a 1ª consulta devolve lista vazia. Prova do DOM
@@ -325,13 +326,16 @@
   **2026-10-24** (≥ data das capturas), com severidade e destino por achado. R2–R5 conformes
   (vazio declarado, "—" com motivo, não marca "conferido", veredito original ao lado do normalizado);
   R6 (ruling no build real) registrado — o caminho é provado por contrato (T03b/T05), não pela tela.
-- **Artefato vivo atualizado no mesmo PR**: `painel/projetos/exemplo.json` — o glob
-  `documentos.jornadas` passa a incluir `docs/journeys/*.md`.
+- **Artefato vivo do mesmo PR**: `painel/projetos/exemplo.json` — o glob `documentos.jornadas`.
+  Depois da correção R2/T13 ele aponta só para **`docs/jornada/*.md`** (a pasta declarada em
+  `boundary.json`), como estava antes do T08.
 - **Limites respeitados**: só a worktree; sem push/merge/rm -rf; sem `.env`/`settings.local.json`;
   fixture sem dado real; servidor em porta alta, derrubado ao fim.
-- **Nota de ambiente conhecida**: `scripts/check-links.sh` chama `python3`, que nesta máquina é o
-  alias da MS Store (não executa). Rodei o equivalente com o interpretador real (`python` 3.12.10) e
-  declarei; nenhum link relativo desta entrega ficou sem resolver.
+- **Nota de ambiente conhecida (corrigida no T13)**: `scripts/check-links.sh` é **bash puro** — não
+  chama `python3` (a nota antiga era imprecisa). O que trava aqui é o emulador de **fork do msys**
+  com um `sed`/`grep` por arquivo sobre as ROOTS (agravado por `.claude/worktrees`). Rodei o bloco
+  **equivalente** num processo só e declarei a poda; nenhum link relativo desta entrega ficou sem
+  resolver. Detalhe e saída: seção **"### 072-T13 — R2 corrigida"**.
 
 ### 072-T10 — living artifacts of the closing (Worker01)
 
@@ -619,3 +623,74 @@ E       sqlite3.IntegrityError: append-only: passo so aceita o fechamento (saida
   `docs/jornada/` (pasta existente, declarada em `boundary.json`). Decisão do regente na rodada de
   correção: a jornada do 072 **muda para `docs/jornada/`** (T13/W01) e a **skill será corrigida num
   ciclo próprio, raia leve** — a divergência é do método, não desta rodada.**
+
+### 072-T13 — R2 corrigida (Worker01)
+
+- **Entregue** (`[[DONE id=072-T13 outcome=delivered]]`, 24/10) na `w/worker01`. Base: `git merge
+  --ff-only ee9b3a9` entrou limpo a partir de `3cbd9f1` (sem push).
+- **A jornada mudou para `docs/jornada/` (singular — o repositório vence).** `git mv` dos 4 arquivos,
+  registrados como **renames** (não apagar+criar):
+  ```
+  R  docs/journeys/072-painel-de-regencia.md  ->  docs/jornada/072-painel-de-regencia.md
+  R  docs/journeys/img/072-01-kanban.png      ->  docs/jornada/img/072-01-kanban.png
+  R  docs/journeys/img/072-02-fila.png        ->  docs/jornada/img/072-02-fila.png
+  R  docs/journeys/scripts/captura-072.sh     ->  docs/jornada/scripts/captura-072.sh
+  ```
+  `docs/jornada/` já existia (o trilho do livro, `README.md`); `scripts/` e `img/` foram criados
+  dentro dela — **nada sobrescrito**.
+- **Links e caminhos corrigidos**: o cabeçalho do documento da jornada, as três ocorrências no
+  `captura-072.sh` (uso, saída e `OUT=`) e o glob `documentos.jornadas` de
+  `painel/projetos/exemplo.json`, que **volta a `docs/jornada/*.md`**. O `ROOT` do script (`../../..`
+  a partir de `docs/jornada/scripts/`) continua resolvendo a raiz — mesma profundidade. Os links de
+  imagem do documento (`img/072-*.png`) são relativos e seguem válidos.
+- **O script regenera do caminho novo** (regeneração é o teste do próprio script — skill
+  `living-journey`). Saída real:
+  ```
+  == subindo o painel real em http://127.0.0.1:8791 (fixture exemplo) ==
+  == esperando a derivação aquecer (até 90s) ==
+    derivação estabilizada com 1 chamado(s) em 2.2s
+  == capturando as duas telas com o navegador (msedge) ==
+  ok: ...\docs\jornada\img\072-01-kanban.png  (Painel de regência)
+  ok: ...\docs\jornada\img\072-02-fila.png  (Fila de decisões)
+  == pronto: capturas em ...\docs\jornada\img ==
+  ```
+- **`check-boundary` verde, sem órfãos.** O script versionado chama `python3` (alias da MS Store,
+  não executa); rodei o **mesmo corpo Python** embutido nele — extraído do arquivo e executado com o
+  interpretador real, sem alterar uma linha do script:
+  ```
+  ── 1. Every tracked file has exactly one domain ──
+    toolkit   586 files  (read by machines)   guide      85 files  (read by humans)
+    ✓ no orphan, no double claim
+  ── 2. Every shared path is owned by the toolkit ──
+    ✓ 6 shared path(s), all owned by the toolkit
+  ── 3. Every published page has a declared source ──
+    ✓ 39 pages: 29 owned by the guide, 10 declared shared
+  ✓ boundary decidable: every file has a domain, every published page has a source.
+  exit=0
+  ```
+  Os 4 órfãos de `docs/journeys/` deixaram de existir: os arquivos agora pertencem ao domínio `guide`
+  (`docs/jornada/`). `boundary.json` **não** foi tocado — a correção foi no conteúdo, como o regente
+  decidiu.
+- **`check-links` verde (bloco equivalente; ressalva declarada).** O script é **bash puro** e o
+  emulador de **fork do msys** (um `sed`/`grep` por arquivo sobre as ROOTS, agravado por
+  `.claude/worktrees`) não o deixa terminar nesta máquina — o mesmo já registrado no T08. Bloco
+  equivalente (mesma regra, mesmas ROOTS, podando `.claude/worktrees`), num processo só:
+  ```
+  -- Relative links across the repository (equivalente; worktrees podados) --
+    checked: 341
+  v every relative link resolves.
+  ```
+- **Não reescrevi o histórico.** As menções a `docs/journeys/` nas seções de revisão acima (achados
+  R1/R2 do T06 e a dívida do método) **ficam como estão** — registram o estado de então. Pelo mesmo
+  motivo **não** toquei `spec.md`, `plan.md` nem `tasks.md`: são registro do ciclo, e a rota é
+  **apensar**, não reescrever (CLAUDE.md).
+- **Ressalva para o Gerente decidir (1 linha cada; arquivos também abertos no T14/W02).** A evidência
+  de FR26 em `spec.md:314`, `plan.md:384` e no bloco do T08 em `tasks.md:191,193,199,201` ainda cita
+  `ls docs/journeys/072-*.md`. Depois da mudança, esse comando aponta para o caminho antigo — quem
+  rodar a evidência do DoD colhe "no such file". Recomendo corrigir **plural → singular** nesses
+  pontos (ou manter a divergência visível, se a decisão for essa). Não editei para não colidir com o
+  T14 nos mesmos arquivos.
+- **Limites respeitados**: só a worktree; sem push/merge/rm -rf; sem `.env`/`settings.local.json`.
+- **Resíduo (não rastreado, inofensivo)**: os diretórios **vazios** `docs/journeys/` (e
+  `docs/journeys/scripts`, `docs/journeys/img`) continuam no disco; não são rastreados pelo git e não
+  aparecem em nenhum gate. Removê-los exige `Remove-Item`, negado pela política da sessão.
