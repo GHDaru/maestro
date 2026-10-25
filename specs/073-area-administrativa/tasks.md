@@ -7,20 +7,37 @@
 > Rodada 2 ACEITA; os 12 termos RATIFICADOS com a condição de que a entrada do glossário resolva as
 > cinco colisões de nome do mapa. Entrega em `specs/073-area-administrativa/prototipo/`.
 
-- [ ] T3-glossario — Worker01: os 12 termos em `docs/governance/glossary.md` (inglês, coluna
+- [x] T3-glossario — Worker01: os 12 termos em `docs/governance/glossary.md` (inglês, coluna
       "Cycle 073"), resolvendo as cinco colisões (sessão de agente × agente; fila de decisões ×
       fila outbox; livro de mensagens × livro de ponto; caixa de entrada como objeto da
       Mensageria; portão do chamado reaproveitado pela Regência via camada anticorrupção).
-- [ ] T3-telas-administracao — Worker04: contexto Administração — catálogo de
+      **Entregue: `ebe7eb9`, integrado em `853a1d5` — acréscimo puro (+12/−0), grafia batendo com
+      o `data-rotulo` das telas, colisões com `arquivo:linha` do mapa §7 (:292–296) + regra
+      operativa "fila e portão nunca nus"; MCP/A2A expandidos (Princípio VIII). Prova medida:
+      allowlist 74→86; com a lista embutida vazia, as 4 telas da Mensageria com ZERO achado de
+      rótulo — a 1ª coluna cobre todos os data-rotulo reais.**
+- [x] T3-telas-administracao — Worker04: contexto Administração — catálogo de
       skills/ferramentas/modelos (ENTRA), políticas allow/deny/ask (ENTRA), limites de orçamento
       (ENTRA); cadastro de agentes e papéis aparece como registro existente (NÃO PRECISA), sem
       funcionalidade nova.
+      **Entregue: `5ce4a5f`, integrado em `00c1ae9` — 3 wireframes estáticos; agentes/papéis como
+      coluna de contexto somente-leitura (NÃO PRECISA honrado); auto-checagem própria com 9 regras
+      E mutação 9/9 (mesmo falso-positivo de substring que o smoke test do Gerente achou — "Mod" ⊂
+      "motor" — corrigido antes de entregar); interpretações declaradas (moldura × domínio; F2–F7
+      e F10–F12 n/a). Fitness do Gerente (v3): 23 achados (18 citação-sem-atributo + 5 rótulo de
+      domínio sem data-rotulo) — correção attempt=2 despachada.**
 - [ ] T3-telas-workflow — Worker05: contexto Workflow de sessões — sessão de agente
       (subir/derrubar), estado do agente vivo, tarefa aberta, consumo por agente; última atividade
       como coluna existente (NÃO PRECISA).
-- [ ] T3-telas-mensageria — Worker03 (prioridade): contexto Mensageria — caixa de entrada, livro
+- [x] T3-telas-mensageria — Worker03 (prioridade): contexto Mensageria — caixa de entrada, livro
       de mensagens, roteamento por nome/ref com a colisão de nomes VISÍVEL, protocolo de
       intercomunicação (A2A/MCP).
+      **Entregue: `5f6dcf8`, integrado em `566bca5` — 4 wireframes estáticos (caixa de entrada,
+      livro de mensagens append-only com desvio marcado, roteamento que RECUSA nome ambíguo e
+      mostra a colisão + tabela das cinco colisões do §7, protocolo com o que a sessão expõe/consome
+      e A2A como "—" com motivo). Self-check do W03: 4 arquivos, 0 falas. Fitness do Gerente (v3):
+      22 achados, TODOS da classe citação-sem-atributo — correção attempt=2 despachada (contrato
+      data-referencia/data-fonte).**
 - [ ] T3-readme-navegacao — Worker01: `prototipo/README.md` (telas × ENTRA × contexto dono ×
       juízes) e o lugar de cada tela na navegação do painel existente (Regência e Chamados ficam
       como estão).
