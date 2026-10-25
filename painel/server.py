@@ -716,7 +716,7 @@ def acrescenta_na_fila(cfg, corpo):
     registro = fila_registro.caminho(cfg)
     agora = dt.datetime.now().astimezone().isoformat(timespec="seconds")
     if tipo == "pedido":
-        motivo = regencia.valida_pedido(corpo)
+        motivo = regencia.valida_pedido(corpo, _pedidos_conhecidos(cfg))  # FR20: id repetido/portão derivado
         if motivo:
             return 422, {"erro": motivo}
         linha = {**corpo, "criado_em": agora}  # carimbo do registro, nunca campo digitado (FR23)

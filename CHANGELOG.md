@@ -92,6 +92,15 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
   — emenda de texto pendente no ADR 0027.
 
 ### Corrigido
+- **O id de um pedido de decisão não pode repetir nem usurpar o id do portão derivado** (ciclo
+  072, condição do gate, `process-guardian` em contexto fresco). `sai_da_fila` fecha o pedido por
+  **igualdade de id**: um id repetido — ou um id no formato do item derivado (`chamado+gate`, ex.
+  `072+T7`) — faria um *ruling* fechar o **item errado em silêncio**. `valida_pedido` passa a
+  recusar os dois casos (a rota responde 422) e recebe os ids já ocupados (`_pedidos_conhecidos`:
+  pedidos registrados + portões derivados); a configuração de exemplo (`painel/projetos/exemplo.json`)
+  ganha `regencia.pessoas`, `fila_decisoes` e `frentes`, documentados no `painel/README.md`. Teste
+  `TestF11IdDoPedido` (função pura + rota); o risco fica **fechado** no `qa-report.md`.
+
 - **O portão de conformidade cobrava artefatos de ciclo de uma pasta que não é ciclo** (ciclo
   069, decisão B1 de 21/10). `specs/070-conferidor-ordem-veredito/` é evidência importada do
   Hindiana (`00-chamado.md` e dez arquivos `G*-*.md`), mas casa `specs/NNN-*` e o

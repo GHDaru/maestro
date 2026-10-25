@@ -2,7 +2,10 @@
 
 - **Date**: 2026-10-24 · **Lane**: full · **Status**: **rodada 1 fechada em 24/10 (HEAD `ccbceef`);
   verdict do gate: aprovado com condições (25/10, crítico process-guardian em contexto fresco);
-  condições T15–T18 em curso — hashes aqui quando fecharem** (this file
+  condições fechadas em 25/10 — T15 `11d295b` · T16 `39c2957`+`c8632db` (integrado `bbfab80`) ·
+  T17 `02e434f` (integrado `1998e3e`; captura pós-T16 pedida ao W01) · T18 `ae1fb84` (integrado
+  `85b1b7f`); suíte integrada 28 passed + 48 passed; falta: reverificação curta do W06 e o
+  TAIL:gate do regente** (this file
   is the skeleton created before the mutations, as the regent session asked; every section below
   is filled by whoever delivers, with command output, never intention)
 - **Verdict**: aprovado com condições pelo gate delegado (ADR 0026) — veredito da revisão
@@ -545,7 +548,7 @@
 
 | Check | Expected | Result |
 |---|---|---|
-| `python -m unittest discover -s painel/tests -p test_regencia.py` | `Ran 26 tests`, `OK`, exit 0 (supersessão de `Ran 13`, `Ran 15` e `Ran 24` declarada em `plan.md § Verification`) | **`Ran 26 tests` · `OK`** (exit 0; medido pelo Worker04 no T16, `39c2957`: 26 passed; suíte antiga isolada: 48 passed) |
+| `python -m unittest discover -s painel/tests -p test_regencia.py` | `Ran 28 tests`, `OK`, exit 0 (supersessão de `Ran 13`, `Ran 15`, `Ran 24` e `Ran 26` declarada em `plan.md § Verification`) | **`28 passed`** (medido pelo Gerente na árvore integrada de T15+T16, 25/10; suíte antiga isolada: **48 passed**) |
 | 48 tests of the old suite (`--ignore=test_regencia.py`) | green, untouched | **`48 passed in 13.49s`** |
 | `python painel/chamados.py painel/projetos/exemplo.json` | exit 0 (FR5 only adds a field) | **`exit=0`** |
 | `python -m unittest discover -s painel/tests -p 'test_*.py'` | green (regression 068/069/070) | **`Ran 54 tests in 13.180s` · `OK`** (24 regência + 30 antigos; a suíte antiga isolada por pytest dá 48 — a diferença é **como cada runner coleta**, não cobertura nova; declarado para não haver divergência silenciosa). **Pós-T16 a conta sobe para 56** (26 regência + 30 antigos) — o T16 mediu a suíte de regência isolada (26 passed) e a antiga isolada (48 passed), verdes |
@@ -1027,3 +1030,84 @@ Declaro a captura pós-T16 **pendente**, não fingida.
   `.env`/`settings.local.json`.
 - **Resíduo (não rastreado, não commitado, não apagado)**: os arquivos `_diag_*` na worktree continuam no
   disco — a remoção segue pendente por permissão, conforme a observação da tarefa.
+
+
+## Rodada de correção 2 — condição do gate (072-T15, Worker05)
+
+> O gate do 072 foi **aprovado com condições** (crítico `process-guardian`, contexto fresco). Esta é a
+> condição do dono da fila. **Risco tratado: "um ruling fecha o item errado em silêncio".**
+
+### O risco, e por que ele existia
+
+`sai_da_fila(pedido, rulings)` fecha um pedido quando existe um *ruling* com `pedido == id` — a
+igualdade de **id** é o único critério. Se um pedido pudesse **repetir** um id já registrado, ou
+assumir o id de um **item derivado** de portão (`chamado+gate`, ex. `072+T7` — `portao_derivado`),
+um *ruling* fecharia o **item errado** — e nada na tela acusaria: a fila apenas encolheria. Fechado
+por construção nesta rodada.
+
+### O que mudou
+
+- **Domínio puro** (`painel/regencia/fila.py`): `valida_pedido(pedido, ids_conhecidos=None)` agora
+  recusa (a) id já ocupado → `"id já registrado: '<id>'"`; (b) id no formato de portão derivado
+  (contém `+`) → `"id no formato de portão derivado (chamado+gate): '<id>'"`. `None` desliga as duas
+  checagens (teste puro de 1 arg segue válido).
+- **Adaptador** (`painel/server.py`): a rota `POST /api/regencia/fila` passa
+  `_pedidos_conhecidos(cfg)` (pedidos registrados + ids derivados dos portões) a `valida_pedido`; a
+  recusa sai como **422** com o motivo da função pura (ADR 0027).
+- **Configuração de exemplo** (`painel/projetos/exemplo.json`): ganha `regencia.pessoas`
+  (`["Ana Exemplo", "Beto Exemplo"]`, fictícios), `fila_decisoes` (`painel/dados/fila-exemplo.jsonl`,
+  o caminho padrão) e `frentes` (mapa `frente → [pastas]`).
+- **`painel/README.md`**: seção "Regência: a fila de decisões" documenta as três chaves.
+- **Teste** (`painel/tests/test_regencia.py`, `TestF11IdDoPedido`): função pura (id duplicado e id de
+  portão) + rota (segundo `POST` com o mesmo id → 422, sem nova linha no registro).
+
+### Build real — saídas coladas
+
+Comando: `python painel/server.py painel/projetos/exemplo.json --porta 8799` (POST de fora do
+`127.0.0.1` é recusado por desenho; o registro `fila-exemplo.jsonl` estava ausente no início — duas
+linhas, nenhuma anterior).
+
+```text
+== POST pedido ==
+{"ok": true, "registrado": {"tipo": "pedido", "id": "D-exemplo-01"}}
+HTTP 200
+== POST ruling (valido, autor em pessoas) ==
+{"ok": true, "registrado": {"tipo": "ruling", "pedido": "D-exemplo-01"}, "backup": "...\\painel\\dados\\backup\\fila-exemplo-2026-10-25.jsonl"}
+HTTP 200
+== POST ruling (autor fora de pessoas) ==
+{"erro": "autor não é pessoa do projeto: 'Office'"}
+HTTP 422
+== GET /api/regencia/fila ==
+{"ok": true, "itens": [], "n": 0, "vazia": true, "destravados": 0, "idade_mais_velha": null, "mais_velho": null, "data_fonte": "painel/fila_registro.py le() · painel/regencia/fila.py ordena_fila/cabecalho_fila", "mensagem": "fila vazia — última decisão às 11:11"}
+== JSONL (painel/dados/fila-exemplo.jsonl) ==
+{"tipo": "pedido", "id": "D-exemplo-01", "pedido_por": "W05/sess", "pergunta": "Aprovar a rodada 1?", "opcoes": [{"id": "a", "descricao": "sim"}, {"id": "b", "descricao": "nao"}], "recomendacao": "a", "prazo": "2026-10-30T12:00:00-03:00", "destrava": ["073"], "destino": "Regente", "status": "aguardando", "criado_em": "2026-10-25T11:11:43-03:00"}
+{"tipo": "ruling", "id": "R-exemplo-01", "pedido": "D-exemplo-01", "escolha": "a", "autor": "Ana Exemplo", "destinatario": "W05", "texto": "aprovado", "registrado_em": "2026-10-25T11:11:44-03:00", "data": "2026-10-25T11:11:44-03:00"}
+```
+
+Leitura da saída: o pedido entra (200), o *ruling* válido entra e traz o **backup datado** do dia
+(200), o *ruling* de autor fora de `pessoas` é recusado com o motivo da função pura (422, nenhuma
+linha nova), e o `GET` seguinte mostra a **fila vazia** — o *ruling* fechou o pedido certo, e o
+"última decisão às 11:11" é o mesmo carimbo da segunda linha. Um pedido cujo id repetisse o de outro
+(ou imitasse `chamado+gate`) não chegaria a entrar: é o que o teste prova.
+
+### Suíte
+
+| Comando | Resultado |
+|---|---|
+| `python -m pytest painel/tests/test_regencia.py -q` | **`26 passed`** (24 do gate + os 2 novos de `TestF11IdDoPedido`) |
+| `python -m pytest painel/tests --ignore=painel/tests/test_regencia.py -q` | **`48 passed`** |
+
+> **Supersessão declarada:** a contagem da regência sobe de **24 → 26** por causa da condição do gate
+> (item 4 exige teste). A frase "24 no gate do plano" do CHANGELOG registra o estado de então e é
+> história.
+>
+> **Nota do Gerente (25/10, pós-integração):** o 26 acima foi medido na base do W05 (sem o T16).
+> Na árvore integrada (T15 + T16) a suíte de regência dá **28 passed** — supersessão completa
+> 13→15→24→26→28, declarada no `plan.md § Verification` e na tabela de fitness.
+
+### Risco — status
+
+**`ruling fecha o item errado em silêncio` → FECHADO** (condição do gate, 072-T15). Fechado por
+construção: `valida_pedido` recusa id repetido e id de portão derivado, com teste (`TestF11IdDoPedido`)
+e a rota respondendo 422 (acima). A garantia não depende de confiança: o id de um pedido não colide
+com um id já registrado nem com o espaço reservado dos itens derivados.

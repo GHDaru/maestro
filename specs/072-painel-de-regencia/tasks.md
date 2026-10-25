@@ -293,11 +293,14 @@
 
 `[[TASK id=072-condicoes-do-gate kind=fix cycle=072 attempt=1]]`
 
-- [ ] **T15 (Worker05, dono da fila)**: `exemplo.json` ganha `regencia` (pessoas, fila_decisoes) e
+- [x] **T15 (Worker05, dono da fila)**: `exemplo.json` ganha `regencia` (pessoas, fila_decisoes) e
       `frentes`; README documenta as três chaves; build real com UM POST de pedido e UM de ruling
       válidos (200 + duas linhas no JSONL, colados aqui) e um ruling com autor fora de pessoas
       (422); `valida_pedido` recusa id duplicado e id com formato de portão derivado, com teste;
       risco "ruling fecha o item errado em silêncio" registrado como fechado.
+      **Entregue: `11d295b` — os 5 itens fechados; build real com as saídas coladas no qa-report
+      (200/200/422, fila vazia no GET seguinte); `TestF11IdDoPedido` (função pura + rota 422);
+      divergências declaradas no README (`frentes` é mapa; `fila_decisoes` no nível de topo).**
 - [x] **T16 (Worker04, dono do kanban)**: `chamado` do POST de transição só aceita `^[\w.-]+$` e
       nunca `..` (422, com teste — hoje `chamado=".."` lista a raiz); arredondamento do aviso
       "LEITURA VELHA" unificado (banner de cima × de dentro: 1H60M contra 1 h 59 min), com teste.
@@ -344,6 +347,25 @@
 | T16 — chamado sem navegação + LEITURA VELHA | `39c2957` + `c8632db` (evidência; integrado em `bbfab80`) | qa-report § 072-T16 · suíte 24→26 |
 | T17 — R7/R8 na heurística datada | `02e434f` (integrado em `1998e3e`) | qa-report § 072-T17 · captura nova pendente (desbloqueada) |
 | T18 — dívida do método no plan | `ae1fb84` (integrado em `85b1b7f`) | plan § Dívidas declaradas |
+| T15 — id do pedido protegido + exemplo/README | `11d295b` | qa-report § Rodada de correção 2 · `TestF11IdDoPedido` |
+
+## Rodada de correção 2 — condição do gate (process-guardian, contexto fresco)
+
+> O gate do 072 foi aprovado **com condições**. Esta é a condição do dono da fila (Worker05).
+
+### Worker05 — o id do pedido protegido (risco fechado)
+
+`[[TASK id=072-T15 kind=fix cycle=072 attempt=1]]`
+
+- [x] `painel/projetos/exemplo.json`: `regencia.pessoas` (nomes fictícios), `fila_decisoes` (caminho
+      padrão) e `frentes`.
+- [x] `painel/README.md`: documenta as três chaves.
+- [x] Build real: 1 `POST` de pedido e 1 de *ruling* válidos (200; duas linhas no `JSONL`) + 1
+      *ruling* com autor fora de `pessoas` (422) — saídas coladas no `qa-report.md`.
+- [x] `valida_pedido` recusa id duplicado e id no formato de portão derivado (`chamado+gate`), com
+      teste (`TestF11IdDoPedido`).
+- [x] Risco "ruling fecha o item errado em silêncio" registrado como **FECHADO** no `qa-report.md`.
+- Suíte: regência **26** (24 + 2 novos) · antiga **48**. Commit citando "ciclo 072".
 
 ## Closing tail — MANDATORY, one line each, never delete
 

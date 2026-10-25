@@ -27,8 +27,14 @@ _CAMPOS_TEXTO = ("id", "pedido_por", "pergunta", "recomendacao", "prazo", "desti
 PORTOES_DO_REGENTE = ("G7", "G8")
 
 
-def valida_pedido(pedido):
-    """FR11: devolve o motivo da recusa (str) ou `None` se o pedido tem a anatomia completa."""
+def valida_pedido(pedido, ids_conhecidos=None):
+    """FR11: devolve o motivo da recusa (str) ou `None` se o pedido tem a anatomia completa.
+
+    `ids_conhecidos` (opcional) = os ids já ocupados (pedidos registrados + ids derivados dos
+    portões). FR20 (risco fechado no 072-T15): o id de um pedido **não pode** repetir um id já
+    registrado nem assumir o formato do portão derivado (`chamado+gate`, ex.: `072+T7`) — senão um
+    ruling fecharia o item errado em silêncio. `None` desliga as duas checagens (teste de 1 arg).
+    """
     if not isinstance(pedido, dict):
         return "pedido não é um objeto"
     for campo in _CAMPOS_TEXTO:
@@ -43,6 +49,11 @@ def valida_pedido(pedido):
     destrava = pedido.get("destrava")
     if not isinstance(destrava, list) or not destrava:
         return "pedido sem o que destrava"
+    pid = pedido["id"]  # já validado como texto não vazio no laço acima
+    if "+" in pid:
+        return f"id no formato de portão derivado (chamado+gate): '{pid}'"
+    if ids_conhecidos is not None and pid in ids_conhecidos:
+        return f"id já registrado: '{pid}'"
     return None
 
 

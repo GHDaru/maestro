@@ -885,5 +885,44 @@ class TestT16LeituraVelhaConcorda(_Base):
                          "072-T16: e o aviso de dentro da página também se cala.")
 
 
+class TestF11IdDoPedido(_Base):
+    """FR11/FR20 (risco do 072-T15): o id do pedido não pode repetir nem usurpar o portão derivado.
+
+    `sai_da_fila` fecha o pedido por **igualdade de id**; sem esta guarda, um id repetido (ou um
+    id no formato `chamado+gate`, que é o dos itens derivados) faria um ruling fechar o **item
+    errado em silêncio**. Aqui o risco é fechado: a função pura recusa e a rota responde 422.
+    """
+
+    _BASE = {"tipo": "pedido", "id": "D-1", "pedido_por": "W03/sess",
+             "pergunta": "Aceitar a rodada 1?", "opcoes": [{"id": "a", "descricao": "sim"}],
+             "recomendacao": "a", "prazo": "2026-10-30T12:00:00-03:00",
+             "destrava": ["072"], "destino": "Regente", "status": "aguardando"}
+
+    def test_f11_valida_pedido_recusa_id_duplicado_e_id_de_portao(self):
+        """FR11/FR20: id já registrado → recusado; id no formato de portão derivado → recusado."""
+        valida = _fn("valida_pedido")
+        self.assertFalse(valida(dict(self._BASE)),
+                         "FR11: sem ids conhecidos, o pedido completo é aceito.")
+        dup = valida(dict(self._BASE), {"D-1", "D-2"})
+        self.assertTrue(dup, "FR11/FR20: id já registrado é recusado (senão fecha o item errado).")
+        self.assertIn("registrad", dup.lower())
+        portao = valida({**self._BASE, "id": "072+T7"})
+        self.assertTrue(portao, "FR11/FR20: id no formato de portão derivado (`chamado+gate`) é recusado.")
+        self.assertIn("portão", portao.lower())
+
+    def test_f11_rota_recusa_id_duplicado(self):
+        """FR11/FR20: pela rota, o segundo POST com o mesmo id responde 422 e não acrescenta linha."""
+        caminho = os.path.join(self.raiz, "fila.jsonl")
+        srv, url = self._sobe()
+        c1, r1 = self._post_json(url, "/api/regencia/fila", dict(self._BASE))
+        c2, r2 = self._post_json(url, "/api/regencia/fila", dict(self._BASE))
+        self.assertEqual(c1, 200, f"FR11: o primeiro pedido é aceito (recebido {c1}: {r1}).")
+        self.assertEqual(c2, 422, f"FR11/FR20: id duplicado pela rota é recusado (recebido {c2}: {r2}).")
+        with open(caminho, encoding="utf-8") as f:
+            linhas = [l for l in f.read().splitlines() if l.strip()]
+        self.assertEqual(len(linhas), 1,
+                         "FR11/FR20: a recusa não acrescenta linha — só o primeiro pedido no registro.")
+
+
 if __name__ == "__main__":
     unittest.main()

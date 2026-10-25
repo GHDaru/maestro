@@ -345,13 +345,14 @@ W03 ──┬── W04 ────────────┐
 > Comando → resultado esperado. Onde a spec do T01 fixava nomes e o T01b delegou ao plano, o comando
 > usa o caminho decidido aqui (ex.: `painel/regencia/normalizacao.py`).
 
-- `python -m unittest discover -s painel/tests -p test_regencia.py` → **`Ran 26 tests`**, `OK`, exit 0.
+- `python -m unittest discover -s painel/tests -p test_regencia.py` → **`Ran 28 tests`**, `OK`, exit 0.
   **Supersessões declaradas:** a spec diz `Ran 13 tests`; o gate do plano levou a **15** (duas provas
   de FR16 — AST do modo de abertura e concorrência); a ampliação do T03b (`42e24f4`) levou a **24** —
   os 13 adaptados aos nomes fixados **mais 11 novos** (F2/F3/F14 em pares positivo+negativo, FR4 em
   classe própria, FR20 em dois negativos, FR1/FR7/FR11/FR15/FR23 nomeados); o T16 (`39c2957`,
   condição do gate) levou a **26** — **mais 2 novos** (`TestT16ChamadoNaoNavega`,
-  `TestT16LeituraVelhaConcorda`). Cada número antigo fica
+  `TestT16LeituraVelhaConcorda`); o T15 (`11d295b`, condição do gate) levou a **28** — **mais 2 novos**
+  (`TestF11IdDoPedido`: função pura + rota 422). Cada número antigo fica
   anotado no `qa-report.md` como superado por esta reconciliação — não é divergência silenciosa.
 - Os **13 testes nomeados de `c1eb802`** (`painel/tests/test_regencia.py`):
   `test_f1_metrica_sem_data_fonte_zero_no_html_renderizado` (FR21) ·

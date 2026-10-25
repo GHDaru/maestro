@@ -36,6 +36,14 @@
       "caminho": "specs"
     }
   ],
+  "regencia": {
+    "pessoas": ["Ana Exemplo", "Beto Exemplo"]
+  },
+  "fila_decisoes": "painel/dados/fila-exemplo.jsonl",
+  "frentes": {
+    "painel": ["specs/072-painel-de-regencia"],
+    "administrativa": ["specs/073-area-administrativa"]
+  },
   "decisoes": [],
   "decisoes_jsonl": "docs/records/decisoes.jsonl",
   "adrs": [
