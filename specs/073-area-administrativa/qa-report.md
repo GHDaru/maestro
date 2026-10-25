@@ -343,3 +343,27 @@ célula citada **não** é `—` (a Regra 2 segue satisfeita).
 - **Segurança da rodada 2**: n/a estendida — rodada documental sem navegação nova (mandato do
   regente), sem código, sem contas externas, sem dados pessoais; os insumos são arquivos do próprio
   repositório já varridos na rodada 1.
+
+## Rodada 3 — fitness function do protótipo (Gerente, 25/10)
+
+**`prototipo/verifica-prototipo.py`** (commit `fa4ee3e`) — o gate executável dos wireframes, com as
+quatro regras do mandato:
+
+1. **elemento interativo sem `data-fonte`** — todo `button`/`a`/`input`/`select`/`textarea` precisa
+   do atributo dizendo de onde a ideia veio;
+2. **rótulo fora do glossário** — allowlist extraída de `docs/governance/glossary.md` (74 termos,
+   primeira coluna em negrito) **+ os 12 ratificados** embutidos no script; casa com **word
+   boundary**, não substring;
+3. **número sem a marca "exemplo"** — conferido em **todo nó de texto** (não só rótulos); aceita a
+   marca como atributo `data-exemplo` em qualquer ancestral ou a palavra "exemplo" no próprio texto;
+4. **colisão sem qualificador** (condição da ratificação) — "fila" exige `decisões`/`outbox` e
+   "portão" exige `chamado`/`regente` no mesmo rótulo.
+
+**Smoke test** (telas sintéticas `_teste-bom.html`/`_teste-ruim.html`, fora do commit, prefixo `_` =
+rascunho e ignorado pelo script): a tela ruim acusou **5 achados** (rótulo fora do glossário, "fila"
+sem qualificador, `button` sem `data-fonte`, número sem "exemplo", e o `<th>` "Fluxo de caixa
+operacional"); a tela boa, **0 achados**. O smoke test **achou um falso-negativo real**: o termo
+"RACI" casava como substring de "ope**raci**onal" — corrigido para word boundary antes do commit.
+Sem telas reais o script **falha por design** ("no screens found", exit 1) — a rodada verde sobre as
+13 telas e a saída colada aqui acontecem no **T3-fechamento**; a mutação do Worker02 quebra este
+script de propósito (TAIL:mutation da rodada).

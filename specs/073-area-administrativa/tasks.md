@@ -24,9 +24,14 @@
 - [ ] T3-readme-navegacao — Worker01: `prototipo/README.md` (telas × ENTRA × contexto dono ×
       juízes) e o lugar de cada tela na navegação do painel existente (Regência e Chamados ficam
       como estão).
-- [ ] T3-fitness — Gerente: script que percorre os HTML e falha se houver elemento interativo sem
+- [x] T3-fitness — Gerente: script que percorre os HTML e falha se houver elemento interativo sem
       `data-fonte`, rótulo fora do glossário (glossary.md + os 12) ou número sem a marca "exemplo";
       saída colada no qa-report.
+      **Entregue: `fa4ee3e` — `prototipo/verifica-prototipo.py` (4 regras: data-fonte, glossário com
+      word-boundary, marca "exemplo" em todo nó de texto, colisões fila/portão sem qualificador);
+      smoke-testado em telas sintéticas (5 achados na ruim, 0 na boa; o smoke test achou e corrigiu
+      o falso-negativo RACI⊂"operacional"). A rodada verde sobre as telas reais e a saída colada no
+      qa-report acontecem no T3-fechamento; a mutação do W02 quebra este script de propósito.**
 - [ ] T3-revisao — Worker02: revisão em contexto fresco das telas contra o mapa e as colisões;
       mutação — quebrar o script da fitness function e vê-lo acusar.
 - [ ] T3-seguranca — Worker06: segurança documental e conformance 073 nos dois modos.
