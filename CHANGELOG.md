@@ -10,6 +10,21 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **Área administrativa, rodadas 1–2 — pesquisa de plataformas e confronto** (ciclo 073). A
+  rodada 1 pesquisou **25 plataformas** (ficha por plataforma com fonte, `specs/073-area-administrativa/pesquisa/`)
+  e consolidou a matriz **25 × 26 = 650 células** com fonte por célula (`—` = nenhuma fonte
+  encontrada, nunca "sim"); leitura: INTERCOMUNICAÇÃO é o grupo mais fraco do mercado (14%;
+  caixa de entrada e livro de mensagens com **0 `sim` em 25**), ADMINISTRAÇÃO o mais maduro (51%,
+  amiúde paywall Enterprise), e duas plataformas desaconselhadas por escrito (Flowise arquivado;
+  OpenAI Agent Builder/Evals descontinuados após 30/11/2026). A rodada 2 normalizou a notação
+  (`não` = a fonte afirma a ausência × `—` = não encontrado; 143 células reclassificadas), levantou
+  o **inventário do Maestro** (tem 8 · parcial 16 · não tem 2) e decidiu o que entra:
+  **ENTRA 13 · NÃO PRECISA 8 · DEPOIS 5** — intercomunicação decide primeiro (6 `ENTRA` de 6,
+  apoiadas em requisito do método onde o mercado é vazio), cada `ENTRA` com nome na linguagem
+  ubíqua e fonte citada, **12 termos propostos** ao glossário. Fecha com o **mapa de contextos
+  delimitados** (DDD, cinco contextos, core domain = Chamados e Gates, sete relacionamentos
+  tipados, cinco colisões de nome) em `specs/073-area-administrativa/confronto/`. Nenhum software
+  construído — as rodadas 3 (wireframes) e 4 (bar de três críticos) seguem.
 - **Painel de regência, rodada 1 — kanban por gate e fila de decisões** (ciclo 072, ADR 0027).
   Duas vistas novas sobre os arquivos que o painel já deriva: o **kanban por gate** — dez colunas
   (G0–G9) com o cartão trazendo dono (papel + sessão), o **veredito normalizado ao lado do

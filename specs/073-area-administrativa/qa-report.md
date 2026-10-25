@@ -1,9 +1,12 @@
-# QA report 073 — Área administrativa do Maestro (rodada 1: pesquisa de plataformas)
+# QA report 073 — Área administrativa do Maestro (rodadas 1–2)
 
-- **Date**: 2026-10-24 (fichas) · 2026-10-25 (consolidação, revisão e fechamento) · **Lane**:
-  plena · **Verdict**: approved (rodada 1) — 7/7 células conferem, contagens estruturais
-  conferem, 1 achado bloqueante (subnotificação de 4 `sim` nas tabelas de leitura) corrigido e
-  reconferido por script; segurança limpa
+- **Date**: 2026-10-24 (fichas) · 2026-10-25 (consolidação, revisão, fechamento e rodada 2
+  inteira) · **Lane**: plena · **Verdict**: approved (rodada 1) — 7/7 células conferem, contagens
+  estruturais conferem, 1 achado bloqueante corrigido e reconferido por script; segurança limpa ·
+  **rodada 2 fechada** — preâmbulo verificado por script (PASS), inventário com 6 citações
+  amostradas conferindo, confronto com contagem machine-checkada (13/8/5) e revisão fresca 6/6
+  com o bloqueante de Princípio VIII corrigido e verificado por script (PASS); mapa de contextos
+  entregue
 
 ## Fitness functions (DoD)
 | Check | Expected | Result |
@@ -15,7 +18,10 @@
 | Células da matriz | 25 × 26 = 650 | **650** |
 | Fichas com tabela fixa completa | 25 × 26 = 650 | **650** — 629 com veredito explícito + 21 células em branco (convertidas em `—` na matriz) |
 | Tabelas de leitura × matriz (script fora do repo, pós-correção) | todo número confere | **PASS** — sim 174 · parcial 221 · não 156 · — 99; grupos CONTROLE 30 · ADMINISTRAÇÃO 76 · GERENCIAMENTO 47 · INTERCOMUNICAÇÃO 21 |
-| `scripts/check-conformance.sh 073` | verde nos dois modos | (preenchido no fechamento da rodada) |
+| Matriz pós-preâmbulo × tabelas de leitura (script fora do repo) | todo número confere | **PASS** — sim 172 · parcial 223 · não 13 · — 242; grupos CONTROLE 30 · ADMINISTRAÇÃO 76 · GERENCIAMENTO 45 · INTERCOMUNICAÇÃO 21 (rodada 2) |
+| Decisões do confronto (script fora do repo) | 26 linhas; ENTRA 13 · NÃO PRECISA 8 · DEPOIS 5 | **PASS** — 26 linhas, contagem exata; por grupo confere com §Totais (rodada 2) |
+| Siglas na 1ª ocorrência no confronto (script fora do repo) | toda 1ª ocorrência expandida | **PASS** — RBAC/RACI/A2A/MCP/ADR/YAGNI/OPA/DDD/ABAC (pós-correção; o script achou o ABAC que a revisão não viu) |
+| `scripts/check-conformance.sh 073` | verde nos dois modos | **verde, exit 0** — normal e `TICKED_ONLY=1` (fechamento da rodada 2, 25/10: Constitution Check 8/8, 5 artefatos com razão, domínio declarado, TAIL com evidência; TAIL:gate segue sendo o "segue" do regente para a rodada 3) |
 
 ## Closing tail — the evidence
 <!-- One entry per non-n/a TAIL token. What was OBSERVED, never the intention restated. -->
@@ -319,3 +325,21 @@ célula citada **não** é `—` (a Regra 2 segue satisfeita).
 - **1 achado bloqueante (Princípio VIII)**: RBAC/RACI/A2A/MCP nuas na 1ª ocorrência; e **1
   secundário** (rótulo "melhor"). Ambos **reportados, não corrigidos**.
 - **Limites**: revisão read-only; nada construído; nada de ferramenta nova entrou no repositório.
+
+## Fechamento da rodada 2 (Gerente, 25/10)
+
+- **Correção do bloqueante da revisão** (commit próprio, "ciclo 073: correcoes da revisao fresca do
+  confronto"): RBAC, RACI, A2A e MCP expandidos na primeira ocorrência (`:49`, `:63`, `:73`) e o
+  secundário rotulado (empates da "melhor referência" em caixa de entrada e livro de mensagens).
+  **Verificado por script** (`%TEMP%\verifica-viii.py`, fora do repo): toda primeira ocorrência de
+  sigla expandida — o script achou também um **ABAC** nu em `:107` que a revisão não viu, corrigido
+  no mesmo commit. **PASS.** Recontagem das decisões re-executada pós-correção: 26 linhas,
+  ENTRA 13 · NÃO PRECISA 8 · DEPOIS 5 — intacta.
+- **Mapa de contextos** (Worker02, `e90e8b9`): cinco contextos com raiz e invariantes, diagrama
+  Mermaid, sete relacionamentos tipados com motivo, core domain = Chamados e Gates (leitura
+  alternativa declarada), linguagem ubíqua por contexto com os 12 termos propostos marcados,
+  cinco colisões de nome reais. Divergências declaradas pelo autor (painel é projeção; sexto
+  contexto recusado por YAGNI; evidência por arquivo+símbolo, não arquivo:linha).
+- **Segurança da rodada 2**: n/a estendida — rodada documental sem navegação nova (mandato do
+  regente), sem código, sem contas externas, sem dados pessoais; os insumos são arquivos do próprio
+  repositório já varridos na rodada 1.

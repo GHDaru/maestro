@@ -21,10 +21,18 @@
       **Entregue: `eb40d89` (ff) — ENTRA 13 · NÃO PRECISA 8 · DEPOIS 5, contagem conferida por
       script pelo Gerente; INTERCOMUNICAÇÃO 6 ENTRA de 6; 12 termos propostos, 8 reusados do
       glossário; nenhum ENTRA sobre célula `—`.**
-- [ ] T2-mapa — Worker02 (se livre) ou Worker03: mapa de contextos delimitados em
+- [x] T2-mapa — Worker02 (se livre) ou Worker03: mapa de contextos delimitados em
       `confronto/mapa-de-contextos.md`, com diagrama.
-- [ ] T2-fechamento — Gerente: revisão fresca do confronto (quem não escreveu), conformance 073
+      **Entregue: `e90e8b9` (W02) — cinco contextos com raiz e invariantes, diagrama Mermaid, sete
+      relacionamentos tipados com motivo, core domain = Chamados e Gates (leitura alternativa
+      declarada), linguagem ubíqua por contexto com os 12 propostos marcados, cinco colisões de
+      nome; divergências declaradas (painel é projeção, sexto contexto recusado por YAGNI).**
+- [x] T2-fechamento — Gerente: revisão fresca do confronto (quem não escreveu), conformance 073
       nos dois modos, andamento, `[[DONE 073-rodada-2]]` ao regente. **Rodada 3 só com o "segue".**
+      **Entregue: revisão fresca do W05 (6/6; 1 bloqueante de Princípio VIII corrigido pelo Gerente
+      e verificado por script — PASS, incluindo um ABAC que a revisão não viu); conformance 073
+      verde exit 0 nos dois modos; andamento e CHANGELOG atualizados; DONE emitido ao regente
+      (fallback commitado em `done-073-rodada-2.md`).**
 
 ## Verification first
 - [x] T0 — define the DoD checks — critérios de aceite FR1–FR4 na `spec.md` (ficha por plataforma

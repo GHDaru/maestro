@@ -4,10 +4,13 @@
 > construído aqui. Quatro rodadas: 1 pesquisa · 2 confronto e decisão · 3 wireframes (DDD, linguagem
 > ubíqua) · 4 bar (três críticos, nota 0–10, passa com os três ≥ 9).
 
-- **Data**: 2026-10-24 (pesquisa) · 2026-10-25 (consolidação, revisão, fechamento e preâmbulo da
-  rodada 2) · **Lane**: plena · **Status**: rodada 1 **fechada e revisada** — 25 plataformas,
-  matriz conferida por script; **preâmbulo da rodada 2 entregue** (normalização `não`/`—`, correções
-  da amostragem; 25 × 26 = 650 células com um só símbolo por veredito)
+- **Data**: 2026-10-24 (pesquisa) · 2026-10-25 (consolidação, revisão, fechamento e rodada 2
+  inteira) · **Lane**: plena · **Status**: **rodada 2 fechada** — preâmbulo (normalização
+  `não`/`—`), inventário do Maestro (tem 8 · parcial 16 · não tem 2), confronto e decisão
+  (**ENTRA 13 · NÃO PRECISA 8 · DEPOIS 5**; intercomunicação 6 ENTRA de 6; 12 termos propostos)
+  e mapa de contextos delimitados (cinco contextos, core = Chamados e Gates) — revisão fresca do
+  confronto feita (6/6 conferem; 1 bloqueante de Princípio VIII corrigido e verificado por
+  script); **rodada 3 aguarda o "segue" do regente**
 - **Spec**: `spec.md` (rascunho aberto pelo Gerente a partir do despacho do regente)
 
 ## Rodada 1 — pesquisa de plataformas
@@ -105,3 +108,17 @@
   juízes da rodada 4 e fonte citada (plataforma com ficha **ou** requisito do método); **nenhum
   `ENTRA` se apoia em célula `—`**. Fecha com os totais e a **lista de 12 termos propostos** para o
   glossário. Sem push, sem merge.
+- 2026-10-25 — **073-T2-revisao-confronto entregue (Worker05, contexto fresco)**: 6/6 linhas da
+  amostragem dirigida conferem; recontagem PASS (13/8/5 e por grupo); regra 2 PASS (nenhum ENTRA
+  sobre célula `—`); **1 bloqueante** — Princípio VIII: RBAC, RACI, A2A e MCP nus na primeira
+  ocorrência — e 1 secundário (empates da "melhor referência" sem rótulo). **Corrigido pelo
+  Gerente** (commit próprio) e verificado por script: toda primeira ocorrência de sigla expandida
+  (PASS — o script achou também um ABAC que a revisão não viu); empates rotulados. Evidência no
+  qa-report § "Revisão em contexto fresco do confronto".
+- 2026-10-25 — **073-T2-mapa entregue (Worker02)** — rodada 2, passo 3: `confronto/mapa-de-contextos.md`
+  — cinco contextos delimitados (Chamados e Gates · Workflow de sessões · Regência · Administração ·
+  Mensageria) com raiz e invariantes, diagrama Mermaid, sete relacionamentos tipados com motivo,
+  **core domain = Chamados e Gates** (leitura alternativa — Regência — declarada), linguagem ubíqua
+  por contexto (12 termos propostos marcados) e **cinco colisões de nome reais** para a rodada 3.
+  Divergências declaradas: o painel é projeção (não contexto); sexto contexto (Medição) recusado
+  por YAGNI. **Rodada 2 fechada** — DONE ao regente; rodada 3 só depois do "segue".
