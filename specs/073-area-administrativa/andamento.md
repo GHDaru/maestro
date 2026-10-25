@@ -12,7 +12,7 @@
 | Task | Worker | Escopo | Estado |
 |---|---|---|---|
 | 073-T1-W03 | Worker03 | Gateways e consoles de LLM: LiteLLM Proxy Admin UI, Portkey, OpenAI Platform, Helicone | despachada |
-| 073-T1-W05 | Worker05 | Observabilidade e orquestração de agentes: AgentOps, Langfuse, LangSmith/LangGraph, CrewAI Enterprise (AMP), AutoGen Studio, Dify, Flowise | despachada |
+| 073-T1-W05 | Worker05 | Observabilidade e orquestração de agentes: AgentOps, Langfuse, LangSmith/LangGraph, CrewAI Enterprise (AMP), AutoGen Studio, Dify, Flowise | **entregue** — 9 arquivos (7 do despacho + 2 extras do mesmo nicho: Arize Phoenix, Comet Opik) |
 | 073-T1-W06 | Worker06 | Controle de processos e governança: Temporal Web UI, Portainer CE, Prefect/Dagster, Copilot Studio/Agent 365, n8n, ecossistema Claude (Claude Code, Maestri canvas, Kiro Crew) | despachada (pausa quando o 072 chamar para a reverificação R1/R2) |
 | consolidação | Gerente (ou quem terminar primeiro) | `pesquisa/plataformas.md` — matriz funcionalidade × plataforma | pendente |
 
@@ -25,3 +25,8 @@
 
 - 2026-10-24 — ciclo aberto (`scripts/new-cycle.sh 073 area-administrativa`); spec da rodada 1
   escrita; três workers despachados (W03, W05, W06).
+- 2026-10-24 — **W05 entregou** (073-T1-W05): 9 arquivos em `pesquisa/` —
+  `agentops.md`, `langfuse.md`, `langsmith-langgraph.md`, `crewai-amp.md`, `autogen-studio.md`,
+  `dify.md`, `flowise.md`, `arize-phoenix.md`, `comet-opik.md` — cada um com URL, data da visita
+  (24/10), o que foi aberto de verdade (docs/repositório; demo do Langfuse não aberta por exigir
+  conta) e a tabela fixa (26 itens) com fonte por célula. Nada rodou local; sem capturas.
