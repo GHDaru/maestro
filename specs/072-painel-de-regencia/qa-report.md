@@ -797,3 +797,98 @@ E       sqlite3.IntegrityError: append-only: passo so aceita o fechamento (saida
 - **Resíduo (não rastreado, inofensivo)**: os diretórios **vazios** `docs/journeys/` (e
   `docs/journeys/scripts`, `docs/journeys/img`) continuam no disco; não são rastreados pelo git e não
   aparecem em nenhum gate. Removê-los exige `Remove-Item`, negado pela política da sessão.
+
+## Reverificação R1/R2 (072-T06 attempt=2, 24/10)
+
+> Apêndice da rodada de correção. **Não** reescrevi o veredito do attempt=1 (as seções acima são o
+> registro de então, e a linha ❌ de FR9 na tabela "FR por FR" fica como estava — este bloco é quem a
+> supersede). Reverifico **só R1 e R2**. Base: `git merge --ff-only ccbceef` (fast-forward, sem push) —
+> HEAD `ccbceef`. Ambiente: `PYTHONUTF8=1`; `python3` é o alias da MS Store (mesma ressalva do attempt=1).
+
+### R1 — `_pasta_do_chamado` colidida e FR9 (T12/W04, `d18b5b2` + `8b08112`) → **RESOLVIDO**
+
+- **Uma só definição.** `painel/server.py` tem agora **UMA** `_pasta_do_chamado` (`:578`, a da fila —
+  caminho absoluto ou `None`); o comentário em `:400` registra a colisão; `_arquivos_do_gate` (`:423`)
+  deriva o relativo com `os.path.relpath` (`:428`) em vez de desempacotar a tupla.
+- **Suíte do ciclo:** `python -m pytest painel/tests/test_regencia.py -q` →
+  ```
+  24 passed in 5.85s
+  ```
+- **Sonda de mutação (opcional, executada) — a F3 nova DISCRIMINA.** Quebrei a **condição** da rota
+  (`v_transicao`, `painel/server.py:448`): `if not proposta.get("permitido"):` → `if False:` (o 422 de
+  domínio desaparece). Saída:
+  ```
+  TestF3Transicao::test_f3_transicao_valida_permite_e_ausente_recusa_sem_excecao — 1 failed
+  E  AssertionError: 200 != 422 : FR9: transição sem evidência responde 422 com o motivo
+     (recebido 200: {"ok": true, "permitido": true, "proposta": {...}}).
+  ```
+  Com a rota quebrada a F3 **falha** — o oposto do attempt=1, quando passava vacuamente. Mutação
+  **revertida** (`git checkout -- painel/server.py`; `git status --porcelain painel/server.py` vazio) e
+  a F3 volta verde: `TestF3Transicao` → `1 passed in 1.67s`.
+- **Veredito R1:** ✅ **corrigido**. A rota entrega o **200** legítimo (metade 1: G1→G2 com arquivo de
+  G2 e cabeçalho válido, `permitido: true`) e o **422 de domínio** com `falta` (metade 2: G2→G5 sem
+  arquivo), sem Traceback (o teste captura `stderr` com `redirect_stderr`); a F3 deixou de ser vácua.
+
+### R2 — jornada em `docs/jornada/` e fronteira (T13/W01, `7b0c946`) → **RESOLVIDO**
+
+```
+$ git ls-files docs/journeys        # espero vazio
+count=0
+$ ls docs/jornada/072-*.md
+072-painel-de-regencia.md
+$ grep -c 'F11' docs/jornada/072-painel-de-regencia.md
+1
+```
+
+Bloco equivalente do `check-boundary.sh` (o script chama `python3`, alias da MS Store — mesma ressalva
+declarada no attempt=1), corpo idêntico rodado com o interpretador real:
+
+```
+=== check-boundary.sh (python equivalent) ===
+  toolkit   592 files
+  guide      85 files
+  ok: no orphan, no double claim
+  shared ok
+  ok: every published page has a source
+  RESULT: PASS
+
+=== check-links.sh (python equivalent, .claude/worktrees pruned) ===
+  checked: 341
+  RESULT: ok: every relative link resolves.
+```
+
+- **Veredito R2:** ✅ **corrigido**. Sem órfãos — os 4 de `docs/journeys/` sumiram (arquivos viraram
+  renames para `docs/jornada/`, domínio `guide`); `git ls-files docs/journeys` vazio; jornada e F11 no
+  lugar; `check-links` segue verde (341).
+
+### `check-conformance.sh 072` (após a correção)
+
+```
+=== 072 (default) ===
+• 072-painel-de-regencia
+    ✓ Constitution Check complete (8/8)
+    ✓ acceptance criteria located and stated without checkboxes
+    ✓ data-model / contracts / ux-design: declared and present
+    ✓ all 5 conditional artifacts declared with a reason
+    ✓ domain model declared (aggregate, invariants, glossary, ports) with a reason
+    ✓ TAIL:review / TAIL:security / TAIL:gate / TAIL:mutation evidence: presentes no qa-report
+✓ every cycle checked declares its artifacts and carries the closing tail with evidence.
+exit=0
+
+=== 072 (--ticked-only) ===
+    ✓ TAIL:review / TAIL:security / TAIL:mutation evidence (…)
+    · TAIL:gate not ticked yet — nothing claimed, nothing owed
+✓ every cycle checked declares its artifacts and carries the closing tail with evidence.
+exit=0
+```
+
+- Os **dois modos saem verdes (exit 0)**; nada fora de R1/R2 apareceu. **TAIL:gate** segue **não
+  marcada** em `tasks.md:310` (é do regente) — por isso o modo `--ticked-only` a lista como "not ticked
+  yet", enquanto o modo padrão vê a linha de evidência no qa-report. Coerente com o protocolo; não é
+  achado.
+
+### Fechamento da reverificação
+
+**R1 ✅ e R2 ✅ — as duas reservas bloqueantes do attempt=1 estão levantadas.** O restante do veredito do
+attempt=1 (FR13/FR19 parciais por JS, D-072-8; dívidas D-072-1..8 e D-072-3/4/5 declaradas) **fica de
+pé**, como o Gerente determinou.
