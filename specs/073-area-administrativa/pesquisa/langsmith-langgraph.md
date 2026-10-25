@@ -25,10 +25,10 @@ Acrônimos: LLM (*Large Language Model*), API (*Application Programming Interfac
 | Funcionalidade | Veredito | Fonte |
 |---|---|---|
 | subir/derrubar sessão ou agente | parcial — *LangSmith Deployment* implanta/gerencia *deploys* de agentes; não há subir/derrubar de uma entidade viva na UI | `docs.langchain.com/langgraph` (visto 24/10): "LangSmith Deployment ... deploy ... agents" |
-| pausar | não — não descrito nas páginas vistas | `docs.langchain.com/langgraph` (visto 24/10) não descreve pausar |
+| pausar | — | `docs.langchain.com/langgraph` (visto 24/10) não descreve pausar |
 | retomar | parcial — *durable execution/persistence*: o run retoma de onde parou; não é um "retomar" acionado por humano | `docs.langchain.com/langgraph` (visto 24/10): "resuming from where they left off" |
 | limites de orçamento e de taxa | parcial — limites de uso são assunto de *billing* ("pricing, retention, and limits"), não política do agente | `docs.langchain.com/langsmith` (visto 24/10): "Usage and billing" |
-| políticas allow/deny/ask | não — não descrito | `docs.langchain.com/langsmith` (visto 24/10) |
+| políticas allow/deny/ask | — | `docs.langchain.com/langsmith` (visto 24/10) |
 | aprovação humana | sim — *human-in-the-loop*: inspecionar e modificar o estado do agente a qualquer ponto (interrupts) | `docs.langchain.com/langgraph` (visto 24/10) |
 
 ### ADMINISTRAÇÃO
@@ -36,22 +36,22 @@ Acrônimos: LLM (*Large Language Model*), API (*Application Programming Interfac
 | Funcionalidade | Veredito | Fonte |
 |---|---|---|
 | cadastro de agentes | parcial — *LangSmith Fleet* (construtor sem código) e "discover, reuse, configure, and share agents" | `docs.langchain.com/langgraph` (visto 24/10) |
-| papéis e permissões RBAC | não — não abordado nas páginas vistas | `docs.langchain.com/langsmith` (visto 24/10) não descreve RBAC |
+| papéis e permissões RBAC | — | `docs.langchain.com/langsmith` (visto 24/10) não descreve RBAC |
 | cadastro de skills/ferramentas/modelos | parcial — *prompt engineering*/gestão de prompts; sem registro de ferramentas/modelos | `docs.langchain.com/langsmith` (visto 24/10) |
 | chaves e segredos | parcial — API keys criadas em *Settings → API Keys* e guardadas; sem gestor de segredos descrito | `docs.langchain.com/langsmith` (visto 24/10) |
-| configuração por projeto | não — organizações/workspaces não abordados | `docs.langchain.com/langsmith` (visto 24/10) |
-| auditoria | não — *audit logs* não abordados nas páginas vistas | `docs.langchain.com/langsmith` (visto 24/10) |
+| configuração por projeto | — | `docs.langchain.com/langsmith` (visto 24/10) |
+| auditoria | — | `docs.langchain.com/langsmith` (visto 24/10) |
 
 ### GERENCIAMENTO
 
 | Funcionalidade | Veredito | Fonte |
 |---|---|---|
-| lista de agentes vivos com estado | não — mostra traces/threads, não agentes vivos | `docs.langchain.com/langsmith` (visto 24/10) |
-| tarefa aberta | não — não descrito | `docs.langchain.com/langsmith` (visto 24/10) |
+| lista de agentes vivos com estado | — | `docs.langchain.com/langsmith` (visto 24/10) |
+| tarefa aberta | — | `docs.langchain.com/langsmith` (visto 24/10) |
 | última atividade | parcial — traces como *threads* com visões Messages/Turns/Details | `docs.langchain.com/langsmith` (visto 24/10) |
-| consumo por agente/sessão/modelo | não — só remete a *billing*; sem quebra por agente/modelo na página | `docs.langchain.com/langsmith` (visto 24/10) |
+| consumo por agente/sessão/modelo | — | `docs.langchain.com/langsmith` (visto 24/10) |
 | custo | parcial — assunto de *billing/usage*; sem métrica de custo por agente na página | `docs.langchain.com/langsmith` (visto 24/10) |
-| filas e workers | não — não abordado nas páginas vistas | `docs.langchain.com/langgraph` (visto 24/10) |
+| filas e workers | — | `docs.langchain.com/langgraph` (visto 24/10) |
 | rastro/replay de sessão | sim — rastreio completo e *threads*; "Trace requests, evaluate outputs, and monitor deployments in one place" | `docs.langchain.com/langsmith` + `/langgraph` (visto 24/10) |
 | alertas | sim — "Build dashboards and set alerts to track quality and catch issues early" | `docs.langchain.com/langsmith` (visto 24/10) |
 
@@ -59,9 +59,9 @@ Acrônimos: LLM (*Large Language Model*), API (*Application Programming Interfac
 
 | Funcionalidade | Veredito | Fonte |
 |---|---|---|
-| mensagem entre agentes | não — não descrito | `docs.langchain.com/langgraph` (visto 24/10) |
+| mensagem entre agentes | — | `docs.langchain.com/langgraph` (visto 24/10) |
 | protocolos (A2A; MCP) | parcial — MCP só como "conecte estes docs ao seu agente"; nem A2A | `docs.langchain.com/langsmith` (visto 24/10) |
-| caixa de entrada | não — não descrito | `docs.langchain.com/langsmith` (visto 24/10) |
-| roteamento por nome/ref | não — não descrito | `docs.langchain.com/langsmith` (visto 24/10) |
-| livro de mensagens | não — não descrito | `docs.langchain.com/langsmith` (visto 24/10) |
-| colisão de nomes | não — não descrito | `docs.langchain.com/langsmith` (visto 24/10) |
+| caixa de entrada | — | `docs.langchain.com/langsmith` (visto 24/10) |
+| roteamento por nome/ref | — | `docs.langchain.com/langsmith` (visto 24/10) |
+| livro de mensagens | — | `docs.langchain.com/langsmith` (visto 24/10) |
+| colisão de nomes | — | `docs.langchain.com/langsmith` (visto 24/10) |

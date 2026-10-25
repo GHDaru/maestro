@@ -25,33 +25,33 @@ A2A (*Agent-to-Agent*).
 | Funcionalidade | Veredito | Fonte |
 |---|---|---|
 | subir/derrubar sessão ou agente | parcial — a **sessão** da SDK inicia/fecha sozinha e há `auto_start_session=False` para controle manual; não é subir/derrubar agente pela plataforma | `docs.agentops.ai` (visto 24/10): `auto_start_session=False`, "manual trace management" |
-| pausar | não — a página de docs não descreve pausar | `docs.agentops.ai` (visto 24/10) não descreve a função |
-| retomar | não — idem | `docs.agentops.ai` (visto 24/10) não descreve a função |
+| pausar | — | `docs.agentops.ai` (visto 24/10) não descreve a função |
+| retomar | — | `docs.agentops.ai` (visto 24/10) não descreve a função |
 | limites de orçamento e de taxa | parcial — o README cita *flag* de estouro de tokens ("Token limit overflow flags"), que **detecta**, não configura limite | `github.com/AgentOps-AI/agentops` README (visto 24/10) |
-| políticas allow/deny/ask | não — não descrito | `docs.agentops.ai` (visto 24/10) não descreve a função |
-| aprovação humana | não — não descrito | `docs.agentops.ai` (visto 24/10) não descreve a função |
+| políticas allow/deny/ask | — | `docs.agentops.ai` (visto 24/10) não descreve a função |
+| aprovação humana | — | `docs.agentops.ai` (visto 24/10) não descreve a função |
 
 ### ADMINISTRAÇÃO
 
 | Funcionalidade | Veredito | Fonte |
 |---|---|---|
 | cadastro de agentes | parcial — decorators (`@agent`, `@session`) registram agentes no código, sem catálogo/registro na plataforma | `docs.agentops.ai` (visto 24/10): decorators |
-| papéis e permissões RBAC | não — não descrito | `docs.agentops.ai` (visto 24/10) não descreve RBAC |
+| papéis e permissões RBAC | — | `docs.agentops.ai` (visto 24/10) não descreve RBAC |
 | cadastro de skills/ferramentas/modelos | parcial — instrumentação de ferramentas via `@operation`/`@task` e lista de integrações de framework/provedor; sem registro gerido | `docs.agentops.ai` + README (visto 24/10) |
 | chaves e segredos | parcial — exige API key em `agentops.init(...)`; não há gestor de segredos descrito | `docs.agentops.ai` (visto 24/10): "INSERT YOUR API KEY HERE" |
-| configuração por projeto | não — conceito de "projeto" não aparece | `docs.agentops.ai` (visto 24/10) não descreve projetos |
-| auditoria | não — não descrito | `docs.agentops.ai` (visto 24/10) não descreve auditoria |
+| configuração por projeto | — | `docs.agentops.ai` (visto 24/10) não descreve projetos |
+| auditoria | — | `docs.agentops.ai` (visto 24/10) não descreve auditoria |
 
 ### GERENCIAMENTO
 
 | Funcionalidade | Veredito | Fonte |
 |---|---|---|
 | lista de agentes vivos com estado | parcial — lista **sessões** (Session Overview), não agentes vivos com estado atual | `docs.agentops.ai` (visto 24/10): "Session Overview" |
-| tarefa aberta | não — não descrito | `docs.agentops.ai` (visto 24/10) não descreve tarefa corrente |
+| tarefa aberta | — | `docs.agentops.ai` (visto 24/10) não descreve tarefa corrente |
 | última atividade | parcial — tempo total de execução da sessão e durações dos eventos | `docs.agentops.ai` (visto 24/10): "total execution time", "charts of event types and durations" |
 | consumo por agente/sessão/modelo | parcial — métricas por sessão; sem quebra por modelo na página | `docs.agentops.ai` (visto 24/10): session-wide metrics |
 | custo | sim — "LLM Cost Management": rastreio de custo entre provedores | `github.com/AgentOps-AI/agentops` README (visto 24/10) |
-| filas e workers | não — não descrito | `docs.agentops.ai` (visto 24/10) não descreve filas/workers |
+| filas e workers | — | `docs.agentops.ai` (visto 24/10) não descreve filas/workers |
 | rastro/replay de sessão | sim — "Session Replays", "Replay Analytics and Debugging", waterfall e grafo passo a passo | README + `docs.agentops.ai` (visto 24/10) |
 | alertas | parcial — não há alertas; há *Failure Detection* e flags de estouro de token (detecção, não notificação) | README (visto 24/10) |
 
@@ -59,9 +59,9 @@ A2A (*Agent-to-Agent*).
 
 | Funcionalidade | Veredito | Fonte |
 |---|---|---|
-| mensagem entre agentes | não — não descrito | `docs.agentops.ai` (visto 24/10) não descreve mensageria entre agentes |
+| mensagem entre agentes | — | `docs.agentops.ai` (visto 24/10) não descreve mensageria entre agentes |
 | protocolos (A2A; MCP) | parcial — só um *MCP Docs Server* (`npx mint-mcp add agentops`) para conversar com a **documentação**; nem A2A nem orquestração por MCP | `docs.agentops.ai` (visto 24/10) |
-| caixa de entrada | não — não descrito | `docs.agentops.ai` (visto 24/10) |
-| roteamento por nome/ref | não — não descrito | `docs.agentops.ai` (visto 24/10) |
-| livro de mensagens | não — não descrito | `docs.agentops.ai` (visto 24/10) |
-| colisão de nomes | não — não descrito | `docs.agentops.ai` (visto 24/10) |
+| caixa de entrada | — | `docs.agentops.ai` (visto 24/10) |
+| roteamento por nome/ref | — | `docs.agentops.ai` (visto 24/10) |
+| livro de mensagens | — | `docs.agentops.ai` (visto 24/10) |
+| colisão de nomes | — | `docs.agentops.ai` (visto 24/10) |

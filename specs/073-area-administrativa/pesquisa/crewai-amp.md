@@ -26,10 +26,10 @@ RBAC (*Role-Based Access Control*), MCP (*Model Context Protocol*), A2A (*Agent-
 | Funcionalidade | Veredito | Fonte |
 |---|---|---|
 | subir/derrubar sessão ou agente | parcial — implanta/escala *crews* e dispara execuções (`kickoff`); não há subir/derrubar de agente individual na UI | `docs-platform.crewai.com/.../overview` (visto 24/10): deploy, "kickoff" |
-| pausar | não — não descrito nas fontes vistas | `github.com/crewAIInc/crewAI` (visto 24/10) não descreve pausar |
+| pausar | — | `github.com/crewAIInc/crewAI` (visto 24/10) não descreve pausar |
 | retomar | parcial — *Flows* com estado/checkpointing; não é "retomar" acionado por humano | README do repositório (visto 24/10): flow state, checkpointing |
-| limites de orçamento e de taxa | não — não descrito nas fontes vistas | `docs-platform.crewai.com/.../overview` (visto 24/10) não descreve limites |
-| políticas allow/deny/ask | não — não descrito nas fontes vistas | `docs-platform.crewai.com/.../overview` (visto 24/10) |
+| limites de orçamento e de taxa | — | `docs-platform.crewai.com/.../overview` (visto 24/10) não descreve limites |
+| políticas allow/deny/ask | — | `docs-platform.crewai.com/.../overview` (visto 24/10) |
 | aprovação humana | sim — *human input on execution* / *human-in-the-loop* no fluxo de execução | README do repositório (visto 24/10) |
 
 ### ADMINISTRAÇÃO
@@ -37,9 +37,9 @@ RBAC (*Role-Based Access Control*), MCP (*Model Context Protocol*), A2A (*Agent-
 | Funcionalidade | Veredito | Fonte |
 |---|---|---|
 | cadastro de agentes | parcial — *Crew Studio* sem código para montar a crew; sem catálogo de agentes durável na página | `docs-platform.crewai.com/.../overview` (visto 24/10) |
-| papéis e permissões RBAC | não — não descrito nas fontes vistas | `docs-platform.crewai.com/.../overview` (visto 24/10) |
+| papéis e permissões RBAC | — | `docs-platform.crewai.com/.../overview` (visto 24/10) |
 | cadastro de skills/ferramentas/modelos | sim — *Tool Repository*: publicar e instalar ferramentas a partir da plataforma | `docs-platform.crewai.com/.../overview` (visto 24/10) |
-| chaves e segredos | não — endpoints REST citados; segredos não descritos | `docs-platform.crewai.com/.../overview` (visto 24/10) |
+| chaves e segredos | — | `docs-platform.crewai.com/.../overview` (visto 24/10) |
 | configuração por projeto | parcial — deploy por CLI/GitHub e endpoints REST por crew; "projeto" não formalizado | `docs-platform.crewai.com/.../overview` (visto 24/10) |
 | auditoria | parcial — "detailed execution traces and logs" (rastro de execução), não trilha de auditoria de administração | `docs-platform.crewai.com/.../overview` (visto 24/10) |
 
@@ -47,14 +47,14 @@ RBAC (*Role-Based Access Control*), MCP (*Model Context Protocol*), A2A (*Agent-
 
 | Funcionalidade | Veredito | Fonte |
 |---|---|---|
-| lista de agentes vivos com estado | não — não descrito nas fontes vistas | `docs-platform.crewai.com/.../overview` (visto 24/10) |
-| tarefa aberta | não — não descrito nas fontes vistas | `docs-platform.crewai.com/.../overview` (visto 24/10) |
+| lista de agentes vivos com estado | — | `docs-platform.crewai.com/.../overview` (visto 24/10) |
+| tarefa aberta | — | `docs-platform.crewai.com/.../overview` (visto 24/10) |
 | última atividade | parcial — traces/logs de execução e webhook streaming de eventos | `docs-platform.crewai.com/.../overview` (visto 24/10) |
-| consumo por agente/sessão/modelo | não — não descrito nas fontes vistas | `docs-platform.crewai.com/.../overview` (visto 24/10) |
-| custo | não — não descrito nas fontes vistas | `docs-platform.crewai.com/.../overview` (visto 24/10) |
-| filas e workers | não — não descrito nas fontes vistas | `docs-platform.crewai.com/.../overview` (visto 24/10) |
+| consumo por agente/sessão/modelo | — | `docs-platform.crewai.com/.../overview` (visto 24/10) |
+| custo | — | `docs-platform.crewai.com/.../overview` (visto 24/10) |
+| filas e workers | — | `docs-platform.crewai.com/.../overview` (visto 24/10) |
 | rastro/replay de sessão | parcial — traces/logs de execução; *replay* não é citado | `docs-platform.crewai.com/.../overview` (visto 24/10) |
-| alertas | não — não descrito nas fontes vistas | `docs-platform.crewai.com/.../overview` (visto 24/10) |
+| alertas | — | `docs-platform.crewai.com/.../overview` (visto 24/10) |
 
 ### INTERCOMUNICAÇÃO
 
@@ -62,7 +62,7 @@ RBAC (*Role-Based Access Control*), MCP (*Model Context Protocol*), A2A (*Agent-
 |---|---|---|
 | mensagem entre agentes | sim — agentes especializados colaboram; processo *hierarchical* com *manager* que delega e sintetiza | README do repositório (visto 24/10) |
 | protocolos (A2A; MCP) | sim — suporte a MCP e A2A listado na página do repositório | `github.com/crewAIInc/crewAI` (visto 24/10) |
-| caixa de entrada | não — não descrito | README (visto 24/10) |
+| caixa de entrada | — | README (visto 24/10) |
 | roteamento por nome/ref | parcial — o *manager* (processo hierarchical) distribui tarefas por papel/agente | README (visto 24/10) |
-| livro de mensagens | não — não descrito | README (visto 24/10) |
-| colisão de nomes | não — não descrito | README (visto 24/10) |
+| livro de mensagens | — | README (visto 24/10) |
+| colisão de nomes | — | README (visto 24/10) |

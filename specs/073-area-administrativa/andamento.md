@@ -4,9 +4,10 @@
 > construído aqui. Quatro rodadas: 1 pesquisa · 2 confronto e decisão · 3 wireframes (DDD, linguagem
 > ubíqua) · 4 bar (três críticos, nota 0–10, passa com os três ≥ 9).
 
-- **Data**: 2026-10-24 (pesquisa) · 2026-10-25 (consolidação, revisão e fechamento) · **Lane**:
-  plena · **Status**: rodada 1 **fechada e revisada** — 25 plataformas, matriz conferida por
-  script; DONE emitido ao regente; **rodada 2 aguarda o "segue"**
+- **Data**: 2026-10-24 (pesquisa) · 2026-10-25 (consolidação, revisão, fechamento e preâmbulo da
+  rodada 2) · **Lane**: plena · **Status**: rodada 1 **fechada e revisada** — 25 plataformas,
+  matriz conferida por script; **preâmbulo da rodada 2 entregue** (normalização `não`/`—`, correções
+  da amostragem; 25 × 26 = 650 células com um só símbolo por veredito)
 - **Spec**: `spec.md` (rascunho aberto pelo Gerente a partir do despacho do regente)
 
 ## Rodada 1 — pesquisa de plataformas
@@ -66,3 +67,11 @@
   Rabo do ciclo: review e security marcados com evidência; mutation n/a (rodada documental);
   gate do regente. **Rodada 1 fechada** — DONE ao regente com a matriz; rodada 2 só depois do
   "segue".
+- 2026-10-25 — **preâmbulo da rodada 2 entregue** (073-T2-preambulo, Worker06): normalização da
+  força do veredito, célula a célula, relendo as 13 fichas do W03/W05 — **143 `não → —`**, **13
+  `não` mantidos** (a fonte afirma a ausência), **nenhum `—` → `sim`**; a regra foi gravada na
+  legenda da matriz e a divergência dada por **resolvida**. Correções da amostragem do crítico em
+  contexto fresco: Temporal *lista de vivos* e *tarefa aberta* `sim → parcial`, Maestri 6 → 5
+  células `—` em CONTROLE, INTERCOMUNICAÇÃO 13% → 14%. **Distribuição medida por script:** `sim` 172
+  · `parcial` 223 · `não` 13 · `—` 242 = **650**. Seção nova "Consideradas e não incluídas" (11
+  plataformas). Sem push, sem merge.

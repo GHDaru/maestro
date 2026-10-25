@@ -215,3 +215,34 @@ que a ficha nomeia como tal.
 - **TAIL:security**: limpo (0 achados não-declarados).
 - Scripts de medição **fora do repositório** (`%TEMP%\rev073.py`, `%TEMP%\rev073b.py`) — nada de
   ferramenta nova entra no projeto por causa desta revisão.
+
+## Preâmbulo da rodada 2 (073-T2-preambulo, 25/10) — normalização e correções da amostragem
+
+Worker06, contexto próprio. Duas operações, ambas **na ficha e na coluna da matriz** (a ficha é a
+fonte de verdade; a matriz é a projeção).
+
+**1. Normalização da força do veredito (`não` × `—`).** As 13 fichas do Worker03/Worker05 usavam
+`não` com dois sentidos. Reclassificação **célula a célula, relendo cada ficha**: `não` de "não
+achei / nada sobre / não aparece / não descrito / *not documented*" → `—`; `não` **afirmado** pela
+fonte ficou `não`. Resultado: **143 células** `não → —` (conferidas por script) e **13 `não`
+mantidos** — Helicone 3 (subir, lista de vivos, mensagem) · Dify 1 · Flowise 1 · Arize Phoenix 3 ·
+Comet Opik 3 · Kiro Crew 2 —, todas com a ausência **afirmada** pela fonte. As 21 células em branco
+do Worker03 já eram `—` na matriz e continuam. **Nenhuma célula mudou de `—` para `sim`** (FR3
+intocado). A regra entrou na legenda da matriz; a nota de divergência passou a "resolvida em 25/10,
+rodada 2".
+
+**2. Correções da amostragem** (crítico em contexto fresco, veredito `SOUND_WITH_FIXES`): duas
+células da coluna **Temporal Web UI** desceram de `sim` para `parcial` — *lista de agentes vivos com
+estado* e *tarefa aberta* (a aba Workers lista *workers* em *polling*, não agentes; a tabela
+Workflows lista execuções, não a tarefa aberta de um agente) —, com a justificativa gravada na
+própria ficha (`pesquisa/temporal-web-ui.md`). Textos corrigidos na leitura: Maestri **6 → 5**
+células `—` em CONTROLE; INTERCOMUNICAÇÃO **13% → 14%** (21/150); tabelas de leitura recontadas.
+
+**Distribuição pós-normalização (medida por script sobre a matriz, 25/10):** `sim` **172** ·
+`parcial` **223** · `não` **13** · `—` **242** = **650**. Por grupo (`sim`): CONTROLE **30**/150 ·
+ADMINISTRAÇÃO **76**/150 · GERENCIAMENTO **45**/200 (22,5%) · INTERCOMUNICAÇÃO **21**/150 (14%).
+
+**Conferência texto × matriz (PASS):** 27 colunas de cabeçalho, 26 linhas de dados, **0** linhas com
+contagem de células ≠ 27, 650 células; toda contagem das tabelas de leitura bate com a matriz.
+Script de medição fora do repositório (`%TEMP%\wf073_check.py`). Nada da evidência da rodada 1 foi
+reescrito — normalização e correções entraram **por acréscimo**.

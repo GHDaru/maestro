@@ -23,8 +23,8 @@ API (*Application Programming Interface*).
 | Funcionalidade | Veredito | Fonte |
 |---|---|---|
 | subir/derrubar sessão ou agente | não — o fluxo roda ao ser usado; não sobe/derruba agente pela UI | `docs.flowiseai.com` (visto 24/10) |
-| pausar | não — não descrito | `docs.flowiseai.com` (visto 24/10) |
-| retomar | não — não descrito | `docs.flowiseai.com` (visto 24/10) |
+| pausar | — | `docs.flowiseai.com` (visto 24/10): não descrito |
+| retomar | — | `docs.flowiseai.com` (visto 24/10): não descrito |
 | limites de orçamento e de taxa | parcial — *Security Controls* lista **rate limit** (taxa), não orçamento | `docs.flowiseai.com` (visto 24/10): "rate limit" |
 | políticas allow/deny/ask | parcial — *restricted domains* (allow/deny de domínios), não política geral | `docs.flowiseai.com` (visto 24/10): "restricted domains" |
 | aprovação humana | sim — *Human in the Loop* listado entre os recursos | `docs.flowiseai.com` (visto 24/10) |
@@ -44,14 +44,14 @@ API (*Application Programming Interface*).
 
 | Funcionalidade | Veredito | Fonte |
 |---|---|---|
-| lista de agentes vivos com estado | não — não descrito | `docs.flowiseai.com` (visto 24/10) |
-| tarefa aberta | não — não descrito | `docs.flowiseai.com` (visto 24/10) |
+| lista de agentes vivos com estado | — | `docs.flowiseai.com` (visto 24/10): não descrito |
+| tarefa aberta | — | `docs.flowiseai.com` (visto 24/10): não descrito |
 | última atividade | parcial — logs de execução/*monitoring* | `docs.flowiseai.com` (visto 24/10) |
-| consumo por agente/sessão/modelo | não — não descrito | `docs.flowiseai.com` (visto 24/10) |
-| custo | não — não descrito | `docs.flowiseai.com` (visto 24/10) |
-| filas e workers | não — escala (vertical/horizontal) é citada; filas não | `docs.flowiseai.com` (visto 24/10) |
+| consumo por agente/sessão/modelo | — | `docs.flowiseai.com` (visto 24/10): não descrito |
+| custo | — | `docs.flowiseai.com` (visto 24/10): não descrito |
+| filas e workers | — | `docs.flowiseai.com` (visto 24/10): escala (vertical/horizontal) é citada; filas não |
 | rastro/replay de sessão | parcial — depuração visual do fluxo + logs de execução; *replay* não citado | `docs.flowiseai.com` (visto 24/10) |
-| alertas | não — não descrito | `docs.flowiseai.com` (visto 24/10) |
+| alertas | — | `docs.flowiseai.com` (visto 24/10): não descrito |
 
 ### INTERCOMUNICAÇÃO
 
@@ -59,7 +59,7 @@ API (*Application Programming Interface*).
 |---|---|---|
 | mensagem entre agentes | parcial — sistemas multiagente no *Agentflow* | `docs.flowiseai.com` (visto 24/10) |
 | protocolos (A2A; MCP) | parcial — nós *MCP client/server* (tool listing, SSE, auth); A2A não citado | `docs.flowiseai.com` (visto 24/10) |
-| caixa de entrada | não — não descrito | `docs.flowiseai.com` (visto 24/10) |
-| roteamento por nome/ref | não — não descrito | `docs.flowiseai.com` (visto 24/10) |
-| livro de mensagens | não — não descrito | `docs.flowiseai.com` (visto 24/10) |
-| colisão de nomes | não — não descrito | `docs.flowiseai.com` (visto 24/10) |
+| caixa de entrada | — | `docs.flowiseai.com` (visto 24/10): não descrito |
+| roteamento por nome/ref | — | `docs.flowiseai.com` (visto 24/10): não descrito |
+| livro de mensagens | — | `docs.flowiseai.com` (visto 24/10): não descrito |
+| colisão de nomes | — | `docs.flowiseai.com` (visto 24/10): não descrito |
