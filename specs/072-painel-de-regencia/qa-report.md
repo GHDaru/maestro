@@ -476,6 +476,64 @@
   asserções continuava verde — a vacância de R1 está fechada por construção, não por confiança.
 - **Commit:** `d18b5b2` na `w/worker04` — *"ciclo 072: R1 — rota de transição sem crash, F3 com teor"*.
 
+### 072-T16 — chamado sem navegação e os dois avisos de leitura velha (Worker04)
+
+- **T16(1) — o `chamado` da transição navegava.** `_pasta_do_chamado` monta a pasta com
+  `os.path.join(raiz, "specs", chamado)` e nada validava o id: com `chamado=".."` a pasta resolvia
+  para a **raiz** do repositório e o `os.listdir` seguinte listava o que estivesse lá.
+  **Medido contra o código anterior** (`painel/server.py` de `e9601ac`): `chamado=".."` respondia
+  **200 permitido** — a transição era promovida com um arquivo de gate achado **fora de `specs/`**,
+  e o `caminho` do gate saía da pasta do chamado. Correção: `RE_CHAMADO = ^[\w.-]+$` +
+  `_chamado_valido` (nunca `.` nem `..`), guarda no `_pasta_do_chamado` — contrato único, então
+  vale também para a fila — e **422** explícito na rota acusando o CHAMADO (antes o motivo dizia
+  "falta G3-*.md…", apontando para o lugar errado).
+- **T16(2) — os dois avisos de leitura velha discordavam.** O de dentro da página
+  (`/api/regencia/kanban` → `meta.aviso`, de `regencia.aviso_ingestao`) dizia "1 h 59 min"; o de
+  cima (`#aviso-velho`, alimentado por `/api/meta`) fazia a conta **em JavaScript** —
+  `Math.round(ingerido_age_min % 60)` sobre um valor já arredondado a 0,1 min — e imprimia
+  **"1h60m"**: duas contas da mesma ingestão. Correção: uma conta só, no domínio (`texto_idade`,
+  `idade_curta` atrás de `idade_defasada`, que fixa o limiar de 1 h para os dois);
+  `/api/meta` publica `leitura_velha` **já pronto** e o banner de cima só o imprime.
+  `kanban._texto_idade` passa a delegar para `texto_idade` — o mesmo cálculo estava duplicado.
+- **Testes novos (2) em `painel/tests/test_regencia.py`:**
+  `TestT16ChamadoNaoNavega` — sete ids de navegação (`..`, `../..`, `.`, `specs/..`, `a/b`,
+  `a\b`, `""`) → 422 **acusando o chamado**, sem vazar para a resposta a isca plantada na raiz,
+  e o id legítimo segue permitido (a guarda não é bloqueio geral); e
+  `TestT16LeituraVelhaConcorda` — 119,9 min de ingestão → os **dois** avisos com 1 h 59 min;
+  ingestão fresca → os dois em silêncio.
+- **Evidência — as duas suítes (`PYTHONUTF8=1`, `python` 3.12):**
+
+  ```
+  $ python -m pytest painel/tests/test_regencia.py -q -p no:cacheprovider
+  ..........................                                               [100%]
+  26 passed in 14.70s
+
+  $ python -m pytest painel/tests -q -p no:cacheprovider --ignore=painel/tests/test_regencia.py
+  ................................................                         [100%]
+  48 passed in 29.60s
+  ```
+
+  (26 = os 24 da rodada + os 2 do T16.)
+- **Evidência — mutação (os dois testes falham contra o código anterior):** rodados contra os
+  arquivos de `e9601ac` (`git checkout --` nas fontes, restauradas em seguida):
+
+  ```
+  $ python -m pytest painel/tests/test_regencia.py -q -p no:cacheprovider -k "T16Chamado"
+  E  AssertionError: 200 != 422 : 072-T16: `chamado='..'` tem de ser recusado (recebido 200:
+     {"ok": true, "permitido": true, "proposta": {"chamado": "..", …}}).
+
+  $ python -m pytest painel/tests/test_regencia.py -q -p no:cacheprovider -k "T16"
+  2 failed, 24 deselected in 7.33s
+  E  AssertionError: None != (1, 59) : 072-T16: idade de 119,9 min = 1 h 59 min no aviso de cima
+     (recebido None).
+  ```
+
+  O 200 com `"chamado": ".."` é a navegação **funcionando** no código antigo: a transição era
+  aceita com a evidência achada fora de `specs/`.
+- **Decisão declarada:** a validação do `chamado` está **FECHADA aqui** (não vira D-072-9).
+- **Commit:** `39c2957` na `w/worker04` — *"ciclo 072: T16 — chamado sem navegação (422) e os dois
+  avisos de leitura velha com o mesmo número"*.
+
 ## Fitness functions (DoD) — filled by Worker06 with real output
 
 > Ambiente: Windows, `PYTHONUTF8=1`, `python` 3.12.10 (o `python3` desta máquina é o alias da MS Store
