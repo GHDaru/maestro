@@ -41,9 +41,18 @@
       22 achados, TODOS da classe citação-sem-atributo — correção attempt=2 entregue (`ccf574c`,
       integrada em `1354240`): `data-referencia` nas citações, só atributos (35/35); **verde nas
       4 telas**.**
-- [ ] T3-readme-navegacao — Worker01: `prototipo/README.md` (telas × ENTRA × contexto dono ×
+- [x] T3-readme-navegacao — Worker01: `prototipo/README.md` (telas × ENTRA × contexto dono ×
       juízes) e o lugar de cada tela na navegação do painel existente (Regência e Chamados ficam
       como estão).
+      **Entregue: `e40f4bf` + `ff83e38` ("em entrega" unificado), integrado em `99fd85d` — tabela
+      única tela × ENTRA nº × nome ubíquo × contexto × grupo × juízes × estado; os 13 ENTRA cabem
+      em 11 telas (21 é objeto das 4 da Mensageria; 26 visível dentro do roteamento); Workflow
+      declarado "em entrega" sem nome de arquivo inventado; Regência e Chamados intactos
+      (`data-v` verificado em `painel/index.html:955`); grupo novo "Área administrativa" marcado
+      como rodada 4, NÃO decidido, NÃO implementado; colisão na navegação explícita (caixa de
+      entrada ≠ fila de decisões); divergência 4/5 (Administração no despacho × CONTROLE na
+      matriz) declarada com as duas colunas; sem link markdown (nada novo para o check-links).
+      Gate re-executado após o merge: 7 telas, 0 achados.**
 - [x] T3-fitness — Gerente: script que percorre os HTML e falha se houver elemento interativo sem
       `data-fonte`, rótulo fora do glossário (glossary.md + os 12) ou número sem a marca "exemplo";
       saída colada no qa-report.
