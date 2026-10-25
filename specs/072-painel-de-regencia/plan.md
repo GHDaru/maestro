@@ -443,6 +443,13 @@ rodada as encosta sem as resolver por inteiro** — e por isso as **declara** em
   de jornada (FR26) e revisão humana que pegam, não a suíte. Declarado para não vender cobertura que
   não existe.
 
+> **Adaptação do F3 aprovada pelo regente (24/10, por delegação — ADR 0026):** como escrita no T03b, o
+> F3 era insatisfazível — a foto da árvore era tirada **antes** de `_sobe()`, que cria `<raiz>/painel.db`,
+> então a comparação final diferia sempre, por artefato da fixture e não da transição (medido pelo W04:
+> única diferença `painel.db`). O W04 moveu a foto para **depois** de `_sobe()` (`0a9a44a`),
+> preservando o intento de FR9 (nenhum arquivo muda na recusa) — dentro do "F3 adapta (W04)" que a
+> tabela "Nomes fixados" já previa.
+
 <!--
   GATE (não delegável na origem; delegado nesta rodada ao crítico independente, ADR 0026): o plano
   foi aprovado COM CONDIÇÕES antes de virar tasks; esta revisão (T02b) reconcilia o plano com os
