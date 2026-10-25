@@ -369,6 +369,31 @@ Sem telas reais o script **falha por design** ("no screens found", exit 1) — a
 13 telas e a saída colada aqui acontecem no **T3-fechamento**; a mutação do Worker02 quebra este
 script de propósito (TAIL:mutation da rodada).
 
+### Primeira rodada sobre telas reais (v2 `b30fd8f` → v3 `da85def`, Gerente, 25/10)
+
+O contrato de marcação foi fechado DEPOIS da primeira rodada real (4 telas do W03): v2 validou
+`data-rotulo` contra o glossário e isentou contexto de citação (`data-fonte`/`data-referencia`) e
+acrônimo com dígito (A2A, F1); v3 declarou o vocabulário de **moldura** do W04 (tipo, consultar,
+regra, efeito…) como stopwords — palavra de domínio NÃO entra nessa lista, leva `data-rotulo`.
+Rodada v3 sobre as **7 telas integradas** (4 Mensageria `566bca5` + 3 Administração `00c1ae9`):
+
+```text
+-- verifica-prototipo: 7 screen(s), 45 finding(s)   [exit 1]
+```
+
+**45 achados, todos em duas classes** — nenhum de `data-fonte` ausente, nenhum de `data-rotulo`
+fora do glossário, nenhum de colisão (fila/portão sempre qualificados nas telas):
+1. **citação sem atributo** (40: W03 22 · W04 18) — dígito de referência (§, ADR, file:linha,
+   "25 plataformas", "ciclo 073") em texto visível fora de `data-fonte`/`data-referencia`;
+2. **rótulo de domínio sem `data-rotulo`** (5, W04) — `Teto`/`Consumo`/`Restante`/`Efeito ao
+   estourar` (→ limite de orçamento / consumo por agente) e o h1 de políticas (→ **OPA**, o termo
+   reusado do glossário para allow/deny/ask, `confronto-decisao.md:159-161`).
+
+**Correções attempt=2 despachadas** ao W03 (22) e ao W04 (23) com o contrato e a lista exata;
+verde esperado antes do fechamento. Com o glossário do W01 integrado (`853a1d5`): allowlist
+74→86 e a rodada re-executada dá **45 = 45** (os achados são todos da classe citação/rótulo,
+independentes do glossário — medido também pelo W01: 22=22 nas telas dele).
+
 ## Rodada 3 — telas da Administração (Worker04, 25/10)
 
 **Escopo:** `T3-telas-administracao` — três wireframes estáticos em
