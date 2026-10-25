@@ -1,10 +1,13 @@
 # QA report 072 — Painel de regência, rodada 1: kanban por gate e fila de decisões
 
-- **Date**: 2026-10-24 · **Lane**: full · **Status**: **open — rodada 1 in progress** (this file
+- **Date**: 2026-10-24 · **Lane**: full · **Status**: **rodada 1 fechada em 24/10 (HEAD `ccbceef`);
+  verdict do gate: aprovado com condições (25/10, crítico process-guardian em contexto fresco);
+  condições T15–T18 em curso — hashes aqui quando fecharem** (this file
   is the skeleton created before the mutations, as the regent session asked; every section below
   is filled by whoever delivers, with command output, never intention)
-- **Verdict**: to be written by the independent review (Worker06, fresh context) after the
-  slices integrate
+- **Verdict**: aprovado com condições pelo gate delegado (ADR 0026) — veredito da revisão
+  independente (Worker06, fresh context) nas seções abaixo; as quatro condições do gate estão
+  em `tasks.md` § "Entregas e hashes" e nas seções T15–T18 quando entregues
 
 > Ruler of the cycle: the DoD of `plan.md § Verification` (**`Ran 15 tests`** — the 13 named
 > tests of `c1eb802` plus the two FR16 proofs the plan gate added; the supersession
