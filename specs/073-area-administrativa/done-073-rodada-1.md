@@ -6,9 +6,9 @@
 
 **Ciclo 073 "área administrativa do Maestro", rodada 1 — pesquisa de plataformas**
 
-**Branch**: 066-painel-de-regencia · **HEAD**: ver `git log` (commit do DONE; a correção da
-leitura da matriz é o commit imediatamente anterior). Sem push, sem merge em dev/main, sem
-promote-main — **a rodada 2 só começa com o teu "segue"**.
+**Branch**: 066-painel-de-regencia · **HEAD**: o commit deste DONE (a correção da leitura da
+matriz é o `5c74120` imediatamente anterior; a revisão fresca do W03, o `b920fce`). Sem push,
+sem merge em dev/main, sem promote-main — **a rodada 2 só começa com o teu "segue"**.
 
 ## A matriz (o que você pediu)
 
