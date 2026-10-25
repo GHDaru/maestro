@@ -422,6 +422,59 @@
 - **Sem regressão e sem teste tocado:** correção de texto em `specs/`; o diff `ee9b3a9..f0c2b39` traz
   **só** `plan.md` e `qa-report.md` (4 inserções / 4 remoções) — nenhum arquivo de `painel/` foi
   alterado (nenhuma linha de código ou de teste).
+### 072-T12 — R1 corrigida (Worker04)
+
+- **O achado (R1, bloqueante, T06/revisão em contexto fresco):** o merge W04+W05 deixou
+  `_pasta_do_chamado` **definida duas vezes** em `painel/server.py` — a primeira devolvia a tupla
+  `(pasta, rel)`, a segunda devolvia só a string do caminho e **sombreava** a primeira. Com isso
+  `_arquivos_do_gate` fazia `pasta, rel = _pasta_do_chamado(...)` sobre uma string, estourava
+  `ValueError`, e o `except ValueError` do `do_POST` transformava o estouro em **422 para toda
+  transição** — válida ou não. A rota nunca promovia nada.
+- **Correção (mesmo PR, só a worktree `w/worker04`, sem push/merge):** `_pasta_do_chamado` passa a
+  ter **uma única definição** — a da fila, que devolve o caminho **absoluto** de `specs/<id>/` ou
+  `None`; `_arquivos_do_gate` consome esse contrato único e deriva o caminho relativo do repositório
+  com `os.path.relpath`. Os dois chamadores convivem com o mesmo contrato: `_item_tail` (fila, quer
+  só o caminho) e `_arquivos_do_gate` (kanban/transição). O corpo do **200** passou a trazer
+  `permitido: true` (antes só `ok: true`), para a transição permitida ser observável pela rota.
+- **F3 deixa de ser vazia — o outro lado de R1.** A asserção antiga aceitava `code == 422` + corpo
+  contendo `"motivo|erro|falta"`; o 422 de crash (`{"erro": "too many values to unpack (expected
+  2)"}`) satisfazia **as duas**, então a F3 passava **com a rota quebrada**. A `TestF3Transicao`
+  agora exige as duas metades: transição **válida** (G1→G2, com `G2-*.md` presente e de cabeçalho
+  válido) → **200** e `permitido: true`; transição **sem o arquivo** do destino (G2→G5) → **422**
+  com `"falta"` no motivo; e **nenhum `"Traceback"` no stderr do servidor** (capturado com
+  `contextlib.redirect_stderr`) — o que separa recusa decidida de exceção disfarçada não é o código
+  HTTP, é o servidor não ter estourado.
+- **A fixture ganhou um repositório git de verdade.** Sem repo, o conferidor não resolve o hash do
+  `objeto` (`chamados._git` → `git log -1 --format=%ai <hash>`), nenhum cabeçalho fica válido e a
+  metade "permitida" era **inalcançável** — daí a F3 antiga só poder olhar o 422. `_repo_de_verdade()`
+  cria o repo na fixture (`git init` + um commit) e os cabeçalhos saem do hash curto e do `%ai`
+  daquele commit; `_gate_objeto()` monta esses cabeçalhos.
+- **Evidência — as duas suítes, saída real (`PYTHONUTF8=1`, `python` 3.12):**
+
+  ```
+  $ python -m pytest painel/tests/test_regencia.py -q -p no:cacheprovider
+  ........................                                                 [100%]
+  24 passed in 8.79s
+
+  $ python -m pytest painel/tests -q -p no:cacheprovider --ignore=painel/tests/test_regencia.py
+  ................................................                         [100%]
+  48 passed in 24.37s
+  ```
+
+- **Evidência — verificação por mutação (a F3 nova discrimina?):** rodado o F3 novo contra o
+  `server.py` de **HEAD**, isto é, com o bug de R1 ainda presente (`git checkout -- painel/server.py`,
+  restaurado em seguida a partir de cópia):
+
+  ```
+  $ python -m pytest painel/tests/test_regencia.py -q -p no:cacheprovider -k "F3"
+  E  AssertionError: 422 != 200 : FR8: transição válida (G1→G2, arquivo de G2 presente e válido)
+     responde 200 (recebido 422: {"erro": "too many values to unpack (expected 2)"}).
+  1 failed, 23 deselected in 7.08s
+  ```
+
+  Ou seja: com o bug a F3 **falha** (422 de crash no lugar do 200 esperado) e o antigo conjunto de
+  asserções continuava verde — a vacância de R1 está fechada por construção, não por confiança.
+- **Commit:** `d18b5b2` na `w/worker04` — *"ciclo 072: R1 — rota de transição sem crash, F3 com teor"*.
 
 ## Fitness functions (DoD) — filled by Worker06 with real output
 
