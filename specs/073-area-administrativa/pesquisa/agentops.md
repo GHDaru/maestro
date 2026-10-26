@@ -50,9 +50,9 @@ A2A (*Agent-to-Agent*).
 | tarefa aberta | — | `docs.agentops.ai` (visto 24/10) não descreve tarefa corrente |
 | última atividade | parcial — tempo total de execução da sessão e durações dos eventos | `docs.agentops.ai` (visto 24/10): "total execution time", "charts of event types and durations" |
 | consumo por agente/sessão/modelo | parcial — métricas por sessão; sem quebra por modelo na página | `docs.agentops.ai` (visto 24/10): session-wide metrics |
-| custo | sim — "LLM Cost Management": rastreio de custo entre provedores | `github.com/AgentOps-AI/agentops` README (visto 24/10) |
+| custo | parcial — "LLM Cost Management" é **linha de README**, não página que documente o mecanismo. Rebaixada de `sim` para `parcial` **na rodada 4 (26/10, juiz 2, P1)** | `github.com/AgentOps-AI/agentops` README (visto 24/10) |
 | filas e workers | — | `docs.agentops.ai` (visto 24/10) não descreve filas/workers |
-| rastro/replay de sessão | sim — "Session Replays", "Replay Analytics and Debugging", waterfall e grafo passo a passo | README + `docs.agentops.ai` (visto 24/10) |
+| rastro/replay de sessão | parcial — "Session Replays"/"Replay Analytics" aparecem só no **README** e na página de produto (`docs.agentops.ai/`), sem página que documente o mecanismo. Rebaixada de `sim` para `parcial` **na rodada 4 (26/10)** | README + `docs.agentops.ai` (visto 24/10) |
 | alertas | parcial — não há alertas; há *Failure Detection* e flags de estouro de token (detecção, não notificação) | README (visto 24/10) |
 
 ### INTERCOMUNICAÇÃO
@@ -65,3 +65,5 @@ A2A (*Agent-to-Agent*).
 | roteamento por nome/ref | — | `docs.agentops.ai` (visto 24/10) |
 | livro de mensagens | — | `docs.agentops.ai` (visto 24/10) |
 | colisão de nomes | — | `docs.agentops.ai` (visto 24/10) |
+
+**Correção da rodada 4 (26/10, fatia do Worker06).** Fontes desta ficha: 3 URLs (produto `app.agentops.ai`, docs, GitHub). As **duas** células `sim` da ficha — **custo** e **rastro/replay de sessão** — caíram para `parcial`: apoiavam-se só no README e na página de produto, sem página que documente o mecanismo (o juiz 3, P1, já registrava que os dois únicos `sim` vêm do README, não da UI).

@@ -66,3 +66,5 @@ Acrônimos: LLM (*Large Language Model*), LLMOps (*Large Language Model Operatio
 | roteamento por nome/ref | — | `docs.dify.ai/en/introduction` (visto 24/10): não descrito |
 | livro de mensagens | — | `docs.dify.ai/en/introduction` (visto 24/10): não descrito |
 | colisão de nomes | — | `docs.dify.ai/en/introduction` (visto 24/10): não descrito |
+
+**Correção da rodada 4 (26/10, fatia do Worker06).** Fontes: 3 URLs (produto `dify.ai`, `/introduction`, GitHub). Células `sim` revisadas contra a regra "só marketing/README → `parcial`": **nenhuma rebaixada** — *cadastro de skills/ferramentas/modelos*, *configuração por projeto* e *última atividade* apoiam-se na página de introdução, que descreve o recurso (o `sim` desta ficha apoia-se em página de visão; declarado para o juiz, se exigir página de mecanismo).

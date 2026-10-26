@@ -63,3 +63,5 @@ Object Notation*).
 | roteamento por nome/ref | parcial — o time roteia mensagens entre os agentes conforme o grafo | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
 | livro de mensagens | parcial — a sessão no Playground mostra as mensagens trocadas (streaming) | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
 | colisão de nomes | — | `.../autogenstudio-user-guide/index.html` (visto 24/10) |
+
+**Correção da rodada 4 (26/10, fatia do Worker06).** Fonte: 1 URL (guia do usuário, página de documentação). Células `sim` revisadas contra a regra "só marketing/README → `parcial`": **nenhuma rebaixada** — *pausar*, *cadastro de agentes*, *cadastro de skills/ferramentas/modelos* e *mensagem entre agentes* apoiam-se no guia, que descreve o mecanismo.
