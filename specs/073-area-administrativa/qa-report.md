@@ -629,3 +629,83 @@ Nada fora de `specs/073-area-administrativa/prototipo/` foi escrito (só o acré
 entrega a peça para o bar da rodada 4. Tokens (piso, soma do `message.usage` do transcript desde a
 1ª ocorrência do `[[TASK]]`): **≈2,56 M** (entrada 2.380.079 + saída 179.650, em 96 mensagens;
 `cache_read` 7.840.512 à parte).
+
+## Correções da revisão fresca (073-T3-correcao-workflow, Worker05, 26/10)
+
+**Escopo:** as correções da revisão em contexto fresco (`revisao-073-rodada-3.md` §1) **nas quatro
+telas do Workflow**. Worktree sincronizada em `dbfe3f2` (`git merge --ff-only`). A revisão é relato,
+não correção: quem corrige é o autor da tela — e é o que se fez aqui.
+
+### R4 — `tasks.jsonl` não existe (o achado mais sério) — **corrigido**
+
+As **cinco** ocorrências em `workflow-03-tarefa-aberta.html` (`:52`, `:66`, `:71`, `:72`, `:73`)
+apontavam para `tasks.jsonl`. **Conferido com `ls` antes de escrever:** não existe `tasks.jsonl` em
+lugar nenhum; o livro de ponto real é **`docs/records/tarefas.jsonl`** (mapa §7, l. 294), e o
+arquivo existe. Todas as cinco passaram ao caminho completo. A `:73` citava **os dois nomes no
+mesmo atributo** (`tasks.jsonl (attempt=) e o histórico de despachos do tarefas.jsonl`) — ficou um
+caminho só: `docs/records/tarefas.jsonl (campo attempt= e o histórico de despachos)`. A `:102`, que
+já acertava o nome mas omitia o diretório, também passou ao caminho completo — citação se resolve
+de fora da pasta do ciclo.
+
+### R7 — estados ilustrativos sem marca — **corrigido** (as 6 células)
+
+As células de **estado** das tabelas ficavam nuas enquanto as vizinhas da mesma linha traziam
+`data-exemplo="true"` + "(exemplo)" — ambíguo para o leitor (dado vivo ou exemplo?). Agora as seis
+carregam a mesma marca das vizinhas: `workflow-01:89`, `:99`, `:109` e `workflow-02:79`, `:85`,
+`:91` → `<span data-fonte="exemplo — nenhum dado real" data-exemplo="true">trabalhando (exemplo)</span>`
+(e equivalentes para "esperando" e "sem tarefa"). Só marcação: nenhum texto de estado mudou.
+
+### R9 — duas bases de citação no mesmo rodapé — **corrigido nas minhas 4 telas**
+
+Escolhida **uma** base: **relativa à raiz do repositório**. As citações relativas ao ciclo viraram
+caminhos completos (`confronto/…` → `specs/073-area-administrativa/confronto/…`; `pesquisa/…` →
+`specs/073-area-administrativa/pesquisa/…`) e o mapa deixou de aparecer como
+`mapa-de-contextos.md` sem diretório (agora `specs/073-area-administrativa/confronto/mapa-de-contextos.md`).
+Resultado: `docs/…`, `painel/…`, `scripts/…`, `specs/…` — uma base só, resolvível de qualquer
+diretório.
+
+**Toda citação foi conferida contra o disco** (a citação tem de apontar para arquivo que existe).
+Os 11 caminhos citados nas 4 telas existem: `specs/073-area-administrativa/confronto/confronto-decisao.md`
+· `…/confronto/mapa-de-contextos.md` · `docs/records/tarefas.jsonl` · `painel/server.py` ·
+`scripts/multi-session.py` · `…/pesquisa/claude-code.md` · `…/pesquisa/litellm.md` ·
+`specs/066-painel-de-regencia/ux-design.md` · `specs/072-painel-de-regencia/spec.md` ·
+`docs/governance/principles.md` · `docs/governance/task-ledger.md`.
+
+### Auto-checagem
+
+```text
+python specs/073-area-administrativa/prototipo/verifica-prototipo.py
+-- verifica-prototipo: 11 screen(s), 0 finding(s)   [exit 0]
+```
+
+**11 telas · 0 achados** depois das correções — nenhuma regra do gate regrediu (as correções mexem
+em atributo e em texto de citação, e o gate as aceita: citação já estava sob `data-fonte`).
+
+### O que NÃO é meu — dívida declarada da rodada 4
+
+O mandato é aplicar **o que for correção de uma linha minha** e declarar o resto. Fica declarado,
+para o regente decidir:
+
+| Achado | Onde | Dono |
+|---|---|---|
+| **R1 / R1b** — "fila" nua em prosa e em atributo | `mensageria-01-caixa-de-entrada.html:75`, `:78` | telas da Mensageria (W03) |
+| **R2** — "portão" nu em `<td>` | `mensageria-04-protocolo.html:61` | telas da Mensageria (W03) |
+| **R2b** — "portão do humano" (terceiro qualificador) | `administracao-politicas.html:105` | telas da Administração (W04) + decisão de grafia |
+| **R3** — "fila outbox" × "fila (outbox)" | `mensageria-03-roteamento.html:73`, `:74`, `:100` | telas da Mensageria (W03) + decisão de grafia |
+| **R5** — `hooks/…` em vez de `scripts/hooks/…` | `administracao-politicas.html:62`, `:92`, `:98`, `:110`, `:122`, `:123` | telas da Administração (W04) |
+| **R6** — `data-exemplo` zero vezes (segundo dialeto) | as 3 telas `administracao-*` | telas da Administração (W04) |
+| **R8** — sem prefixo numérico | as 3 telas `administracao-*` | decisão do regente (uniformidade) |
+| **R9 (metade da Mensageria)** — duas bases no mesmo rodapé | as 4 telas `mensageria-*` | telas da Mensageria (W03) |
+
+**Decisões de grafia que a correção não pode tomar sozinha** (recomendações 2, 3 e 4 da revisão):
+qual grafia única de "fila (outbox)" (o mapa prescreve com parênteses; a tela escreve sem) · se
+"portão do humano" sobrevive ou entra no par permitido do §7 · estender a **regra 4** do gate a
+`<p>`/`<td>`/atributos (hoje ela só lê rótulos — o ponto cego que a Parte 2 da revisão mediu) · e
+**pôr `fixtures/tela-ruim.html` no alcance do gate**, senão a fitness function não tem oráculo.
+
+### Limites
+
+Só as 4 telas do Workflow e o acréscimo desta seção ao `qa-report.md`; **sem push, sem merge, sem
+código de produto, sem segredo**; nenhuma outra tela foi tocada. Tokens (piso, soma do
+`message.usage` do transcript desde a 1ª ocorrência deste `[[TASK]]`): **≈0,45 M** (entrada 430.176
++ saída 22.660, em 30 mensagens; `cache_read` 2.804.992 à parte).
