@@ -77,8 +77,19 @@
       smoke-testado em telas sintéticas (5 achados na ruim, 0 na boa; o smoke test achou e corrigiu
       o falso-negativo RACI⊂"operacional"). A rodada verde sobre as telas reais e a saída colada no
       qa-report acontecem no T3-fechamento; a mutação do W02 quebra este script de propósito.**
-- [ ] T3-revisao — Worker02: revisão em contexto fresco das telas contra o mapa e as colisões;
+- [x] T3-revisao — Worker02: revisão em contexto fresco das telas contra o mapa e as colisões;
       mutação — quebrar o script da fitness function e vê-lo acusar.
+      **Entregue: `d1e9cc7`, integrado em `dbfe3f2` — `revisao-073-rodada-3.md` (284 linhas) +
+      CHANGELOG. Parte 1: nenhuma violação estrutural nem invasão de contexto nas 11 telas; 9
+      achados de disciplina de nome/citação que o gate não alcança (R1/R1b "fila" nua, R2/R2b
+      "portão" nu/terceiro qualificador, R3 grafia "fila outbox", R4 citação de `tasks.jsonl`
+      inexistente 5×, R5 caminho sem `scripts/`, R6–R9 robustez), cada um com arquivo:linha e a
+      regra ferida; examinados e aceitos declarados (§1.4). Parte 2 — mutação: regra 3 cega →
+      sumiu 'number without the "exemplo" mark: "42"'; regra 4 cega → sumiu '"fila" unqualified';
+      descoberta mecânica: nenhuma tela real exercita a regra 4 (só o fixture) — base da
+      extensão da regra 4 mandatada pela regente. Script restaurado byte a byte (SHA-256 igual
+      ao de `af81499`, git diff vazio). Tokens (piso): 9.778.712. Correções R1–R9 despachadas
+      por dono de tela (W03/W04/W05) + extensão da regra 4 (W02) na rodada de correção final.**
 - [x] T3-seguranca — Worker06: segurança documental e conformance 073 nos dois modos.
       **Entregue: varredura de `specs/073-area-administrativa/` (foco `prototipo/` e `confronto/`):
       0 achados — os únicos casamentos de segredo são falsos positivos (`sk-l` ⊂ "task-ledger";
