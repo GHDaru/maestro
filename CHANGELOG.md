@@ -10,6 +10,17 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **Revisão fresca da rodada 3 e mutação do gate** (ciclo 073, `073-T3-revisao`): a revisão em
+  contexto fresco das **11 telas** contra o mapa de contextos (§6, contexto dono; §7, as cinco
+  colisões de nome) e o contrato de marcação, com **9 achados** em `arquivo:linha`
+  (`specs/073-area-administrativa/revisao-073-rodada-3.md`) — nenhuma tela viola o contrato
+  estrutural nem invade contexto alheio; os achados são de disciplina de nome e de citação (entre
+  eles um arquivo citado que não existe, `tasks.jsonl` × `docs/records/tarefas.jsonl`, em 5
+  lugares), e **nenhum deles o gate vê**. A parte 2 **quebrou de propósito** duas regras do
+  verificador (número sem "exemplo"; termo de colisão nu) e mostrou, na saída literal, o achado
+  do corpus ruim **deixando de ser acusado** (5 → 4 nas duas) — com o script **restaurado byte a
+  byte** (hash SHA-256 igual ao de `af81499`, `git diff` vazio) e o achado de que **nenhuma das
+  11 telas reais exercita a regra 4**: o fixture é o único oráculo dela.
 - **O protótipo ganha o seu índice** (ciclo 073, `073-T3-readme-navegacao`):
   `specs/073-area-administrativa/prototipo/README.md` põe as **7 telas da árvore** (4 da Mensageria, 3
   da Administração — mais as 4 do Workflow em entrega) contra os **13 `ENTRA`** (as funcionalidades que
