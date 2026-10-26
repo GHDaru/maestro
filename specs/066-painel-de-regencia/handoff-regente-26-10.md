@@ -67,3 +67,17 @@ fatia) com a lacuna nomeada; `/loop` até passar; regra das duas rodadas sem mud
 Store, `AGENTS.md` symlink); o CI em Linux decide. Bash tool lento com nove sessões abertas: rodar
 em segundo plano com saída em arquivo e ler com `Read`. `Edit/Write(docs/adr/**)` negado: criar
 ADR via `python shutil.copyfile` do scratchpad. Nunca `rm -rf`, `Remove-Item`, `--amend`.
+
+## 6. Adendo 26/10 18:10 — rodada 4 em curso e teto de consumo atingido
+
+- Rodada 3 aceita (`gate-073-rodada-3-delegado`, `83c386e`). Design system v1 medido na referência
+  Smart Core em `specs/073-area-administrativa/design-system.md` (`e89963a`).
+- Rodada 4: três juízes em contexto fresco (subagentes Sonnet da regente) devolveram **barra não
+  atingida** nos três; pareceres e a **correção 1** consolidada com as decisões da regente em
+  `specs/073-area-administrativa/rodada-4/` (`bce269b`). Correção 1 despachada ao Gerente por dono.
+- **Teto de 40 % do consumo semanal atingido (39 %)** depois de seis execuções de juiz (três caíram
+  por rede e foram relançadas). Decisão: a **segunda rodada de julgamento roda nos Workers** (um
+  subagente novo por juiz, no gateway, com os mesmos mandatos dos arquivos `juiz-*.md`), e a regente
+  só lê os vereditos e decide. Se a correção 2 não mudar o diagnóstico, o laço para e o Darú decide.
+- Contexto da sessão regente em 93 %: a próxima sessão retoma por este handoff; primeiro ato é mandar
+  o ref novo ao Gerente `[31ee4d]`.
