@@ -677,7 +677,6 @@ python specs/073-area-administrativa/prototipo/verifica-prototipo.py
 -- verifica-prototipo: 11 screen(s), 0 finding(s)   [exit 0]
 ```
 
-<<<<<<< HEAD
 **11 telas · 0 achados** depois das correções — nenhuma regra do gate regrediu (as correções mexem
 em atributo e em texto de citação, e o gate as aceita: citação já estava sob `data-fonte`).
 
