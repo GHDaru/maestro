@@ -1254,3 +1254,68 @@ declarada** para o juiz reavaliar (Arize *Span Replay*, Comet README, Dify visã
 **Não tocado** (fora da fatia): o mapa do W02, o inventário do W05, as telas, o verificador. A prosa
 "não encontrado na documentação lida" substituiu "lacuna de mercado" **só nesta fatia** (leitura da
 matriz); `juiz-3` e `correcao-1.md` mantêm a citação como registro do que foi corrigido.
+
+## Rodada 4 — fechamento da correção 1 (Gerente, 26/10)
+
+As seis fatias da `rodada-4/correcao-1.md` + o fechamento da regra 5 nas telas, integradas na
+`066-painel-de-regencia`:
+
+| Fatia | Dono | Commit do dono | Integração |
+|---|---|---|---|
+| preâmbulo R8 (rename das 3 telas da Administração) | Worker04 | `9bb5917` | `741b130` |
+| preâmbulo R9 (base de citação única + § Convenções + mapa §7) | Worker02 | `46d254c` | `6a32e24` (conflitos do `nav`: hrefs do R8 + base nova) |
+| correção 1 — Mensageria (4 telas) | Worker03 | `edbb32f`+`80a4c6d` | `d83920e` |
+| correção 1 — Administração (3 telas) | Worker04 | `5be4a31` | `bfe1da5` |
+| correção 1 — README + glossário | Worker01 | `0deccf4` | `bd51e4d` |
+| correção 1 — Workflow (4 telas) + inventário | Worker05 | `952ce53` | `5d91a1a` |
+| correção 1 — confronto + mapa + regra 5 (v4) | Worker02 | `11efa79` | `eb638b2` |
+| fechamento da regra 5 — Workflow (4 achados) | Worker05 | `fb599bb` | fast-forward |
+| fechamento da regra 5 — Mensageria (34 achados) | Worker03 | `a04b6d0` | merge pós-`fb599bb` |
+| correção 1 — matriz (`plataformas.md`) | Worker06 | `4257101` | `cb8a11a` |
+
+**Discrepância declarada (39 × 29):** o W02 mediu 29 achados da regra 5 no corpus dele, que não
+tinha as telas da correção 1 do W03/W05; no topo integrado a regra 5 viva acusou **39** (a tabela de
+endereços da `mensageria-03`, criada pela correção 1 do W03, trouxe 11). Os 39 fecharam por dono de
+tela: 34 W03 (causa: o ref dentro de `<span class="mono">` caía em nó de texto diferente do nome) e
+4 W05 (causa: ref separado do nome por `:` ou `(agente)`). Nenhuma isenção nova: a tabela de
+endereços **não** é isenta; só `data-rotulo="colisão de nomes"` é.
+
+**Portão final (cinco regras vivas, incluindo a regra 5):**
+
+```text
+python specs/073-area-administrativa/prototipo/verifica-prototipo.py
+-- verifica-prototipo: 11 screen(s), 0 finding(s)   [exit 0]
+```
+
+**Conformance 073, dois modos** (saída idêntica nos dois, exit 0):
+
+```text
+bash scripts/check-conformance.sh 073            → exit-normal=0
+TICKED_ONLY=1 bash scripts/check-conformance.sh 073 → exit-ticked=0
+✓ every cycle checked declares its artifacts and carries the closing tail with evidence.
+```
+
+**Coerência do README na integração (Gerente, declarado):** "falha em quatro regras" → **cinco**
+(v4, `11efa79`); "regra 5 ainda não está no script" → está; isenção da regra 5 explicitada (só a
+tabela de colisão de **nomes**; a de endereços lista os refs nas próprias células). Commit `dd15761`.
+
+**Tokens (pisos — `tarefas.jsonl` parou no ciclo 064; soma de `message.usage` dos transcripts,
+desde a 1ª ocorrência do `[[TASK]]` de cada fatia):**
+
+| Fatia | Dono | Piso |
+|---|---|---|
+| preâmbulo R8 | Worker04 | 4.219.636 |
+| preâmbulo R9 | Worker02 | 821.054 (+ cache_read 3.739.264 à parte) |
+| correção 1 — Mensageria | Worker03 | 5.542.221 |
+| correção 1 — Administração | Worker04 | 11.671.366 |
+| correção 1 — README + glossário | Worker01 | 3.248.622 (fatia; sessão acumulada 36.784.845) |
+| correção 1 — Workflow + inventário | Worker05 | 16.918.086 |
+| correção 1 — confronto + mapa + regra 5 | Worker02 | 20.453.582 |
+| regra 5 — Workflow | Worker05 | 4.156.209 |
+| regra 5 — Mensageria | Worker03 | 4.119.310 |
+| correção 1 — matriz | Worker06 | 5.274.507 |
+| **Total (piso)** | | **≈ 76,4 M** |
+
+**Limites cumpridos:** nenhum push, nenhum merge na dev/main, nenhum promote-main.sh, nenhum
+`rm -rf`, nenhuma leitura de `.env`/`settings.local.json`, só acréscimo em ADR/decisoes.jsonl, sem
+código de produto, sem segredo. A segunda rodada de juízes é do regente, em contexto fresco.
