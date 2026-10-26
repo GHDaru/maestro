@@ -253,6 +253,74 @@ contagem de células ≠ 27, 650 células; toda contagem das tabelas de leitura 
 Script de medição fora do repositório (`%TEMP%\wf073_check.py`). Nada da evidência da rodada 1 foi
 reescrito — normalização e correções entraram **por acréscimo**.
 
+## Rodada 3 (073-T3-seguranca, 26/10) — segurança documental e conformance 073
+
+Worker06, contexto próprio. Objeto: `specs/073-area-administrativa/` — foco em `prototipo/`
+(11 telas + 2 fixtures + o verificador) e `confronto/` (3 arquivos). **Por acréscimo**: nada da
+evidência das rodadas 1/2 foi reescrito.
+
+### 1. Varredura — nenhum achado
+
+| Classe | Padrões procurados | Resultado |
+|---|---|---|
+| Segredo | chave `sk-*`/`sk_live`/`sk_test`, `api_key`, `secret`, `senha`, `password`, `bearer`, *connection string*, `AKIA…`, `ghp_…`, bloco de chave privada, JWT (*JSON Web Token*, `eyJ…`) | **0** — os únicos casamentos são **falsos positivos**: `sk-l` dentro de "ta**sk-l**edger" (o `task-ledger.md` citado nas telas) e `senha` dentro de "de**senha**dos" (`prototipo/README.md:4`). Confirmado por `grep -o`: o texto casado é literalmente `sk-l`/`senha`, não um segredo. |
+| Dado pessoal | e-mail, telefone `+55`, CPF, CNPJ, caminho de usuário | **0** e-mails, 0 telefone, 0 CPF/CNPJ. O único caminho de usuário é o **namespace público do repositório** `GHDaru/maestro` (`confronto/inventario-maestro.md:9`) — não é dado de terceiro. |
+| Nome real de sessão/agente | `Worker0*`, `Gerente`, `Regente`, `Office`, nomes próprios | **0 sem marcador** — todo valor que parece real carrega `(exemplo)` **e** `data-exemplo="true"` (verificado tela a tela). Nomes de **papel** do método (Worker01–05, Gerente) não são pessoas. |
+| URL externa | `http(s)://…`, com e sem *query string* | **só documentação/produto público** — `docs.litellm.ai`, `code.claude.com/docs`, `docs.temporal.io`, `windmill.dev`, `kiro.dev`, `themaestri.app`, `learn.microsoft.com`, `arize.com`… A única com *query string* é o endpoint público de consulta da doc do n8n (`pesquisa/n8n.md:5`), sem token nem credencial. Nada vaza acesso privado. |
+
+**Declarado, não achado:** `Darú` aparece em `spec.md:44` e `plan.md:18` (prosa: "a página de
+progresso viva do Darú") — é o **dono do repositório**, nome já presente em todo o repo; não é dado
+de terceiro nem dado de tela.
+
+**Achados: 0.** Pela taxonomia do Princípio III (*read → … → irreversível → bloqueada*), nada a
+classificar.
+
+### 2. O protótipo passa na própria fitness function
+
+```
+$ python specs/073-area-administrativa/prototipo/verifica-prototipo.py
+-- verifica-prototipo: 11 screen(s), 0 finding(s)
+```
+
+11 telas, 0 achados, exit 0 — verde **além** do retrato de 25/10, que registrava 45 achados
+pendentes de `attempt=2`.
+
+### 3. Conformance 073 — verde nos dois modos
+
+**Modo normal** (`bash scripts/check-conformance.sh 073`) — exit 0:
+
+```text
+── Conformance: did the method survive into the artifacts? ──
+   (floor: cycle 42; older cycles carry declared debt — see the roadmap)
+• 070-conferidor-ordem-veredito
+    · imported evidence (00-chamado.md + G*-*.md, no tasks.md): a Hindiana chamado, not a Maestro cycle — not charged (ADR 0024)
+• 073-area-administrativa
+    ✓ Constitution Check complete (8/8)
+    ✓ acceptance criteria located and stated without checkboxes
+    ✓ all 5 conditional artifacts declared with a reason
+    ✓ domain model declared (aggregate, invariants, glossary, ports) with a reason
+    ✓ TAIL:review evidence: Worker03, contexto fresco (não consolidou; amostragem esc
+    ✓ TAIL:security evidence: Worker03, varredura sobre `pesquisa/` (28 arquivos, 14 pad
+    ✓ TAIL:gate evidence: o gate humano da rodada 1 é o **"segue" do regente para a
+    · TAIL:mutation not applicable — rodada documental — nenhum gate executável criado ou alte
+──
+cycles checked: 2
+✓ every cycle checked declares its artifacts and carries the closing tail with evidence.
+```
+
+**Modo `TICKED_ONLY=1`** — saída **idêntica**, exit 0.
+
+> Nota da máquina: nesta worktree a chamada do conformance 073 leva ~4–6 min (msys, *fork* por
+> arquivo). **Não** foi preciso extrair `check-links.sh`/`check-boundary.sh` — o conformance 073
+> não os invoca a ponto de pendurar; a lentidão é do próprio `check-conformance.sh` sob msys.
+> Saídas coladas acima, como pedido.
+
+### Veredito
+
+**Limpo.** 0 achados de segurança (segredo, dado pessoal, nome não marcado, URL vazada); protótipo
+verde na própria fitness function; conformance 073 verde nos dois modos. **Nada corrigido — nada
+havia a corrigir.**
+
 ## Revisão em contexto fresco do confronto (073-T2-revisao-confronto, 25/10)
 
 Worker05, contexto próprio — **não escrevi o confronto** (foi o Worker03). Declaro, por

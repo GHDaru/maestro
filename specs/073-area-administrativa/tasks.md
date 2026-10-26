@@ -73,7 +73,14 @@
       qa-report acontecem no T3-fechamento; a mutação do W02 quebra este script de propósito.**
 - [ ] T3-revisao — Worker02: revisão em contexto fresco das telas contra o mapa e as colisões;
       mutação — quebrar o script da fitness function e vê-lo acusar.
-- [ ] T3-seguranca — Worker06: segurança documental e conformance 073 nos dois modos.
+- [x] T3-seguranca — Worker06: segurança documental e conformance 073 nos dois modos.
+      **Entregue: varredura de `specs/073-area-administrativa/` (foco `prototipo/` e `confronto/`):
+      0 achados — os únicos casamentos de segredo são falsos positivos (`sk-l` ⊂ "task-ledger";
+      `senha` ⊂ "desenhados", confirmado por `grep -o`), 0 dado pessoal, todo nome que parece real
+      com `(exemplo)`+`data-exemplo="true"`, só URL de doc/produto público. Protótipo verde na
+      própria fitness function (11 telas, 0 achados, exit 0). Conformance 073 verde nos dois modos
+      (normal e `TICKED_ONLY=1`), exit 0, saídas idênticas. Evidência por acréscimo no `qa-report.md`
+      (§ Rodada 3).**
 - [ ] T3-fechamento — Gerente: andamento, `[[DONE 073-rodada-3]]` ao regente (e commitado) com a
       lista de telas, o resultado do script e os tokens. **Rodada 4 só com o "segue".**
 
