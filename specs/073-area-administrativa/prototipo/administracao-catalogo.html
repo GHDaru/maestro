@@ -100,27 +100,27 @@ footer.rodape strong{color:var(--tinta)}
 
 <h2>As linhas do catálogo</h2>
 <table data-fonte="confronto/confronto-decisao.md (ENTRA cadastro de skills/ferramentas/modelos: skills em pasta, modelos por sessão); layout do registro inspirado em LiteLLM, Skills Registry (pesquisa/litellm.md)">
-  <caption>Formato da linha. Os valores marcados <span class="exemplo">exemplo</span> ilustram o layout — não são dados do repositório; para o valor real, consulta-se a fonte da coluna.</caption>
+  <caption>Formato da linha. Os valores marcados <span class="exemplo" data-exemplo="true">exemplo</span> ilustram o layout — não são dados do repositório; para o valor real, consulta-se a fonte da coluna.</caption>
   <thead>
     <tr><th>Nome</th><th>Tipo</th><th>Onde vive</th><th>Invariante que verifica</th><th>Consultar</th></tr>
   </thead>
   <tbody>
     <tr>
-      <td><span class="exemplo">exemplo: revisar-spec</span></td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: revisar-spec</span></td>
       <td>Skill</td>
       <td><code>skills/&lt;nome&gt;/SKILL.md</code></td>
       <td>Invariante: toda skill é uma pasta com <code>SKILL.md</code> — <code>scripts/check-agents.sh</code></td>
       <td><button type="button" data-fonte="pesquisa/litellm.md — Skills Registry (cadastro de skills por plugin) e método skills/&lt;nome&gt;/SKILL.md">abrir ficha</button></td>
     </tr>
     <tr>
-      <td><span class="exemplo">exemplo: Read / Write / Bash</span></td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: Read / Write / Bash</span></td>
       <td>Ferramenta</td>
       <td>declaradas no agente (<code>.claude/agents/</code>)</td>
       <td>Invariante: ferramenta declarada é ferramenta permitida ao papel — <code>scripts/check-roles.sh</code></td>
       <td><button type="button" data-fonte="pesquisa/litellm.md — List Tools / Call Tools (ferramentas por chave/time) e método scripts/check-roles.sh">abrir ficha</button></td>
     </tr>
     <tr>
-      <td><span class="exemplo">exemplo: modelo da sessão</span></td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: modelo da sessão</span></td>
       <td>Modelo</td>
       <td><code>scripts/multi-session.py</code> (hoje por sessão)</td>
       <td class="vazio">— motivo: ainda não há invariante de registro de modelo (a lacuna é o que entra)</td>
@@ -177,7 +177,7 @@ footer.rodape strong{color:var(--tinta)}
 <footer class="rodape" data-referencia="true">
   <p><strong>Como ler este wireframe.</strong> Arquivo HTML estático: sem servidor, sem JavaScript de dados; CSS
   mínimo, em cinza, de caixas e rótulos. Nenhum número é inventado — o valor ilustrativo vem marcado
-  <span class="exemplo">exemplo</span>, e o valor vivo aparece como <span class="vazio">—</span> com o motivo ao
+  <span class="exemplo" data-exemplo="true">exemplo</span>, e o valor vivo aparece como <span class="vazio">—</span> com o motivo ao
   lado. <span class="fonte">fonte: ux-design 066 §4 (anti-regras verificáveis)</span></p>
   <p><strong>Rótulos.</strong> Os nomes de objeto vêm do vocabulário do contexto — o glossário
   (<code>docs/governance/glossary.md</code>), a linguagem ubíqua da Administração

@@ -629,3 +629,27 @@ Nada fora de `specs/073-area-administrativa/prototipo/` foi escrito (só o acré
 entrega a peça para o bar da rodada 4. Tokens (piso, soma do `message.usage` do transcript desde a
 1ª ocorrência do `[[TASK]]`): **≈2,56 M** (entrada 2.380.079 + saída 179.650, em 96 mensagens;
 `cache_read` 7.840.512 à parte).
+
+### Correções da revisão fresca — telas da Administração (26/10)
+
+Achados da `revisao-073-rodada-3.md` §1 que caem nestas três telas:
+
+| # | Onde | Correção | Estado |
+|---|---|---|---|
+| **R5** | `administracao-politicas.html:62, :92, :98, :110, :122, :123` | `hooks/guard-immutables.py` → **`scripts/hooks/guard-immutables.py`** (6×). Caminho conferido antes de corrigir: não existe `hooks/` na raiz; o arquivo está em `scripts/hooks/` | **corrigido** |
+| **R2b** | `administracao-politicas.html:105` | "portão do humano" → **"portão do regente"** — a grafia prescrita pelo mapa §7 (`confronto/mapa-de-contextos.md:296`: o segundo portão é *sempre* qualificado, "portão do regente") | **corrigido** |
+| **R6** | as 3 telas | `data-exemplo="true"` nos 18 valores ilustrativos, além do `class="exemplo"` e da palavra no texto — encerra o segundo dialeto de marcação | **corrigido** |
+| **R8** | as 3 telas | prefixo numérico uniforme | **dívida da rodada 4** — renomear arquivo é decisão da regente (uniformizou o Workflow em `af81499` e deixou a Administração como está); não renomeei por conta própria |
+| **R9** | as 3 telas | uma base única de citação | **dívida da rodada 4** — a revisão não listou estas telas, mas o padrão ocorre: o mesmo rodapé mistura citação relativa ao ciclo (`ux-design 066 §4`) com relativa à raiz (`specs/066-painel-de-regencia/ux-design.md §4 e §7`), e cita `tasks.md` sem diretório. Escolher a base é decisão (recomendação 5 da revisão) — não alterei em silêncio |
+
+R1, R1b, R2, R3 e R4 **não** tocam estas telas (são de `mensageria-*` e `workflow-03`).
+
+**Verificação**
+
+- `python specs/073-area-administrativa/prototipo/verifica-prototipo.py` → **11 telas, 0 achados, exit 0**.
+- Auto-checagem própria re-rodada **só nas 3 telas** (cópia em diretório temporário): `fit073.py`
+  **PASS** (R1–R9 verdes) e `mut073.py` **PASS** (9/9) — a mutação do R4 foi reapontada para a
+  marcação nova, senão mediria um texto que não existe mais.
+- **Nota para a rodada 4**: a regra 4 do gate ainda não foi ampliada a `<p>`/`<td>`/atributos
+  (§2.3 da revisão). Quando for, nenhuma destas 3 telas acusa termo de colisão nu — "portão" aqui
+  só aparece qualificado ("portão do regente") e "fila" não aparece.
