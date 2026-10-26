@@ -8,8 +8,8 @@
 > **O contrato** — que o verificador desta pasta cobra (ver "Como estas telas são julgadas"): cada
 > elemento interativo declara `data-fonte` (de onde a ideia veio, plataforma + URL da ficha ou
 > requisito do método), todo rótulo de domínio é termo do glossário, e todo número vem marcado
-> `exemplo` — **nenhum valor é inventado**. Onde as telas de hoje ainda devem esse contrato, a
-> medição de 25/10 está declarada abaixo.
+> `exemplo` — **nenhum valor é inventado**. As medições datadas (25/10 e 26/10) estão declaradas
+> abaixo: **hoje o verificador fecha verde**.
 
 - **Ciclo**: 073 (área administrativa) · **Rodada**: 3 (wireframes) · **Fonte de verdade**:
   `confronto/confronto-decisao.md` (§ "ENTRA — 13")
@@ -29,10 +29,10 @@
 | `administracao-catalogo.html` | 9 · **catálogo de skills/ferramentas/modelos** | Administração | ADMINISTRAÇÃO | Administração/Gerenciamento | **neste ramo** (`5ce4a5f`, Worker04) |
 | `administracao-politicas.html` | 5 · **política declarativa (allow/deny/ask)** | Administração | CONTROLE | Controle · Administração/Gerenciamento | **neste ramo** (`5ce4a5f`, Worker04) |
 | `administracao-orcamento.html` | 4 · **limite de orçamento** | Administração | CONTROLE | Controle | **neste ramo** (`5ce4a5f`, Worker04) |
-| *(arquivo a declarar pelo Worker05)* | 1 · **sessão de agente** (subir/derrubar) | Workflow de sessões | CONTROLE | Controle · Administração/Gerenciamento | **em entrega** |
-| *(idem)* | 13 · **estado do agente vivo** | Workflow de sessões | GERENCIAMENTO | Administração/Gerenciamento · Controle | **em entrega** |
-| *(idem)* | 14 · **tarefa aberta** | Workflow de sessões | GERENCIAMENTO | Administração/Gerenciamento | **em entrega** |
-| *(idem)* | 16 · **consumo por agente** | Workflow de sessões | GERENCIAMENTO | Administração/Gerenciamento | **em entrega** |
+| `workflow-01-sessao-de-agente.html` | 1 · **sessão de agente** (subir/derrubar) | Workflow de sessões | CONTROLE | Controle · Administração/Gerenciamento | **neste ramo** (`365f59d`, Worker05) |
+| `workflow-02-estado-do-agente-vivo.html` | 13 · **estado do agente vivo** | Workflow de sessões | GERENCIAMENTO | Administração/Gerenciamento · Controle | **neste ramo** (`365f59d`, Worker05) |
+| `workflow-03-tarefa-aberta.html` | 14 · **tarefa aberta** | Workflow de sessões | GERENCIAMENTO | Administração/Gerenciamento | **neste ramo** (`365f59d`, Worker05) |
+| `workflow-04-consumo-por-agente.html` | 16 · **consumo por agente** | Workflow de sessões | GERENCIAMENTO | Administração/Gerenciamento | **neste ramo** (`365f59d`, Worker05) |
 
 **Os 13 `ENTRA` cabem em 11 telas** — dois deles não têm tela própria de propósito:
 
@@ -69,21 +69,21 @@ espera **decisão do humano**). São dois depósitos, dois donos, dois `append-o
 293) fixa a distinção. Duas entradas de menu com "entrada" no nome **exigem o qualificador no rótulo**
 sob pena de a fitness function acusar `fila` sem qualificador.
 
-## Estado real das telas (declarado, com a data — 25/10)
+## Estado real das telas (declarado, com a data — 26/10)
 
-| Contexto | Telas | Autor | Onde estão (medido no topo `20f352c`) |
+| Contexto | Telas | Autor | Onde estão (medido no topo `af81499`) |
 |---|---|---|---|
 | Mensageria | 4 | Worker03 | **neste ramo** — `5f6dcf8` |
 | Administração | 3 | Worker04 | **neste ramo** — `5ce4a5f` |
-| Workflow de sessões | 4 esperadas | Worker05 | **em entrega** — nomes de arquivo ainda não declarados |
+| Workflow de sessões | 4 | Worker05 | **neste ramo** — `365f59d` |
 
-**São 7 telas na árvore hoje** (4 + 3); a tabela é o retrato datado de 25/10 — quem listar a pasta vê o
-mesmo. As quatro do Workflow entram na próxima integração e passam a ocupar as linhas "não entregue" da
-tabela acima.
+**São 11 telas na árvore hoje** (4 + 3 + 4); a tabela é o retrato datado de 26/10 — quem listar a pasta
+vê o mesmo.
 
 A convenção de nome **não é uniforme** hoje — `mensageria-NN-slug.html` (com ordem) contra
 `administracao-slug.html` (sem ordem). Fica **declarado** aqui em vez de silenciado; renomear arquivo de
-outro worker não é decisão minha, e o Worker05 ainda vai escolher a sua.
+outro worker não é decisão minha; as quatro do Workflow foram uniformizadas no formato `NN-` pela
+regente na integração (`af81499`).
 
 ## Como estas telas são julgadas
 
@@ -120,6 +120,11 @@ o glossário anterior e com o de agora (**22 = 22** nas telas da Mensageria). As
 despachadas** às telas (attempt=2: contrato de citação via `data-fonte`/`data-referencia`, e
 `data-rotulo` nos `th` de domínio) — o verde é esperado antes do fechamento. A saída colada fica no
 `../qa-report.md`.
+
+**Medido em 26/10, no topo `af81499`** (mesmo script v3): **11 telas · 0 achados — verde.** As duas
+classes acima foram fechadas **só acrescentando atributos** — `data-referencia` nas citações e
+`data-rotulo` nos `th` de domínio —, sem reescrever o conteúdo de nenhuma tela: as telas não estavam
+erradas, o **contrato** é que não estava declarado.
 
 ## Rastreabilidade
 
