@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workflow de sessões · consumo por agente</title>
+<!--
+  Wireframe estático (ciclo 073, rodada 3). Sem servidor, sem JavaScript de dados.
+  Contrato de marcação (verifica-prototipo.py): elemento interativo com `data-fonte`;
+  rótulo de domínio com `data-rotulo` (valor = termo do glossário); número de exemplo
+  com `data-exemplo` e "(exemplo)"; citação com `data-fonte`/`data-referencia`.
+-->
+<style>
+:root{--tinta:#171b24;--cinza:#5b6472;--linha:#c9cfd8;--papel:#fff;--caixa:#f4f6f8;--realce:#e7ebf0}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--tinta);font:14px/1.55 system-ui,"Segoe UI",Roboto,Arial,sans-serif}
+.wrap{max-width:980px;margin:0 auto;padding:16px}
+header.topo{border-bottom:2px solid var(--linha);padding-bottom:12px}
+h1{font-size:20px;margin:.3em 0}
+h2{font-size:15px;margin:1.6em 0 .5em;padding-bottom:.2em;border-bottom:1px solid var(--linha)}
+p{margin:.5em 0}
+code{background:var(--realce);padding:0 3px;border-radius:3px;font-size:12px}
+.migalha{color:var(--cinza);font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin:0}
+.contexto{background:var(--caixa);border:1px solid var(--linha);border-radius:6px;padding:8px 10px;font-size:13px}
+.grade{display:flex;flex-wrap:wrap;gap:10px;margin:.6em 0}
+.caixa{border:1px solid var(--linha);background:var(--caixa);border-radius:6px;padding:10px;flex:1 1 210px;min-width:210px}
+.caixa.traco{border-style:dashed}
+.num{display:block;font-size:20px;font-variant-numeric:tabular-nums}
+.rotulo{display:block;font-size:11px;color:var(--cinza);text-transform:uppercase;letter-spacing:.05em}
+.barra{height:8px;border:1px solid var(--linha);background:var(--papel);border-radius:4px;overflow:hidden}
+.barra i{display:block;height:100%;background:var(--cinza)}
+table{border-collapse:collapse;width:100%;margin:.6em 0;font-size:13px}
+caption{text-align:left;color:var(--cinza);font-size:12px;padding:.2em 0}
+th,td{border:1px solid var(--linha);padding:6px 8px;text-align:left;vertical-align:top}
+thead th{background:var(--realce)}
+.fonte{display:block;color:var(--cinza);font-size:11px}
+.exemplo{font-style:italic}
+.vazio{color:var(--cinza)}
+footer.rodape{border-top:1px solid var(--linha);color:var(--cinza);font-size:12px;margin-top:28px;padding-top:10px}
+footer.rodape strong{color:var(--tinta)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="topo">
+  <p class="migalha" data-referencia="true">Maestro · área administrativa · wireframe estático · ciclo 073, rodada 3</p>
+  <h1 class="rotulo" data-rotulo="consumo por agente" data-fonte="método: specs/073-area-administrativa/confronto/confronto-decisao.md § Glossário proposto (‘consumo por agente’, ENTRA ratificado)">consumo por agente</h1>
+  <p class="contexto" data-fonte="confronto/mapa-de-contextos.md §6.3 (contexto Workflow de sessões) e §7 (colisão «sessão» × «agente»); confronto/confronto-decisao.md (ENTRA consumo por agente)">
+    <strong>Contexto delimitado:</strong> Workflow de sessões (subdomínio de apoio) ·
+    <strong>ENTRA:</strong> consumo por agente ·
+    <strong>juízes da rodada 4:</strong> Controle · Administração/Gerenciamento ·
+    <strong>fonte do ENTRA:</strong> método (o custo sai do <em>usage</em> do transcript — <code>message.usage</code>) e plataforma OpenRouter / LiteLLM (relatório de gasto por chave).
+  </p>
+</header>
+
+<main>
+
+<h2>Resumo — consumo e teto</h2>
+<div class="grade" data-fonte="método: transcript da sessão (<code>message.usage</code>) e <code>painel/server.py</code>; confronto/confronto-decisao.md (ENTRA consumo por agente)">
+  <div class="caixa">
+    <span class="rotulo">consumo por agente</span>
+    <span class="num" data-fonte="exemplo — nenhum dado real" data-exemplo="true">1,2 M (exemplo)</span>
+    <span class="fonte" data-referencia="true">tokens no ciclo, somando o <em>usage</em> de cada sessão</span>
+  </div>
+  <div class="caixa">
+    <span class="rotulo">limite de orçamento</span>
+    <span class="num" data-fonte="exemplo — nenhum dado real" data-exemplo="true">60% (exemplo)</span>
+    <span class="barra" data-fonte="exemplo — nenhum dado real" data-exemplo="true" role="img" aria-label="barra de consumo, valor de exemplo"><i style="width:60%"></i></span>
+    <span class="fonte" data-referencia="true">teto declarado por projeto; a tela compara, não decide (Princípio III)</span>
+  </div>
+</div>
+
+<h2>consumo por agente</h2>
+<table data-fonte="método: transcript da sessão (<code>message.usage</code> — é piso, não total) e <code>painel/server.py</code>; plataforma LiteLLM — <em>Spend Reports</em>, <code>https://docs.litellm.ai/</code> (ficha <code>pesquisa/litellm.md</code>)">
+  <caption>Consumo atribuído a cada sessão. Os valores marcados <span class="exemplo">exemplo</span> ilustram o layout — não são dados do repositório.</caption>
+  <thead>
+    <tr>
+      <th class="rotulo" data-rotulo="consumo por agente" data-fonte="método: painel/server.py (read-model de sessões); termo ratificado ‘consumo por agente’">agente</th>
+      <th class="rotulo" data-rotulo="sessão de agente" data-fonte="método: transcript da sessão (message.usage); termo ratificado ‘sessão de agente’">tokens da sessão</th>
+      <th class="rotulo" data-rotulo="catálogo de skills/ferramentas/modelos" data-fonte="método: scripts/multi-session.py (modelo por sessão); termo ratificado ‘catálogo de skills/ferramentas/modelos’">tokens por modelo</th>
+      <th class="rotulo" data-rotulo="consumo por agente" data-fonte="método: transcript da sessão (message.usage); piso declarado, não total">consumo por agente</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker05 (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">820 k (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">modelo A (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">piso: 820 k (exemplo)</span></td>
+    </tr>
+    <tr>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">Gerente (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">410 k (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">modelo B (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">piso: 410 k (exemplo)</span></td>
+    </tr>
+    <tr>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker02 (exemplo)</span></td>
+      <td class="vazio">— motivo: a sessão não tem transcript no ciclo corrente</td>
+      <td class="vazio">— motivo: sem sessão, sem modelo atribuído</td>
+      <td class="vazio">— motivo: sem consumo medido (nunca um valor padrão)</td>
+    </tr>
+  </tbody>
+</table>
+<p class="fonte" data-referencia="true">«—» sempre com «motivo:» (ux-design 066 §7, F8). O número é <strong>piso</strong>, não total: soma o <em>usage</em> do transcript a partir do despacho.</p>
+
+<h2>o que entra — a lacuna</h2>
+<div class="caixa traco" data-fonte="confronto/confronto-decisao.md (ENTRA consumo por agente: a lacuna é o custo por sessão, hoje só no transcript)">
+  <p><strong>custo por sessão</strong> — hoje só existe somando o <em>usage</em> do transcript; o termo pede o número reunido por agente e por modelo.</p>
+  <p class="fonte" data-referencia="true">Contra o teto entra o <strong>limite de orçamento</strong> (termo ratificado na rodada 2) — a tela <strong>compara</strong>; quem decide o corte é o humano (Princípio III).</p>
+</div>
+
+<h2>limite de orçamento — declarado, não decidido</h2>
+<div class="caixa" data-fonte="método: principles.md (Princípio III — gate humano) e ux-design 066 §4 (anti-regra: a tela não decide pelo humano)">
+  <p>O teto é <strong>declarado</strong> por projeto; a tela mostra a razão consumo/teto e <strong>não bloqueia</strong> nada sozinha.</p>
+  <p class="vazio">— motivo: nenhum teto declarado neste protótipo (valor vivo, não digitado)</p>
+</div>
+
+</main>
+
+<footer class="rodape" data-referencia="true">
+  <p><strong>Como ler este wireframe.</strong> Arquivo HTML estático: sem servidor, sem JavaScript de dados; CSS mínimo, em cinza. Nenhum número é inventado — o valor ilustrativo vem marcado <span class="exemplo">exemplo</span> e o valor vivo aparece como <span class="vazio">—</span> com o motivo ao lado.</p>
+  <p><strong>Fitness functions de UX (ciclo 066).</strong> Valem <code>F1</code> (todo número/selo com <code>data-fonte</code>), <code>F8</code> (todo "—" com motivo) e <code>F9</code> (nenhum controle só-ícone sem <code>aria-label</code>); <code>F2</code>–<code>F7</code> e <code>F10</code>–<code>F12</code> são <em>n/a</em> — supõem servidor e API, que este protótipo não tem. Declarado, não omitido.</p>
+  <p><strong>Siglas (Princípio VIII).</strong> ux-design (<em>User Experience</em> — experiência de uso). Fonte: <code>docs/governance/principles.md</code>.</p>
+</footer>
+
+</div>
+</body>
+</html>

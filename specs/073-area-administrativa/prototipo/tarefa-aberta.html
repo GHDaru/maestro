@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workflow de sessões · tarefa aberta</title>
+<!--
+  Wireframe estático (ciclo 073, rodada 3). Sem servidor, sem JavaScript de dados.
+  Contrato de marcação (verifica-prototipo.py): elemento interativo com `data-fonte`;
+  rótulo de domínio com `data-rotulo` (valor = termo do glossário); número de exemplo
+  com `data-exemplo` e "(exemplo)"; citação com `data-fonte`/`data-referencia`.
+-->
+<style>
+:root{--tinta:#171b24;--cinza:#5b6472;--linha:#c9cfd8;--papel:#fff;--caixa:#f4f6f8;--realce:#e7ebf0}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--tinta);font:14px/1.55 system-ui,"Segoe UI",Roboto,Arial,sans-serif}
+.wrap{max-width:980px;margin:0 auto;padding:16px}
+header.topo{border-bottom:2px solid var(--linha);padding-bottom:12px}
+h1{font-size:20px;margin:.3em 0}
+h2{font-size:15px;margin:1.6em 0 .5em;padding-bottom:.2em;border-bottom:1px solid var(--linha)}
+p{margin:.5em 0}
+code{background:var(--realce);padding:0 3px;border-radius:3px;font-size:12px}
+.migalha{color:var(--cinza);font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin:0}
+.contexto{background:var(--caixa);border:1px solid var(--linha);border-radius:6px;padding:8px 10px;font-size:13px}
+.grade{display:flex;flex-wrap:wrap;gap:10px;margin:.6em 0}
+.caixa{border:1px solid var(--linha);background:var(--caixa);border-radius:6px;padding:10px;flex:1 1 210px;min-width:210px}
+.caixa.traco{border-style:dashed}
+.rotulo{display:block;font-size:11px;color:var(--cinza);text-transform:uppercase;letter-spacing:.05em}
+.selo{border:1px solid var(--linha);background:var(--papel);border-radius:9px;padding:1px 6px;font-size:12px}
+table{border-collapse:collapse;width:100%;margin:.6em 0;font-size:13px}
+caption{text-align:left;color:var(--cinza);font-size:12px;padding:.2em 0}
+th,td{border:1px solid var(--linha);padding:6px 8px;text-align:left;vertical-align:top}
+thead th{background:var(--realce)}
+.fonte{display:block;color:var(--cinza);font-size:11px}
+.exemplo{font-style:italic}
+.vazio{color:var(--cinza)}
+button{font:inherit;border:1px solid var(--linha);background:var(--papel);border-radius:4px;padding:3px 8px}
+footer.rodape{border-top:1px solid var(--linha);color:var(--cinza);font-size:12px;margin-top:28px;padding-top:10px}
+footer.rodape strong{color:var(--tinta)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="topo">
+  <p class="migalha" data-referencia="true">Maestro · área administrativa · wireframe estático · ciclo 073, rodada 3</p>
+  <h1 class="rotulo" data-rotulo="tarefa aberta" data-fonte="método: specs/073-area-administrativa/confronto/confronto-decisao.md § Glossário proposto (‘tarefa aberta’, ENTRA ratificado)">tarefa aberta</h1>
+  <p class="contexto" data-fonte="confronto/mapa-de-contextos.md §6.3 (contexto Workflow de sessões) e §7 (colisão «livro de ponto» × «livro de mensagens»); confronto/confronto-decisao.md (ENTRA tarefa aberta)">
+    <strong>Contexto delimitado:</strong> Workflow de sessões (subdomínio de apoio) ·
+    <strong>ENTRA:</strong> tarefa aberta ·
+    <strong>juízes da rodada 4:</strong> Administração/Gerenciamento · Controle ·
+    <strong>fonte do ENTRA:</strong> método (<code>tasks.jsonl</code> do ciclo — tarefa despachada e ainda não fechada) e plataforma Claude Code (a <em>task</em> que a sessão está executando).
+  </p>
+</header>
+
+<main>
+
+<h2>Resumo — tarefas abertas por estado</h2>
+<div class="grade" data-fonte="método: painel/server.py (read-model do ciclo corrente); confronto/confronto-decisao.md (ENTRA tarefa aberta)">
+  <div class="caixa"><span class="selo">em curso</span> <span class="exemplo" data-fonte="exemplo — nenhum dado real" data-exemplo="true">2 (exemplo)</span></div>
+  <div class="caixa"><span class="selo">travada</span> <span class="exemplo" data-fonte="exemplo — nenhum dado real" data-exemplo="true">1 (exemplo)</span></div>
+  <div class="caixa"><span class="selo">entregue, sem DONE</span> <span class="exemplo" data-fonte="exemplo — nenhum dado real" data-exemplo="true">0 (exemplo)</span></div>
+</div>
+
+<h2>tarefas abertas</h2>
+<table data-fonte="método: <code>tasks.jsonl</code> (Task ledger do ciclo) e <code>painel/server.py</code> (read-model); plataforma Claude Code — <em>agent view</em>, <code>https://code.claude.com/docs/en/agent-view</code> (ficha <code>pesquisa/claude-code.md</code>)">
+  <caption>Uma linha por tarefa despachada e ainda não fechada. Os valores marcados <span class="exemplo">exemplo</span> ilustram o layout — não são dados do repositório.</caption>
+  <thead>
+    <tr>
+      <th class="rotulo" data-rotulo="sessão de agente" data-fonte="método: painel/server.py (read-model de sessões); termo ratificado ‘sessão de agente’">sessão</th>
+      <th class="rotulo" data-rotulo="tarefa aberta" data-fonte="método: tasks.jsonl (id da TASK despachada); termo ratificado ‘tarefa aberta’">tarefa aberta</th>
+      <th class="rotulo" data-rotulo="tarefa aberta" data-fonte="método: tasks.jsonl (carimbo do despacho); a idade não é digitada (ux-design 066 §7, F7)">desde</th>
+      <th class="rotulo" data-rotulo="tarefa aberta" data-fonte="método: tasks.jsonl (attempt=) e o histórico de despachos do tarefas.jsonl">tentativas</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker05 (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">073-T3-telas-workflow (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">há 40 min (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">2 (exemplo)</span> <span class="fonte" data-referencia="true">— redespacho (attempt=2)</span></td>
+    </tr>
+    <tr>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">Gerente (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">073-T3-readme-navegacao (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">há 3 h (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">1 (exemplo)</span></td>
+    </tr>
+    <tr>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker02 (exemplo)</span></td>
+      <td class="vazio">— motivo: a sessão está sem tarefa aberta no ciclo corrente</td>
+      <td class="vazio">— motivo: sem tarefa, sem carimbo de abertura</td>
+      <td class="vazio">— motivo: nenhuma tentativa (a tarefa não existe)</td>
+    </tr>
+  </tbody>
+</table>
+<p class="fonte" data-referencia="true">«—» sempre com «motivo:» (ux-design 066 §7, F8); nenhuma idade é digitada (ux-design 066 §7, F7).</p>
+
+<h2>o que entra — a lacuna</h2>
+<div class="caixa traco" data-fonte="confronto/confronto-decisao.md (ENTRA tarefa aberta: a lacuna é ver a tarefa sem abrir o transcript)">
+  <p><strong>tarefa aberta por sessão</strong> — hoje o vínculo «sessão ↔ tarefa» só aparece ao abrir o transcript de cada uma. O termo pede essa lista reunida.</p>
+  <p class="fonte" data-referencia="true">O <strong>livro de ponto</strong> (<code>tarefas.jsonl</code> — <em>Task ledger</em> do método) é a fonte; aqui ele é projetado, não copiado.</p>
+</div>
+
+<h2>ação</h2>
+<div class="caixa" data-fonte="método: docs/governance/task-ledger.md (o DONE fecha a tarefa aberta); principles.md (Princípio II — quem executa não verifica)">
+  <p>
+    <button type="button" data-fonte="método: painel/server.py (abre o transcript da sessão — somente leitura)" aria-label="abrir o transcript da sessão">abrir transcript</button>
+    <button type="button" data-fonte="método: docs/governance/task-ledger.md (o fechamento é do DONE, não da tela)" aria-label="ver a tarefa aberta no livro de ponto">ver no livro de ponto</button>
+  </p>
+  <p class="fonte" data-referencia="true">A tela <strong>não fecha</strong> a tarefa: quem fecha é o <code>[[DONE ...]]</code> da sessão (docs/governance/task-ledger.md).</p>
+</div>
+
+</main>
+
+<footer class="rodape" data-referencia="true">
+  <p><strong>Como ler este wireframe.</strong> Arquivo HTML estático: sem servidor, sem JavaScript de dados; CSS mínimo, em cinza. Nenhum número é inventado — o valor ilustrativo vem marcado <span class="exemplo">exemplo</span> e o valor vivo aparece como <span class="vazio">—</span> com o motivo ao lado.</p>
+  <p><strong>Fitness functions de UX (ciclo 066).</strong> Valem <code>F1</code> (todo número/selo com <code>data-fonte</code>), <code>F7</code> (idade nunca digitada), <code>F8</code> (todo "—" com motivo) e <code>F9</code> (nenhum controle só-ícone sem <code>aria-label</code>); <code>F2</code>–<code>F6</code> e <code>F10</code>–<code>F12</code> são <em>n/a</em> — supõem servidor e API, que este protótipo não tem. Declarado, não omitido.</p>
+  <p><strong>Siglas (Princípio VIII).</strong> ux-design (<em>User Experience</em> — experiência de uso). Fonte: <code>docs/governance/principles.md</code>.</p>
+</footer>
+
+</div>
+</body>
+</html>
