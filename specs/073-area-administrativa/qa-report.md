@@ -998,3 +998,51 @@ W01 glossário 14,7M · W01 README 2,24M (fatia) / 785.878 (fatia do complemento
 W03 correção 61,36M (sessão) · W03 correção final 8,97M · W04 telas 18,26M · W04 correção 4,1M ·
 W04 correção final 5,70M (total_in) · W05 telas 2,56M · W05 correção 0,45M · W06 reverificação 072
 ~5,32M · W06 segurança 12,67M · W02 revisão 9,78M · W02 regra 4 0,63M.
+
+## Rodada 4 — preâmbulo: renome (R8) das três telas da Administração (Worker04, 26/10)
+
+**Decisão da regente**, fechando R8 (`revisao-073-rodada-3.md`: estas 3 eram as **únicas de 11**
+sem prefixo numérico, depois que `af81499` uniformizou o grupo do Workflow em `NN-`):
+
+| nome antigo | nome novo |
+|---|---|
+| `administracao-catalogo.html` | `administracao-01-catalogo.html` |
+| `administracao-politicas.html` | `administracao-02-politicas.html` |
+| `administracao-orcamento.html` | `administracao-03-orcamento.html` |
+
+**As seções datadas de 25–26/10 acima citam os nomes antigos de propósito** — são o retrato do que
+foi medido naquele momento (inclusive os `FINDING:` do gate e o placar R1–R9) e **não foram
+reescritas**: histórico não se reescreve. Esta seção é a declaração do renome; do commit abaixo em
+diante, os nomes em vigor são os da coluna "nome novo".
+
+**Referências aos nomes antigos atualizadas no mesmo commit** (tudo dentro de
+`specs/073-area-administrativa/`):
+
+- **as 3 telas** — os 9 `href` da navegação interna (`nav.telas`, 3 por tela). Sem isso os links
+  relativos quebrariam — a minha R9 acusa link relativo quebrado;
+- **`prototipo/README.md`** — **só as células de nome de arquivo** das linhas 29–31 da tabela
+  tela × `ENTRA` (o W02 mexe no mesmo arquivo em paralelo, no § Convenções e na base de citação;
+  por isso não toquei em nenhuma outra linha);
+- **`prototipo/verifica-prototipo.py`** — **nenhuma** referência a nome de arquivo: o gate seleciona
+  por glob (`*.html`, linha 279). Conferido por busca; **nada a mudar**;
+- **`revisao-073-rodada-3.md`, `done-073-rodada-3.md`, `done-073-t3-correcao-administracao.md`** —
+  **não** editados (documentos datados).
+
+**Verificação** (o renome não muda a contagem: o glob `*.html` vê os mesmos arquivos)
+
+```text
+python specs/073-area-administrativa/prototipo/verifica-prototipo.py
+-- verifica-prototipo: 11 screen(s), 0 finding(s)   [exit 0]
+```
+
+Auto-checagem própria re-rodada **só nas 3 telas** (cópia em diretório temporário): `fit073.py`
+**PASS** (R1–R9 verdes — a R9 passou a medir os `href` novos) e a mutação **PASS** (9/9, com os
+alvos reapontados para os nomes novos; a mutação da R9 agora quebra
+`href="administracao-03-orcamento.html"`).
+
+**Pendência declarada para o fechamento**: a prosa de `prototipo/README.md` **linhas 83–86** ("A
+convenção de nome **não é uniforme** hoje — `mensageria-NN-slug.html` (com ordem) contra
+`administracao-slug.html` (sem ordem) …") **ficou obsoleta** com este renome, que era justamente o
+que ela declarava. Não a editei: a ordem foi mexer **só nas linhas de nome de arquivo**, e essa
+prosa é do W02, que estava fixando o § Convenções no mesmo arquivo nesta janela. Fica registrada
+aqui para o merge não passar em silêncio.
