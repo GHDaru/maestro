@@ -7,7 +7,7 @@
 <!--
   Wireframe estático (ciclo 073, rodada 3). Sem servidor, sem JavaScript de dados.
   Convenção: todo elemento de bloco (cabeçalho, caixa, tabela, controle, link) traz `data-fonte`,
-  que nomeia a plataforma (ficha em pesquisa/, que traz a URL externa) ou o requisito do método
+  que nomeia a plataforma (ficha em specs/073-area-administrativa/pesquisa/, que traz a URL externa) ou o requisito do método
   (princípio, ADR (<em>Architecture Decision Record</em>), ux-design).
   Nenhum número inventado: valor ilustrativo vem marcado "exemplo"; valor vivo aparece como "—" com motivo.
 -->
@@ -51,7 +51,7 @@ footer.rodape strong{color:var(--tinta)}
 <header class="topo">
   <p class="migalha" data-referencia="true">Maestro · área administrativa · wireframe estático · ciclo 073, rodada 3</p>
   <h1>Administração — catálogo de skills/ferramentas/modelos</h1>
-  <p class="contexto" data-fonte="confronto/mapa-de-contextos.md §2 (contexto Administração: raiz Agente (registro) e Projeto (configuração); subdomínio genérico) e §6.5; confronto/confronto-decisao.md (linha do ENTRA cadastro de skills/ferramentas/modelos)">
+  <p class="contexto" data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §2 (contexto Administração: raiz Agente (registro) e Projeto (configuração); subdomínio genérico) e §6.5; specs/073-area-administrativa/confronto/confronto-decisao.md (linha do ENTRA cadastro de skills/ferramentas/modelos)">
     <strong>Contexto delimitado:</strong> Administração (subdomínio genérico) ·
     <strong>raiz:</strong> Agente (registro) e Projeto (configuração) ·
     <strong>ENTRA:</strong> cadastro de skills/ferramentas/modelos ·
@@ -59,10 +59,10 @@ footer.rodape strong{color:var(--tinta)}
     <strong>fonte do ENTRA:</strong> método (<code>skills/&lt;nome&gt;/SKILL.md</code> e o catálogo que o instalador gera)
     e plataforma LiteLLM (<em>Skills Registry</em>).
   </p>
-  <nav class="telas" aria-label="Telas da Administração" data-fonte="confronto/mapa-de-contextos.md §6.5 (os três ENTRA da Administração); tasks.md T3-telas-administracao (as três telas deste contexto)">
-    <a href="administracao-01-catalogo.html" aria-current="page" data-fonte="esta tela — ENTRA cadastro de skills/ferramentas/modelos (confronto/confronto-decisao.md; pesquisa/litellm.md)">catálogo de skills/ferramentas/modelos</a>
-    <a href="administracao-02-politicas.html" data-fonte="ENTRA políticas allow/deny/ask (confronto/confronto-decisao.md; pesquisa/agent-365.md)">política declarativa (allow/deny/ask)</a>
-    <a href="administracao-03-orcamento.html" data-fonte="ENTRA limites de orçamento e de taxa (confronto/confronto-decisao.md; pesquisa/openai-platform.md)">limite de orçamento</a>
+  <nav class="telas" aria-label="Telas da Administração" data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §6.5 (os três ENTRA da Administração); specs/073-area-administrativa/tasks.md T3-telas-administracao (as três telas deste contexto)">
+    <a href="administracao-01-catalogo.html" aria-current="page" data-fonte="esta tela — ENTRA cadastro de skills/ferramentas/modelos (specs/073-area-administrativa/confronto/confronto-decisao.md; specs/073-area-administrativa/pesquisa/litellm.md)">catálogo de skills/ferramentas/modelos</a>
+    <a href="administracao-02-politicas.html" data-fonte="ENTRA políticas allow/deny/ask (specs/073-area-administrativa/confronto/confronto-decisao.md; specs/073-area-administrativa/pesquisa/agent-365.md)">política declarativa (allow/deny/ask)</a>
+    <a href="administracao-03-orcamento.html" data-fonte="ENTRA limites de orçamento e de taxa (specs/073-area-administrativa/confronto/confronto-decisao.md; specs/073-area-administrativa/pesquisa/openai-platform.md)">limite de orçamento</a>
   </nav>
 </header>
 
@@ -77,29 +77,29 @@ footer.rodape strong{color:var(--tinta)}
 
 <h2>O que o registro guarda</h2>
 <div class="grade">
-  <div class="caixa" data-fonte="método — skills/ e scripts/check-roles.sh; plataforma — LiteLLM, Skills Registry (pesquisa/litellm.md)">
+  <div class="caixa" data-fonte="método — skills/ e scripts/check-roles.sh; plataforma — LiteLLM, Skills Registry (specs/073-area-administrativa/pesquisa/litellm.md)">
     <span class="rotulo">Tipo de registro</span>
     <h3>Skill</h3>
     <p>A pasta <code>skills/&lt;nome&gt;/SKILL.md</code> — a instrução que um agente segue.</p>
-    <span class="fonte">fonte: método (<code>skills/</code>; <code>scripts/check-roles.sh</code>) · plataforma: LiteLLM, <em>Skills Registry</em> (<code>pesquisa/litellm.md</code>)</span>
+    <span class="fonte">fonte: método (<code>skills/</code>; <code>scripts/check-roles.sh</code>) · plataforma: LiteLLM, <em>Skills Registry</em> (<code>specs/073-area-administrativa/pesquisa/litellm.md</code>)</span>
   </div>
-  <div class="caixa" data-fonte="método — .claude/agents/ e scripts/check-roles.sh; plataforma — LiteLLM, List Tools / Call Tools (pesquisa/litellm.md)">
+  <div class="caixa" data-fonte="método — .claude/agents/ e scripts/check-roles.sh; plataforma — LiteLLM, List Tools / Call Tools (specs/073-area-administrativa/pesquisa/litellm.md)">
     <span class="rotulo">Tipo de registro</span>
     <h3>Ferramenta</h3>
     <p>O que um agente pode usar, declarado no par perfil ↔ executável.</p>
-    <span class="fonte">fonte: método (<code>.claude/agents/</code>; <code>scripts/check-roles.sh</code>) · plataforma: LiteLLM, "List Tools"/"Call Tools" (<code>pesquisa/litellm.md</code>)</span>
+    <span class="fonte">fonte: método (<code>.claude/agents/</code>; <code>scripts/check-roles.sh</code>) · plataforma: LiteLLM, "List Tools"/"Call Tools" (<code>specs/073-area-administrativa/pesquisa/litellm.md</code>)</span>
   </div>
-  <div class="caixa" data-fonte="método — scripts/multi-session.py (modelo escolhido por sessão); confronto/inventario-maestro.md (estado parcial: modelos não registrados)">
+  <div class="caixa" data-fonte="método — scripts/multi-session.py (modelo escolhido por sessão); specs/073-area-administrativa/confronto/inventario-maestro.md (estado parcial: modelos não registrados)">
     <span class="rotulo">Tipo de registro — lacuna declarada</span>
     <h3>Modelo</h3>
     <p class="vazio">Hoje o modelo é escolhido <em>por sessão</em>, não registrado por projeto. É a lacuna que este
     catálogo fecha: o modelo passa a ter linha própria.</p>
-    <span class="fonte">fonte: método (<code>scripts/multi-session.py</code>) · confronto/inventario-maestro.md (parcial)</span>
+    <span class="fonte">fonte: método (<code>scripts/multi-session.py</code>) · specs/073-area-administrativa/confronto/inventario-maestro.md (parcial)</span>
   </div>
 </div>
 
 <h2>As linhas do catálogo</h2>
-<table data-fonte="confronto/confronto-decisao.md (ENTRA cadastro de skills/ferramentas/modelos: skills em pasta, modelos por sessão); layout do registro inspirado em LiteLLM, Skills Registry (pesquisa/litellm.md)">
+<table data-fonte="specs/073-area-administrativa/confronto/confronto-decisao.md (ENTRA cadastro de skills/ferramentas/modelos: skills em pasta, modelos por sessão); layout do registro inspirado em LiteLLM, Skills Registry (specs/073-area-administrativa/pesquisa/litellm.md)">
   <caption>Formato da linha. Os valores marcados <span class="exemplo" data-exemplo="true">exemplo</span> ilustram o layout — não são dados do repositório; para o valor real, consulta-se a fonte da coluna.</caption>
   <thead>
     <tr><th>Nome</th><th>Tipo</th><th>Onde vive</th><th>Invariante que verifica</th><th>Consultar</th></tr>
@@ -110,21 +110,21 @@ footer.rodape strong{color:var(--tinta)}
       <td>Skill</td>
       <td><code>skills/&lt;nome&gt;/SKILL.md</code></td>
       <td>Invariante: toda skill é uma pasta com <code>SKILL.md</code> — <code>scripts/check-agents.sh</code></td>
-      <td><button type="button" data-fonte="pesquisa/litellm.md — Skills Registry (cadastro de skills por plugin) e método skills/&lt;nome&gt;/SKILL.md">abrir ficha</button></td>
+      <td><button type="button" data-fonte="specs/073-area-administrativa/pesquisa/litellm.md — Skills Registry (cadastro de skills por plugin) e método skills/&lt;nome&gt;/SKILL.md">abrir ficha</button></td>
     </tr>
     <tr>
       <td><span class="exemplo" data-exemplo="true">exemplo: Read / Write / Bash</span></td>
       <td>Ferramenta</td>
       <td>declaradas no agente (<code>.claude/agents/</code>)</td>
       <td>Invariante: ferramenta declarada é ferramenta permitida ao papel — <code>scripts/check-roles.sh</code></td>
-      <td><button type="button" data-fonte="pesquisa/litellm.md — List Tools / Call Tools (ferramentas por chave/time) e método scripts/check-roles.sh">abrir ficha</button></td>
+      <td><button type="button" data-fonte="specs/073-area-administrativa/pesquisa/litellm.md — List Tools / Call Tools (ferramentas por chave/time) e método scripts/check-roles.sh">abrir ficha</button></td>
     </tr>
     <tr>
       <td><span class="exemplo" data-exemplo="true">exemplo: modelo da sessão</span></td>
       <td>Modelo</td>
       <td><code>scripts/multi-session.py</code> (hoje por sessão)</td>
       <td class="vazio">— motivo: ainda não há invariante de registro de modelo (a lacuna é o que entra)</td>
-      <td><button type="button" data-fonte="pesquisa/litellm.md — Model Management / Add Models (registro de modelos) e método scripts/multi-session.py">abrir ficha</button></td>
+      <td><button type="button" data-fonte="specs/073-area-administrativa/pesquisa/litellm.md — Model Management / Add Models (registro de modelos) e método scripts/multi-session.py">abrir ficha</button></td>
     </tr>
   </tbody>
 </table>
@@ -133,7 +133,7 @@ footer.rodape strong{color:var(--tinta)}
   <div class="caixa" data-fonte="método — scripts/check-agents.sh e skills/<nome>/SKILL.md (filtro por tipo, não por conteúdo)">
     <span class="rotulo">Controle</span>
     <p><label for="filtro-tipo">filtrar</label>
-      <select id="filtro-tipo" data-fonte="pesquisa/litellm.md — Skills Registry e Model Management (tipos de item do registro); método skills/ e .claude/agents/">
+      <select id="filtro-tipo" data-fonte="specs/073-area-administrativa/pesquisa/litellm.md — Skills Registry e Model Management (tipos de item do registro); método skills/ e .claude/agents/">
         <option>todos os tipos</option>
         <option>Skill</option>
         <option>Ferramenta</option>
@@ -150,7 +150,7 @@ footer.rodape strong{color:var(--tinta)}
 </div>
 
 <h2>Coluna de contexto — cadastro de agentes (registro que já existe)</h2>
-<div class="caixa" data-fonte="método — docs/agents/README.md (perfil ↔ executável) e scripts/check-agents.sh (invariantes); confronto/confronto-decisao.md §NÃO PRECISA (cadastro de agentes: já coberto)">
+<div class="caixa" data-fonte="método — docs/agents/README.md (perfil ↔ executável) e scripts/check-agents.sh (invariantes); specs/073-area-administrativa/confronto/confronto-decisao.md §NÃO PRECISA (cadastro de agentes: já coberto)">
   <span class="rotulo">Coluna existente — somente leitura</span>
   <p>O registro de <strong>Agente</strong> já existe e tem invariante que o verifica. Aqui ele aparece como
   <strong>coluna de contexto</strong>, só de leitura — <strong>nenhuma funcionalidade nova</strong>: a raiz deste
@@ -160,7 +160,7 @@ footer.rodape strong{color:var(--tinta)}
   <span class="fonte">fonte: método (<code>docs/agents/README.md</code>; <code>scripts/check-agents.sh</code>)</span></p>
   <p><strong>Fronteira:</strong> o registro declara o dono de cada arquivo; a declaração vive em
   <code>boundary.json</code> e é verificada por <code>scripts/check-boundary.sh</code>.</p>
-  <span class="fonte">fonte: ADR (<em>Architecture Decision Record</em> — registro de decisão de arquitetura) 0018, fronteira interna, <code>boundary.json</code>; <code>confronto/mapa-de-contextos.md</code> §6.5</span>
+  <span class="fonte">fonte: ADR (<em>Architecture Decision Record</em> — registro de decisão de arquitetura) 0018, fronteira interna, <code>boundary.json</code>; <code>specs/073-area-administrativa/confronto/mapa-de-contextos.md</code> §6.5</span>
 </div>
 
 <h2>Estados desta tela</h2>
@@ -181,21 +181,21 @@ footer.rodape strong{color:var(--tinta)}
   lado. <span class="fonte">fonte: ux-design 066 §4 (anti-regras verificáveis)</span></p>
   <p><strong>Rótulos.</strong> Os nomes de objeto vêm do vocabulário do contexto — o glossário
   (<code>docs/governance/glossary.md</code>), a linguagem ubíqua da Administração
-  (<code>confronto/mapa-de-contextos.md</code> §6.5: Agente, Skill, ferramenta, Projeto, Fronteira) e os
-  termos ratificados na rodada 2 (<code>confronto/confronto-decisao.md</code> § Glossário proposto:
+  (<code>specs/073-area-administrativa/confronto/mapa-de-contextos.md</code> §6.5: Agente, Skill, ferramenta, Projeto, Fronteira) e os
+  termos ratificados na rodada 2 (<code>specs/073-area-administrativa/confronto/confronto-decisao.md</code> § Glossário proposto:
   <em>catálogo de skills/ferramentas/modelos</em>, que dá a linha "Skill", "Ferramenta" e "Modelo").
   Palavras de moldura (Nome, Tipo, Onde vive, Consultar, Controle, Estado vazio) são interface, não
   vocabulário de domínio.
   <span class="fonte">fonte: Princípio VIII (<code>docs/governance/principles.md</code>) e <code>docs/governance/glossary.md</code></span></p>
   <p><strong>Toda caixa, tabela e controle traz <code>data-fonte</code></strong> — a plataforma (ficha em
-  <code>pesquisa/</code>, que traz a URL externa) ou o requisito do método (princípio, ADR, ux-design). Das fitness functions de UX
+  <code>specs/073-area-administrativa/pesquisa/</code>, que traz a URL externa) ou o requisito do método (princípio, ADR, ux-design). Das fitness functions de UX
   (<em>User Experience</em> — experiência de uso) do ciclo 066, valem aqui <code>F1</code> (todo número e selo com
   <code>data-fonte</code>), <code>F8</code> (todo "—" com motivo) e <code>F9</code> (nenhum controle só-ícone sem
   <code>aria-label</code>); <code>F2</code>–<code>F7</code> e <code>F10</code>–<code>F12</code> são <em>n/a</em> neste protótipo — supõem servidor e API, que ele não tem. Declarado, não omitido.
   <span class="fonte">fonte: specs/066-painel-de-regencia/ux-design.md §4 e §7</span></p>
   <p><strong>Navegação.</strong> A área administrativa entra no painel existente ao lado de Regência e de Chamados e
-  Gates, que ficam como estão. <span class="fonte">fonte: confronto/mapa-de-contextos.md §4 (o painel é projeção) ·
-  tasks.md (T3-readme-navegacao)</span></p>
+  Gates, que ficam como estão. <span class="fonte">fonte: specs/073-area-administrativa/confronto/mapa-de-contextos.md §4 (o painel é projeção) ·
+  specs/073-area-administrativa/tasks.md (T3-readme-navegacao)</span></p>
 </footer>
 
 </div>
