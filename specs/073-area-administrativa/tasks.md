@@ -63,6 +63,12 @@
       entrada ≠ fila de decisões); divergência 4/5 (Administração no despacho × CONTROLE na
       matriz) declarada com as duas colunas; sem link markdown (nada novo para o check-links).
       Gate re-executado após o merge: 7 telas, 0 achados.**
+      **Complemento pós-integração do W05 (`e756232`): as 4 linhas do Workflow pelos nomes reais
+      (`workflow-01..04`, renomeados pela regente em `af81499`), estado "neste ramo" (`365f59d`);
+      retrato atualizado para 11 telas (4+3+4), datado 26/10; bloco de medição com o topo `af81499`
+      medido por ele (11 telas, 0 achados — não aceito de palavra); 4 correções de coerência
+      declaradas (frases que ficariam falsas); CHANGELOG intocado de propósito. Tokens (piso):
+      fatia 785.878 / sessão 33.118.017.**
 - [x] T3-fitness — Gerente: script que percorre os HTML e falha se houver elemento interativo sem
       `data-fonte`, rótulo fora do glossário (glossary.md + os 12) ou número sem a marca "exemplo";
       saída colada no qa-report.
