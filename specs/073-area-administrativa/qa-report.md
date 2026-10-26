@@ -508,10 +508,10 @@ sincronizada em `c3137e2` com `git merge --ff-only`):
 
 | Arquivo | ENTRA (`confronto-decisao.md`) | Nome na linguagem ubíqua | Juiz(es) da rodada 4 |
 |---|---|---|---|
-| `sessao-de-agente.html` | sessão de agente, subir/derrubar | **sessão de agente** | Controle · Administração/Gerenciamento |
-| `estado-do-agente-vivo.html` | estado do agente vivo | **estado do agente vivo** | Administração/Gerenciamento · Controle |
-| `tarefa-aberta.html` | tarefa aberta | **tarefa aberta** | Administração/Gerenciamento |
-| `consumo-por-agente.html` | consumo por agente | **consumo por agente** | Controle · Administração/Gerenciamento |
+| `workflow-01-sessao-de-agente.html` | sessão de agente, subir/derrubar | **sessão de agente** | Controle · Administração/Gerenciamento |
+| `workflow-02-estado-do-agente-vivo.html` | estado do agente vivo | **estado do agente vivo** | Administração/Gerenciamento · Controle |
+| `workflow-03-tarefa-aberta.html` | tarefa aberta | **tarefa aberta** | Administração/Gerenciamento |
+| `workflow-04-consumo-por-agente.html` | consumo por agente | **consumo por agente** | Controle · Administração/Gerenciamento |
 
 **Coluna existente, não funcionalidade nova.** "Última atividade" é a coluna que o painel já exibe
 (`painel/server.py`); nas duas telas em que aparece (sessão de agente e estado do agente vivo) está
@@ -548,8 +548,8 @@ passam em todas. A conferência foi feita **antes** de commitar, e é re-execut�
 ### Dúvida declarada (herdada, não resolvida aqui)
 
 A convenção de nome destas telas é **`slug.html` sem prefixo de contexto e sem ordem**
-(`sessao-de-agente.html`, `estado-do-agente-vivo.html`, `tarefa-aberta.html`,
-`consumo-por-agente.html`) — diverge das duas já em uso
+(`workflow-01-sessao-de-agente.html`, `workflow-02-estado-do-agente-vivo.html`, `workflow-03-tarefa-aberta.html`,
+`workflow-04-consumo-por-agente.html`) — diverge das duas já em uso
 (`mensageria-NN-slug.html`, `administracao-slug.html`), como o README desta pasta já declara (o
 autor da tela escolhe o nome; renomear arquivo de outro worker não é decisão de worker). Se a
 rodada 4 quiser uniformidade, é decisão do regente.
