@@ -1,4 +1,4 @@
-# Protótipo da área administrativa — telas × `ENTRA` × contexto dono × juízes (ciclo 073, rodada 3)
+# Protótipo da área administrativa — telas × `ENTRA` × contexto dono × juízes (ciclo 073, rodadas 3 e 4)
 
 > **O que é isto.** Wireframes **estáticos** das funcionalidades que a rodada 2 decidiu que **`ENTRA`**
 > — as que **entram** na área administrativa — (`confronto/confronto-decisao.md`), desenhados sobre o
@@ -11,10 +11,18 @@
 > `exemplo` — **nenhum valor é inventado**. As medições datadas (25/10 e 26/10) estão declaradas
 > abaixo: **hoje o verificador fecha verde**.
 
-- **Ciclo**: 073 (área administrativa) · **Rodada**: 3 (wireframes) · **Fonte de verdade**:
-  `confronto/confronto-decisao.md` (§ "ENTRA — 13")
+- **Ciclo**: 073 (área administrativa) · **Rodada**: 3 (wireframes) · **correção 1 da rodada 4**
+  (26/10) · **Fonte de verdade**: `confronto/confronto-decisao.md` (§ "ENTRA — 13", que esta página
+  passa a ler como **15** depois da decisão 4)
 - **Juízes (rodada 4)**: **controle** · **administração e gerenciamento de agentes** ·
   **intercomunicabilidade** — o bar dá nota **0 a 10 por peça** e só passa com os **três** em 9 ou mais.
+- **Rodada 4 — correção 1 (26/10)**: as decisões da regente (`specs/073-area-administrativa/rodada-4/correcao-1.md`) mudam o que
+  esta página afirmava em quatro pontos: **12 · auditoria administrativa** e **17 · custo estimado em
+  dólar por agente** entram como `ENTRA` (decisão 4); a identidade de sessão passa a
+  **`nome · ref · projeto`** (decisão 2); colisão de **termo** e colisão de **endereço** ficam
+  separadas (decisão 3); e o **limite de orçamento é da Administração** (decisão 1) — a divergência
+  que esta página declarava, resolvida. Os três pareceres frescos (`specs/073-area-administrativa/rodada-4/juiz-1..3-*.md`) deram
+  **barra não atingida** (máximo 8 de 10).
 - **Siglas** (Princípio VIII, expandidas na 1ª ocorrência): **ADR** (*Architecture Decision Record*),
   **A2A** (*Agent-to-Agent*), **MCP** (*Model Context Protocol*).
 
@@ -34,18 +42,103 @@
 | `workflow-03-tarefa-aberta.html` | 14 · **tarefa aberta** | Workflow de sessões | GERENCIAMENTO | Administração/Gerenciamento | **neste ramo** (`365f59d`, Worker05) |
 | `workflow-04-consumo-por-agente.html` | 16 · **consumo por agente** | Workflow de sessões | GERENCIAMENTO | Administração/Gerenciamento | **neste ramo** (`365f59d`, Worker05) |
 
-**Os 13 `ENTRA` cabem em 11 telas** — dois deles não têm tela própria de propósito:
+**Os 15 `ENTRA` cabem em 11 telas** — quatro deles não têm tela própria de propósito:
 
 - **21 · mensagem entre agentes** é o **objeto** que as quatro telas da Mensageria exibem (o remetente e
   o destinatário da caixa de entrada, a linha do livro, o consumo pelo protocolo). Coberto, não órfão.
 - **26 · colisão de nomes** é **visível dentro** de `mensageria-03-roteamento.html`, como o motivo que
   aparece na linha do roteador — é uma condição que se mostra, não uma tela.
+- **12 · auditoria administrativa** *(entra na correção 1)* — uma **seção "histórico de mudanças"** nas
+  **três** telas da Administração: **quem mudou o quê**, com `changed_by`. O confronto dizia `NÃO
+  PRECISA` (`specs/073-area-administrativa/confronto/confronto-decisao.md:53`); a decisão 4 a promove a `ENTRA` — o índice de decisões
+  é append-only, mas a **mudança de chave, de papel ou de modelo** não tinha onde aparecer.
+- **17 · custo estimado em dólar por agente** *(entra na correção 1)* — uma **coluna** em
+  `workflow-04-consumo-por-agente.html`, com a fonte declarada (o **preço do modelo** no catálogo) e a
+  marca **estimado**. O confronto dizia `NÃO PRECISA` (`specs/073-area-administrativa/confronto/confronto-decisao.md:63`).
 
-**Uma divergência declarada, entre o despacho e a matriz.** O despacho da rodada 3 deu **4 · limite de
-orçamento** e **5 · políticas allow/deny/ask** ao contexto **Administração**; na matriz do confronto as
-duas são do grupo **CONTROLE**. As telas seguem o despacho (autor e contexto dono); a coluna "grupo da
-matriz" preserva a outra leitura. Não é erro de um dos dois — é a diferença entre **contexto dono** e
-**grupo de funcionalidade**.
+Os dois `ENTRA` novos estão **despachados nesta rodada** (Worker04 e Worker05,
+`specs/073-area-administrativa/rodada-4/correcao-1.md`), e as seções/colunas **ainda não estão neste ramo**: a coluna "Estado" da
+tabela acima continua sendo o retrato do topo `6a32e24`, medido hoje.
+
+**A divergência do orçamento está resolvida (decisão 1).** O despacho da rodada 3 deu **4 · limite de
+orçamento** e **5 · políticas allow/deny/ask** ao contexto **Administração**; a matriz do confronto as
+punha no grupo **CONTROLE**, e esta página declarava as duas leituras sem escolher. A regente decidiu em
+26/10: **o limite de orçamento é da Administração** — ela **define e guarda o teto**; o Workflow de
+sessões apenas **mede e exibe o consumo contra o teto**. O mapa (§ 2, § 6.3 e § 6.5) é corrigido por
+Worker02 nesta rodada; aqui, a coluna "Grupo da matriz" passa a ser lida como **grupo de
+funcionalidade** (CONTROLE), nunca como contexto dono.
+
+## Identidade de sessão: `nome · ref · projeto`
+
+**Decisão 2 (correção 1).** Toda tela que cite uma sessão escreve as **três** partes — `nome · ref ·
+projeto` — e, **onde houver ação**, o aviso de que **o `ref` muda ao reiniciar**. O motivo é este: o
+**`nome`** sozinho não identifica, e o par **`nome · ref`** também não, porque **o `ListAgents` não
+mostra o projeto** — duas sessões com o mesmo nome, em projetos diferentes, parecem o mesmo
+interlocutor. O **`ref`** (referência curta da sessão: o `[xxxxxx]` que o `ListAgents` mostra ao lado do
+nome) é o campo que resolve **e o único que expira**.
+
+**Retrato datado — exemplo da forma, medido em 26/10/2026.** Os valores abaixo **não são cadastro**:
+valem para este retrato e mudam no próximo reinício; o que fica é a **forma**.
+
+| `nome` (do catálogo) | `ref` | `projeto` |
+|---|---|---|
+| `Gerente` (a sessão que despacha — "a regente", no vocabulário dos despachos) | `[31ee4d]` | `410_MAESTRO` |
+| `Worker01` (esta) | `[9a1b27]` | `410_MAESTRO` |
+| `Worker02` | `[31f7bf]` | `410_MAESTRO` |
+| `Worker03` | `[ad66d6]` | `410_MAESTRO` |
+| `Worker04` | `[4d000a]` | `410_MAESTRO` |
+| `Worker05` | `[78d88f]` | `410_MAESTRO` |
+| `Worker06` | `[c85948]` | `410_MAESTRO` |
+| `MAESTRO` | `[7c8d05]` | `410_MAESTRO` |
+| `Office` | — | **outro projeto** — **Hindiana** (`painel/custo.py:33-36`) |
+| `Assistente` | — | **—** (nenhuma sessão viva com esse nome em 26/10) |
+
+`projeto` é a pasta do projeto em `~/.claude/projects/` (a que o painel filtra: `painel/projetos/
+exemplo.json:103`); a daqui é `C--Users-ghdaru-Documents-010-PROJETOS-410-MAESTRO`. `Office` e
+`Assistente` são **nomes do catálogo** (a decisão 2 os lista; `painel/custo.py:33-36` é quem os mapeia)
+e **não têm sessão viva neste projeto em 26/10** — por isso `—` **com o motivo**, e nunca um `ref`
+inventado.
+
+**Regra 5 (despachada à Worker02 nesta rodada; ainda não está no script).** O verificador passa a exigir
+o `ref` no formato `[xxxxxx]` depois de toda menção a um nome do catálogo, **salvo** em tabela marcada
+`data-rotulo="colisão de nomes"`.
+
+## As colisões: de **termo** e de **endereço** (são duas coisas diferentes)
+
+**Decisão 3 (correção 1).** As cinco colisões do mapa § 7 são de **termo**: a mesma **palavra** quer
+dizer duas coisas em dois contextos. A dor que o protótipo desenha é outra — a **colisão de endereço**:
+o mesmo **identificador** aponta para duas sessões, ou deixa de apontar para nenhuma. Termo se
+**escreve qualificado**; endereço se **recusa**.
+
+### Colisão de termo — cinco casos; o script trava dois
+
+| Termo | O que é no contexto A | O que é no contexto B | Como desambiguar |
+|---|---|---|---|
+| `fila` | a **fila de decisões** (o `JSONL` — *JSON Lines* — da Regência) | a **fila (outbox)** (`SQLite` da Mensageria) | escrever sempre **`fila de decisões`** ou **`fila (outbox)`** |
+| `caixa de entrada` | a tela **Fila** do painel (entrada de **decisões**, Regência) | a entrada de **mensagens** (Mensageria) | a do painel é Regência; "caixa de entrada" é Mensageria |
+| `livro de ponto` | o **`Task ledger`** (`docs/records/tarefas.jsonl`) | o **livro de mensagens** proposto | `Task ledger` para o primeiro; `livro de mensagens` para o segundo |
+| `sessão` × `agente` | hoje, sinônimos ("a sessão W04") | conceitos distintos: **sessão de agente** é a execução, **agente** é o perfil registrado | a Administração registra o **agente**; o Workflow acompanha a **sessão** |
+| `portão` | o **gate do chamado** (`G0`–`G9`, derivado dos arquivos) | o **portão do regente** (`TAIL:gate`, item da fila) | o segundo é sempre **`portão do regente`** |
+
+Fonte: `specs/073-area-administrativa/confronto/mapa-de-contextos.md` § 7 (`:292–296`). **O verificador
+trava dois dos cinco** — `fila` e `portão`, pela regra 4 (abaixo); os outros três (`caixa de entrada`,
+`livro de ponto`, `sessão × agente`) ficam com a revisão em contexto fresco: não são executáveis por
+script hoje.
+
+### Colisão de endereço — três classes; nenhuma é executável hoje
+
+**Invariante (decisão 3): endereço ambíguo é recusado, nunca resolvido.** Quem resolve a ambiguidade
+"por conta própria" entrega ao interlocutor errado — e entregar não se desfaz.
+
+| Classe | O caso | Por que o endereço não se resolve sozinho |
+|---|---|---|
+| **nome em N `ref`s** | `Hindiana Office`: um nome, mais de uma sessão (juiz 3, P5) | o nome é de catálogo, não é identidade; só o `ref` separa |
+| **nome em dois projetos** | `Gerente` em dois projetos (juiz 3, P5) | o `ListAgents` **não mostra o projeto** — dois "Gerente" parecem o mesmo |
+| **`ref` obsoleto após reinício** | a sessão reinicia, o `ref` é outro; o antigo deixa de resolver | mensagem ou tarefa no `ref` antigo não chega — e o recibo de entrega (**ack**, *acknowledgement*) é `DEPOIS` (decisão 4), não existe hoje |
+
+A **tabela de colisões de endereço** entra no mapa por Worker02, **separada** das cinco de termo
+(decisão 3). A regra **executável** para o endereço ambíguo — que o juiz 3 pediu para chegar a 9 —
+**não está despachada nesta rodada**: o verificador ganha só a regra 5 (identidade). Fica **declarado**.
 
 ## Onde cada tela entra na navegação do painel existente
 
@@ -57,6 +150,12 @@ de peças · Chamados e gates · Fila de decisões · Painel de regência) · **
 de `data-v`: `chamados`, `fila`, `kanban`, `board`, `pecas`, `processo` e as demais seguem intactas
 (`painel/index.html:955`). O protótipo **não** substitui nenhuma delas.
 
+**A navegação entre as telas do protótipo (medido na pasta, 26/10).** Só as **três telas da
+Administração** carregam a faixa de navegação entre si: um `<nav class="telas">` logo abaixo do título,
+com os três **nomes de arquivo irmãos** (`administracao-01-catalogo.html:62-65`; igual nas outras duas),
+e os `href` já atualizados na renomeação do R8. As **outras oito** telas não têm `href` nenhum — abrem
+sozinhas, como documento. Fica **declarado** para o revisor não procurar o que não existe.
+
 **Proposta para a rodada 4 (não decidida, e não implementada aqui):** um grupo novo —
 **"Área administrativa"** — logo abaixo de *Agora*, com **uma entrada por contexto**, cada uma abrindo
 as suas telas em abas: `Administração` (3), `Workflow de sessões` (4), `Mensageria` (4). O painel já tem
@@ -66,8 +165,9 @@ vista BPMN (`:757`).
 **A colisão que a navegação precisa respeitar.** A **caixa de entrada** (Mensageria — o que chegou para
 uma **sessão** e ainda não foi lido ou drenado) **não é** a **Fila de decisões** (Regência — o que
 espera **decisão do humano**). São dois depósitos, dois donos, dois `append-only`, e o mapa §7 (linha
-293) fixa a distinção. Duas entradas de menu com "entrada" no nome **exigem o qualificador no rótulo**
-sob pena de a fitness function acusar `fila` sem qualificador.
+293) fixa a distinção — está também na tabela de colisão de **termo**, acima. Duas entradas de menu com
+"entrada" no nome **exigem o qualificador no rótulo** sob pena de a fitness function acusar `fila` sem
+qualificador.
 
 ## Estado real das telas (declarado, com a data — 26/10)
 
@@ -80,10 +180,12 @@ sob pena de a fitness function acusar `fila` sem qualificador.
 **São 11 telas na árvore hoje** (4 + 3 + 4); a tabela é o retrato datado de 26/10 — quem listar a pasta
 vê o mesmo.
 
-A convenção de nome **não é uniforme** hoje — `mensageria-NN-slug.html` (com ordem) contra
-`administracao-slug.html` (sem ordem). Fica **declarado** aqui em vez de silenciado; renomear arquivo de
-outro worker não é decisão minha; as quatro do Workflow foram uniformizadas no formato `NN-` pela
-regente na integração (`af81499`).
+**A convenção de nome é uniforme hoje: as 11 telas usam `contexto-NN-slug.html`.** As três da
+Administração foram renomeadas de `administracao-slug.html` para `administracao-01/02/03-…` na
+integração da rodada 4 (achado R8, `6a32e24`), depois das quatro do Workflow, que a regente já
+uniformizara no formato `NN-` (`af81499`). A frase anterior desta página — "a convenção **não é
+uniforme**" — está **substituída** por esta: o que a mantinha verdadeira era só a pasta da
+Administração, e ela mudou.
 
 ## Como estas telas são julgadas
 
@@ -92,7 +194,7 @@ python specs/073-area-administrativa/prototipo/verifica-prototipo.py
 ```
 
 A fitness function (`verifica-prototipo.py`, v3 — `da85def`) percorre os `*.html` e falha em quatro
-regras:
+regras hoje — a **quinta** é despachada nesta rodada (abaixo):
 
 1. elemento interativo **sem `data-fonte`** — onde a ideia foi achada;
 2. **rótulo fora da allowlist** — o `docs/governance/glossary.md` **mais** os 12 termos ratificados
@@ -102,7 +204,11 @@ regras:
 3. **número sem a marca `exemplo`**, salvo em contexto de citação (`data-fonte`/`data-referencia`) ou
    dentro de sigla com dígito (`A2A`, `F1`, `T16`);
 4. **termo de colisão sem qualificador** — `fila` sem *decisões*/*outbox*, `portão` sem
-   *chamado*/*regente*.
+   *chamado*/*regente*. **Trava dois dos cinco** pares de termo do mapa § 7; os outros três
+   (`caixa de entrada`, `livro de ponto`, `sessão × agente`) não são executáveis por script hoje;
+5. *(despachada à Worker02 nesta rodada, ainda não no script)* **identidade de sessão** — toda menção a
+   um nome do catálogo (`Gerente`, `WorkerNN`, `MAESTRO`, `Office`, `Assistente`) seguida do `ref` no
+   formato `[xxxxxx]`, salvo em tabela marcada `data-rotulo="colisão de nomes"`.
 
 **Medido em 25/10, no topo `20f352c`** (script v3): **7 telas · 45 achados**, e **só duas classes**:
 
@@ -126,6 +232,10 @@ classes acima foram fechadas **só acrescentando atributos** — `data-referenci
 `data-rotulo` nos `th` de domínio —, sem reescrever o conteúdo de nenhuma tela: as telas não estavam
 erradas, o **contrato** é que não estava declarado.
 
+**Remedido em 26/10, no topo `6a32e24`,** antes desta correção (mesmo script v3): **11 telas · 0
+achados** — o verde atravessou a renomeação da Administração e a troca da base de citação. A próxima
+medição, já com a **regra 5**, é da regente, depois da correção 1.
+
 ## Convenções
 
 **Base única de citação: todo caminho é relativo à raiz do repositório.** Vale para as 11 telas desta
@@ -145,11 +255,18 @@ pasta — é a mesma base que as telas do Workflow já seguiam. Nada de caminho 
 `specs/073-area-administrativa/revisao-073-rodada-3.md`): substituição **mecânica**, com **zero mudança
 de conteúdo** — só a base do caminho mudou; cada caminho resultante foi conferido contra o disco.
 
-> O corpo desta página guarda as citações da redação original (não foram reescritas nesta passagem,
-> para não colidir com a renomeação das telas da Administração em curso) — a convenção vale para as telas.
+> O corpo desta página ainda guarda as citações da redação original (as da coluna "base antiga" acima):
+> na passagem do R9 elas não foram reescritas, para não colidir com a renomeação das telas da
+> Administração, que se concluiu em `6a32e24`. **O que a correção 1 acrescentou — identidade, colisões,
+> os dois `ENTRA` novos e a navegação — já nasce na base única.** Fechar a base do corpo inteiro é
+> passagem própria, declarada aqui e **não** feita nesta rodada.
 
 ## Rastreabilidade
 
-`spec 073` ↔ `../tasks.md` (rodada 3) ↔ `confronto/confronto-decisao.md` (os 13 `ENTRA`) ↔
-`../confronto/mapa-de-contextos.md` (contexto dono e as cinco colisões) ↔ as telas desta pasta ↔
-`verifica-prototipo.py` (quem julga).
+`spec 073` ↔ `specs/073-area-administrativa/tasks.md` (rodada 3) ↔
+`specs/073-area-administrativa/confronto/confronto-decisao.md` (os `ENTRA`) ↔
+`specs/073-area-administrativa/confronto/mapa-de-contextos.md` (contexto dono e as cinco colisões) ↔ as
+telas desta pasta ↔ `specs/073-area-administrativa/prototipo/verifica-prototipo.py` (quem julga) ↔
+`specs/073-area-administrativa/rodada-4/juiz-1..3-*.md` (os três pareceres frescos, barra não atingida) ↔
+`specs/073-area-administrativa/rodada-4/correcao-1.md` (as seis decisões da regente e as fatias) ↔ esta
+página.
