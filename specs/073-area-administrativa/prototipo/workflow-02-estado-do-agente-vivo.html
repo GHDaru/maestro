@@ -44,7 +44,7 @@ footer.rodape strong{color:var(--tinta)}
 <header class="topo">
   <p class="migalha" data-referencia="true">Maestro · área administrativa · wireframe estático · ciclo 073, rodada 3</p>
   <h1 class="rotulo" data-rotulo="estado do agente vivo" data-fonte="método: specs/073-area-administrativa/confronto/confronto-decisao.md § Glossário proposto (‘estado do agente vivo’, ENTRA nº 13)">estado do agente vivo</h1>
-  <p class="contexto" data-fonte="confronto/mapa-de-contextos.md §6.3 (contexto Workflow de sessões) e §7 (colisão «sessão» × «agente»); confronto/confronto-decisao.md (ENTRA estado do agente vivo)">
+  <p class="contexto" data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §6.3 (contexto Workflow de sessões) e §7 (colisão «sessão» × «agente»); specs/073-area-administrativa/confronto/confronto-decisao.md (ENTRA estado do agente vivo)">
     <strong>Contexto delimitado:</strong> Workflow de sessões (subdomínio de apoio) ·
     <strong>ENTRA:</strong> estado do agente vivo ·
     <strong>juízes da rodada 4:</strong> Administração/Gerenciamento · Controle ·
@@ -55,7 +55,7 @@ footer.rodape strong{color:var(--tinta)}
 <main>
 
 <h2>Resumo — sessões por estado</h2>
-<div class="grade" data-fonte="método: painel/server.py (os quatro estados do read-model atual); mapa-de-contextos.md §6.3">
+<div class="grade" data-fonte="método: painel/server.py (os quatro estados do read-model atual); specs/073-area-administrativa/confronto/mapa-de-contextos.md §6.3">
   <div class="caixa"><span class="selo">trabalhando</span> <span class="exemplo" data-fonte="exemplo — nenhum dado real" data-exemplo="true">2 (exemplo)</span></div>
   <div class="caixa"><span class="selo">esperando</span> <span class="exemplo" data-fonte="exemplo — nenhum dado real" data-exemplo="true">1 (exemplo)</span></div>
   <div class="caixa"><span class="selo">sem tarefa</span> <span class="exemplo" data-fonte="exemplo — nenhum dado real" data-exemplo="true">1 (exemplo)</span></div>
@@ -63,32 +63,32 @@ footer.rodape strong{color:var(--tinta)}
 </div>
 
 <h2>sessões</h2>
-<table data-fonte="plataforma Claude Code — agent view, <code>https://code.claude.com/docs/en/agent-view</code> (ficha <code>pesquisa/claude-code.md</code>, coluna GERENCIAMENTO «lista de agentes vivos com estado» = <code>sim</code>); método: <code>painel/server.py</code>">
+<table data-fonte="plataforma Claude Code — agent view, <code>https://code.claude.com/docs/en/agent-view</code> (ficha <code>specs/073-area-administrativa/pesquisa/claude-code.md</code>, coluna GERENCIAMENTO «lista de agentes vivos com estado» = <code>sim</code>); método: <code>painel/server.py</code>">
   <caption>Estado corrente por sessão. Os valores marcados <span class="exemplo">exemplo</span> ilustram o layout — não são dados do repositório.</caption>
   <thead>
     <tr>
       <th class="rotulo" data-rotulo="sessão de agente" data-fonte="método: painel/server.py (read-model); termo ratificado ‘sessão de agente’">sessão</th>
-      <th class="rotulo" data-rotulo="estado do agente vivo" data-fonte="método: mapa-de-contextos.md §6.3; termo ratificado ‘estado do agente vivo’">estado do agente vivo</th>
+      <th class="rotulo" data-rotulo="estado do agente vivo" data-fonte="método: specs/073-area-administrativa/confronto/mapa-de-contextos.md §6.3; termo ratificado ‘estado do agente vivo’">estado do agente vivo</th>
       <th class="rotulo" data-rotulo="sessão de agente" data-fonte="método: painel/server.py (coluna existente do painel — idade_min)">última atividade</th>
-      <th class="rotulo" data-rotulo="estado do agente vivo" data-fonte="método: confronto/confronto-decisao.md (a lacuna é a detecção de processo, não só heartbeat)">detecção</th>
+      <th class="rotulo" data-rotulo="estado do agente vivo" data-fonte="método: specs/073-area-administrativa/confronto/confronto-decisao.md (a lacuna é a detecção de processo, não só heartbeat)">detecção</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker05 (exemplo)</span></td>
-      <td>trabalhando</td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">trabalhando (exemplo)</span></td>
       <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">há 12 min (exemplo)</span></td>
       <td>heartbeat · <span class="vazio">lacuna: detecção de processo</span></td>
     </tr>
     <tr>
       <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">Gerente (exemplo)</span></td>
-      <td>esperando</td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">esperando (exemplo)</span></td>
       <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">há 3 min (exemplo)</span></td>
       <td>heartbeat · <span class="vazio">lacuna: detecção de processo</span></td>
     </tr>
     <tr>
       <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker02 (exemplo)</span></td>
-      <td>sem tarefa</td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">sem tarefa (exemplo)</span></td>
       <td class="vazio">— motivo: sem carimbo de última atividade na projeção</td>
       <td class="vazio">— motivo: sem processo detectado (nunca um valor padrão)</td>
     </tr>
@@ -97,13 +97,13 @@ footer.rodape strong{color:var(--tinta)}
 <p class="fonte" data-referencia="true">«—» sempre com «motivo:» (ux-design 066 §7, F8); nenhuma idade é digitada (ux-design 066 §7, F7).</p>
 
 <h2>o que entra — a lacuna</h2>
-<div class="caixa traco" data-fonte="confronto/confronto-decisao.md (ENTRA estado do agente vivo: a lacuna é a detecção de processo)">
+<div class="caixa traco" data-fonte="specs/073-area-administrativa/confronto/confronto-decisao.md (ENTRA estado do agente vivo: a lacuna é a detecção de processo)">
   <p><strong>detecção de processo vivo</strong> — hoje o estado é derivado do transcrito (heartbeat); o termo pede sabê-lo do <strong>processo</strong>, não só do sinal.</p>
-  <p class="fonte" data-referencia="true">Estados do Claude Code citados na ficha (<em>agent view</em>: <em>Working</em>, <em>Needs input</em>, <em>Idle</em>, <em>Completed</em>, <em>Failed</em>, <em>Stopped</em>) — <code>pesquisa/claude-code.md</code>, em <em>research preview</em>.</p>
+  <p class="fonte" data-referencia="true">Estados do Claude Code citados na ficha (<em>agent view</em>: <em>Working</em>, <em>Needs input</em>, <em>Idle</em>, <em>Completed</em>, <em>Failed</em>, <em>Stopped</em>) — <code>specs/073-area-administrativa/pesquisa/claude-code.md</code>, em <em>research preview</em>.</p>
 </div>
 
 <h2>última atividade — coluna existente (NÃO PRECISA)</h2>
-<div class="caixa" data-fonte="método: painel/server.py (o painel já mostra idade_min e o histórico de status); confronto/confronto-decisao.md (decisão: NÃO PRECISA — já coberto)">
+<div class="caixa" data-fonte="método: painel/server.py (o painel já mostra idade_min e o histórico de status); specs/073-area-administrativa/confronto/confronto-decisao.md (decisão: NÃO PRECISA — já coberto)">
   <p>Coluna herdada do painel atual: <code>idade_min</code> e o histórico de status já são exibidos. <strong>Nenhuma funcionalidade nova</strong> — a coluna só é reexibida.</p>
   <p class="fonte" data-referencia="true">ux-design 066 §2.4 (o objeto «última atividade» do Mapa de sessões) e §6 (idade como «há X h Y min» + carimbo absoluto).</p>
 </div>
