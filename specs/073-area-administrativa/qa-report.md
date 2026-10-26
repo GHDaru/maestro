@@ -885,3 +885,116 @@ Nada fora de `specs/073-area-administrativa/` foi escrito; sem push, sem merge, 
 produto, sem segredo. Tokens (piso, soma do `message.usage` desde a 1ª ocorrência do
 `[[TASK 073-T3-regra4]]`, 61 mensagens): **≈0,63 M** (entrada 545.865 + saída 80.833);
 `cache_read` 7.603.584 à parte.
+
+## Rodada 3 — fechamento do Gerente (26/10)
+
+**Integrações da rodada** (todas citando "ciclo 073"): W05 `365f59d`+`fc183ce` (telas do Workflow,
+integradas pela regente em `552c16c`/`af81499` com o renome `workflow-01..04`) · W01 `e756232`
+(README com nomes reais) · W06 `bc36487` (segurança + conformance) · W02 `d1e9cc7` (revisão +
+mutação) · correções: W05 `09c02f0`, W04 `9fbbad3`+fallback `0ecb7d2`, W03 `938d38b`, W02
+`9cf0118`+`1264194` (regra 4 ampliada).
+
+### Gate final — verificador com a regra 4 ampliada, sobre as 11 telas corrigidas
+
+```text
+python specs/073-area-administrativa/prototipo/verifica-prototipo.py
+-- verifica-prototipo: 11 screen(s), 0 finding(s)   [exit 0]
+```
+
+As 11 telas: `mensageria-01-caixa-de-entrada` · `mensageria-02-livro-de-mensagens` ·
+`mensageria-03-roteamento` · `mensageria-04-protocolo` · `administracao-catalogo` ·
+`administracao-politicas` · `administracao-orcamento` · `workflow-01-sessao-de-agente` ·
+`workflow-02-estado-do-agente-vivo` · `workflow-03-tarefa-aberta` ·
+`workflow-04-consumo-por-agente` (todas `.html`, em `prototipo/`). A regra 4 ampliada (texto
+visível + atributos, isenção declarada para tabela de colisão de nomes) acusa 0 — os R1/R1b/R2/R2b
+corrigidos pelos donos não voltam.
+
+### Conformance 073 — modo normal
+
+```text
+── Conformance: did the method survive into the artifacts? ──
+   (floor: cycle 42; older cycles carry declared debt — see the roadmap)
+• 070-conferidor-ordem-veredito
+    · imported evidence (00-chamado.md + G*-*.md, no tasks.md): a Hindiana chamado, not a Maestro cycle — not charged (ADR 0024)
+• 073-area-administrativa
+    ✓ Constitution Check complete (8/8)
+    ✓ acceptance criteria located and stated without checkboxes
+    ✓ all 5 conditional artifacts declared with a reason
+    ✓ domain model declared (aggregate, invariants, glossary, ports) with a reason
+    ✓ TAIL:review evidence: Worker03, contexto fresco (não consolidou; amostragem esc
+    ✓ TAIL:security evidence: Worker03, varredura sobre `pesquisa/` (28 arquivos, 14 pad
+    ✓ TAIL:gate evidence: o gate humano da rodada 1 é o **"segue" do regente para a
+    · TAIL:mutation not applicable — rodada documental — nenhum gate executável criado ou alte
+──
+cycles checked: 2
+✓ every cycle checked declares its artifacts and carries the closing tail with evidence.
+exit-normal=0
+```
+
+### Conformance 073 — modo TICKED_ONLY=1
+
+```text
+── Conformance: did the method survive into the artifacts? ──
+   (floor: cycle 42; older cycles carry declared debt — see the roadmap)
+• 070-conferidor-ordem-veredito
+    · imported evidence (00-chamado.md + G*-*.md, no tasks.md): a Hindiana chamado, not a Maestro cycle — not charged (ADR 0024)
+• 073-area-administrativa
+    ✓ Constitution Check complete (8/8)
+    ✓ acceptance criteria located and stated without checkboxes
+    ✓ all 5 conditional artifacts declared with a reason
+    ✓ domain model declared (aggregate, invariants, glossary, ports) with a reason
+    ✓ TAIL:review evidence: Worker03, contexto fresco (não consolidou; amostragem esc
+    ✓ TAIL:security evidence: Worker03, varredura sobre `pesquisa/` (28 arquivos, 14 pad
+    ✓ TAIL:gate evidence: o gate humano da rodada 1 é o **"segue" do regente para a
+    · TAIL:mutation not applicable — rodada documental — nenhum gate executável criado ou alte
+──
+cycles checked: 2
+✓ every cycle checked declares its artifacts and carries the closing tail with evidence.
+exit-ticked=0
+```
+
+> Nota: as duas saídas acima foram medidas com o `tasks.md` ainda trazendo o TAIL:mutation como
+> n/a (linha de rodada 1). O TAIL:mutation foi re-marcado `[x]` com a evidência da mutação da
+> rodada 3 (qa-report § "Rodada 3 — a regra 4 passa a cobrir o texto visível" e § fechamento) —
+> mudança que só adiciona evidência; o conformance foi re-rodado no estado commitado e segue
+> verde nos dois modos.
+
+### Correção final — o placar dos 9 achados da revisão
+
+| Achado | Dono | Estado |
+|---|---|---|
+| R1/R1b — "fila" nua (prosa e `data-fonte`) | W03 `938d38b` | **corrigido** — "fila outbox" |
+| R2 — "portão" nu em `<td>` | W03 `938d38b` | **corrigido** — "portão do chamado" |
+| R2b — "portão do humano" (terceiro qualificador) | W04 `9fbbad3` | **corrigido** — "portão do regente" |
+| R3 — grafia "fila outbox" × "fila (outbox)" | W03 `938d38b` | **corrigido nas telas** — grafia da regente "fila outbox"; resalva: o mapa §7 (`:292`) mantém "fila (outbox)" com parênteses — alinhar a §7 é edição de doc da rodada 4 |
+| R4 — `tasks.jsonl` inexistente (5×) | W05 `09c02f0` | **corrigido** — `docs/records/tarefas.jsonl`, conferido com `ls` |
+| R5 — `hooks/` sem `scripts/` (6×) | W04 `9fbbad3` | **corrigido** — `scripts/hooks/guard-immutables.py` |
+| R6 — segundo dialeto de marcação | W04 `9fbbad3` | **corrigido** — `data-exemplo` nos 18 valores |
+| R7 — estados ilustrativos sem marca (6 células) | W05 `09c02f0` | **corrigido** |
+| R8 — prefixo numérico da Administração | — | **dívida da rodada 4** — renomear arquivo é decisão da regente |
+| R9 — base única de citação | W05 (suas 4) `09c02f0` | **corrigido nas telas do Workflow** (base relativa à raiz, 11 caminhos conferidos); Mensageria e Administração: **dívida da rodada 4** (convenção global) |
+
+**Regra 4 ampliada** (W02 `9cf0118`): passa a cobrir todo nó de texto visível e todo valor de
+atributo, com qualificadores por fronteira de palavra e isenção **declarada** para tabela de
+colisão de nomes (`data-rotulo="colisão de nomes"` no cabeçalho). R3 fica **fora do gate** por
+decisão declarada do W02 e aceita pelo Gerente: grafia não é termo nu — policiá-la exigiria uma
+regra 5 e falsificaria a tabela da §7. Mutação re-rodada: 12 telas · 10 achados → regra 4 cega →
+4; sumiram os 4 das telas reais + `zz-tela-ruim: "fila" unqualified: "Fila"` + `"Fila de tarefas"`
+(novo, visível só com a regra ampliada). Script restaurado byte a byte (SHA-256 conferido).
+
+### Incidente declarado — marcador de conflito órfão no qa-report
+
+Um `<<<<<<< HEAD` órfão entrou neste arquivo na resolução do merge `00c1ae9` (Gerente, 25/10 —
+conflito das seções fitness × telas da Administração) e propagou por todos os commits seguintes,
+inclusive o `af81499` da regente, sem que nenhum gate o visse (nenhum fitness function lê o
+qa-report). Achado ao resolver o merge do W04 (26/10) e removido no `6f71db7`; um segundo
+marcador, da resolução do merge do W03, foi removido no `858baa4`. Lição registrada para a
+retrospectiva: resolução de conflito de acréscimo no fim de arquivo precisa de conferência de
+marcadores antes do commit — o check pós-resolução agora é passo declarado do fechamento.
+
+### Tokens da rodada 3 (pisos, soma de `message.usage` desde a 1ª ocorrência do `[[TASK]]`)
+
+W01 glossário 14,7M · W01 README 2,24M (fatia) / 785.878 (fatia do complemento) · W03 telas 57,2M ·
+W03 correção 61,36M (sessão) · W03 correção final 8,97M · W04 telas 18,26M · W04 correção 4,1M ·
+W04 correção final 5,70M (total_in) · W05 telas 2,56M · W05 correção 0,45M · W06 reverificação 072
+~5,32M · W06 segurança 12,67M · W02 revisão 9,78M · W02 regra 4 0,63M.

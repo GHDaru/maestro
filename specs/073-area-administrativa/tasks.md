@@ -98,8 +98,12 @@
       própria fitness function (11 telas, 0 achados, exit 0). Conformance 073 verde nos dois modos
       (normal e `TICKED_ONLY=1`), exit 0, saídas idênticas. Evidência por acréscimo no `qa-report.md`
       (§ Rodada 3).**
-- [ ] T3-fechamento — Gerente: andamento, `[[DONE 073-rodada-3]]` ao regente (e commitado) com a
+- [x] T3-fechamento — Gerente: andamento, `[[DONE 073-rodada-3]]` ao regente (e commitado) com a
       lista de telas, o resultado do script e os tokens. **Rodada 4 só com o "segue".**
+      **Entregue: gate final com a regra 4 ampliada — 11 telas, 0 achados, exit 0; conformance 073
+      verde nos dois modos; andamento e qa-report com o fechamento (placar R1–R9, incidente do
+      marcador órfão declarado, tokens); DONE emitido ao regente e commitado como fallback
+      (`done-073-rodada-3.md`).**
 
 ## Rodada 2 — confronto com o Maestro e decisão do que entra (25/10, mandato do regente)
 
@@ -162,5 +166,5 @@
      check-conformance.sh requires the evidence of every non-n/a step in qa-report.md. -->
 - [x] TAIL:review — independent review in fresh context, by whoever did not execute
 - [x] TAIL:security — security pass proportional to the risk class
-- [ ] TAIL:mutation — n/a: rodada documental — nenhum gate executável criado ou alterado (não há código neste ciclo); o verificável é a contagem e a amostragem, cobertas no TAIL:review
+- [x] TAIL:mutation — a rodada 1 era documental (n/a na época), mas a rodada 3 criou o gate executável `prototipo/verifica-prototipo.py` e ele foi mutado: regra 3 e regra 4 cegas separadamente pelo Worker02 em contexto fresco (`d1e9cc7` §2, depois re-rodada com a regra ampliada em `9cf0118`/`1264194`), achados que sumiram copiados da saída, script restaurado byte a byte (SHA-256 conferido) — evidência no qa-report § "Rodada 3 — a regra 4 passa a cobrir o texto visível"
 - [ ] TAIL:gate — DoD green -> guardian verdict -> human merge gate (not delegable)
