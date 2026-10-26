@@ -59,7 +59,7 @@ footer.rodape strong{color:var(--tinta)}
     declarativa) ·
     <strong>juízes da rodada 4:</strong> Controle · Administração/Gerenciamento ·
     <strong>fonte do ENTRA:</strong> Princípio III (política declarativa <code>allow / deny / ask</code>; a
-    autorização vive fora do modelo) e o <code>deny</code> que já roda (<code>hooks/guard-immutables.py</code>);
+    autorização vive fora do modelo) e o <code>deny</code> que já roda (<code>scripts/hooks/guard-immutables.py</code>);
     plataforma Microsoft Agent 365 (política aplicada por modelo).
   </p>
   <nav class="telas" aria-label="Telas da Administração" data-fonte="confronto/mapa-de-contextos.md §6.5 (os três ENTRA da Administração); tasks.md T3-telas-administracao">
@@ -89,25 +89,25 @@ footer.rodape strong{color:var(--tinta)}
     <p class="vazio">estado hoje — motivo: declarado, não executável</p>
     <span class="fonte">fonte: Princípio III · plataforma: Agent 365, modelo de política (<code>pesquisa/agent-365.md</code>)</span>
   </div>
-  <div class="caixa" data-fonte="método — hooks/guard-immutables.py (o deny que roda); docs/governance/principles.md (Princípio III)">
+  <div class="caixa" data-fonte="método — scripts/hooks/guard-immutables.py (o deny que roda); docs/governance/principles.md (Princípio III)">
     <span class="rotulo">Efeito</span>
     <h3><span class="efeito">deny</span></h3>
     <p>O que é recusado na origem — e recusar é o que o Maestro <em>já</em> faz: os caminhos imutáveis são
     barrados por um gancho.</p>
     <p><strong>estado hoje: roda</strong> (o único efeito executável)</p>
-    <span class="fonte">fonte: método (<code>hooks/guard-immutables.py</code>; Princípio III)</span>
+    <span class="fonte">fonte: método (<code>scripts/hooks/guard-immutables.py</code>; Princípio III)</span>
   </div>
   <div class="caixa" data-fonte="docs/governance/principles.md — Princípio III (ask: a decisão sobe ao humano); ux-design 066 §3 (sem permissão: a ação do humano aparece somente leitura ao agente)">
     <span class="rotulo">Efeito</span>
     <h3><span class="efeito">ask</span></h3>
     <p>O que espera o humano antes de acontecer — a ação irreversível.</p>
     <p class="vazio">estado hoje — motivo: declarado, não executável</p>
-    <span class="fonte">fonte: Princípio III · ux-design 066 §3 (portão do humano aparece somente leitura ao agente)</span>
+    <span class="fonte">fonte: Princípio III · ux-design 066 §3 (portão do regente aparece somente leitura ao agente)</span>
   </div>
 </div>
 
 <h2>As regras</h2>
-<table data-fonte="docs/governance/principles.md — Princípio III; hooks/guard-immutables.py (deny dos imutáveis); pesquisa/agent-365.md e pesquisa/litellm.md (formato de política por objeto)">
+<table data-fonte="docs/governance/principles.md — Princípio III; scripts/hooks/guard-immutables.py (deny dos imutáveis); pesquisa/agent-365.md e pesquisa/litellm.md (formato de política por objeto)">
   <caption>Cada regra tem um objeto, um efeito e o estado em que ela está. O que ainda não é executável aparece como
   <span class="vazio">—</span> com o motivo; nada é marcado "conferido" sem sê-lo.</caption>
   <thead>
@@ -115,15 +115,15 @@ footer.rodape strong{color:var(--tinta)}
   </thead>
   <tbody>
     <tr>
-      <td><span class="exemplo">exemplo: imutáveis do método</span></td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: imutáveis do método</span></td>
       <td>corpo de ADR (<em>Architecture Decision Record</em>), índice de decisões append-only, ideias datadas</td>
       <td><span class="efeito">deny</span></td>
       <td><strong>roda</strong></td>
-      <td>o gancho <code>hooks/guard-immutables.py</code></td>
-      <td><button type="button" data-fonte="método — hooks/guard-immutables.py (deny dos imutáveis) e docs/governance/principles.md (Princípio III); plataforma — Agent 365, política por objeto (pesquisa/agent-365.md)">abrir regra</button></td>
+      <td>o gancho <code>scripts/hooks/guard-immutables.py</code></td>
+      <td><button type="button" data-fonte="método — scripts/hooks/guard-immutables.py (deny dos imutáveis) e docs/governance/principles.md (Princípio III); plataforma — Agent 365, política por objeto (pesquisa/agent-365.md)">abrir regra</button></td>
     </tr>
     <tr>
-      <td><span class="exemplo">exemplo: leitura do repositório</span></td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: leitura do repositório</span></td>
       <td>leitura e escrita na worktree do worker</td>
       <td><span class="efeito">allow</span></td>
       <td><span class="vazio">—</span> motivo: declarado, ainda não executável</td>
@@ -131,7 +131,7 @@ footer.rodape strong{color:var(--tinta)}
       <td><button type="button" data-fonte="método — docs/governance/principles.md (Princípio III, allow) e operating-model.md; plataforma — pesquisa/agent-365.md (política padrão vs. customizada)">abrir regra</button></td>
     </tr>
     <tr>
-      <td><span class="exemplo">exemplo: ação irreversível</span></td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: ação irreversível</span></td>
       <td>merge, promoção, publicação — o que não se desfaz</td>
       <td><span class="efeito">ask</span></td>
       <td><span class="vazio">—</span> motivo: declarado, ainda não executável</td>
@@ -139,7 +139,7 @@ footer.rodape strong{color:var(--tinta)}
       <td><button type="button" data-fonte="método — docs/governance/principles.md (Princípio III, ask) e ux-design 066 §3; plataforma — pesquisa/agent-365.md (aprovar/restringir implantação exige papel de administrador)">abrir regra</button></td>
     </tr>
     <tr>
-      <td><span class="exemplo">exemplo: ferramenta fora do papel</span></td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: ferramenta fora do papel</span></td>
       <td>ferramenta que o papel do agente não declara</td>
       <td><span class="efeito">deny</span></td>
       <td>parcial — declarado em <code>scripts/check-roles.sh</code></td>
@@ -214,7 +214,7 @@ footer.rodape strong{color:var(--tinta)}
 <footer class="rodape" data-referencia="true">
   <p><strong>Como ler este wireframe.</strong> Arquivo HTML estático: sem servidor, sem JavaScript de dados; CSS
   mínimo, em cinza, de caixas e rótulos. Nenhum número é inventado — o valor ilustrativo vem marcado
-  <span class="exemplo">exemplo</span>, e o valor vivo aparece como <span class="vazio">—</span> com o motivo ao
+  <span class="exemplo" data-exemplo="true">exemplo</span>, e o valor vivo aparece como <span class="vazio">—</span> com o motivo ao
   lado. <span class="fonte">fonte: ux-design 066 §4 (anti-regras verificáveis)</span></p>
   <p><strong>Rótulos.</strong> Os nomes de objeto vêm do vocabulário do contexto — o glossário
   (<code>docs/governance/glossary.md</code>: OPA, RBAC, ABAC, ReBAC), a linguagem ubíqua da Administração

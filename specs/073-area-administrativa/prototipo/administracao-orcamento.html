@@ -112,23 +112,23 @@ footer.rodape strong{color:var(--tinta)}
 
 <h2>Os tetos por sessão e por projeto</h2>
 <table data-fonte="docs/governance/glossary.md (Custo por sessão; Rodada; Passo) e docs/governance/operating-model.md; formato de teto por objeto em pesquisa/openai-platform.md e pesquisa/litellm.md">
-  <caption>Formato da linha. Os valores marcados <span class="exemplo">exemplo</span> ilustram o layout — não são
+  <caption>Formato da linha. Os valores marcados <span class="exemplo" data-exemplo="true">exemplo</span> ilustram o layout — não são
   dados do repositório; o que é vivo aparece como <span class="vazio">—</span> com o motivo.</caption>
   <thead>
     <tr><th>Sessão de agente ou Projeto</th><th data-rotulo="limite de orçamento">Teto</th><th data-rotulo="consumo por agente">Consumo</th><th data-rotulo="limite de orçamento">Restante</th><th data-rotulo="limite de orçamento">Efeito ao estourar</th><th>Consultar</th></tr>
   </thead>
   <tbody>
     <tr>
-      <td><span class="exemplo">exemplo: sessão de agente</span></td>
-      <td><span class="exemplo">exemplo: 40 %</span></td>
-      <td><span class="exemplo">exemplo: 19 %</span></td>
-      <td><span class="exemplo">exemplo: 21 %</span></td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: sessão de agente</span></td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: 40 %</span></td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: 19 %</span></td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: 21 %</span></td>
       <td><span class="vazio">—</span> motivo: hoje é declarado, não executável</td>
       <td><button type="button" data-fonte="método — docs/records/decisoes.jsonl (teto declarado) e glossário (Custo por sessão); plataforma — pesquisa/litellm.md (max_budget por chave/time)">abrir teto</button></td>
     </tr>
     <tr>
-      <td><span class="exemplo">exemplo: Projeto</span></td>
-      <td><span class="exemplo">exemplo: teto do projeto</span></td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: Projeto</span></td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: teto do projeto</span></td>
       <td><span class="vazio">—</span> motivo: leitura viva, o wireframe não a digita</td>
       <td><span class="vazio">—</span> motivo: derivado do teto e do consumo</td>
       <td><span class="vazio">—</span> motivo: taxa não existe hoje</td>
@@ -182,7 +182,7 @@ footer.rodape strong{color:var(--tinta)}
 <footer class="rodape" data-referencia="true">
   <p><strong>Como ler este wireframe.</strong> Arquivo HTML estático: sem servidor, sem JavaScript de dados; CSS
   mínimo, em cinza, de caixas e rótulos. Nenhum número é inventado — o valor ilustrativo vem marcado
-  <span class="exemplo">exemplo</span>, o valor real traz o selo <span class="selo">declarado</span> (ou
+  <span class="exemplo" data-exemplo="true">exemplo</span>, o valor real traz o selo <span class="selo">declarado</span> (ou
   <span class="selo">referência</span>, quando vem de uma plataforma) com a fonte, e o valor vivo aparece como
   <span class="vazio">—</span> com o motivo ao lado. <span class="fonte">fonte: ux-design 066 §4 (anti-regras verificáveis)</span></p>
   <p><strong>Rótulos.</strong> Os nomes de objeto vêm do vocabulário do contexto — o glossário
