@@ -10,6 +10,27 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **Correção 1 da rodada 4 — confronto, mapa e a regra 5 do verificador** (ciclo 073,
+  `073-T4-correcao-1-confronto`): a decisão da regente vira três artefatos. (a) `confronto/
+  confronto-decisao.md` — a linha 4 é **desdobrada** (orçamento `ENTRA`, taxa `DEPOIS`), `auditoria`
+  e `custo` sobem de `NÃO PRECISA` a **`ENTRA`** viram **auditoria administrativa** (com
+  `changed_by`) e **custo estimado por agente**, cinco funcionalidades de intercomunicação entram
+  como `DEPOIS` com **gatilho escrito** (recibo de entrega, reentrega, *dead-letter*,
+  *broadcast*/cópia, estabilidade de ref), e os totais são refeitos: **15 `ENTRA` · 6 `NÃO PRECISA`
+  · 11 `DEPOIS` = 32**; duas bases são corrigidas (Windmill **não** endereça sessão por nome;
+  Kiro Crew × Claude Code julgados com o **mesmo critério**) e "lacuna de mercado" vira **"não
+  encontrado na documentação lida"**. (b) `confronto/mapa-de-contextos.md` — o **limite de
+  orçamento** passa para a **Administração** (§ 2, § 6.3, § 6.5), entra o invariante **"endereço
+  ambíguo é recusado, nunca resolvido"** com a tabela de **colisões de endereço** (§ 7.1, separada
+  das cinco colisões de termo), o **ponto de execução do controle** fica declarado (hooks +
+  `.claude/settings.json`, fora do corte) e a **relação 5** (Workflow → Regência: derrubar e `ask`
+  viram pedido de decisão) entra no mapa e no diagrama. (c) `prototipo/verifica-prototipo.py` —
+  **regra 5**: toda menção a sessão (Gerente, WorkerNN, MAESTRO, Office, Assistente) exige a ref
+  `[xxxxxx]` logo depois (`nome · ref · projeto`), em todo texto visível e valor de atributo, com
+  **uma** isenção declarada (tabela de colisão de nomes); a regra 3 passa a descontar a ref antes de
+  contar dígitos. Mutação no `qa-report.md`: **36 → 6** achados com a regra cegada, restauração
+  provada por SHA-256. Gate real: **11 telas, 29 achados (todos da regra 5), exit 1** — vermelho de
+  propósito até as telas escreverem a identidade.
 - **Base única de citação nas 11 telas (R9) e o mapa §7 alinhado** (ciclo 073,
   `073-T4-preambulo-r9`, preâmbulo da rodada 4): a convenção fica **fixada por escrito** no
   `§ Convenções` novo de `specs/073-area-administrativa/prototipo/README.md` — **todo caminho é

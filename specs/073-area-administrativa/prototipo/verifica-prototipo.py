@@ -27,6 +27,17 @@ FAILS when it finds:
      Rule 4 does NOT exempt citation contexts (data-fonte/data-referencia): the
      review found the naked terms precisely in citation prose, so exempting it
      would leave the rule with nothing to accuse on the real screens.
+  5. (correction 1 of round 4) a SESSION mentioned without its ref — the
+     regent's decision 2: a session is addressed as `nome · ref · projeto`, so
+     every mention of a catalogue name (Gerente, WorkerNN, MAESTRO, Office,
+     Assistente) must be followed by a ref `[xxxxxx]`. Like rule 4, it runs on
+     every visible text node and every attribute value. ONE exemption, the one
+     the decision authorises: a COLLISION-NAMING TABLE (a <table> whose header
+     declares data-rotulo="colisão de nomes") — there the sessions are named on
+     purpose to expose the collision ("Office" in two refs). An example mark
+     does NOT exempt rule 5: the identity format is a presentation convention
+     and must hold in example rows too — that is what the screens must learn.
+     Declared limit: the fence is the whole table, as in rule 4.
 
 Markup contract (agreed with the screen authors — v2, after the first run over
 the real screens flagged citations as if they were metrics):
@@ -39,7 +50,10 @@ the real screens flagged citations as if they were metrics):
   - `data-fonte` / `data-referencia` mark a CITATION context: digits inside are
     references (§7, ADR 0027, ciclo 073, file:line…), not metric values, so
     rule 3 exempts them. Digit-bearing acronyms (A2A, F1, T16…) are exempt
-    everywhere.
+    everywhere. A session REF is `[xxxxxx]` (six hex digits, e.g. `[31ee4d]`):
+    its digits are a reference too, so rule 3 strips them like an acronym.
+  - a session is addressed as `nome · ref · projeto`, the ref right after the
+    name (`Gerente [31ee4d] · 410_MAESTRO`). Rule 5 enforces it.
   - th/label/legend/h1/dt WITHOUT data-rotulo are label-checked by their text
     (a glossary term inside, or stopwords only). h2+ are section prose; button
     text is action phrasing — both are covered by rule 1/4 and the fresh
@@ -104,6 +118,11 @@ NUMBER = re.compile(r"\d")
 WORD = re.compile(r"[\wà-ú/=-]+")
 # digit-bearing acronyms are references, not metric values (A2A, F1, T16…)
 ACRONYM = re.compile(r"\b[A-Za-z]+\d+[A-Za-z]*\b")
+# rule 5: the catalogue names of sessions, and the ref that must follow the name
+SESSION = re.compile(r"\b(?:Gerente|Worker\d+|MAESTRO|Office|Assistente)\b")
+SESSION_REF = re.compile(r"\s*·?\s*\[[0-9a-fA-F]{6}\]")
+# a ref's digits are a reference, not a metric: rule 3 strips them
+SESSION_REF_TOKEN = re.compile(r"\[[0-9a-fA-F]{6}\]")
 
 
 def glossary_terms():
@@ -175,6 +194,15 @@ class ScreenParser(HTMLParser):
             return True
         return "data-exemplo" in (attrs or {})
 
+    def identity_exempt(self):
+        """Rule 5 exemption — ONLY the one decision 2 authorises: a
+        collision-naming table names the colliding sessions on purpose (map §7:
+        "Office" in two refs, "Gerente" in two projects). An example mark does
+        NOT exempt rule 5: the identity format is a presentation convention and
+        holds in example rows too. Declared, not inferred.
+        """
+        return self.inside_collision_table()
+
     def handle_starttag(self, tag, attrs):
         a = {k.lower(): (v or "") for k, v in attrs}
         if tag in INTERACTIVE and not a.get("data-fonte", "").strip():
@@ -190,6 +218,11 @@ class ScreenParser(HTMLParser):
         if not self.collision_exempt(a):
             for value in a.values():
                 self.check_collisions(value)
+        # 5 (attribute pass), same reason as rule 4: an aria-label or a tooltip
+        # can name a session too.
+        if not self.identity_exempt():
+            for value in a.values():
+                self.check_identity(value)
         if tag in VOID:
             return
         is_label = tag in LABEL_TAGS or "data-rotulo" in a
@@ -214,6 +247,7 @@ class ScreenParser(HTMLParser):
         # 3. numbers must be marked as example — in every text node, unless
         #    it is a citation context or a digit-bearing acronym (A2A, F1…)
         stripped = ACRONYM.sub("", data)
+        stripped = SESSION_REF_TOKEN.sub("", stripped)
         if NUMBER.search(stripped) and "exemplo" not in data.lower() \
                 and not self.inside_example() and not self.inside_citation():
             self.findings.append(
@@ -223,6 +257,9 @@ class ScreenParser(HTMLParser):
         # where the review found the real violations.
         if not self.inside_label() and not self.collision_exempt():
             self.check_collisions(data)
+        # 5 (visible-text pass), same fence as rule 4
+        if not self.inside_label() and not self.identity_exempt():
+            self.check_identity(data)
         # feed the innermost open label collector
         for entry in reversed(self.stack):
             if entry[2] is not None:
@@ -254,6 +291,10 @@ class ScreenParser(HTMLParser):
         #    text and the attribute passes (check_collisions)
         if not self.collision_exempt(attrs):
             self.check_collisions(text)
+        # 5. a session named in a label carries its ref — same test as the
+        #    visible text and the attribute passes (check_identity)
+        if not self.identity_exempt():
+            self.check_identity(text)
 
     def check_collisions(self, text):
         """Rule 4: the colliding terms must be qualified wherever they surface.
@@ -271,6 +312,21 @@ class ScreenParser(HTMLParser):
         if re.search(r"\bport[ãa]o\b", low) and not re.search(r"\bchamado\b|\bregente\b", low):
             self.findings.append(
                 f'{self.path.name}: "portão" unqualified (chamado or regente?): "{text.strip()}"')
+
+
+    def check_identity(self, text):
+        """Rule 5: a session is addressed as `nome · ref · projeto`.
+
+        Every mention of a catalogue name has to carry its ref right after it.
+        The bare name is not an address — that is the failure the round-4 judges
+        named ("Gerente" alone, a ref column without the project, a ref that
+        changes when the session restarts).
+        """
+        for m in SESSION.finditer(text):
+            if not SESSION_REF.match(text, m.end()):
+                self.findings.append(
+                    f'{self.path.name}: session "{m.group(0)}" without a ref '
+                    f'[xxxxxx] (nome · ref · projeto): "{text.strip()}"')
 
 
 def main():
