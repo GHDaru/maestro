@@ -360,8 +360,10 @@ quatro regras do mandato:
 4. **colisão sem qualificador** (condição da ratificação) — "fila" exige `decisões`/`outbox` e
    "portão" exige `chamado`/`regente` no mesmo rótulo.
 
-**Smoke test** (telas sintéticas `_teste-bom.html`/`_teste-ruim.html`, fora do commit, prefixo `_` =
-rascunho e ignorado pelo script): a tela ruim acusou **5 achados** (rótulo fora do glossário, "fila"
+**Smoke test** (telas sintéticas, commitadas como fixtures do script em
+`prototipo/fixtures/tela-bom.html` e `prototipo/fixtures/tela-ruim.html` — subdiretório não é
+varrido como tela; a ruim mantém os 5 achados de propósito e é o corpus da mutação do W02): a tela
+ruim acusou **5 achados** (rótulo fora do glossário, "fila"
 sem qualificador, `button` sem `data-fonte`, número sem "exemplo", e o `<th>` "Fluxo de caixa
 operacional"); a tela boa, **0 achados**. O smoke test **achou um falso-negativo real**: o termo
 "RACI" casava como substring de "ope**raci**onal" — corrigido para word boundary antes do commit.
