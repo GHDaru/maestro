@@ -1046,3 +1046,95 @@ convenção de nome **não é uniforme** hoje — `mensageria-NN-slug.html` (com
 que ela declarava. Não a editei: a ordem foi mexer **só nas linhas de nome de arquivo**, e essa
 prosa é do W02, que estava fixando o § Convenções no mesmo arquivo nesta janela. Fica registrada
 aqui para o merge não passar em silêncio.
+
+## Rodada 4 — correção 1: a **regra 5** do verificador (Worker02, 26/10)
+
+Fatia `073-T4-correcao-1-confronto` (decisão 2 da regente, `rodada-4/correcao-1.md`): **toda menção
+a uma sessão tem de vir como `nome · ref · projeto`** — o nome do catálogo (Gerente, WorkerNN,
+MAESTRO, Office, Assistente) seguido da ref `[xxxxxx]`. A regra 5 entra no
+`prototipo/verifica-prototipo.py` (v3 → v4) e roda em **todo nó de texto visível e todo valor de
+atributo**, como a regra 4.
+
+**Uma isenção, a única que a decisão autoriza** (declarada, nunca inferida): a **tabela de colisão
+de nomes** (um `<table>` cujo cabeçalho declara `data-rotulo="colisão de nomes"`) — ali as sessões
+são nomeadas de propósito para expor a colisão ("Office" em duas refs, "Gerente" em dois projetos).
+A marca de exemplo (`data-exemplo`) **não** isenta a regra 5: a identidade é convenção de
+apresentação e vale nas linhas de exemplo também — fosse o contrário, a regra nasceria vazia, já
+que **todo** valor destes wireframes é exemplo (a lição da rodada 3).
+
+**Correção acoplada**: a regra 3 (número sem a marca `exemplo`) passa a **remover a ref** antes de
+contar dígitos (`SESSION_REF_TOKEN.sub`), como já fazia com siglas (`A2A`, `T16`): `[31ee4d]` é
+referência, não valor métrico. Sem isso, escrever a identidade fora de contexto de citação acusaria
+a regra 3 — defeito silencioso que a mutação não pegaria.
+
+### O gate no corpus real (11 telas)
+
+```text
+python specs/073-area-administrativa/prototipo/verifica-prototipo.py
+-- verifica-prototipo: 11 screen(s), 29 finding(s)   [exit 1]
+```
+
+Os **29 são todos da regra 5**, nas telas que ainda não escrevem a identidade: `mensageria-01` (5),
+`mensageria-02` (12), `workflow-01`, `-02`, `-03`, `-04` (3 cada). **Zero** nas 3 telas da
+Administração (não citam sessão) e **zero** em `mensageria-03` (a isenção da tabela de colisão
+funciona no corpus, não só na fixture). A lista nominal, achado a achado, segue no `[[DONE]]` para
+os donos fecharem. **O gate fica vermelho de propósito até as telas escreverem `nome · ref ·
+projeto`** — a regra não existe para passar, existe para acusar.
+
+### A mutação (prova de que a regra 5 não é vazia)
+
+Arnês fora do repositório (`%TEMP%`), rodando o **mesmo** `ScreenParser` sobre as 11 telas **mais** a
+dupla de fixtures (`fixtures/tela-bom.html`, `fixtures/tela-ruim.html`), com a saída literal colada:
+
+```text
+ANTES (regra 5 viva)      -- 13 screen(s), 36 finding(s)
+MUTADO (regra 5 cega)     -- 13 screen(s),  6 finding(s)
+```
+
+Os **30** que desaparecem são exatamente os da regra 5 (29 do corpus + 1 da fixture). Os **6** que
+sobrevivem são os achados das **outras** regras, e **todos** em `tela-ruim.html` — a regra cega não
+leva nenhum junto:
+
+```text
+FINDING: tela-ruim.html: label outside the glossary: "Fila"
+FINDING: tela-ruim.html: "fila" unqualified (decisões or outbox?): "Fila"
+FINDING: tela-ruim.html: interactive <button> without data-fonte
+FINDING: tela-ruim.html: label outside the glossary: "Fluxo de caixa operacional"
+FINDING: tela-ruim.html: number without the "exemplo" mark: "42"
+FINDING: tela-ruim.html: "fila" unqualified (decisões or outbox?): "Fila de tarefas"
+```
+
+O achado da regra 5 que **desapareceu** com a cegueira (o discriminador da mutação), literal:
+
+```text
+FINDING: tela-ruim.html: session "Gerente" without a ref [xxxxxx] (nome · ref · projeto): "Gerente"
+```
+
+E a fixture boa prova o outro lado: `fixtures/tela-bom.html` fica com **0 achados** com a regra 5
+viva — a linha `Gerente [31ee4d] · Maestro` **passa** (a convenção é aceita, não só exigida), e o
+`data-rotulo="colisão de nomes"` da `mensageria-03` **isenta** a tabela.
+
+### Restauração provada (sem resíduo)
+
+```text
+H0  (antes)       E338FD47139BB2A673AFEAEBBBF17632DA29C1102A9EF2DC599827FEEE64DD54
+H   (mutado)      1EB968EB0734950D2074176FC0106E7714731A58C3669F89AF7EE9D23DA7CB64
+H   (restaurado)  E338FD47139BB2A673AFEAEBBBF17632DA29C1102A9EF2DC599827FEEE64DD54
+igual ao original? True
+linhas 'MUTACAO-W02' no arquivo: 0
+```
+
+Script de mutação e arnês são **fora do repositório** (nenhum artefato temporário na árvore): o
+`.bak-w02` e o `__pycache__` que a execução criou foram **movidos** para `%TEMP%` (não apagados), e a
+árvore mostra só as cinco modificações declaradas.
+
+### Pendências declaradas (não silenciadas)
+
+- **`prototipo/README.md`** diz, na linha **94**, que o script "falha em **quatro** regras" — agora
+  são **cinco**. Não editei: o README está sendo tocado por outros três workers nesta janela (a
+  minha fatia nele é só o § Convenções, do R9) — a atualização é do dono do arquivo.
+- **`prototipo/README.md` linhas 83–86** — a prosa do renome, que o Worker04 declarou obsoleta (ver a
+  seção anterior). Continua **pendente**; não é desta fatia.
+- **Contrato de markup**: o docstring do verificador agora declara a identidade `nome · ref · projeto`
+  e a ref `[xxxxxx]`; a regra 5 é a **única** das cinco que **não** isenta contexto de citação — a
+  citação é justamente onde os nomes nus apareceram.
