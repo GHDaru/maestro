@@ -13,10 +13,13 @@
   contexto fresco (9 achados de disciplina de nome/citação, nenhum estrutural) + **mutação do
   gate** (regras 3 e 4 cegas, achados que sumiram copiados da saída, script restaurado byte a
   byte), segurança documental (0 achados) e conformance 073 verde nos dois modos; **rodada de
-  correção fechada** (R1–R9 por dono de tela; regra 4 ampliada ao texto visível); **rodada 4
-  aberta** — preâmbulo integrado (R8 rename `741b130`, R9 base de citação `6a32e24`), três juízes
-  em contexto fresco: **barra não atingida** (nenhuma peça em 9), **correção 1 (de máx. 2)
-  despachada por dono** (`rodada-4/correcao-1.md`)
+  correção fechada** (R1–R9 por dono de tela; regra 4 ampliada ao texto visível); **rodada 4 —
+  correção 1 fechada**: preâmbulo integrado (R8 rename `741b130`, R9 base de citação `6a32e24`),
+  juízes: **barra não atingida**; as seis fatias da `rodada-4/correcao-1.md` integradas (Mensageria
+  `d83920e`, Administração `bfe1da5`, README+glossário `bd51e4d`, Workflow+inventário `5d91a1a`,
+  confronto+mapa+**regra 5** `eb638b2`, matriz `cb8a11a`) + fechamento da regra 5 nas telas (W03
+  `a04b6d0` + W05 `fb599bb`); **gate 11 telas, 0 achados com as cinco regras**; **segunda rodada de
+  juízes é do regente, em contexto fresco**
 - **Spec**: `spec.md` (rascunho aberto pelo Gerente a partir do despacho do regente)
 
 ## Rodada 1 — pesquisa de plataformas
@@ -79,7 +82,7 @@ máx. 2), despachada por dono a partir de `6a32e24`:
 | correção 1 — Workflow (4 telas) + inventário | Worker05 | **integrado** — `952ce53` (derrubar por confirmação com regente protegido, reiniciar no lugar de subir, ações por estado, travada com limiar, custo estimado em US$ com teto da Administração; inventário com SendMessage/ListAgents de primeira classe); gate 11/0 |
 | correção 1 — confronto + mapa + regra 5 do verificador (identidade `nome · ref · projeto`, com mutação e fixture) | Worker02 | **integrado** — `11efa79` → `eb638b2` (ENTRA 15 · NÃO PRECISA 6 · DEPOIS 11; mapa com o orçamento na Administração, invariante de endereço ambíguo e § 7.1; regra 5 v4 com mutação 36→6 e fixtures) |
 | fechamento da regra 5 nas telas (identidade `nome · ref · projeto` adjacente) | W03 + W05 | **integrado** — W05 `fb599bb` (4: ref logo depois do nome) + W03 `a04b6d0` (34: ref embutido no mesmo nó de texto; a causa era o `<span class="mono">` separando nome e ref em nós diferentes); **gate 11 telas, 0 achados com a regra 5 viva** |
-| correção 1 — matriz (`plataformas.md`) | Worker06 | despachada |
+| correção 1 — matriz (`plataformas.md`) | Worker06 | **integrado** — `4257101` → `cb8a11a` (6 células corrigidas, nenhuma `—`→`sim`; contagens por script 169/225/12/244; nota "corta × avisa"; "não encontrado na documentação lida"; ficha do Claude Code com mailbox/agent teams) |
 | correção 1 — README + glossário | Worker01 | **integrado** — `0deccf4` (tabela de identidade, colisões termo × endereço, ENTRA 12 e 17, prosa obsoleta reescrita; glossário +2 termos); gate 11/0, check-language ✓ |
 
 ## Histórico
