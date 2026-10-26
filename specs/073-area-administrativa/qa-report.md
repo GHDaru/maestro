@@ -629,3 +629,120 @@ Nada fora de `specs/073-area-administrativa/prototipo/` foi escrito (só o acré
 entrega a peça para o bar da rodada 4. Tokens (piso, soma do `message.usage` do transcript desde a
 1ª ocorrência do `[[TASK]]`): **≈2,56 M** (entrada 2.380.079 + saída 179.650, em 96 mensagens;
 `cache_read` 7.840.512 à parte).
+
+## Rodada 3 — a regra 4 passa a cobrir o texto visível (Worker02, 26/10)
+
+**Escopo:** `T3-regra4` (correção final da rodada 3, despacho do Gerente em 26/10). A revisão
+fresca desta mesma rodada provou que **nenhuma das 11 telas reais exercitava a regra 4** do
+`prototipo/verifica-prototipo.py`: ela só era chamada de `check_label`, então via rótulos, e as
+violações viviam em `<p>`, `<td>` e valores de atributo. Commit **`9cf0118`**, com a mensagem
+exata pedida — `ciclo 073: verificador cobre fila/portão nus no texto visível` (base `dbfe3f2`,
+via `git merge --ff-only`).
+
+### O que mudou
+
+| Antes | Depois |
+|---|---|
+| regra 4 só em `check_label` (rótulos) | regra 4 em **todo nó de texto visível** e em **todo valor de atributo**, além dos rótulos |
+| qualificador por **substring** (`"outbox" not in low`) | qualificador por **fronteira de palavra** (`\boutbox\b`, `\bdecis\w*`, `\bchamado\b`, `\bregente\b`) |
+| — | **isenção declarada**: tabela cujo cabeçalho declara `data-rotulo="colisão de nomes"` é uma *collision-naming table* — a regra 4 não roda dentro dela |
+
+Duas isenções, ambas **declaradas, nunca inferidas**: (a) a tabela que nomeia as colisões (map §7
+reproduzido na `mensageria-03`); (b) valor marcado como exemplo (`data-exemplo`, ou "exemplo" no
+texto), igual à regra 3. **A regra 4 não isenta contexto de citação**
+(`data-fonte`/`data-referencia`) — de propósito: foi exatamente na prosa de citação que a revisão
+achou os termos nus, e isentar ali deixaria a regra sem nada para acusar nas telas reais. O
+contrato foi atualizado na *docstring* (regra 4 + o marcador da tabela de colisões).
+
+### Critério de aceite (a): a tabela da §7 **não** vira achado
+
+Probe dedicado (`%TEMP%\probe-exemption.py`, só lê) rodando a regra 4 estendida na
+`mensageria-03-roteamento.html`, **com** e **sem** a isenção declarada:
+
+```text
+--- COM a isencao declarada (como entregue): 0 achado(s) em mensageria-03
+--- SEM a isencao (probe): 1 achado(s) em mensageria-03
+    mensageria-03-roteamento.html: "fila" unqualified (decisões or outbox?): "a Fila do Painel (Regência) × as mensagens (Mensageria)"
+```
+
+A isenção é o que sustenta o critério — e ela está **escrita na própria tela** (o `<th>` declara
+`colisão de nomes`), não inferida pelo script.
+
+### Critério de aceite (b): os achados da revisão viram achado (topo atual, telas ainda não corrigidas)
+
+```text
+python specs/073-area-administrativa/prototipo/verifica-prototipo.py
+FINDING: administracao-politicas.html: "portão" unqualified (chamado or regente?): "fonte: Princípio III · ux-design 066 §3 (portão do humano aparece somente leitura ao agente)"
+FINDING: mensageria-01-caixa-de-entrada.html: "fila" unqualified (decisões or outbox?): "método: painel/fila_outbox.py (drenagem; ADR 0027 — a fila recusa DELETE, só registra a leitura)"
+FINDING: mensageria-01-caixa-de-entrada.html: "fila" unqualified (decisões or outbox?): "A fila é"
+FINDING: mensageria-04-protocolo.html: "portão" unqualified (chamado or regente?): "(o portão vira contrato)."
+-- verifica-prototipo: 11 screen(s), 4 finding(s)
+[exit 1]
+```
+
+Cobre **R1, R1b, R2 e R2b** da revisão. R1b — a "fila" nua **dentro do `data-fonte`** — exigiu o
+qualificador com fronteira de palavra: `painel/fila_outbox.py` é **nome de arquivo**, não
+qualifica a frase em volta; mesmo tipo de falso-negativo do `RACI ⊂ operacional`, corrigido do
+mesmo jeito.
+
+**R3 declarado como não coberto, e por quê.** R3 ("fila outbox" × a grafia fixada "fila
+(outbox)") **não é termo nu** — é desvio de grafia, e o teste de qualificação o aceita por
+construção. Apertá-lo para exigir "fila (outbox)" literal acusaria a própria tabela da §7 (que
+escreve, de propósito, "fila outbox" como **o objeto da colisão**) — isto é, falsificaria o
+critério (a). Escolher a grafia é decisão do regente; a regra 4 mede nudez, não ortografia.
+
+### Critério de aceite (c) e a mutação (prova de que a regra estendida não é vazia)
+
+`fixtures/tela-ruim.html` trazido ao alcance do glob (cópia `prototipo/zz-tela-ruim.html`, sem
+`_`), regra 4 **cegada de propósito** (um `return` no topo de `check_collisions`):
+
+```text
+--- ANTES (regra 4 viva) ---
+FINDING: administracao-politicas.html: "portão" unqualified (chamado or regente?): "fonte: Princípio III · ux-design 066 §3 (portão do humano aparece somente leitura ao agente)"
+FINDING: mensageria-01-caixa-de-entrada.html: "fila" unqualified (decisões or outbox?): "método: painel/fila_outbox.py (drenagem; ADR 0027 — a fila recusa DELETE, só registra a leitura)"
+FINDING: mensageria-01-caixa-de-entrada.html: "fila" unqualified (decisões or outbox?): "A fila é"
+FINDING: mensageria-04-protocolo.html: "portão" unqualified (chamado or regente?): "(o portão vira contrato)."
+FINDING: zz-tela-ruim.html: label outside the glossary: "Fila"
+FINDING: zz-tela-ruim.html: "fila" unqualified (decisões or outbox?): "Fila"
+FINDING: zz-tela-ruim.html: interactive <button> without data-fonte
+FINDING: zz-tela-ruim.html: label outside the glossary: "Fluxo de caixa operacional"
+FINDING: zz-tela-ruim.html: number without the "exemplo" mark: "42"
+FINDING: zz-tela-ruim.html: "fila" unqualified (decisões or outbox?): "Fila de tarefas"
+-- verifica-prototipo: 12 screen(s), 10 finding(s)
+[exit 1]
+
+--- DEPOIS (regra 4 cega, mesmo corpus) ---
+FINDING: zz-tela-ruim.html: label outside the glossary: "Fila"
+FINDING: zz-tela-ruim.html: interactive <button> without data-fonte
+FINDING: zz-tela-ruim.html: label outside the glossary: "Fluxo de caixa operacional"
+FINDING: zz-tela-ruim.html: number without the "exemplo" mark: "42"
+-- verifica-prototipo: 12 screen(s), 4 finding(s)
+[exit 1]
+```
+
+Achados que **sumiram** (nomes copiados da saída), 10 → 4:
+
+- `administracao-politicas.html: "portão" unqualified (chamado or regente?): "fonte: Princípio III · ux-design 066 §3 (portão do humano aparece somente leitura ao agente)"`
+- `mensageria-01-caixa-de-entrada.html: "fila" unqualified (decisões or outbox?): "método: painel/fila_outbox.py (drenagem; ADR 0027 — a fila recusa DELETE, só registra a leitura)"`
+- `mensageria-01-caixa-de-entrada.html: "fila" unqualified (decisões or outbox?): "A fila é"`
+- `mensageria-04-protocolo.html: "portão" unqualified (chamado or regente?): "(o portão vira contrato)."`
+- `zz-tela-ruim.html: "fila" unqualified (decisões or outbox?): "Fila"`
+- `zz-tela-ruim.html: "fila" unqualified (decisões or outbox?): "Fila de tarefas"` (esta é **nova**: o nó
+  de texto do `<td>`, que a regra antiga — só rótulos — não via; o critério (c) está atendido, e o
+  fixture ficou mais exigente do que era)
+
+Restauração **byte a byte**: hash SHA-256
+`EF7BF07510840A2277D52F2E4C907E0E33B1DABE300CE7772FBFF771423E1EA1` (idêntico ao da versão
+entregue), `git diff` vazio e `git status --porcelain` vazio depois do commit `9cf0118`. Desvio
+declarado: `Remove-Item` é negado por política nesta sessão — a cópia temporária saiu do
+repositório por `Move-Item` (`%TEMP%\zz-tela-ruim.worker02b.html`).
+
+### Limites
+
+As telas **não foram corrigidas aqui** (é dos donos, em paralelo): no estado deste topo o gate
+acusa os 4 achados de R1/R1b/R2/R2b — fica verde quando as correções chegarem. O script **não** é
+chamado por `.github/workflows/` (verificado por busca), então o CI não fica vermelho por isso.
+Nada fora de `specs/073-area-administrativa/` foi escrito; sem push, sem merge, sem código de
+produto, sem segredo. Tokens (piso, soma do `message.usage` desde a 1ª ocorrência do
+`[[TASK 073-T3-regra4]]`, 61 mensagens): **≈0,63 M** (entrada 545.865 + saída 80.833);
+`cache_read` 7.603.584 à parte.

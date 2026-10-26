@@ -10,6 +10,16 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **A regra 4 do verificador do protótipo passa a cobrir o texto visível** (ciclo 073,
+  `073-T3-regra4`, commit `9cf0118`): a revisão da rodada 3 provou que **nenhuma das 11 telas
+  reais exercitava a regra 4** — ela só rodava em rótulos (`check_label`), e as violações viviam
+  em `<p>`, `<td>` e valores de atributo. Agora "fila"/"portão" nus são acusados em **todo nó de
+  texto visível** e em **todo valor de atributo**, com duas isenções **declaradas** (tabela que
+  nomeia as colisões, pelo `data-rotulo="colisão de nomes"` no cabeçalho; valor marcado como
+  exemplo) e o qualificador medido por **fronteira de palavra** (`painel/fila_outbox.py` é nome de
+  arquivo, não qualifica a frase). Efeito medido: R1/R1b/R2/R2b da revisão passam a ser acusados
+  (11 telas, 4 achados) e o fixture `tela-ruim.html` acusa **6** em vez de 5; mutação com a regra
+  cegada devolve 10 → 4, com os nomes que sumiram colados no `qa-report.md`.
 - **Revisão fresca da rodada 3 e mutação do gate** (ciclo 073, `073-T3-revisao`): a revisão em
   contexto fresco das **11 telas** contra o mapa de contextos (§6, contexto dono; §7, as cinco
   colisões de nome) e o contrato de marcação, com **9 achados** em `arquivo:linha`
