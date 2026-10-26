@@ -16,6 +16,7 @@
   th, td { border:1px solid #dfe3e9; padding:8px 10px; text-align:left; font-size:.9rem; vertical-align:top; }
   th { background:#eceef2; font-weight:600; }
   .metrica { font-variant-numeric: tabular-nums; }
+  .mono { font-family: ui-monospace, monospace; }
   .desvio { color:#7a1f1f; background:#fbeaea; }
   .falta { color:#7a3d00; }
   button { font:inherit; background:#eceef2; border:1px solid #b9bfc9; border-radius:5px; padding:6px 10px; cursor:pointer; }
@@ -27,15 +28,16 @@
 <body>
 
 <header class="cx">
-  <h1 class="rotulo" data-rotulo="livro de mensagens" data-fonte="método: specs/073-area-administrativa/confronto/confronto-decisao.md § Glossário proposto (‘livro de mensagens’)">livro de mensagens</h1>
-  <p class="nota">Contexto <strong>Mensageria</strong> — o registro <em>append-only</em> unificado das mensagens entre sessões.
-    <span class="fonte" data-referencia="true">Fonte da ideia: método — livro de ponto append-only, <code>docs/records/tarefas.jsonl</code> + <code>docs/governance/task-ledger.md</code>; mercado: 0 <code>sim</code> em 25.</span></p>
+  <h1 class="rotulo" data-rotulo="livro de mensagens" data-fonte="método: docs/governance/glossary.md (Livro de mensagens) · specs/073-area-administrativa/confronto/confronto-decisao.md § Glossário proposto">livro de mensagens</h1>
+  <p class="nota" data-referencia="true">Contexto <strong>Mensageria</strong> — o registro <em>append-only</em> unificado das mensagens entre sessões.
+    <span class="fonte" data-referencia="true">Fonte real do registro hoje: a <strong>fila outbox</strong> (SQLite, <code>painel/fila_outbox.py</code>) — o livro é a leitura unificada dela.
+    Não é o <strong>livro de ponto</strong> (Task ledger, <code>docs/records/tarefas.jsonl</code>): mesmo nome, outro objeto (mapa §7).</span></p>
   <p class="nota">Regra do livro: <strong>nunca se apaga uma linha</strong> — corrigir é acrescentar. A leitura é marcada, não removida.</p>
 </header>
 
 <div class="cx">
-  <div class="grade-linha">
-    <span class="rotulo" data-rotulo="livro de mensagens" data-fonte="método: docs/records/tarefas.jsonl (append-only)">livro de mensagens</span>
+  <div>
+    <span class="rotulo" data-rotulo="livro de mensagens" data-fonte="método: painel/fila_outbox.py (append-only)">livro de mensagens</span>
     <span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">linhas: 5 (exemplo)</span>
   </div>
   <p class="fonte" data-referencia="true">Contagem na tela é métrica com fonte; valor de exemplo.</p>
@@ -46,51 +48,77 @@
 <table>
   <thead>
     <tr>
-      <th class="rotulo" data-rotulo="task tag" data-fonte="método: docs/governance/task-ledger.md (task tag [[TASK]]/[[DONE]])">task tag</th>
-      <th class="rotulo" data-rotulo="sessão de agente" data-fonte="método: docs/governance/task-ledger.md · termo ratificado ‘sessão de agente’">sessão de agente (remetente)</th>
-      <th class="rotulo" data-rotulo="roteamento por nome/ref" data-fonte="método: painel/ingest.py (norm_sessao) · termo ratificado ‘roteamento por nome/ref’">roteamento por nome/ref (destinatário)</th>
-      <th class="rotulo" data-rotulo="outbox" data-fonte="método: docs/governance/glossary.md (Outbox)">outbox</th>
+      <th class="rotulo" data-rotulo="mensagem entre agentes" data-fonte="método: specs/066-painel-de-regencia/ux-design.md (F7 — carimbo do relógio, nunca digitado)">hora</th>
+      <th class="rotulo" data-rotulo="livro de mensagens" data-fonte="método: painel/fila_outbox.py (identificador da mensagem)">id</th>
+      <th class="rotulo" data-rotulo="livro de mensagens" data-fonte="método: painel/fila_outbox.py (ordem de registro, append-only)">ordem</th>
+      <th class="rotulo" data-rotulo="mensagem entre agentes" data-fonte="método: docs/governance/glossary.md (Mensagem entre agentes) — além das task tags [[TASK]]/[[DONE]]">mensagem entre agentes</th>
+      <th class="rotulo" data-rotulo="sessão de agente" data-fonte="método: docs/governance/glossary.md (Sessão de agente) · rodada 4, decisão 2 (nome · ref · projeto)">remetente (nome · ref · projeto)</th>
+      <th class="rotulo" data-rotulo="roteamento por nome/ref" data-fonte="método: painel/ingest.py (norm_sessao) · rodada 4, decisão 3">destinatário (pretendido × real)</th>
+      <th class="rotulo" data-rotulo="outbox" data-fonte="método: docs/governance/glossary.md (Outbox) · painel/fila_outbox.py (entrega)">estado da entrega</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">[[TASK id=073-T2-confronto]] (exemplo)</span></td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Gerente (exemplo)</span></td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">pretendido: Worker03 · real: Worker03 (exemplo)</span></td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">drenada (exemplo)</span></td>
-    </tr>
-    <tr class="desvio">
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">[[TASK id=073-T2-mapa]] (exemplo)</span></td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Gerente (exemplo)</span></td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">pretendido: Worker02 · real: Worker04 (exemplo)</span></td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">drenada (exemplo)</span></td>
-    </tr>
-    <tr class="desvio">
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">[[DONE id=072-R1]] (exemplo)</span></td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker01 (exemplo)</span></td>
-      <td><span class="falta rotulo" data-rotulo="colisão de nomes" data-fonte="método: specs/073-area-administrativa/confronto/mapa-de-contextos.md §7 · specs/066-painel-de-regencia/qa-report.md (incidente real de nomes cruzados)">— pretendido: “Office” · real: “Office” em 2 refs (exemplo) <span class="fonte" data-referencia="true">motivo: colisão de nomes (exemplo)</span></span></td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">drenada (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">09:14 (exemplo)</span></td>
+      <td><span class="metrica mono" data-fonte="exemplo — nenhum dado real" data-exemplo="true">msg-0417 (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">12 (exemplo)</span></td>
+      <td>“Segue o inventário para o confronto.”</td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker05 <span class="mono">[4d000a]</span> · projeto: maestro (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">pretendido: Worker03 <span class="mono">[9a1b27]</span> · real: Worker03 <span class="mono">[9a1b27]</span> (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">entregue (exemplo)</span></td>
     </tr>
     <tr>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">[[DONE id=073-T2-confronto]] (exemplo)</span></td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker03 (exemplo)</span></td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">pretendido: Gerente · real: Gerente (exemplo)</span></td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">drenada (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">08:02 (exemplo)</span></td>
+      <td><span class="metrica mono" data-fonte="exemplo — nenhum dado real" data-exemplo="true">msg-0416 (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">11 (exemplo)</span></td>
+      <td>“Revisão fresca aceita; nada pendente de ti.”</td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Gerente <span class="mono">[6f0c21]</span> · projeto: maestro (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">pretendido: Worker03 <span class="mono">[9a1b27]</span> · real: Worker03 <span class="mono">[9a1b27]</span> (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">lida (exemplo)</span></td>
+    </tr>
+    <tr class="desvio">
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">07:48 (exemplo)</span></td>
+      <td><span class="metrica mono" data-fonte="exemplo — nenhum dado real" data-exemplo="true">msg-0415 (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">10 (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">[[TASK id=073-T2-mapa]] (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Gerente <span class="mono">[6f0c21]</span> · projeto: maestro (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">pretendido: Worker02 <span class="mono">[31f7bf]</span> · real: Worker04 <span class="mono">[4d000a]</span> (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">entregue (exemplo)</span></td>
+    </tr>
+    <tr class="desvio">
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">07:20 (exemplo)</span></td>
+      <td><span class="metrica mono" data-fonte="exemplo — nenhum dado real" data-exemplo="true">msg-0414 (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">9 (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">[[DONE id=072-R1]] (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker01 <span class="mono">[9a1b27]</span> · projeto: maestro (exemplo)</span></td>
+      <td><span class="falta" data-fonte="exemplo — nenhum dado real" data-exemplo="true">pretendido: Office <span class="mono">[b7e3a2]</span> · real: — recusa por colisão de endereço (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">falhou (exemplo)</span></td>
+    </tr>
+    <tr>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">07:05 (exemplo)</span></td>
+      <td><span class="metrica mono" data-fonte="exemplo — nenhum dado real" data-exemplo="true">msg-0413 (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">8 (exemplo)</span></td>
+      <td>“Segue o recorte; confirma o recebimento.”</td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Office <span class="mono">[b7e3a2]</span> · projeto: maestro (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">pretendido: Worker03 <span class="mono">[9a1b27]</span> · real: Worker03 <span class="mono">[9a1b27]</span> (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">enviada, a caminho (exemplo)</span></td>
     </tr>
   </tbody>
 </table>
 
 <div class="cx">
-  <p class="nota"><strong>Destinatário pretendido × real.</strong> O livro guarda os dois: quando diferem, a linha fica marcada (é a prova de entrega errada, hoje só visível à mão).</p>
+  <p class="nota"><strong>Destinatário pretendido × real.</strong> O livro guarda os dois: quando diferem, a linha fica marcada — é a prova de entrega errada, antes só visível à mão.</p>
+  <p class="nota"><strong>Quem pode ver o livro de outra sessão:</strong> a leitura é do time — qualquer <strong>sessão de agente</strong> lê as linhas. Filtrar as mensagens <em>de outra sessão</em> exige a ref dela e não altera nada (o livro é <em>append-only</em>).</p>
+  <p class="nota"><strong>Quem pode escrever:</strong> só a <strong>sessão dona</strong> da mensagem acrescenta a própria linha. Nem o regente reescreve uma linha — corrigir é acrescentar.</p>
   <p>
     <button aria-label="filtrar por mensagem desviada" data-fonte="método: specs/066-painel-de-regencia/ux-design.md §2.4 (‘mensagem desviada’) — objeto nomeado, agora com fonte no livro">Ver entregas erradas</button>
-    <button aria-label="abrir a caixa de entrada" data-fonte="método: termo ratificado ‘caixa de entrada’ (specs/073-area-administrativa/confronto/confronto-decisao.md § Glossário proposto)">caixa de entrada</button>
+    <button aria-label="abrir a caixa de entrada" data-fonte="método: docs/governance/glossary.md (Caixa de entrada)">caixa de entrada</button>
   </p>
 </div>
 
 <footer>
-  <p class="fonte" data-referencia="true">Fontes — método: <code>docs/records/tarefas.jsonl</code> · <code>docs/governance/task-ledger.md</code> ·
-  <code>docs/governance/glossary.md</code> (Outbox, Task ledger, Task tag) · <code>specs/073-area-administrativa/confronto/mapa-de-contextos.md</code> §6.6 e §7 ·
+  <p class="fonte" data-referencia="true">Fontes — método: <code>painel/fila_outbox.py</code> · <code>docs/governance/glossary.md</code> (Livro de mensagens, Task ledger, Outbox, Mensagem entre agentes) ·
+  <code>specs/073-area-administrativa/confronto/mapa-de-contextos.md</code> §6.6 e §7 · <code>specs/073-area-administrativa/rodada-4/correcao-1.md</code> (decisões 2 e 3) ·
   <code>specs/066-painel-de-regencia/ux-design.md</code> §2.4 e §5 (F1, F7, F8, F9). Plataforma (ideia de leitura): Temporal Web UI,
   <code>https://docs.temporal.io/web-ui</code> (ficha <code>specs/073-area-administrativa/pesquisa/temporal-web-ui.md</code>, <code>sim</code> em rastro/replay).</p>
   <p class="nota">Todo elemento interativo tem <code>data-fonte</code>; todo número/estado é <code>(exemplo)</code>.</p>

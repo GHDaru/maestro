@@ -16,6 +16,7 @@
   th, td { border:1px solid #dfe3e9; padding:8px 10px; text-align:left; font-size:.9rem; vertical-align:top; }
   th { background:#eceef2; font-weight:600; }
   .metrica { font-variant-numeric: tabular-nums; }
+  .mono { font-family: ui-monospace, monospace; }
   .recusa { color:#7a1f1f; background:#fbeaea; font-weight:600; }
   .ok { color:#1f5a2a; }
   .falta { color:#7a3d00; }
@@ -28,13 +29,14 @@
 <body>
 
 <header class="cx">
-  <h1 class="rotulo" data-rotulo="roteamento por nome/ref" data-fonte="método: specs/073-area-administrativa/confronto/confronto-decisao.md § Glossário proposto (‘roteamento por nome/ref’)">roteamento por nome/ref</h1>
+  <h1 class="rotulo" data-rotulo="roteamento por nome/ref" data-fonte="método: docs/governance/glossary.md (Roteamento por nome/ref); specs/073-area-administrativa/confronto/confronto-decisao.md § Glossário proposto">roteamento por nome/ref</h1>
   <p class="nota">Contexto <strong>Mensageria</strong> — endereçar uma mensagem a uma sessão por <strong>nome</strong> (livre, digitado)
     resolve o nome contra as referências (<em>refs</em>) conhecidas. <span class="fonte" data-referencia="true">Fonte da ideia: método — <code>painel/ingest.py</code>
     (<code>norm_sessao</code>) e <code>painel/server.py</code> (<code>contatos()</code>); plataforma: Windmill, <code>https://www.windmill.dev/</code>
     (ficha <code>specs/073-area-administrativa/pesquisa/windmill.md</code>, <code>sim</code> — roteamento por <em>tag</em>).</span></p>
-  <p class="nota"><strong>Regra da tela:</strong> se um nome casa com <strong>duas refs</strong>, o roteador <strong>recusa</strong> entregar
-    e mostra a colisão — nunca escolhe uma em silêncio.</p>
+  <p class="nota"><strong>Regra da tela:</strong> se um nome casa com <strong>duas refs</strong>, ou se a ref mudou de sessão depois
+    de um reinício, o roteador <strong>recusa</strong> entregar e mostra a colisão — <strong>endereço ambíguo é recusado, nunca
+    resolvido</strong>. <span class="fonte" data-referencia="true">Invariante da rodada 4 (decisão 3); mapa §7.</span></p>
 </header>
 
 <h2>Resolução do nome pretendido → ref</h2>
@@ -43,52 +45,56 @@
   <thead>
     <tr>
       <th class="rotulo" data-rotulo="roteamento por nome/ref" data-fonte="método: painel/ingest.py (norm_sessao)">nome pretendido</th>
-      <th class="rotulo" data-rotulo="sessão de agente" data-fonte="método: termo ratificado ‘sessão de agente’ · painel/server.py (contatos())">refs que casam</th>
-      <th class="rotulo" data-rotulo="roteamento por nome/ref" data-fonte="método: painel/fila_outbox.py (drenagem) · termo ratificado ‘roteamento por nome/ref’">decisão do roteador</th>
-      <th class="rotulo" data-rotulo="colisão de nomes" data-fonte="método: specs/073-area-administrativa/confronto/mapa-de-contextos.md §7">motivo</th>
+      <th class="rotulo" data-rotulo="sessão de agente" data-fonte="método: painel/server.py (contatos()) · rodada 4, decisão 2 (nome · ref · projeto)">refs que casam (projeto · vivo/morto)</th>
+      <th class="rotulo" data-rotulo="roteamento por nome/ref" data-fonte="método: painel/fila_outbox.py (drenagem)">decisão do roteador</th>
+      <th class="rotulo" data-rotulo="roteamento por nome/ref" data-fonte="método: specs/073-area-administrativa/rodada-4/correcao-1.md (decisão 3 — colisão de endereço) · specs/066-painel-de-regencia/qa-report.md (incidente real de nomes cruzados)">motivo</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker03 (exemplo)</span></td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">1 ref (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker03 <span class="mono">[9a1b27]</span> (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">1 ref: Worker03 <span class="mono">[9a1b27]</span> · projeto: maestro · vivo (exemplo)</span></td>
       <td class="ok"><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">entrega (exemplo)</span></td>
-      <td><span class="fonte" data-referencia="true">nome único (exemplo)</span></td>
+      <td><span class="fonte" data-referencia="true">endereço único (exemplo)</span></td>
     </tr>
     <tr class="recusa">
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Office (exemplo)</span></td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">2 refs (exemplo)</span></td>
-      <td><span data-fonte="método: specs/066-painel-de-regencia/qa-report.md (incidente real de nomes cruzados)" data-exemplo="true">RECUSA (exemplo)</span></td>
-      <td><span class="rotulo falta" data-rotulo="colisão de nomes" data-fonte="método: specs/073-area-administrativa/confronto/mapa-de-contextos.md §7 (nome em duas refs) · specs/066-painel-de-regencia/qa-report.md:35">colisão de nomes (exemplo) — endereçar por ref</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Office <span class="mono">[b7e3a2]</span> (exemplo)</span></td>
+      <td><span class="falta" data-fonte="exemplo — nenhum dado real" data-exemplo="true">2 refs: Office <span class="mono">[b7e3a2]</span> · projeto: maestro · vivo; Office <span class="mono">[c9f1d4]</span> · projeto: outro · morto (exemplo)</span></td>
+      <td><span data-fonte="método: specs/073-area-administrativa/rodada-4/correcao-1.md (decisão 3) · specs/066-painel-de-regencia/qa-report.md (incidente real de nomes cruzados)" data-exemplo="true">RECUSA (exemplo)</span></td>
+      <td><span class="falta" data-fonte="método: specs/073-area-administrativa/rodada-4/correcao-1.md (decisão 3) · specs/073-area-administrativa/confronto/mapa-de-contextos.md §7" data-exemplo="true">colisão de endereço: nome em 2 refs (exemplo) — endereçar por ref</span></td>
+    </tr>
+    <tr class="recusa">
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Gerente <span class="mono">[6f0c21]</span> (exemplo)</span></td>
+      <td><span class="falta" data-fonte="exemplo — nenhum dado real" data-exemplo="true">2 refs: Gerente <span class="mono">[6f0c21]</span> · projeto: maestro · vivo; Gerente <span class="mono">[d2a7b8]</span> · projeto: outro · vivo (exemplo)</span></td>
+      <td><span data-fonte="método: specs/073-area-administrativa/rodada-4/correcao-1.md (decisão 3)" data-exemplo="true">RECUSA (exemplo)</span></td>
+      <td><span class="falta" data-fonte="método: specs/073-area-administrativa/rodada-4/correcao-1.md (decisão 3) · specs/073-area-administrativa/confronto/inventario-maestro.md" data-exemplo="true">colisão de endereço: o mesmo nome em dois projetos (exemplo)</span></td>
     </tr>
     <tr>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Gerente (exemplo)</span></td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">1 ref (exemplo)</span></td>
-      <td class="ok"><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">entrega (exemplo)</span></td>
-      <td><span class="fonte" data-referencia="true">nome único (exemplo)</span></td>
-    </tr>
-    <tr>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">“Fila” (exemplo)</span></td>
-      <td><span class="falta" data-fonte="método: docs/governance/glossary.md (Outbox) · painel/regencia/fila.py" data-exemplo="true">2 significados (exemplo)</span></td>
-      <td><span class="recusa" data-fonte="método: specs/073-area-administrativa/confronto/mapa-de-contextos.md §7 (Fila = fila de decisões × fila outbox)" data-exemplo="true">RECUSA (exemplo)</span></td>
-      <td><span class="rotulo falta" data-rotulo="colisão de nomes" data-fonte="método: specs/073-area-administrativa/confronto/mapa-de-contextos.md §7 · docs/governance/glossary.md">colisão de nomes (exemplo) — fila de decisões × fila outbox</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker01 <span class="mono">[1a2b3c]</span> (exemplo)</span></td>
+      <td><span class="falta" data-fonte="exemplo — nenhum dado real" data-exemplo="true">ref antiga: Worker01 <span class="mono">[1a2b3c]</span> · morta; ref nova: Worker01 <span class="mono">[9f8e7d]</span> · viva (exemplo)</span></td>
+      <td><span data-fonte="método: specs/073-area-administrativa/rodada-4/correcao-1.md (decisão 2 — o ref muda ao reiniciar)" data-exemplo="true">pede confirmação (exemplo)</span></td>
+      <td><span class="falta" data-fonte="método: specs/073-area-administrativa/rodada-4/correcao-1.md (decisão 2) · specs/073-area-administrativa/confronto/inventario-maestro.md" data-exemplo="true">ref mudou no reinício — endereçar pela ref nova (exemplo)</span></td>
     </tr>
   </tbody>
 </table>
 
 <div class="cx">
-  <p class="nota"><strong>Uma ref pode receber; um nome ambíguo, não.</strong> A recusa é o comportamento nomeado: em vez de uma entrega errada silenciosa, a tela mostra as duas refs e pede o endereço explícito.
-    <span class="fonte" data-referencia="true">Prova de origem: o incidente real de nomes cruzados (<code>specs/066-painel-de-regencia/qa-report.md:35</code>) — a colisão aconteceu; aqui ela fica visível.</span></p>
+  <p class="nota"><strong>Uma ref pode receber; um nome ambíguo, não.</strong> A recusa é o comportamento nomeado: em vez de uma entrega errada silenciosa, a tela mostra as refs e pede o endereço explícito.
+    <span class="fonte" data-referencia="true">Prova de origem: o incidente real de nomes cruzados (<code>specs/066-painel-de-regencia/qa-report.md</code>) — a colisão aconteceu; aqui ela fica visível.</span></p>
+  <p class="nota"><strong>Confirmação humana antes de entregar a destino não resolvido.</strong> Entregar à sessão errada não se desfaz:
+    quando a resolução falha, a tela abre uma confirmação com nome, refs, projeto e vivo/morto antes de qualquer entrega — e o
+    pedido vai à <strong>fila de decisões</strong> do regente como <strong>pedido de decisão</strong>.
+    <span class="fonte" data-referencia="true">Quem autoriza: o humano (gate) ou o regente por delegação; uma sessão não entrega a destino ambíguo por conta própria (rodada 4, decisões 3 e 5).</span></p>
   <p>
-    <button aria-label="resolver o nome pela ref exata" data-fonte="método: painel/ingest.py (norm_sessao) · termo ratificado ‘roteamento por nome/ref’">Endereçar pela ref</button>
-    <button aria-label="ver a colisão de nomes do contexto" data-fonte="método: termo ratificado ‘colisão de nomes’ (specs/073-area-administrativa/confronto/confronto-decisao.md § Glossário proposto) · specs/073-area-administrativa/confronto/mapa-de-contextos.md §7">Ver a colisão</button>
+    <button aria-label="resolver o nome pela ref exata" data-fonte="método: painel/ingest.py (norm_sessao) · docs/governance/glossary.md (Roteamento por nome/ref)">Endereçar pela ref</button>
+    <button aria-label="ver a colisão de endereço do contexto" data-fonte="método: specs/073-area-administrativa/rodada-4/correcao-1.md (decisão 3) · specs/073-area-administrativa/confronto/mapa-de-contextos.md §7">Ver a colisão</button>
   </p>
 </div>
 
 <h2>As cinco colisões de nome herdadas do mapa de contextos</h2>
 
 <div class="cx">
-  <p class="nota" data-referencia="true">Nenhuma é inventada: as cinco vêm do mapa de contextos (§7), com o termo que vence na linguagem ubíqua e o que fica marcado.</p>
+  <p class="nota" data-referencia="true">Nenhuma é inventada: as cinco vêm do mapa de contextos (§7), com o termo que vence na linguagem ubíqua e o que fica marcado. São colisões de <strong>termo</strong> — a tabela de endereços acima trata das colisões de <strong>endereço</strong>.</p>
   <table>
     <thead>
       <tr>
@@ -108,9 +114,10 @@
 </div>
 
 <footer>
-  <p class="fonte" data-referencia="true">Fontes — método: <code>docs/governance/glossary.md</code> (Outbox, Task ledger, Portão do regente) ·
+  <p class="fonte" data-referencia="true">Fontes — método: <code>docs/governance/glossary.md</code> (Roteamento por nome/ref, Colisão de nomes, Sessão de agente, Task ledger, Portão do regente) ·
   <code>painel/ingest.py</code> (<code>norm_sessao</code>) · <code>painel/server.py</code> (<code>contatos()</code>) ·
-  <code>painel/fila_outbox.py</code> · <code>specs/073-area-administrativa/confronto/mapa-de-contextos.md</code> §7 · <code>specs/066-painel-de-regencia/qa-report.md:35</code> ·
+  <code>painel/fila_outbox.py</code> · <code>specs/073-area-administrativa/confronto/mapa-de-contextos.md</code> §7 ·
+  <code>specs/073-area-administrativa/rodada-4/correcao-1.md</code> (decisões 2, 3 e 5) · <code>specs/066-painel-de-regencia/qa-report.md</code> ·
   <code>specs/066-painel-de-regencia/ux-design.md</code> (F1, F8, F9). Plataforma: Windmill, <code>https://www.windmill.dev/</code>
   (ficha <code>specs/073-area-administrativa/pesquisa/windmill.md</code>, <code>sim</code>); colisão de nomes: Kiro Crew, <code>https://kiro.dev/</code>
   (ficha <code>specs/073-area-administrativa/pesquisa/kiro-crew.md</code>, <code>sim</code>).</p>

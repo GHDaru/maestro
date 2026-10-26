@@ -1046,3 +1046,33 @@ convenção de nome **não é uniforme** hoje — `mensageria-NN-slug.html` (com
 que ela declarava. Não a editei: a ordem foi mexer **só nas linhas de nome de arquivo**, e essa
 prosa é do W02, que estava fixando o § Convenções no mesmo arquivo nesta janela. Fica registrada
 aqui para o merge não passar em silêncio.
+
+
+## Rodada 4 — correção 1 nas telas da Mensageria (Worker03, 26/10)
+
+Fatia do `rodada-4/correcao-1.md` (P6 a P9 dos juízes 1 e 3), quatro telas, hash `edbb32f`.
+Só conteúdo de tela: nenhum código de produto, nenhum script novo.
+
+| Tela | O que entrou |
+|---|---|
+| `mensageria-01-caixa-de-entrada` | coluna **carimbo** (relógio do sistema, F7 — nunca digitado); remetente `nome · ref · projeto`; destinatário **pretendido × resolvido**; estado **não lida/lida**; linha de exemplo "chegou aqui, era para outro projeto"; **contagem de não lidas**; quem pode drenar (a sessão dona ou o regente por delegação) |
+| `mensageria-02-livro-de-mensagens` | colunas **hora · id · ordem**; estados **enviada/entregue/lida/falhou**; fonte real nomeada (a fila outbox, `painel/fila_outbox.py` — não o `tarefas.jsonl`, que é o **livro de ponto**, outro objeto, mapa §7); mensagem além de `[[TASK]]`/`[[DONE]]`; quem pode ver o livro de outra sessão (leitura do time, filtro pela ref) e quem escreve (só a sessão dona) |
+| `mensageria-03-roteamento` | tabela de **endereços** passa a listar os **refs colidentes com projeto e vivo/morto**; caso "Gerente em dois projetos" com RECUSA; caso "ref mudou no reinício" (antigo → novo); a linha "Fila" (colisão de **termo**) sai da tabela de endereços; **confirmação humana antes de entregar a destino não resolvido** ("endereço ambíguo é recusado, nunca resolvido") |
+| `mensageria-04-protocolo` | seção **por onde a mensagem trafega hoje** (`SendMessage`/`ListAgents` do harness, fallback por arquivo commitado, fila outbox) e que o **MCP não carrega mensagem**; o que o **A2A** exibiria (agent card, pares) mesmo desabilitado; **quem autoriza** "Chamar estado_atual" (leitura) e "Registrar status" (escrita, pela sessão dona) |
+
+Decisão 2 da regente (identidade `nome · ref · projeto`, com o aviso "o ref muda ao reiniciar"
+onde há ação) aplicada nas quatro telas; toda menção a sessão do catálogo vem seguida da ref
+`[xxxxxx]` — pronta para a regra 5 do verificador (Worker02), que **ainda não está** no script
+nesta worktree.
+
+**Portão (mesmo script da regente, sem edição):**
+
+```text
+python specs/073-area-administrativa/prototipo/verifica-prototipo.py
+-- verifica-prototipo: 11 screen(s), 0 finding(s)
+[exit 0]
+```
+
+**Limites:** nenhum `push`, `merge` (além do `ff-only 6a32e24` do despacho), código de produto ou
+segredo. As duas tabelas de colisão do mapa seguem separadas (termo no §7 × endereço na tela de
+roteamento); a tabela de colisões de **endereço** do mapa é do Worker02.

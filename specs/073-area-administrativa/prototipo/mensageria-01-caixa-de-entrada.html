@@ -11,13 +11,13 @@
   h2 { font-size:1rem; margin:20px 0 8px; }
   .nota { color:#5a6270; font-size:.85rem; }
   .cx { background:#fff; border:1px solid #cfd4dc; border-radius:6px; padding:12px 14px; margin:10px 0; }
-  .grade { display:grid; grid-template-columns: repeat(4, 1fr); gap:8px; }
   .rotulo { display:block; color:#5a6270; font-size:.78rem; text-transform:lowercase; }
   table { border-collapse:collapse; width:100%; background:#fff; border:1px solid #cfd4dc; }
   th, td { border:1px solid #dfe3e9; padding:8px 10px; text-align:left; font-size:.9rem; vertical-align:top; }
   th { background:#eceef2; font-weight:600; }
   .metrica { font-variant-numeric: tabular-nums; }
-  .ex { color:#8a909c; font-size:.75rem; }
+  .mono { font-family: ui-monospace, monospace; }
+  .desvio { background:#fbeaea; }
   .falta { color:#7a3d00; }
   button { font:inherit; background:#eceef2; border:1px solid #b9bfc9; border-radius:5px; padding:6px 10px; cursor:pointer; }
   .fonte { color:#6b7280; font-size:.78rem; }
@@ -30,9 +30,13 @@
 <header class="cx">
   <h1 class="rotulo" data-rotulo="caixa de entrada" data-fonte="método: specs/073-area-administrativa/confronto/mapa-de-contextos.md §6.6 (termo ratificado ‘caixa de entrada’)">caixa de entrada</h1>
   <p class="nota" data-referencia="true">Contexto <strong>Mensageria</strong> — a visão nomeada do que chegou para uma sessão e ainda não foi lido/drenado.
-    Wireframe estático (ciclo 073, rodada 3). <span class="fonte" data-referencia="true">Fonte da ideia: método — drenagem do Outbox, <code>painel/fila_outbox.py</code>; mercado: 0 <code>sim</code> em 25 plataformas.</span></p>
-  <p class="nota">Fonte do quadro: <span class="metrica" data-fonte="painel/ingest.py (ingestão do painel)" data-exemplo="true">última ingestão há 3 min (exemplo)</span>.
-    <span class="fonte" data-referencia="true">— sem fonte, a tela mostra “—” com motivo, nunca um valor inventado.</span></p>
+    Wireframe estático (ciclo 073, rodada 4). <span class="fonte" data-referencia="true">Fonte da ideia: método — drenagem do outbox, <code>painel/fila_outbox.py</code>; mercado: 0 <code>sim</code> em 25 plataformas.</span></p>
+  <p class="nota">Identidade de sessão: sempre <strong>nome · ref · projeto</strong>.
+    <span class="fonte" data-referencia="true">O ref muda ao reiniciar — por isso a ação de drenar endereça por ref, nunca só pelo nome (rodada 4, decisão 2).</span></p>
+  <p class="nota"><strong>Contagem de não lidas:</strong>
+    <span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">3 não lidas (exemplo)</span>.
+    Idade da mais antiga — <strong>do relógio do sistema</strong>, nunca digitada:
+    <span class="metrica" data-fonte="relógio do sistema (idade calculada, não digitada — ux-design 066 F7)" data-exemplo="true">há 2 h 10 min (exemplo)</span>.</p>
 </header>
 
 <h2>Chegaram para esta sessão</h2>
@@ -40,37 +44,47 @@
 <table>
   <thead>
     <tr>
-      <th class="rotulo" data-rotulo="mensagem entre agentes" data-fonte="método: docs/governance/glossary.md (Outbox) · termo ratificado ‘mensagem entre agentes’">mensagem entre agentes</th>
-      <th class="rotulo" data-rotulo="sessão de agente" data-fonte="método: docs/governance/task-ledger.md (task tag) · termo ratificado ‘sessão de agente’">sessão de agente (remetente)</th>
-      <th class="rotulo" data-rotulo="roteamento por nome/ref" data-fonte="método: painel/ingest.py (norm_sessao) · termo ratificado ‘roteamento por nome/ref’">roteamento por nome/ref (destinatário)</th>
-      <th class="rotulo" data-rotulo="outbox" data-fonte="método: docs/governance/glossary.md (Outbox)">outbox</th>
+      <th class="rotulo" data-rotulo="mensagem entre agentes" data-fonte="método: specs/066-painel-de-regencia/ux-design.md (F7 — carimbo do relógio, nunca digitado)">carimbo (relógio do sistema)</th>
+      <th class="rotulo" data-rotulo="mensagem entre agentes" data-fonte="método: docs/governance/glossary.md (Mensagem entre agentes)">mensagem entre agentes</th>
+      <th class="rotulo" data-rotulo="sessão de agente" data-fonte="método: docs/governance/glossary.md (Sessão de agente) · rodada 4, decisão 2 (nome · ref · projeto)">remetente (nome · ref · projeto)</th>
+      <th class="rotulo" data-rotulo="roteamento por nome/ref" data-fonte="método: painel/ingest.py (norm_sessao) · rodada 4, decisão 3 (endereço ambíguo é recusado, nunca resolvido)">destinatário (pretendido × resolvido)</th>
+      <th class="rotulo" data-rotulo="caixa de entrada" data-fonte="método: docs/governance/glossary.md (Caixa de entrada)">estado</th>
     </tr>
   </thead>
   <tbody>
     <tr>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">09:14 (exemplo)</span></td>
       <td>“Segue o inventário para o confronto.”</td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker05 (exemplo)</span></td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker03 (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker05 <span class="mono">[4d000a]</span> · projeto: maestro (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">pretendido: Worker03 <span class="mono">[9a1b27]</span> · resolvido: Worker03 <span class="mono">[9a1b27]</span> (exemplo)</span></td>
       <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">não lida (exemplo)</span></td>
     </tr>
     <tr>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">08:02 (exemplo)</span></td>
       <td>“Revisão fresca aceita; nada pendente de ti.”</td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Gerente (exemplo)</span></td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker03 (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Gerente <span class="mono">[6f0c21]</span> · projeto: maestro (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">pretendido: Worker03 <span class="mono">[9a1b27]</span> · resolvido: Worker03 <span class="mono">[9a1b27]</span> (exemplo)</span></td>
       <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">lida (exemplo)</span></td>
     </tr>
-    <tr>
+    <tr class="desvio">
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">07:48 (exemplo)</span></td>
       <td>“Fila de decisões: um pedido te espera.”</td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Office (exemplo)</span></td>
-      <td><span class="falta rotulo" data-rotulo="colisão de nomes" data-fonte="método: specs/073-area-administrativa/confronto/mapa-de-contextos.md §7 (nome em duas refs)">— <span class="fonte" data-referencia="true">motivo: colisão de nomes em 2 refs (exemplo); endereçar por ref</span></span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Office <span class="mono">[b7e3a2]</span> · projeto: maestro (exemplo)</span></td>
+      <td><span class="falta" data-fonte="exemplo — nenhum dado real" data-exemplo="true">— pretendido: Office <span class="mono">[b7e3a2]</span> · resolvido: nenhum — outra ref <span class="mono">[c9f1d4]</span> com o mesmo nome (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">não lida (exemplo)</span></td>
+    </tr>
+    <tr class="desvio">
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">07:20 (exemplo)</span></td>
+      <td>“Segue o recorte do inventário.”</td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker05 <span class="mono">[4d000a]</span> · projeto: outro (exemplo)</span></td>
+      <td><span class="falta" data-fonte="exemplo — nenhum dado real" data-exemplo="true">pretendido: Worker03 <span class="mono">[9a1b27]</span> · resolvido: — chegou aqui, era para outro projeto (exemplo)</span></td>
       <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">não lida (exemplo)</span></td>
     </tr>
   </tbody>
 </table>
 
 <div class="cx">
-  <p class="nota">Idade da mais antiga não lida — <strong>do relógio do sistema</strong>, nunca digitada:
-    <span class="metrica" data-fonte="relógio do sistema (idade calculada, não digitada — ux-design 066 F7)" data-exemplo="true">há 2 h 10 min (exemplo)</span>.</p>
+  <p class="nota"><strong>Quem pode drenar:</strong> a <strong>sessão dona</strong> drena a própria caixa; o <strong>regente</strong> pode drenar por delegação. A tela nunca drena a caixa de outra sessão sem aquele pedido explícito — o ref de quem pede é o que autoriza.</p>
   <p>
     <button aria-label="drenar o outbox desta sessão" data-fonte="método: painel/fila_outbox.py (drenagem; ADR 0027 — a fila outbox recusa DELETE, só registra a leitura)">Drenar outbox</button>
     <button aria-label="ver o livro de mensagens" data-fonte="método: specs/073-area-administrativa/confronto/confronto-decisao.md § Glossário proposto (‘livro de mensagens’)">livro de mensagens</button>
@@ -79,10 +93,10 @@
 </div>
 
 <footer>
-  <p class="fonte" data-referencia="true">Fontes — método: <code>docs/governance/glossary.md</code> (Outbox, Task ledger, Portão do regente) ·
+  <p class="fonte" data-referencia="true">Fontes — método: <code>docs/governance/glossary.md</code> (Outbox, Caixa de entrada, Mensagem entre agentes, Sessão de agente) ·
   <code>painel/fila_outbox.py</code> · <code>painel/ingest.py</code> · <code>specs/073-area-administrativa/confronto/mapa-de-contextos.md</code> §6.6 e §7 ·
-  <code>specs/066-painel-de-regencia/ux-design.md</code> (F1, F7, F8, F9). Plataforma (ideia de leitura): Maestri canvas,
-  <code>https://www.themaestri.app/pt-br</code> (ficha <code>specs/073-area-administrativa/pesquisa/maestri-canvas.md</code>, <code>parcial</code>).</p>
+  <code>specs/073-area-administrativa/rodada-4/correcao-1.md</code> (decisões 2 e 3) · <code>specs/066-painel-de-regencia/ux-design.md</code> (F1, F7, F8, F9).
+  Plataforma (ideia de leitura): Maestri canvas, <code>https://www.themaestri.app/pt-br</code> (ficha <code>specs/073-area-administrativa/pesquisa/maestri-canvas.md</code>, <code>parcial</code>).</p>
   <p class="nota">Todo elemento interativo tem <code>data-fonte</code>; todo número/estado é <code>(exemplo)</code> — wireframe, não dado real.</p>
 </footer>
 
