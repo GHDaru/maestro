@@ -1189,3 +1189,24 @@ Script de mutação e arnês são **fora do repositório** (nenhum artefato temp
 - **Contrato de markup**: o docstring do verificador agora declara a identidade `nome · ref · projeto`
   e a ref `[xxxxxx]`; a regra 5 é a **única** das cinco que **não** isenta contexto de citação — a
   citação é justamente onde os nomes nus apareceram.
+
+### Regra 5 fechada nas telas da Mensageria (Worker03, 26/10)
+
+A regra 5 entrou no verificador em `dd15761` e acusava **34 achados** nas três telas da
+Mensageria. Causa única: o ref estava **dentro de um `<span class="mono">`**, então o nome da
+sessão e o ref caíam em **nós de texto diferentes** — e a regra exige o ref **no mesmo nó**,
+adjacente ao nome (`SESSION_REF = \s*·?\s*\[[0-9a-fA-F]{6}\]`). Correção: ref embutido no
+próprio texto (`Worker05 [4d000a]`), sem o `span` interno; nenhum conteúdo mudou, só a marcação.
+
+```text
+python specs/073-area-administrativa/prototipo/verifica-prototipo.py
+FINDING: workflow-01-sessao-de-agente.html: session "Worker05" without a ref [xxxxxx] ...
+FINDING: workflow-04-consumo-por-agente.html: session "Worker05" without a ref [xxxxxx] ...
+FINDING: workflow-04-consumo-por-agente.html: session "Gerente" without a ref [xxxxxx] ...
+FINDING: workflow-04-consumo-por-agente.html: session "Worker02" without a ref [xxxxxx] ...
+-- verifica-prototipo: 11 screen(s), 4 finding(s)
+```
+
+As três telas da Mensageria ficam com **0 achados**; os 4 restantes são de `workflow-01` e
+`workflow-04` (fatia do Worker05), não desta slice. A tabela de **endereços** da `mensageria-03`
+continua **não** isenta (só a tabela com `data-rotulo="colisão de nomes"` é), como a decisão manda.
