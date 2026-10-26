@@ -26,9 +26,9 @@
 | `mensageria-02-livro-de-mensagens.html` | 25 · **livro de mensagens** | Mensageria | INTERCOMUNICAÇÃO | Intercomunicabilidade | **neste ramo** |
 | `mensageria-03-roteamento.html` | 24 · **roteamento por nome/ref** · 26 · **colisão de nomes** (visível) | Mensageria | INTERCOMUNICAÇÃO | Intercomunicabilidade | **neste ramo** |
 | `mensageria-04-protocolo.html` | 22 · **protocolo de intercomunicação** · 21 · **mensagem entre agentes** | Mensageria | INTERCOMUNICAÇÃO | Intercomunicabilidade | **neste ramo** |
-| `administracao-catalogo.html` | 9 · **catálogo de skills/ferramentas/modelos** | Administração | ADMINISTRAÇÃO | Administração/Gerenciamento | **neste ramo** (`5ce4a5f`, Worker04) |
-| `administracao-politicas.html` | 5 · **política declarativa (allow/deny/ask)** | Administração | CONTROLE | Controle · Administração/Gerenciamento | **neste ramo** (`5ce4a5f`, Worker04) |
-| `administracao-orcamento.html` | 4 · **limite de orçamento** | Administração | CONTROLE | Controle | **neste ramo** (`5ce4a5f`, Worker04) |
+| `administracao-01-catalogo.html` | 9 · **catálogo de skills/ferramentas/modelos** | Administração | ADMINISTRAÇÃO | Administração/Gerenciamento | **neste ramo** (`5ce4a5f`, Worker04) |
+| `administracao-02-politicas.html` | 5 · **política declarativa (allow/deny/ask)** | Administração | CONTROLE | Controle · Administração/Gerenciamento | **neste ramo** (`5ce4a5f`, Worker04) |
+| `administracao-03-orcamento.html` | 4 · **limite de orçamento** | Administração | CONTROLE | Controle | **neste ramo** (`5ce4a5f`, Worker04) |
 | `workflow-01-sessao-de-agente.html` | 1 · **sessão de agente** (subir/derrubar) | Workflow de sessões | CONTROLE | Controle · Administração/Gerenciamento | **neste ramo** (`365f59d`, Worker05) |
 | `workflow-02-estado-do-agente-vivo.html` | 13 · **estado do agente vivo** | Workflow de sessões | GERENCIAMENTO | Administração/Gerenciamento · Controle | **neste ramo** (`365f59d`, Worker05) |
 | `workflow-03-tarefa-aberta.html` | 14 · **tarefa aberta** | Workflow de sessões | GERENCIAMENTO | Administração/Gerenciamento | **neste ramo** (`365f59d`, Worker05) |
