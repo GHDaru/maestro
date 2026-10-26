@@ -65,3 +65,5 @@ Protocol*), A2A (*Agent-to-Agent*), OSS (*Open Source Software*).
 | roteamento por nome/ref | — | `arize.com/docs/phoenix` (visto 24/10): não descrito |
 | livro de mensagens | — | `arize.com/docs/phoenix` (visto 24/10): não descrito |
 | colisão de nomes | — | `arize.com/docs/phoenix` (visto 24/10): não descrito |
+
+**Correção da rodada 4 (26/10, fatia do Worker06).** Fontes: 3 URLs (produto, `/docs/phoenix`, GitHub). Célula `sim` revisada contra a regra "só marketing/README → `parcial`": **nenhuma rebaixada** — *rastro/replay de sessão* (*Span Replay*) apoia-se na página de documentação, que descreve o mecanismo.

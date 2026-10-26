@@ -54,7 +54,7 @@ SDK (*Software Development Kit*).
 | tarefa aberta | — | `langfuse.com/docs` (visto 24/10) |
 | última atividade | parcial — *timeline view* de traces e sessões com carimbos de tempo | `langfuse.com/docs` (visto 24/10): "traces, a timeline view for debugging latency" |
 | consumo por agente/sessão/modelo | parcial — custo/uso por `userId` e métricas de sessão; quebra por modelo não consta da página | `langfuse.com/docs` (visto 24/10): "monitor costs and usage per user" |
-| custo | sim — "Quality, cost, and latency metrics" no dashboard | `langfuse.com/docs` (visto 24/10) |
+| custo | parcial — "Quality, cost, and latency metrics" é frase da **página de visão** (`/docs`); **nenhuma página que documente o painel de custo** foi aberta. Rebaixada de `sim` para `parcial` **na rodada 4 (26/10, juiz 2, P1)** | `langfuse.com/docs` (visto 24/10) |
 | filas e workers | — | `langfuse.com/docs` (visto 24/10) |
 | rastro/replay de sessão | parcial — *Sessions* rastreiam o workflow multi-passo e há *timeline view*; "no dedicated replay feature is documented here" | `langfuse.com/docs` (visto 24/10) |
 | alertas | sim — notificação por Slack, GitHub Actions ou Webhook quando a métrica cruza o limiar | `langfuse.com/docs` (visto 24/10) |
@@ -69,3 +69,5 @@ SDK (*Software Development Kit*).
 | roteamento por nome/ref | — | `langfuse.com/docs` (visto 24/10) |
 | livro de mensagens | — | `langfuse.com/docs` (visto 24/10) |
 | colisão de nomes | — | `langfuse.com/docs` (visto 24/10) |
+
+**Correção da rodada 4 (26/10, fatia do Worker06).** Fontes desta ficha: 3 URLs (produto `/docs`, `/security`, GitHub). A célula **custo** caiu de `sim` para `parcial`: só se apoiava numa frase da página de visão, não numa página que documente o mecanismo — é o caso que o juiz 2 (P1) nomeou ("custo por sessão apoiado em página de marketing"). As células `sim` de **RBAC, chaves, configuração por projeto e auditoria** **permanecem**: apoiam-se em `langfuse.com/security`, página que descreve o controle.

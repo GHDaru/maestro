@@ -52,11 +52,11 @@ Siglas expandidas na primeira ocorrência: **RBAC** (*Role-Based Access Control*
 > (o Worker03 deixava a célula **em branco** — 21 células — e o Worker05 escrevia `não` para "nada
 > achei"). O preâmbulo da rodada 2 **reclassificou célula a célula, relendo cada ficha**: o `não` de
 > "não achei / nada sobre / não aparece / não descrito / *not documented*" virou `—`; o `não` que a
-> fonte **afirma** permaneceu `não`. Resultado: **143 células** `não → —` (corrigidas na ficha **e**
-> na coluna da matriz) e **13** `não` mantidos — 3 na Helicone (subir, lista de vivos, mensagem), 8
-> nas nove fichas de observabilidade/orquestração (subir, cadastro e lista de vivos: "não sobe nem
-> derruba agente", "não há catálogo de agentes", "mostra traces, não agentes vivos") e 2 no Kiro Crew
-> (pausar, caixa de entrada). **Nenhuma célula mudou de `—` para `sim`** (FR3 intocado). Hoje vale
+> fonte **afirma** permaneceu `não`. Resultado: **144 células** `não → —` (143 na rodada 2 + 1 na
+> correção da rodada 4, a *caixa de entrada* do Kiro Crew) e **12** `não` mantidos — 3 na Helicone
+> (subir, lista de vivos, mensagem), 8 nas nove fichas de observabilidade/orquestração (subir,
+> cadastro e lista de vivos: "não sobe nem derruba agente", "não há catálogo de agentes", "mostra
+> traces, não agentes vivos") e 1 no Kiro Crew (pausar). **Nenhuma célula mudou de `—` para `sim`** (FR3 intocado). Hoje vale
 > **um só símbolo, uma só força**: `não` = a fonte afirma a ausência; `—` = nenhuma fonte encontrada.
 
 ## A matriz
@@ -79,16 +79,23 @@ Siglas expandidas na primeira ocorrência: **RBAC** (*Role-Based Access Control*
 | GERENCIAMENTO | tarefa aberta | parcial | — | parcial | parcial | — | parcial | parcial | sim | parcial | sim | parcial | sim | — | — | — | — | — | — | — | — | parcial | — | — | — | — |
 | GERENCIAMENTO | última atividade | parcial | — | parcial | parcial | sim | parcial | sim | parcial | parcial | parcial | parcial | parcial | parcial | parcial | parcial | sim | parcial | parcial | parcial | parcial | parcial | sim | parcial | parcial | sim |
 | GERENCIAMENTO | consumo por agente/sessão/modelo | parcial | — | — | parcial | sim | parcial | parcial | sim | — | parcial | parcial | — | sim | parcial | parcial | parcial | parcial | parcial | — | — | — | parcial | — | — | parcial |
-| GERENCIAMENTO | custo | parcial | — | — | parcial | sim | — | sim | sim | — | parcial | parcial | parcial | sim | sim | sim | sim | sim | sim | parcial | — | — | parcial | — | — | parcial |
+| GERENCIAMENTO | custo | parcial | — | — | parcial | sim | — | sim | sim | — | parcial | sim | sim | sim | sim | parcial | parcial | parcial | parcial | — | — | parcial | — | — | — | parcial |
 | GERENCIAMENTO | filas e workers | sim | — | sim | parcial | — | — | sim | parcial | — | — | parcial | sim | — | — | parcial | — | — | — | — | — | — | — | — | — | — |
-| GERENCIAMENTO | rastro/replay de sessão | sim | parcial | parcial | parcial | sim | parcial | sim | parcial | parcial | parcial | sim | parcial | parcial | parcial | parcial | parcial | sim | parcial | sim | parcial | parcial | parcial | parcial | sim | sim |
+| GERENCIAMENTO | rastro/replay de sessão | sim | parcial | parcial | parcial | sim | parcial | sim | parcial | parcial | parcial | sim | parcial | parcial | parcial | parcial | parcial | parcial | parcial | sim | parcial | parcial | parcial | parcial | sim | sim |
 | GERENCIAMENTO | alertas | parcial | — | sim | sim | parcial | parcial | parcial | parcial | — | parcial | parcial | sim | sim | parcial | sim | sim | parcial | sim | sim | — | — | — | — | — | parcial |
 | INTERCOMUNICAÇÃO | mensagem entre agentes | sim | — | — | — | sim | parcial | parcial | sim | sim | parcial | sim | parcial | sim | — | parcial | não | — | — | — | sim | sim | — | parcial | — | — |
 | INTERCOMUNICAÇÃO | protocolos (A2A, MCP) | parcial | — | parcial | parcial | sim | sim | parcial | parcial | — | parcial | sim | parcial | sim | parcial | parcial | parcial | parcial | parcial | parcial | sim | — | parcial | parcial | — | parcial |
-| INTERCOMUNICAÇÃO | caixa de entrada | — | — | — | — | — | — | — | parcial | parcial | não | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — |
+| INTERCOMUNICAÇÃO | caixa de entrada | — | — | — | — | — | — | — | parcial | parcial | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — |
 | INTERCOMUNICAÇÃO | roteamento por nome/ref | sim | — | parcial | — | sim | parcial | parcial | sim | parcial | sim | sim | sim | parcial | parcial | — | — | — | — | — | parcial | parcial | — | — | — | — |
 | INTERCOMUNICAÇÃO | livro de mensagens | — | — | — | — | — | — | — | — | parcial | — | parcial | parcial | parcial | — | parcial | — | — | — | — | — | parcial | — | — | — | — |
 | INTERCOMUNICAÇÃO | colisão de nomes | parcial | — | — | — | — | — | — | parcial | — | sim | — | sim | — | — | — | — | — | — | — | — | — | — | — | — | — |
+
+> **Nota de coluna — "corta × avisa"** (decisão da rodada 4). Duas linhas parecem a mesma coisa e não
+> são: **limites de orçamento e de taxa** (grupo CONTROLE) é o **limite que corta** — estourou, a
+> chamada é recusada (a OpenAI Platform devolve 429 acima do teto de gasto); **alertas** (grupo
+> GERENCIAMENTO) é o **aviso que só notifica**, sem bloquear nada (a própria doc do Portkey declara os
+> alertas "work in progress and not sent today"). Um `sim` na linha de alertas diz que a plataforma
+> **avisa** — não que ela **corta**.
 
 ## Como acrescentar uma plataforma
 
@@ -113,13 +120,21 @@ Siglas expandidas na primeira ocorrência: **RBAC** (*Role-Based Access Control*
 > Efeito nos totais: **`sim` 174 → 172**, **`parcial` 221 → 223**, **GERENCIAMENTO 47 → 45** (22,5%).
 > Toda contagem desta seção foi reconferida por script contra a matriz (PASS), já sobre a
 > distribuição normalizada (`não` 156 → 13 · `—` 99 → 242).
+>
+> **Corrigido em 26/10 (correção 1 da rodada 4).** Seis células mudaram nesta fatia: **Kiro Crew**
+> *caixa de entrada* `não` → `—` (a fonte não afirma a ausência); **AgentOps** *custo* e
+> *rastro/replay de sessão* e **Langfuse** *custo* `sim` → `parcial` (apoio só no README/marketing);
+> **Claude Code** *caixa de entrada* e *colisão de nomes* `—` → `parcial` (busca explícita por
+> mailbox/*agent teams* achou fonte, ver `claude-code.md`). Totais reconferidos por script contra a
+> matriz, **valendo sobre os números acima**: **`sim` 169 · `parcial` 225 · `não` 12 · `—` 244**
+> (650 células = 26 funcionalidades × 25 plataformas); **GERENCIAMENTO 42/200 = 21%**.
 
 **Por grupo** — `sim` sobre o total de células do grupo, nas 25 plataformas:
 
 | Grupo | `sim` | Células | Aproveitamento | Leitura |
 |---|---|---|---|---|
 | ADMINISTRAÇÃO | 76 | 150 | **51%** | o que o mercado sabe fazer: cadastro, RBAC, segredos, por projeto, auditoria |
-| GERENCIAMENTO | 45 | 200 | **22,5%** | metade é observabilidade; "agentes vivos" e consumo por agente quase não existem |
+| GERENCIAMENTO | 42 | 200 | **21%** | metade é observabilidade; "agentes vivos" e consumo por agente quase não existem |
 | CONTROLE | 30 | 150 | **20%** | ciclo de vida é o buraco: pausar tem 3 `sim` em 25 |
 | INTERCOMUNICAÇÃO | 21 | 150 | **14%** | **o grupo mais fraco** — e é exatamente o que o Maestro já opera a mão |
 
@@ -130,14 +145,14 @@ Siglas expandidas na primeira ocorrência: **RBAC** (*Role-Based Access Control*
 | configuração por projeto | 15 | o mais maduro do conjunto |
 | papéis e permissões RBAC · cadastro de skills/ferramentas/modelos · chaves e segredos | 13 cada | a base de administração é commodity |
 | cadastro de agentes · auditoria | 11 cada | o "cadastro de agentes" é **registro**, quase nunca processo vivo |
-| custo | 9 | custo de *token* é comum; custo de operação de agente, não |
-| aprovação humana · rastro/replay de sessão · alertas · mensagem entre agentes | 8 cada | human-in-the-loop existe onde há grafo de execução; e a mensagem entre agentes é quase toda delegação dentro do processo, não mensagem entre pares |
+| aprovação humana · alertas · mensagem entre agentes | 8 cada | human-in-the-loop existe onde há grafo de execução; e a mensagem entre agentes é quase toda delegação dentro do processo, não mensagem entre pares |
+| custo · rastro/replay de sessão | 7 cada | custo de *token* é comum, custo de operação de agente não; e o rastro desceu com os rebaixamentos por apoio só em marketing/README |
 | limites de orçamento e de taxa · roteamento por nome/ref | 6 cada | orçamento por chave/projeto, raramente por agente |
 | políticas allow/deny/ask · protocolos (A2A, MCP) · última atividade · lista de agentes vivos com estado | 5 cada | |
 | subir/derrubar sessão ou agente · retomar · filas e workers | 4 cada | |
 | pausar · tarefa aberta · consumo por agente/sessão/modelo | 3 cada | consumo por agente em **Copilot Studio**, **Claude Code** e **LiteLLM** |
 | colisão de nomes | 2 | |
-| **caixa de entrada** · **livro de mensagens** | **0 cada** | **nenhuma** das 25 entrega |
+| **caixa de entrada** · **livro de mensagens** | **0 cada** | nenhuma das 25 tem `sim` — no máximo `parcial` (Claude Code e Maestri na *caixa de entrada*; nenhuma no *livro de mensagens*): **nenhuma** das 25 entrega |
 
 **Por plataforma** — uma linha cada (as 12 primeiras são da fatia do Worker06):
 
@@ -165,7 +180,9 @@ Siglas expandidas na primeira ocorrência: **RBAC** (*Role-Based Access Control*
   cuja intercomunicação é por **PTY** (*Pseudo-Terminal*), com caixa de entrada e livro de
   mensagens parciais.
 - **Kiro Crew** — a mais **completa em administração** (só RBAC é parcial) e a única que
-  **documenta a ausência** de pausa e de caixa de entrada; forte em **colisão de nomes**.
+  **documenta a ausência** de pausa (a *caixa de entrada* deixou de ser `não` na correção da rodada
+  4: a página não a descreve, mas também não afirma que inexiste — ver `kiro-crew.md:55`); forte em
+  **colisão de nomes**.
 - **AWS Bedrock AgentCore** — a **mais completa no total** (só 2 células `—`): sessão, limites,
   políticas, cadastro, auditoria, rastro e mensageria com **A2A**.
 - **Windmill** — a mais forte em **filas e workers** e **pausa**, com auditoria e segredos
@@ -186,8 +203,8 @@ Siglas expandidas na primeira ocorrência: **RBAC** (*Role-Based Access Control*
   pela fonte: subir, lista de vivos, mensagem), nenhuma entidade de agente, nenhum papel/auditoria.
   O que salva é **custo por dimensão** e sessão como árvore de chamadas; o MCP é o dela mesma
   (consultar dados), não um gateway.
-- **AgentOps** — quase todo `—`/`parcial`; os dois únicos `sim` (custo e rastro/replay) vêm do
-  README, não da UI.
+- **AgentOps** — quase todo `—`/`parcial`; nem um `sim`: custo e rastro/replay apoiavam-se só no
+  README (não na UI) e desceram para `parcial` na correção da rodada 4 (ver `agentops.md`).
 - **Langfuse** — o **melhor bloco de administração entre as 9 do Worker05** (RBAC, chaves, por
   projeto e auditoria = `sim`); o ciclo de vida (subir/pausar/retomar) fica todo `—`.
 - **LangSmith/LangGraph** — o único do bloco com **aprovação humana** forte
@@ -207,10 +224,10 @@ Siglas expandidas na primeira ocorrência: **RBAC** (*Role-Based Access Control*
 
 Três leituras para a rodada 2 (confronto e decisão):
 
-1. **A caixa de entrada e o livro de mensagens não existem em nenhuma das 25.** O que o Maestro já
+1. **A caixa de entrada e o livro de mensagens não têm `sim` em nenhuma das 25.** O que o Maestro já
    faz — mensagem endereçada por nome entre sessões, com registro — não tem equivalente pronto para
-   copiar; é lacuna de mercado, não falta de pesquisa. E o grupo INTERCOMUNICAÇÃO é o mais fraco
-   (14%) — converge com o achado do Worker05.
+   copiar: **não encontrado na documentação lida**, não falta de pesquisa. E o grupo INTERCOMUNICAÇÃO
+   é o mais fraco (14%) — converge com o achado do Worker05.
 2. **Intercomunicação com A2A é minoria: 5 fichas** (LiteLLM, CrewAI AMP, Copilot Studio, Agent 365,
    AgentCore). Nas demais o protocolo é só **MCP** — e em duas (AutoGen Studio, Arize Phoenix)
    nenhum dos dois aparece. Quem quiser A2A escolhe a plataforma por isso, não pelo painel.
@@ -223,8 +240,14 @@ Três leituras para a rodada 2 (confronto e decisão):
 
 - **Notação**: `não` = a fonte **afirma** a ausência; `—` = **nenhuma fonte encontrada** (busca vazia
   ou célula vazia de prova). A divergência entre as duas gerações de ficha foi **resolvida na rodada
-  2** (nota da legenda): 143 células `não → —`, 13 `não` mantidos. Hoje há **um só símbolo, uma só
+  2** (nota da legenda): 144 células `não → —`, 12 `não` mantidos. Hoje há **um só símbolo, uma só
   força** nas 25 colunas.
+- **Apoio em marketing não vira `sim`** (correção da rodada 4): `sim` exige fonte que **descreva o
+  mecanismo** (documentação ou README técnico), não *bullet* de marketing. Onde só havia marketing, a
+  célula desceu para `parcial` (AgentOps *custo* e *rastro/replay*; Langfuse *custo*). Onde a fonte é
+  o README técnico do repositório, a célula foi **mantida e declarada** para o juiz reavaliar.
+- **Leitura**: onde **nenhuma** fonte foi encontrada, a leitura é "**não encontrado na documentação
+  lida**" — nunca "lacuna de mercado": ausência de fonte não é prova de ausência no mercado.
 - **Nada rodou local** exceto o LiteLLM (capturas em `pesquisa/img/`) e a própria sessão Claude Code.
 - **Demo pública não abriu** onde foi tentada: `demo.portainer.io` recusou conexão
   (`connect ECONNREFUSED 114.23.206.2:443`), e as demos do Langfuse e da Helicone foram recusadas

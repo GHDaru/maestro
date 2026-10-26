@@ -1046,3 +1046,49 @@ convenção de nome **não é uniforme** hoje — `mensageria-NN-slug.html` (com
 que ela declarava. Não a editei: a ordem foi mexer **só nas linhas de nome de arquivo**, e essa
 prosa é do W02, que estava fixando o § Convenções no mesmo arquivo nesta janela. Fica registrada
 aqui para o merge não passar em silêncio.
+
+## Rodada 4 — correção 1, fatia do Worker06: matriz e fichas (26/10)
+
+**Escopo** (`rodada-4/correcao-1.md:95-98`): `pesquisa/plataformas.md` (leitura "não encontrado na
+documentação lida"; nota de coluna "corta × avisa"), `kiro-crew.md:55` (`não` → `—`), ficha do
+Claude Code com busca explícita por mailbox/*agent teams* (com URL) e fichas de observabilidade com
+o `sim` apoiado só em marketing rebaixado a `parcial`.
+
+**Células da matriz alteradas** (6 no total):
+
+| Grupo · funcionalidade | Plataforma | de → para | Motivo (fonte na ficha) |
+|---|---|---|---|
+| INTERCOMUNICAÇÃO · caixa de entrada | Kiro Crew | `não` → `—` | a página **não cobre** o inbox; não afirma a ausência (`kiro-crew.md:55`) |
+| GERENCIAMENTO · custo | AgentOps | `sim` → `parcial` | apoio só no README, não na UI (`agentops.md`) |
+| GERENCIAMENTO · rastro/replay de sessão | AgentOps | `sim` → `parcial` | idem |
+| GERENCIAMENTO · custo | Langfuse | `sim` → `parcial` | apoio só em marketing/README (`langfuse.md`) |
+| INTERCOMUNICAÇÃO · caixa de entrada | Claude Code | `—` → `parcial` | *inbox socket* + `crossSessionInbound` documentados (`claude-code.md:81`) |
+| INTERCOMUNICAÇÃO · colisão de nomes | Claude Code | `—` → `parcial` | recusa de envio a nome colidente, documentada (`claude-code.md:84`) |
+
+**FR3 intocado**: nenhuma célula `—` virou `sim` (as duas do Claude Code subiram só a `parcial`).
+
+**Contagens reconferidas por script** contra a matriz (parser das 26 linhas × 27 células):
+
+```text
+rows: 26 cells/row: {27}
+by symbol: sim 169 · parcial 225 · não 12 · — 244   (total 650 = 26 × 25)
+CONTROLE 30/150 = 20,0% · ADMINISTRAÇÃO 76/150 = 50,7% ·
+GERENCIAMENTO 42/200 = 21,0% · INTERCOMUNICAÇÃO 21/150 = 14,0%
+por funcionalidade: maior 15 (configuração por projeto); custo 7 · rastro/replay 7 ·
+caixa de entrada 0 · livro de mensagens 0
+```
+
+Todas as tabelas de leitura de `plataformas.md` foram atualizadas para esses números (GERENCIAMENTO
+45 → **42**; custo 9 → **7**; `sim` 172 → **169**; `parcial` → **225**; `não` → **12**; `—` → **244**),
+com nota datada de 26/10 declarando o efeito sobre as contagens anteriores.
+
+**Fichas com nota de correção** (11): `agentops` · `arize-phoenix` · `autogen-studio` ·
+`claude-code` · `comet-opik` · `crewai-amp` · `dify` · `flowise` · `kiro-crew` · `langfuse` ·
+`langsmith-langgraph`. Regra aplicada: `sim` exige fonte que **descreva o mecanismo** (doc/README
+técnico); só marketing → `parcial`. Onde o apoio é o README técnico, a célula foi **mantida e
+declarada** para o juiz reavaliar (Arize *Span Replay*, Comet README, Dify visão, CrewAI visão).
+
+**Não tocado** (fora da fatia): o mapa do W02, o inventário do W05, as telas, o verificador. A prosa
+"não encontrado na documentação lida" substituiu "lacuna de mercado" **só nesta fatia** (leitura da
+matriz); `juiz-3` e `correcao-1.md` mantêm a citação como registro do que foi corrigido.
+

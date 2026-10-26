@@ -65,3 +65,5 @@ Acrônimos: LLM (*Large Language Model*), API (*Application Programming Interfac
 | roteamento por nome/ref | — | `docs.langchain.com/langsmith` (visto 24/10) |
 | livro de mensagens | — | `docs.langchain.com/langsmith` (visto 24/10) |
 | colisão de nomes | — | `docs.langchain.com/langsmith` (visto 24/10) |
+
+**Correção da rodada 4 (26/10, fatia do Worker06).** Fontes: 2 URLs (`docs.langchain.com/langsmith`, `/langgraph`). Células `sim` revisadas contra a regra "só marketing/README → `parcial`": **nenhuma rebaixada** — *aprovação humana*, *rastro/replay* e *alertas* apoiam-se em páginas de documentação que descrevem o mecanismo.

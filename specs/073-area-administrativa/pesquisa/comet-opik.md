@@ -68,3 +68,5 @@ Interface*).
 | roteamento por nome/ref | — | README (visto 24/10): não descrito |
 | livro de mensagens | — | README (visto 24/10): não descrito |
 | colisão de nomes | — | README (visto 24/10): não descrito |
+
+**Correção da rodada 4 (26/10, fatia do Worker06).** Fontes: 2 URLs (produto `comet.com`, GitHub — a doc oficial deu 404). Células `sim` revisadas contra a regra "só marketing/README → `parcial`": *última atividade* e *rastro/replay de sessão* apoiam-se no **README** do repositório, que descreve o recurso (não é bullet de marketing); **mantidas `sim`**, declaradas para o juiz reavaliar por a fonte ser o README e não a doc.

@@ -63,3 +63,5 @@ API (*Application Programming Interface*).
 | roteamento por nome/ref | — | `docs.flowiseai.com` (visto 24/10): não descrito |
 | livro de mensagens | — | `docs.flowiseai.com` (visto 24/10): não descrito |
 | colisão de nomes | — | `docs.flowiseai.com` (visto 24/10): não descrito |
+
+**Correção da rodada 4 (26/10, fatia do Worker06).** Fontes: 3 URLs (produto `flowiseai.com`, `/docs`, GitHub). Células `sim` revisadas contra a regra "só marketing/README → `parcial`": *cadastro de agentes*, *cadastro de skills/ferramentas/modelos* e *configuração por projeto* descrevem o recurso e **permanecem**; **`aprovação humana`, `papéis e permissões RBAC` e `chaves e segredos`** apoiam-se na **lista "Security Controls" da página de visão** (bullet sem descrição do mecanismo) — **declaradas para o juiz reavaliar** (candidatas a `parcial`).

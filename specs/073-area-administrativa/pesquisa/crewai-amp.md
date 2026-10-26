@@ -66,3 +66,5 @@ RBAC (*Role-Based Access Control*), MCP (*Model Context Protocol*), A2A (*Agent-
 | roteamento por nome/ref | parcial — o *manager* (processo hierarchical) distribui tarefas por papel/agente | README (visto 24/10) |
 | livro de mensagens | — | README (visto 24/10) |
 | colisão de nomes | — | README (visto 24/10) |
+
+**Correção da rodada 4 (26/10, fatia do Worker06).** Fontes: 2 URLs (página de visão da plataforma AMP + página do repositório). Células `sim` revisadas contra a regra "só marketing/README → `parcial`": *cadastro de skills/ferramentas/modelos* e *mensagem entre agentes* descrevem o recurso e **permanecem**; *protocolos (A2A; MCP)* apoia-se numa **lista da página do repositório** ("suporte ... listado") — **declarada para o juiz reavaliar** (candidata a `parcial` se não houver página que documente o mecanismo).
