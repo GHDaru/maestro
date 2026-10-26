@@ -14,7 +14,9 @@
   gate** (regras 3 e 4 cegas, achados que sumiram copiados da saída, script restaurado byte a
   byte), segurança documental (0 achados) e conformance 073 verde nos dois modos; **rodada de
   correção fechada** (R1–R9 por dono de tela; regra 4 ampliada ao texto visível); **rodada 4
-  aguarda o "segue" do regente**
+  aberta** — preâmbulo integrado (R8 rename `741b130`, R9 base de citação `6a32e24`), três juízes
+  em contexto fresco: **barra não atingida** (nenhuma peça em 9), **correção 1 (de máx. 2)
+  despachada por dono** (`rodada-4/correcao-1.md`)
 - **Spec**: `spec.md` (rascunho aberto pelo Gerente a partir do despacho do regente)
 
 ## Rodada 1 — pesquisa de plataformas
@@ -60,6 +62,24 @@
 | 073-T3-regra4 | Worker02 | regra 4 do gate ampliada ao texto visível e a atributos | **entregue** — `9cf0118`+`1264194`; isenção declarada para tabela de colisão de nomes; mutação re-rodada 10→4 |
 | correções R1–R9 | W03/W04/W05 | por dono de tela, mandato da regente | **entregues** — W03 `938d38b`, W04 `9fbbad3`, W05 `09c02f0`; R8/R9-mensageria declarados dívida da rodada 4 |
 | 073-T3-fechamento | Gerente | gate final, conformance, andamento, DONE ao regente | **entregue** — ver qa-report § fechamento; **rodada 4 só com o "segue"** |
+
+## Rodada 4 — o bar dos três juízes (26/10)
+
+Pareceres dos três juízes (controle; administração e gerenciamento; intercomunicabilidade) sobre
+`83c386e`: **barra não atingida** — os 13 ENTRA têm tela, as 25 plataformas têm ficha, o que falta
+é teor. Pareceres e consolidação da regente em `rodada-4/` (commit `bce269b`). Correção 1 (de
+máx. 2), despachada por dono a partir de `6a32e24`:
+
+| Fatia | Dono | Estado |
+|---|---|---|
+| preâmbulo R8 (rename das 3 telas da Administração) | Worker04 | **integrado** — `9bb5917` → `741b130` |
+| preâmbulo R9 (base de citação única + § Convenções + mapa §7 "fila outbox") | Worker02 | **integrado** — `46d254c` → `6a32e24` (conflitos do nav: hrefs do R8 + base nova) |
+| correção 1 — Mensageria (4 telas) | Worker03 | **integrado** — `edbb32f`+`80a4c6d` → `d83920e`; gate 11 telas, 0 achados |
+| correção 1 — Administração (3 telas) | Worker04 | despachada |
+| correção 1 — Workflow (4 telas) + inventário | Worker05 | despachada |
+| correção 1 — confronto + mapa + regra 5 do verificador (identidade `nome · ref · projeto`, com mutação e fixture) | Worker02 | despachada |
+| correção 1 — matriz (`plataformas.md`) | Worker06 | despachada |
+| correção 1 — README + glossário | Worker01 | despachada |
 
 ## Histórico
 
