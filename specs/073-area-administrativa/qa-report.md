@@ -498,3 +498,66 @@ re-executado na árvore integrada:
 As 7 telas (4 Mensageria + 3 Administração) passam nas quatro regras. Faltam as telas do Workflow
 (W05) e o README/navegação (W01); a rodada final sobre as 13, com a saída colada aqui, acontece no
 T3-fechamento — e a mutação do W02 quebra este script de propósito antes disso.
+
+## Rodada 3 — telas do Workflow de sessões (Worker05, 26/10)
+
+**Escopo:** `T3-telas-workflow` (attempt=2, redespacho) — os quatro wireframes **estáticos** das
+`ENTRA` que o mapa §6.3 põe no contexto **Workflow de sessões**, em
+`specs/073-area-administrativa/prototipo/` (commit `365f59d`, citando "ciclo 073"; worktree
+sincronizada em `c3137e2` com `git merge --ff-only`):
+
+| Arquivo | ENTRA (`confronto-decisao.md`) | Nome na linguagem ubíqua | Juiz(es) da rodada 4 |
+|---|---|---|---|
+| `sessao-de-agente.html` | sessão de agente, subir/derrubar | **sessão de agente** | Controle · Administração/Gerenciamento |
+| `estado-do-agente-vivo.html` | estado do agente vivo | **estado do agente vivo** | Administração/Gerenciamento · Controle |
+| `tarefa-aberta.html` | tarefa aberta | **tarefa aberta** | Administração/Gerenciamento |
+| `consumo-por-agente.html` | consumo por agente | **consumo por agente** | Controle · Administração/Gerenciamento |
+
+**Coluna existente, não funcionalidade nova.** "Última atividade" é a coluna que o painel já exibe
+(`painel/server.py`); nas duas telas em que aparece (sessão de agente e estado do agente vivo) está
+declarada **NÃO PRECISA** na própria tela — nenhuma capacidade nova é pedida, só a reexibição, como
+o mandato exige.
+
+### Formato entregue (contrato de marcação — `verifica-prototipo.py` § Markup contract)
+
+- um arquivo HTML **estático** por tela; zero `<script>`, zero recurso externo (`http`), sem servidor;
+- CSS mínimo em cinza (tokens em `:root`, ~25 linhas, repetido por arquivo), sem `<body>` com
+  `data-fonte` — a isenção vale **por bloco**, não para a tela inteira;
+- **todo** controle e todo bloco com `data-fonte` (plataforma + ficha em `pesquisa/`, ou requisito do
+  método); **todo** rótulo de domínio com `data-rotulo`, cujo **valor** é termo ratificado na rodada 2
+  (`sessão de agente`, `estado do agente vivo`, `tarefa aberta`, `consumo por agente`,
+  `roteamento por nome/ref`, `limite de orçamento`, `catálogo de skills/ferramentas/modelos`);
+- **nenhum número inventado**: ilustrativo → dentro do marcador `data-exemplo` **com** "(exemplo)";
+  vivo → `—` **com** `motivo:`; citação (ciclo, §, `F1`, `file:line`) sempre dentro de
+  `data-fonte`/`data-referencia`, sem dígito solto em texto visível;
+- `F1`, `F7` (idade nunca digitada), `F8` (todo "—" com motivo) e `F9` (controle só-ícone com
+  `aria-label`) do `ux-design` 066 valem; **`F2`–`F6` e `F10`–`F12` são *n/a*** neste protótipo
+  (supõem servidor e API) — declarado no rodapé de cada tela, não omitido;
+- Princípio VIII: siglas expandidas na 1ª ocorrência (`PID`, `ux-design`).
+
+### Auto-checagem — o gate do protótipo
+
+```text
+python specs/073-area-administrativa/prototipo/verifica-prototipo.py
+-- verifica-prototipo: 11 screen(s), 0 finding(s)   [exit 0]
+```
+
+**11 telas · 0 achados** (as 7 integradas + as 4 desta entrega): as quatro regras do verificador
+passam em todas. A conferência foi feita **antes** de commitar, e é re-executável por qualquer um.
+
+### Dúvida declarada (herdada, não resolvida aqui)
+
+A convenção de nome destas telas é **`slug.html` sem prefixo de contexto e sem ordem**
+(`sessao-de-agente.html`, `estado-do-agente-vivo.html`, `tarefa-aberta.html`,
+`consumo-por-agente.html`) — diverge das duas já em uso
+(`mensageria-NN-slug.html`, `administracao-slug.html`), como o README desta pasta já declara (o
+autor da tela escolhe o nome; renomear arquivo de outro worker não é decisão de worker). Se a
+rodada 4 quiser uniformidade, é decisão do regente.
+
+### Limites
+
+Nada fora de `specs/073-area-administrativa/prototipo/` foi escrito (só o acréscimo desta seção ao
+`qa-report.md`); **sem push, sem merge, sem código de produto, sem segredo**; a rodada não julga —
+entrega a peça para o bar da rodada 4. Tokens (piso, soma do `message.usage` do transcript desde a
+1ª ocorrência do `[[TASK]]`): **≈2,56 M** (entrada 2.380.079 + saída 179.650, em 96 mensagens;
+`cache_read` 7.840.512 à parte).

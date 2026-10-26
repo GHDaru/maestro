@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workflow de sessões · sessão de agente (subir/derrubar)</title>
+<!--
+  Wireframe estático (ciclo 073, rodada 3). Sem servidor, sem JavaScript de dados.
+  Contrato de marcação (verifica-prototipo.py): elemento interativo com `data-fonte`;
+  rótulo de domínio com `data-rotulo` (valor = termo do glossário); número de exemplo
+  com `data-exemplo` e "(exemplo)"; citação com `data-fonte`/`data-referencia`.
+-->
+<style>
+:root{--tinta:#171b24;--cinza:#5b6472;--linha:#c9cfd8;--papel:#fff;--caixa:#f4f6f8;--realce:#e7ebf0}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--tinta);font:14px/1.55 system-ui,"Segoe UI",Roboto,Arial,sans-serif}
+.wrap{max-width:980px;margin:0 auto;padding:16px}
+header.topo{border-bottom:2px solid var(--linha);padding-bottom:12px}
+h1{font-size:20px;margin:.3em 0}
+h2{font-size:15px;margin:1.6em 0 .5em;padding-bottom:.2em;border-bottom:1px solid var(--linha)}
+p{margin:.5em 0}
+code{background:var(--realce);padding:0 3px;border-radius:3px;font-size:12px}
+.migalha{color:var(--cinza);font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin:0}
+.contexto{background:var(--caixa);border:1px solid var(--linha);border-radius:6px;padding:8px 10px;font-size:13px}
+.grade{display:flex;flex-wrap:wrap;gap:10px;margin:.6em 0}
+.caixa{border:1px solid var(--linha);background:var(--caixa);border-radius:6px;padding:10px;flex:1 1 210px;min-width:210px}
+.caixa.traco{border-style:dashed}
+.rotulo{display:block;font-size:11px;color:var(--cinza);text-transform:uppercase;letter-spacing:.05em}
+table{border-collapse:collapse;width:100%;margin:.6em 0;font-size:13px}
+caption{text-align:left;color:var(--cinza);font-size:12px;padding:.2em 0}
+th,td{border:1px solid var(--linha);padding:6px 8px;text-align:left;vertical-align:top}
+thead th{background:var(--realce)}
+.fonte{display:block;color:var(--cinza);font-size:11px}
+.exemplo{font-style:italic}
+.vazio{color:var(--cinza)}
+button{font:inherit;border:1px solid var(--linha);background:var(--papel);border-radius:4px;padding:3px 8px}
+footer.rodape{border-top:1px solid var(--linha);color:var(--cinza);font-size:12px;margin-top:28px;padding-top:10px}
+footer.rodape strong{color:var(--tinta)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="topo">
+  <p class="migalha" data-referencia="true">Maestro · área administrativa · wireframe estático · ciclo 073, rodada 3</p>
+  <h1 class="rotulo" data-rotulo="sessão de agente" data-fonte="método: specs/073-area-administrativa/confronto/confronto-decisao.md § Glossário proposto (‘sessão de agente’, ENTRA nº 1)">sessão de agente</h1>
+  <p class="contexto" data-fonte="confronto/mapa-de-contextos.md §6.3 (contexto Workflow de sessões) e §7 (colisão «sessão» × «agente»); confronto/confronto-decisao.md (ENTRA sessão de agente)">
+    <strong>Contexto delimitado:</strong> Workflow de sessões (subdomínio de apoio) ·
+    <strong>ENTRA:</strong> sessão de agente — <strong>subir</strong> e <strong>derrubar</strong> ·
+    <strong>juízes da rodada 4:</strong> Controle · Administração/Gerenciamento ·
+    <strong>fonte do ENTRA:</strong> método (o "subir" existe em <code>scripts/multi-session.py</code>; o derrubar é escopo declarado em <code>specs/072-painel-de-regencia/spec.md</code>) e plataforma Claude Code (<em>agent view</em>).
+  </p>
+</header>
+
+<main>
+
+<h2>Resumo</h2>
+<div class="grade" data-fonte="confronto/confronto-decisao.md (ENTRA sessão de agente: lacuna = o derrubar; o subir existe)">
+  <div class="caixa">
+    <span class="rotulo">sessões vivas</span>
+    <p class="exemplo"><span data-fonte="exemplo — nenhum dado real; o número vivo sai de painel/server.py (read-model de sessões)" data-exemplo="true">3 (exemplo)</span></p>
+  </div>
+  <div class="caixa">
+    <span class="rotulo">subir</span>
+    <p>existe hoje — <span class="fonte" data-referencia="true">método: <code>scripts/multi-session.py</code> (o lançador abre a sessão)</span></p>
+  </div>
+  <div class="caixa">
+    <span class="rotulo">derrubar</span>
+    <p class="vazio">lacuna — fora de escopo hoje · motivo: <code>specs/072-painel-de-regencia/spec.md</code></p>
+  </div>
+</div>
+
+<h2>sessões</h2>
+<table data-fonte="plataforma Claude Code — agent view, <code>https://code.claude.com/docs/en/agent-view</code> (ficha <code>pesquisa/claude-code.md</code>, coluna CONTROLE «subir/derrubar» = <code>sim</code>); método: <code>painel/server.py</code> (read-model de sessões)">
+  <caption>Lista de sessões vivas. Os valores marcados <span class="exemplo">exemplo</span> ilustram o layout — não são dados do repositório.</caption>
+  <thead>
+    <tr>
+      <th class="rotulo" data-rotulo="sessão de agente" data-fonte="método: painel/server.py (read-model); termo ratificado ‘sessão de agente’">nome</th>
+      <th class="rotulo" data-rotulo="roteamento por nome/ref" data-fonte="método: ListAgents (ref da sessão); pesquisa/claude-code.md (roteamento por nome/ref = sim)">ref</th>
+      <th class="rotulo" data-rotulo="estado do agente vivo" data-fonte="método: mapa-de-contextos.md §6.3; termo ratificado ‘estado do agente vivo’">estado do agente vivo</th>
+      <th class="rotulo" data-rotulo="sessão de agente" data-fonte="método: painel/server.py (coluna existente do painel — idade_min)">última atividade</th>
+      <th class="rotulo" data-rotulo="sessão de agente" data-fonte="método: scripts/multi-session.py (subir) · specs/072-painel-de-regencia/spec.md (derrubar)">ação</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker05 (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">78d88f (exemplo)</span></td>
+      <td>trabalhando</td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">há 12 min (exemplo)</span></td>
+      <td>
+        <button type="button" data-fonte="método: scripts/multi-session.py (subir sessão — já existe)" aria-label="subir sessão de agente">subir</button>
+        <button type="button" data-fonte="método: specs/072-painel-de-regencia/spec.md (derrubar — fora de escopo; risco alto)" aria-label="derrubar sessão de agente">derrubar</button>
+      </td>
+    </tr>
+    <tr>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">Gerente (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">31ee4d (exemplo)</span></td>
+      <td>esperando</td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">há 3 min (exemplo)</span></td>
+      <td>
+        <button type="button" data-fonte="método: scripts/multi-session.py (subir sessão)" aria-label="subir sessão de agente">subir</button>
+        <button type="button" data-fonte="método: specs/072-painel-de-regencia/spec.md (derrubar)" aria-label="derrubar sessão de agente">derrubar</button>
+      </td>
+    </tr>
+    <tr>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker02 (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">31f7bf (exemplo)</span></td>
+      <td>sem tarefa</td>
+      <td class="vazio">— motivo: sem carimbo de última atividade na projeção (nunca um valor padrão)</td>
+      <td>
+        <button type="button" data-fonte="método: scripts/multi-session.py (subir sessão)" aria-label="subir sessão de agente">subir</button>
+        <button type="button" data-fonte="método: specs/072-painel-de-regencia/spec.md (derrubar)" aria-label="derrubar sessão de agente">derrubar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p class="fonte" data-referencia="true">«—» sempre com «motivo:» (ux-design 066 §7, F8). A coluna «última atividade» é a existente do painel (<code>painel/server.py</code>) — não é funcionalidade nova.</p>
+
+<h2>subir</h2>
+<div class="caixa" data-fonte="método: scripts/multi-session.py (o lançador) e pesquisa/claude-code.md (agent view, claude --bg)">
+  <p>
+    <label for="nome-subir" data-fonte="exemplo — campo de forma; hoje o nome vem da lista NAMES do lançador (scripts/multi-session.py)">nome</label>
+    <input id="nome-subir" name="nome" type="text" data-fonte="método: scripts/multi-session.py (lista NAMES do lançador)">
+    <button type="button" data-fonte="método: scripts/multi-session.py (subir) · pesquisa/claude-code.md (agent view)">subir</button>
+  </p>
+  <p class="fonte" data-referencia="true">Subir cria uma <strong>sessão de agente</strong>; o <strong>agente</strong> é o perfil registrado pela Administração (mapa §7, colisão «sessão» × «agente»).</p>
+</div>
+
+<h2>derrubar — a lacuna</h2>
+<div class="caixa traco" data-fonte="método: specs/072-painel-de-regencia/spec.md («Controle de PID — subir/derrubar sessão (risco alto; spec própria)»)">
+  <p>Derrubar uma sessão de agente é <strong>risco alto</strong> (perda de trabalho em curso). Hoje: <span class="vazio">— motivo: fora de escopo</span>.</p>
+  <button type="button" disabled data-fonte="ux-design 066 §4 (anti-regra: «não decide pelo humano» — botão nunca pré-marcado); principles.md (Princípio III — gate humano para ação irreversível)" aria-label="derrubar sessão de agente (aguarda gate humano)">derrubar (aguarda gate humano)</button>
+  <p class="fonte" data-referencia="true">O painel projeta, não decide: o derrubar exige confirmação humana (Princípio III).</p>
+</div>
+
+</main>
+
+<footer class="rodape" data-referencia="true">
+  <p><strong>Como ler este wireframe.</strong> Arquivo HTML estático: sem servidor, sem JavaScript de dados; CSS mínimo, em cinza. Nenhum número é inventado — o valor ilustrativo vem marcado <span class="exemplo">exemplo</span> e o valor vivo aparece como <span class="vazio">—</span> com o motivo ao lado.</p>
+  <p><strong>Fitness functions de UX (ciclo 066).</strong> Valem <code>F1</code> (todo número/selo com <code>data-fonte</code>), <code>F8</code> (todo "—" com motivo) e <code>F9</code> (nenhum controle só-ícone sem <code>aria-label</code>); <code>F2</code>–<code>F7</code> e <code>F10</code>–<code>F12</code> são <em>n/a</em> — supõem servidor e API, que este protótipo não tem. Declarado, não omitido.</p>
+  <p><strong>Siglas (Princípio VIII).</strong> PID (<em>Process Identifier</em> — identificador de processo) · ux-design (<em>User Experience</em>). Fonte: <code>docs/governance/principles.md</code>.</p>
+</footer>
+
+</div>
+</body>
+</html>
