@@ -79,7 +79,7 @@ máx. 2), despachada por dono a partir de `6a32e24`:
 | correção 1 — Workflow (4 telas) + inventário | Worker05 | despachada |
 | correção 1 — confronto + mapa + regra 5 do verificador (identidade `nome · ref · projeto`, com mutação e fixture) | Worker02 | despachada |
 | correção 1 — matriz (`plataformas.md`) | Worker06 | despachada |
-| correção 1 — README + glossário | Worker01 | despachada |
+| correção 1 — README + glossário | Worker01 | **integrado** — `0deccf4` (tabela de identidade, colisões termo × endereço, ENTRA 12 e 17, prosa obsoleta reescrita; glossário +2 termos); gate 11/0, check-language ✓ |
 
 ## Histórico
 
