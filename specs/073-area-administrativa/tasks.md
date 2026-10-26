@@ -28,9 +28,19 @@
       domínio sem data-rotulo) — correção attempt=2 entregue (`7147f50`, integrada em `01b55f6`):
       `data-referencia` na migalha/rodapé + `data-rotulo` nos th e no h1 (→OPA); fit073 e mut073
       re-rodados PASS; **verde nas 3 telas**.**
-- [ ] T3-telas-workflow — Worker05: contexto Workflow de sessões — sessão de agente
+- [x] T3-telas-workflow — Worker05: contexto Workflow de sessões — sessão de agente
       (subir/derrubar), estado do agente vivo, tarefa aberta, consumo por agente; última atividade
       como coluna existente (NÃO PRECISA).
+      **Entregue: `365f59d` + `fc183ce` (evidência no qa-report), attempt=2 por redespacho — o
+      attempt=1 ficou 24h sem avanço (branch parada em `e51b3f5`, sessão idle) e o regente mandou
+      redespachar com o contrato completo; W05 respondeu dentro da rodada, partindo de `c3137e2`
+      (ff ok). 4 wireframes estáticos no contrato de marcação (data-fonte por bloco — retirou o
+      data-fonte do `<body>` que isentaria a tela inteira; data-rotulo com termo ratificado;
+      data-exemplo com "(exemplo)"; `—` sempre com motivo; F1/F7/F8/F9 valem, F2–F6 e F10–F12 n/a
+      declaradas; Princípio VIII). "Última atividade" declarada NÃO PRECISA nas próprias telas.
+      Self-check: 11 telas, 0 achados, exit 0. Divergência de nome de arquivo (slug sem prefixo ×
+      mensageria-NN/administracao-) declarada — decisão de uniformidade é do regente, rodada 4.
+      Tokens (piso): ≈2,56M.**
 - [x] T3-telas-mensageria — Worker03 (prioridade): contexto Mensageria — caixa de entrada, livro
       de mensagens, roteamento por nome/ref com a colisão de nomes VISÍVEL, protocolo de
       intercomunicação (A2A/MCP).
