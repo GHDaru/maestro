@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Workflow de sessões · tarefa aberta</title>
 <!--
-  Wireframe estático (ciclo 073, rodada 3). Sem servidor, sem JavaScript de dados.
+  Wireframe estático (ciclo 073, rodada 4 — correção 1). Sem servidor, sem JavaScript de dados.
   Contrato de marcação (verifica-prototipo.py): elemento interativo com `data-fonte`;
   rótulo de domínio com `data-rotulo` (valor = termo do glossário); número de exemplo
   com `data-exemplo` e "(exemplo)"; citação com `data-fonte`/`data-referencia`.
+  Identidade de sessão: sempre `nome · ref · projeto` (decisão 2 da regente, 26/10).
 -->
 <style>
 :root{--tinta:#171b24;--cinza:#5b6472;--linha:#c9cfd8;--papel:#fff;--caixa:#f4f6f8;--realce:#e7ebf0}
@@ -27,14 +28,15 @@ code{background:var(--realce);padding:0 3px;border-radius:3px;font-size:12px}
 .caixa.traco{border-style:dashed}
 .rotulo{display:block;font-size:11px;color:var(--cinza);text-transform:uppercase;letter-spacing:.05em}
 .selo{border:1px solid var(--linha);background:var(--papel);border-radius:9px;padding:1px 6px;font-size:12px}
-table{border-collapse:collapse;width:100%;margin:.6em 0;font-size:13px}
+table{border-collapse:collapse;width:100%;margin:.6em 0;font-size:12px}
 caption{text-align:left;color:var(--cinza);font-size:12px;padding:.2em 0}
 th,td{border:1px solid var(--linha);padding:6px 8px;text-align:left;vertical-align:top}
 thead th{background:var(--realce)}
 .fonte{display:block;color:var(--cinza);font-size:11px}
 .exemplo{font-style:italic}
 .vazio{color:var(--cinza)}
-button{font:inherit;border:1px solid var(--linha);background:var(--papel);border-radius:4px;padding:3px 8px}
+button{font:inherit;border:1px solid var(--linha);background:var(--papel);border-radius:4px;padding:3px 8px;font-size:12px}
+button[disabled]{color:var(--cinza);border-style:dashed}
 footer.rodape{border-top:1px solid var(--linha);color:var(--cinza);font-size:12px;margin-top:28px;padding-top:10px}
 footer.rodape strong{color:var(--tinta)}
 </style>
@@ -43,13 +45,15 @@ footer.rodape strong{color:var(--tinta)}
 <div class="wrap">
 
 <header class="topo">
-  <p class="migalha" data-referencia="true">Maestro · área administrativa · wireframe estático · ciclo 073, rodada 3</p>
-  <h1 class="rotulo" data-rotulo="tarefa aberta" data-fonte="método: specs/073-area-administrativa/confronto/confronto-decisao.md § Glossário proposto (‘tarefa aberta’, ENTRA ratificado)">tarefa aberta</h1>
-  <p class="contexto" data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §6.3 (contexto Workflow de sessões) e §7 (colisão «livro de ponto» × «livro de mensagens»); specs/073-area-administrativa/confronto/confronto-decisao.md (ENTRA tarefa aberta)">
-    <strong>Contexto delimitado:</strong> Workflow de sessões (subdomínio de apoio) ·
+  <p class="migalha" data-referencia="true">Maestro · área administrativa · wireframe estático · ciclo 073, rodada 4</p>
+  <h1 class="rotulo" data-rotulo="tarefa aberta" data-fonte="método: specs/073-area-administrativa/confronto/confronto-decisao.md § Glossário proposto (‘tarefa aberta’, ENTRA ratificado) · docs/governance/glossary.md (Tarefa aberta, ciclo 073)">tarefa aberta</h1>
+  <p class="contexto" data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §6.3 (contexto Workflow de sessões) e §7 (colisão «livro de ponto» × «livro de mensagens»); specs/073-area-administrativa/rodada-4/correcao-1.md (decisões 2, 5 e a declaração do ledger parado)">
+    <strong>Contexto delimitado:</strong> Workflow de sessões ·
     <strong>ENTRA:</strong> tarefa aberta ·
-    <strong>juízes da rodada 4:</strong> Administração/Gerenciamento · Controle ·
-    <strong>fonte do ENTRA:</strong> método (<code>docs/records/tarefas.jsonl</code> do ciclo — tarefa despachada e ainda não fechada) e plataforma Claude Code (a <em>task</em> que a sessão está executando).
+    <strong>identidade de sessão:</strong> sempre <strong>nome · ref · projeto</strong> — vale para o
+    <strong>destinatário</strong> e para o <strong>despachante</strong> (<strong>o ref muda ao reiniciar</strong>) ·
+    <strong>fonte do ENTRA:</strong> método (<code>docs/records/tarefas.jsonl</code> — o livro de ponto) e
+    plataforma Claude Code (a <em>task</em> que a sessão está executando).
   </p>
 </header>
 
@@ -64,51 +68,75 @@ footer.rodape strong{color:var(--tinta)}
 
 <h2>tarefas abertas</h2>
 <table data-fonte="método: <code>docs/records/tarefas.jsonl</code> (Task ledger do ciclo) e <code>painel/server.py</code> (read-model); plataforma Claude Code — <em>agent view</em>, <code>https://code.claude.com/docs/en/agent-view</code> (ficha <code>specs/073-area-administrativa/pesquisa/claude-code.md</code>)">
-  <caption>Uma linha por tarefa despachada e ainda não fechada. Os valores marcados <span class="exemplo">exemplo</span> ilustram o layout — não são dados do repositório.</caption>
+  <caption>Uma linha por tarefa despachada e ainda não fechada, com o <strong>destinatário</strong> e o <strong>despachante</strong> na identidade completa <strong>nome · ref · projeto</strong>. Os valores marcados <span class="exemplo">exemplo</span> ilustram o layout — não são dados do repositório.</caption>
   <thead>
     <tr>
-      <th class="rotulo" data-rotulo="sessão de agente" data-fonte="método: painel/server.py (read-model de sessões); termo ratificado ‘sessão de agente’">sessão</th>
-      <th class="rotulo" data-rotulo="tarefa aberta" data-fonte="método: docs/records/tarefas.jsonl (id da TASK despachada); termo ratificado ‘tarefa aberta’">tarefa aberta</th>
+      <th class="rotulo" data-rotulo="sessão de agente" data-fonte="método: ListAgents (nome e ref) · specs/073-area-administrativa/pesquisa/claude-code.md (roteamento por nome/ref = sim)">destinatário (nome · ref · projeto)</th>
+      <th class="rotulo" data-rotulo="tarefa aberta" data-fonte="método: docs/records/tarefas.jsonl (id da TASK despachada) · docs/governance/glossary.md (Tarefa aberta, ciclo 073)">tarefa aberta</th>
+      <th class="rotulo" data-rotulo="roteamento por nome/ref" data-fonte="método: docs/governance/task-ledger.md (quem despacha escreve a TASK) · specs/066-painel-de-regencia/andamento.md:112-113 (endereçar sempre com o ref lido)">despachada por (nome · ref · projeto)</th>
       <th class="rotulo" data-rotulo="tarefa aberta" data-fonte="método: docs/records/tarefas.jsonl (carimbo do despacho); a idade não é digitada (ux-design 066 §7, F7)">desde</th>
       <th class="rotulo" data-rotulo="tarefa aberta" data-fonte="método: docs/records/tarefas.jsonl (campo attempt= e o histórico de despachos)">tentativas</th>
+      <th class="rotulo" data-rotulo="custo por sessão" data-fonte="método: docs/records/tarefas.jsonl (tokens da TASK, quando houver) · docs/governance/glossary.md (Custo por sessão, ciclo 068 — contagem, nunca conteúdo)">tokens da tarefa</th>
+      <th class="rotulo" data-rotulo="tarefa aberta" data-fonte="método: specs/073-area-administrativa/rodada-4/correcao-1.md (P15: a regra de «travada»)">estado da tarefa</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker05 (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»" data-exemplo="true">Worker05 [78d88f] · 410_MAESTRO (exemplo)</span></td>
       <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">073-T3-telas-workflow (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">Gerente [31ee4d] · 410_MAESTRO (exemplo)</span></td>
       <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">há 40 min (exemplo)</span></td>
       <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">2 (exemplo)</span> <span class="fonte" data-referencia="true">— redespacho (attempt=2)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">820 k (piso) (exemplo)</span></td>
+      <td><span class="selo" data-fonte="exemplo — nenhum dado real" data-exemplo="true">em curso (exemplo)</span></td>
     </tr>
     <tr>
-      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">Gerente (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»" data-exemplo="true">Gerente [31ee4d] · 410_MAESTRO (exemplo)</span></td>
       <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">073-T3-readme-navegacao (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">MAESTRO [7c8d05] · 410_MAESTRO (exemplo)</span></td>
       <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">há 3 h (exemplo)</span></td>
       <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">1 (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">1,1 M (piso) (exemplo)</span></td>
+      <td><span class="selo" data-fonte="exemplo — nenhum dado real" data-exemplo="true">travada (exemplo)</span></td>
     </tr>
     <tr>
-      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker02 (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»" data-exemplo="true">Worker02 [31f7bf] · 410_MAESTRO (exemplo)</span></td>
       <td class="vazio">— motivo: a sessão está sem tarefa aberta no ciclo corrente</td>
+      <td class="vazio">— motivo: sem tarefa, sem despachante</td>
       <td class="vazio">— motivo: sem tarefa, sem carimbo de abertura</td>
       <td class="vazio">— motivo: nenhuma tentativa (a tarefa não existe)</td>
+      <td class="vazio">— motivo: a TASK não tem tokens no livro de ponto</td>
+      <td class="vazio">— motivo: sem tarefa, sem estado</td>
     </tr>
   </tbody>
 </table>
-<p class="fonte" data-referencia="true">«—» sempre com «motivo:» (ux-design 066 §7, F8); nenhuma idade é digitada (ux-design 066 §7, F7).</p>
+<p class="fonte" data-referencia="true">«—» sempre com «motivo:» (ux-design 066 §7, F8); nenhuma idade é digitada (ux-design 066 §7, F7). O <code>[[TASK ...]]</code> amarra o destinatário ao <strong>ref</strong> lido do <code>ListAgents</code> — nome nu não endereça (juiz 3, P15).</p>
 
-<h2>o que entra — a lacuna</h2>
-<div class="caixa traco" data-fonte="specs/073-area-administrativa/confronto/confronto-decisao.md (ENTRA tarefa aberta: a lacuna é ver a tarefa sem abrir o transcript)">
-  <p><strong>tarefa aberta por sessão</strong> — hoje o vínculo «sessão ↔ tarefa» só aparece ao abrir o transcript de cada uma. O termo pede essa lista reunida.</p>
-  <p class="fonte" data-referencia="true">O <strong>livro de ponto</strong> (<code>docs/records/tarefas.jsonl</code> — <em>Task ledger</em> do método) é a fonte; aqui ele é projetado, não copiado.</p>
+<h2>estado da tarefa — a regra de «travada»</h2>
+<div class="caixa" data-fonte="specs/073-area-administrativa/rodada-4/juiz-1-controle.md (P15: «travada» sem regra) · docs/governance/task-ledger.md (o DONE fecha a tarefa) · specs/066-painel-de-regencia/andamento.md:139-140 (fallback por arquivo commitado)">
+  <p><strong>Regra declarada.</strong> A tarefa está <strong>travada</strong> quando o <code>[[TASK ...]]</code> foi despachado e passou o limiar <em>sem nenhum <code>[[DONE ...]]</code> e sem carimbo novo de progresso</em>. Limiar: <span data-fonte="exemplo — proposta de limiar; nenhum dado real medido" data-exemplo="true">2× o tempo declarado da tarefa (aqui: 3 h) (exemplo)</span>.</p>
+  <p>Travada <strong>não é falha</strong>: é o gatilho de um <strong>pedido de decisão</strong> endereçado a quem despachou (<strong>nome · ref · projeto</strong>), com as opções — esperar, reatribuir ou cancelar.</p>
+  <p class="fonte" data-referencia="true">Quem fecha a tarefa é o <code>[[DONE ...]]</code> da sessão, nunca a tela (docs/governance/task-ledger.md). Se o envio do DONE falhar duas vezes, ele vai commitado (specs/066-painel-de-regencia/andamento.md:139-140).</p>
 </div>
 
-<h2>ação</h2>
-<div class="caixa" data-fonte="método: docs/governance/task-ledger.md (o DONE fecha a tarefa aberta); principles.md (Princípio II — quem executa não verifica)">
+<h2>ação — cancelar e reatribuir</h2>
+<div class="caixa" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (decisão 5: toda ação de escrita diz quem autoriza); principles.md (Princípio II — quem executa não verifica)">
   <p>
+    <button type="button" disabled data-fonte="ux-design 066 §4 (anti-regra: «não decide pelo humano»); principles.md (Princípio III — gate humano)" aria-label="cancelar a tarefa aberta (aguarda gate humano)">cancelar a tarefa…</button>
+    <button type="button" disabled data-fonte="método: docs/governance/task-ledger.md (o redespacho é um novo despacho com attempt+1); specs/066-painel-de-regencia/andamento.md:112-113 (o ref do novo destinatário relê-se do ListAgents)" aria-label="reatribuir a tarefa aberta (aguarda gate humano)">reatribuir…</button>
     <button type="button" data-fonte="método: painel/server.py (abre o transcript da sessão — somente leitura)" aria-label="abrir o transcript da sessão">abrir transcript</button>
-    <button type="button" data-fonte="método: docs/governance/task-ledger.md (o fechamento é do DONE, não da tela)" aria-label="ver a tarefa aberta no livro de ponto">ver no livro de ponto</button>
   </p>
-  <p class="fonte" data-referencia="true">A tela <strong>não fecha</strong> a tarefa: quem fecha é o <code>[[DONE ...]]</code> da sessão (docs/governance/task-ledger.md).</p>
+  <ul>
+    <li><strong>cancelar</strong> — quem autoriza: o humano (gate) ou o regente por delegação; a <strong>sessão dona não cancela a própria tarefa</strong>, porque a conferência é de outro (Princípio II).</li>
+    <li><strong>reatribuir</strong> — quem autoriza: o regente por delegação, com o ref do novo destinatário lido do <code>ListAgents</code>; gera despacho novo (<code>attempt+1</code>) e a tarefa velha não fica aberta em dois lugares.</li>
+  </ul>
+  <p class="fonte" data-referencia="true">A tela <strong>não fecha</strong> a tarefa e <strong>não decide</strong> o cancelamento: ela abre a confirmação, com quem autoriza declarado.</p>
+</div>
+
+<h2>declarado — o livro de ponto está parado</h2>
+<div class="caixa traco" data-fonte="specs/073-area-administrativa/rodada-4/juiz-2-administracao-gerenciamento.md (P11: «fonte tarefas.jsonl parada desde o 064») · specs/073-area-administrativa/rodada-4/correcao-1.md (declarar o ledger parado)">
+  <p><strong>Limite da fonte:</strong> o livro de ponto <code>docs/records/tarefas.jsonl</code> <em>parou no ciclo 064</em> — as últimas linhas são <code>064-F7</code> e <code>064-F6</code>. Do 065 em diante, «tokens» e «tentativas» da tarefa <strong>não estão no livro</strong>: a tela os projeta do transcrito e marca o valor como <em>piso</em>.</p>
+  <p class="fonte" data-referencia="true">Sem essa declaração, a coluna «tokens da tarefa» mentiria por omissão (juiz 2, P11). Retomar o livro é dívida registrada — não silenciada.</p>
 </div>
 
 </main>
@@ -116,7 +144,7 @@ footer.rodape strong{color:var(--tinta)}
 <footer class="rodape" data-referencia="true">
   <p><strong>Como ler este wireframe.</strong> Arquivo HTML estático: sem servidor, sem JavaScript de dados; CSS mínimo, em cinza. Nenhum número é inventado — o valor ilustrativo vem marcado <span class="exemplo">exemplo</span> e o valor vivo aparece como <span class="vazio">—</span> com o motivo ao lado.</p>
   <p><strong>Fitness functions de UX (ciclo 066).</strong> Valem <code>F1</code> (todo número/selo com <code>data-fonte</code>), <code>F7</code> (idade nunca digitada), <code>F8</code> (todo "—" com motivo) e <code>F9</code> (nenhum controle só-ícone sem <code>aria-label</code>); <code>F2</code>–<code>F6</code> e <code>F10</code>–<code>F12</code> são <em>n/a</em> — supõem servidor e API, que este protótipo não tem. Declarado, não omitido.</p>
-  <p><strong>Siglas (Princípio VIII).</strong> ux-design (<em>User Experience</em> — experiência de uso). Fonte: <code>docs/governance/principles.md</code>.</p>
+  <p><strong>Siglas (Princípio VIII).</strong> ux-design (<em>User Experience</em> — experiência de uso) · ADR (<em>Architecture Decision Record</em>). Fonte: <code>docs/governance/principles.md</code>.</p>
 </footer>
 
 </div>
