@@ -10,6 +10,17 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **Base única de citação nas 11 telas (R9) e o mapa §7 alinhado** (ciclo 073,
+  `073-T4-preambulo-r9`, preâmbulo da rodada 4): a convenção fica **fixada por escrito** no
+  `§ Convenções` novo de `specs/073-area-administrativa/prototipo/README.md` — **todo caminho é
+  relativo à raiz do repositório** — e é **aplicada por substituição mecânica** às 11 telas, com
+  **zero mudança de conteúdo** (prova: os textos canonizados do antes e do depois batem byte a
+  byte): **136 caminhos em 7 telas** — `confronto/…` e `pesquisa/…` ganham o prefixo
+  `specs/073-area-administrativa/`, e `mapa-de-contextos.md`, `confronto-decisao.md`, `tasks.md` e
+  `spec.md` nus ganham o caminho completo; cada caminho resultante foi **conferido contra o disco**.
+  No `confronto/mapa-de-contextos.md` **§7**, a grafia da colisão virou **"fila outbox"** (era
+  "fila (outbox)") — a resalva registrada na revisão do R3 fica resolvida. Gate: **11 telas,
+  0 achados, exit 0**.
 - **A regra 4 do verificador do protótipo passa a cobrir o texto visível** (ciclo 073,
   `073-T3-regra4`, commit `9cf0118`): a revisão da rodada 3 provou que **nenhuma das 11 telas
   reais exercitava a regra 4** — ela só rodava em rótulos (`check_label`), e as violações viviam

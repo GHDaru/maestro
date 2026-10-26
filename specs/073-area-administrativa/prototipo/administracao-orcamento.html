@@ -7,7 +7,7 @@
 <!--
   Wireframe estático (ciclo 073, rodada 3). Sem servidor, sem JavaScript de dados.
   Convenção: todo elemento de bloco (cabeçalho, caixa, tabela, controle, link) traz `data-fonte`,
-  que nomeia a plataforma (ficha em pesquisa/, que traz a URL externa) ou o requisito do método
+  que nomeia a plataforma (ficha em specs/073-area-administrativa/pesquisa/, que traz a URL externa) ou o requisito do método
   (princípio, ADR (<em>Architecture Decision Record</em>), ux-design).
   Nenhum número inventado: valor ilustrativo vem marcado "exemplo"; valor vivo aparece como "—" com motivo;
   valor real traz o selo "declarado" e a fonte.
@@ -54,7 +54,7 @@ footer.rodape strong{color:var(--tinta)}
 <header class="topo">
   <p class="migalha" data-referencia="true">Maestro · área administrativa · wireframe estático · ciclo 073, rodada 3</p>
   <h1>Administração — limite de orçamento</h1>
-  <p class="contexto" data-fonte="confronto/mapa-de-contextos.md §2 e §6.5 (contexto Administração); confronto/confronto-decisao.md (linha do ENTRA limites de orçamento e de taxa)">
+  <p class="contexto" data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §2 e §6.5 (contexto Administração); specs/073-area-administrativa/confronto/confronto-decisao.md (linha do ENTRA limites de orçamento e de taxa)">
     <strong>Contexto delimitado:</strong> Administração (subdomínio genérico) ·
     <strong>ENTRA:</strong> limites de orçamento e de taxa — o nome na linguagem ubíqua é
     <strong>limite de orçamento</strong> ·
@@ -62,27 +62,27 @@ footer.rodape strong{color:var(--tinta)}
     <strong>fonte do ENTRA:</strong> método (<code>operating-model.md</code>: tempo fixo, escopo variável, com teto
     declarado) e plataforma OpenAI Platform (o limite de gasto devolve uma recusa).
   </p>
-  <nav class="telas" aria-label="Telas da Administração" data-fonte="confronto/mapa-de-contextos.md §6.5 (os três ENTRA da Administração); tasks.md T3-telas-administracao">
-    <a href="administracao-catalogo.html" data-fonte="ENTRA cadastro de skills/ferramentas/modelos (confronto/confronto-decisao.md; pesquisa/litellm.md)">catálogo de skills/ferramentas/modelos</a>
-    <a href="administracao-politicas.html" data-fonte="ENTRA políticas allow/deny/ask (confronto/confronto-decisao.md; pesquisa/agent-365.md)">política declarativa (allow/deny/ask)</a>
-    <a href="administracao-orcamento.html" aria-current="page" data-fonte="esta tela — ENTRA limites de orçamento e de taxa (confronto/confronto-decisao.md; pesquisa/openai-platform.md)">limite de orçamento</a>
+  <nav class="telas" aria-label="Telas da Administração" data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §6.5 (os três ENTRA da Administração); specs/073-area-administrativa/tasks.md T3-telas-administracao">
+    <a href="administracao-catalogo.html" data-fonte="ENTRA cadastro de skills/ferramentas/modelos (specs/073-area-administrativa/confronto/confronto-decisao.md; specs/073-area-administrativa/pesquisa/litellm.md)">catálogo de skills/ferramentas/modelos</a>
+    <a href="administracao-politicas.html" data-fonte="ENTRA políticas allow/deny/ask (specs/073-area-administrativa/confronto/confronto-decisao.md; specs/073-area-administrativa/pesquisa/agent-365.md)">política declarativa (allow/deny/ask)</a>
+    <a href="administracao-orcamento.html" aria-current="page" data-fonte="esta tela — ENTRA limites de orçamento e de taxa (specs/073-area-administrativa/confronto/confronto-decisao.md; specs/073-area-administrativa/pesquisa/openai-platform.md)">limite de orçamento</a>
   </nav>
 </header>
 
 <main>
 
-<div class="caixa" data-fonte="confronto/mapa-de-contextos.md §6.3 (limite de orçamento: o teto de consumo de uma sessão/projeto, executável); docs/governance/operating-model.md (tempo fixo, escopo variável) e docs/records/decisoes.jsonl (teto declarado)">
+<div class="caixa" data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §6.3 (limite de orçamento: o teto de consumo de uma sessão/projeto, executável); docs/governance/operating-model.md (tempo fixo, escopo variável) e docs/records/decisoes.jsonl (teto declarado)">
   <span class="rotulo">O que a tela serve</span>
   <p>O <strong>limite de orçamento</strong> é o <strong>teto de consumo</strong> de uma sessão ou de um projeto —
   e o que este ENTRA acrescenta é torná-lo <strong>executável</strong>, não só declarado. Hoje o teto é declarado
   (o teto entra no índice de decisões) e o consumo por sessão é lido do livro de ponto; <strong>faltam o teto
   executável e o limite de taxa</strong>.</p>
-  <span class="fonte">fonte: método (<code>docs/governance/operating-model.md</code>; <code>docs/records/decisoes.jsonl</code>) · estado: confronto/inventario-maestro.md (parcial)</span>
+  <span class="fonte">fonte: método (<code>docs/governance/operating-model.md</code>; <code>docs/records/decisoes.jsonl</code>) · estado: specs/073-area-administrativa/confronto/inventario-maestro.md (parcial)</span>
 </div>
 
 <h2>Os números da tela</h2>
 <div class="grade">
-  <div class="caixa" data-fonte="docs/records/decisoes.jsonl (teto declarado do consumo semanal) e spec.md §Clarify (a sessão do regente para no teto declarado)">
+  <div class="caixa" data-fonte="docs/records/decisoes.jsonl (teto declarado do consumo semanal) e specs/073-area-administrativa/spec.md §Clarify (a sessão do regente para no teto declarado)">
     <span class="rotulo">Teto do consumo semanal</span>
     <p class="metrica" data-fonte="docs/records/decisoes.jsonl (teto declarado do consumo semanal) · specs/073-area-administrativa/spec.md §Clarify"><span class="selo" data-fonte="docs/records/decisoes.jsonl (teto declarado)">declarado</span> 40 %</p>
     <p>Teto declarado no índice de decisões; a sessão do regente para nele.</p>
@@ -93,25 +93,25 @@ footer.rodape strong{color:var(--tinta)}
     <p class="metrica" data-fonte="specs/073-area-administrativa/spec.md §Clarify (consumo declarado em 25/10) · docs/governance/glossary.md (Custo por sessão)"><span class="selo" data-fonte="specs/073-area-administrativa/spec.md §Clarify (valor declarado, data de 25/10)">declarado</span> 19 %</p>
     <p>Consumo da sessão do regente na data declarada. Leitura por sessão é do <strong>Custo por sessão</strong>
     (contagem de tokens, nunca conteúdo).</p>
-    <span class="fonte">fonte: método (<code>spec.md</code> §Clarify, 25/10) · glossário (Custo por sessão)</span>
+    <span class="fonte">fonte: método (<code>specs/073-area-administrativa/spec.md</code> §Clarify, 25/10) · glossário (Custo por sessão)</span>
   </div>
-  <div class="caixa" data-fonte="confronto/confronto-decisao.md (lacuna do ENTRA: limite executável por sessão/projeto; taxa não existe hoje)">
+  <div class="caixa" data-fonte="specs/073-area-administrativa/confronto/confronto-decisao.md (lacuna do ENTRA: limite executável por sessão/projeto; taxa não existe hoje)">
     <span class="rotulo">Limite de taxa</span>
-    <p class="metrica" data-fonte="confronto/confronto-decisao.md (lacuna do ENTRA: taxa não existe hoje) · confronto/inventario-maestro.md"><span class="vazio">—</span></p>
+    <p class="metrica" data-fonte="specs/073-area-administrativa/confronto/confronto-decisao.md (lacuna do ENTRA: taxa não existe hoje) · specs/073-area-administrativa/confronto/inventario-maestro.md"><span class="vazio">—</span></p>
     <p class="vazio">motivo: taxa não existe hoje no Maestro — é lacuna declarada, não um valor zero.</p>
-    <span class="fonte">fonte: confronto/confronto-decisao.md (coluna Lacuna) · confronto/inventario-maestro.md</span>
+    <span class="fonte">fonte: specs/073-area-administrativa/confronto/confronto-decisao.md (coluna Lacuna) · specs/073-area-administrativa/confronto/inventario-maestro.md</span>
   </div>
-  <div class="caixa" data-fonte="pesquisa/openai-platform.md (limite rígido de gasto devolve recusa; o alerta de gasto não capa) e confronto/confronto-decisao.md (lacuna: limite executável)">
+  <div class="caixa" data-fonte="specs/073-area-administrativa/pesquisa/openai-platform.md (limite rígido de gasto devolve recusa; o alerta de gasto não capa) e specs/073-area-administrativa/confronto/confronto-decisao.md (lacuna: limite executável)">
     <span class="rotulo">Efeito ao estourar o teto</span>
-    <p class="metrica" data-fonte="pesquisa/openai-platform.md (o limite rígido devolve recusa; o alerta não capa)"><span class="selo" data-fonte="pesquisa/openai-platform.md (comportamento do limite rígido, fonte da plataforma)">referência</span> recusa</p>
+    <p class="metrica" data-fonte="specs/073-area-administrativa/pesquisa/openai-platform.md (o limite rígido devolve recusa; o alerta não capa)"><span class="selo" data-fonte="specs/073-area-administrativa/pesquisa/openai-platform.md (comportamento do limite rígido, fonte da plataforma)">referência</span> recusa</p>
     <p>Na plataforma de referência, o limite rígido devolve uma recusa — e o alerta de gasto apenas avisa, sem
     capar. É o que falta ao Maestro: o teto que <em>age</em>, não só o teto que se lê.</p>
-    <span class="fonte">fonte: plataforma (<code>pesquisa/openai-platform.md</code>) · lacuna: confronto/confronto-decisao.md</span>
+    <span class="fonte">fonte: plataforma (<code>specs/073-area-administrativa/pesquisa/openai-platform.md</code>) · lacuna: specs/073-area-administrativa/confronto/confronto-decisao.md</span>
   </div>
 </div>
 
 <h2>Os tetos por sessão e por projeto</h2>
-<table data-fonte="docs/governance/glossary.md (Custo por sessão; Rodada; Passo) e docs/governance/operating-model.md; formato de teto por objeto em pesquisa/openai-platform.md e pesquisa/litellm.md">
+<table data-fonte="docs/governance/glossary.md (Custo por sessão; Rodada; Passo) e docs/governance/operating-model.md; formato de teto por objeto em specs/073-area-administrativa/pesquisa/openai-platform.md e specs/073-area-administrativa/pesquisa/litellm.md">
   <caption>Formato da linha. Os valores marcados <span class="exemplo" data-exemplo="true">exemplo</span> ilustram o layout — não são
   dados do repositório; o que é vivo aparece como <span class="vazio">—</span> com o motivo.</caption>
   <thead>
@@ -124,7 +124,7 @@ footer.rodape strong{color:var(--tinta)}
       <td><span class="exemplo" data-exemplo="true">exemplo: 19 %</span></td>
       <td><span class="exemplo" data-exemplo="true">exemplo: 21 %</span></td>
       <td><span class="vazio">—</span> motivo: hoje é declarado, não executável</td>
-      <td><button type="button" data-fonte="método — docs/records/decisoes.jsonl (teto declarado) e glossário (Custo por sessão); plataforma — pesquisa/litellm.md (max_budget por chave/time)">abrir teto</button></td>
+      <td><button type="button" data-fonte="método — docs/records/decisoes.jsonl (teto declarado) e glossário (Custo por sessão); plataforma — specs/073-area-administrativa/pesquisa/litellm.md (max_budget por chave/time)">abrir teto</button></td>
     </tr>
     <tr>
       <td><span class="exemplo" data-exemplo="true">exemplo: Projeto</span></td>
@@ -132,7 +132,7 @@ footer.rodape strong{color:var(--tinta)}
       <td><span class="vazio">—</span> motivo: leitura viva, o wireframe não a digita</td>
       <td><span class="vazio">—</span> motivo: derivado do teto e do consumo</td>
       <td><span class="vazio">—</span> motivo: taxa não existe hoje</td>
-      <td><button type="button" data-fonte="método — docs/governance/operating-model.md (teto por projeto) e scripts/install-maestro.sh (.maestro/install-options.json); plataforma — pesquisa/openai-platform.md (limite por projeto)">abrir teto</button></td>
+      <td><button type="button" data-fonte="método — docs/governance/operating-model.md (teto por projeto) e scripts/install-maestro.sh (.maestro/install-options.json); plataforma — specs/073-area-administrativa/pesquisa/openai-platform.md (limite por projeto)">abrir teto</button></td>
     </tr>
   </tbody>
 </table>
@@ -140,7 +140,7 @@ footer.rodape strong{color:var(--tinta)}
 <div class="caixa" data-fonte="ux-design 066 §4 anti-regra 3 (não inventa número: fonte ausente vira "—" com motivo e caminho) e §3 (defasagem da fonte anunciada no cabeçalho)">
   <span class="rotulo">Controle</span>
   <p><label for="escopo">aplicar a</label>
-    <select id="escopo" data-fonte="método — docs/governance/operating-model.md (teto por sessão e por projeto); plataforma — pesquisa/litellm.md e pesquisa/openai-platform.md (orçamento por chave, time e projeto)">
+    <select id="escopo" data-fonte="método — docs/governance/operating-model.md (teto por sessão e por projeto); plataforma — specs/073-area-administrativa/pesquisa/litellm.md e specs/073-area-administrativa/pesquisa/openai-platform.md (orçamento por chave, time e projeto)">
       <option>sessão de agente</option>
       <option>Projeto</option>
     </select>
@@ -151,19 +151,19 @@ footer.rodape strong{color:var(--tinta)}
 
 <h2>O que o mercado ensina (referência, com fonte)</h2>
 <div class="grade">
-  <div class="caixa" data-fonte="pesquisa/openai-platform.md — limite de gasto por organização e por projeto; limite rígido devolve recusa; alerta informa sem capar; limites de taxa por organização e por projeto">
+  <div class="caixa" data-fonte="specs/073-area-administrativa/pesquisa/openai-platform.md — limite de gasto por organização e por projeto; limite rígido devolve recusa; alerta informa sem capar; limites de taxa por organização e por projeto">
     <span class="rotulo">Referência</span>
     <h3>OpenAI Platform</h3>
     <p>Limite de gasto na organização e no projeto, com <em>recusa</em> e não só aviso: o alerta de gasto informa,
     o limite rígido barra. Os limites de taxa vivem no mesmo nível — organização e projeto, não por usuário.</p>
-    <span class="fonte">fonte: <code>pesquisa/openai-platform.md</code> (limite de gasto e limites de taxa)</span>
+    <span class="fonte">fonte: <code>specs/073-area-administrativa/pesquisa/openai-platform.md</code> (limite de gasto e limites de taxa)</span>
   </div>
-  <div class="caixa" data-fonte="pesquisa/litellm.md — orçamento (max_budget, budget_duration) e limites de taxa (tpm/rpm) por chave, usuário, time e projeto, com acompanhamento de gasto">
+  <div class="caixa" data-fonte="specs/073-area-administrativa/pesquisa/litellm.md — orçamento (max_budget, budget_duration) e limites de taxa (tpm/rpm) por chave, usuário, time e projeto, com acompanhamento de gasto">
     <span class="rotulo">Referência</span>
     <h3>LiteLLM</h3>
     <p>Orçamento e limite de taxa por chave, usuário, time e projeto, com acompanhamento de gasto por objeto — o
     nível mais fino de recorte entre as plataformas do nicho.</p>
-    <span class="fonte">fonte: <code>pesquisa/litellm.md</code> (orçamento e limite de taxa; gestão de projeto)</span>
+    <span class="fonte">fonte: <code>specs/073-area-administrativa/pesquisa/litellm.md</code> (orçamento e limite de taxa; gestão de projeto)</span>
   </div>
 </div>
 
@@ -187,13 +187,13 @@ footer.rodape strong{color:var(--tinta)}
   <span class="vazio">—</span> com o motivo ao lado. <span class="fonte">fonte: ux-design 066 §4 (anti-regras verificáveis)</span></p>
   <p><strong>Rótulos.</strong> Os nomes de objeto vêm do vocabulário do contexto — o glossário
   (<code>docs/governance/glossary.md</code>: Custo por sessão), a linguagem ubíqua da Administração
-  (<code>confronto/mapa-de-contextos.md</code> §6.5: Agente, Projeto) e os termos ratificados na rodada 2
-  (<code>confronto/confronto-decisao.md</code> § Glossário proposto: <em>limite de orçamento</em>,
+  (<code>specs/073-area-administrativa/confronto/mapa-de-contextos.md</code> §6.5: Agente, Projeto) e os termos ratificados na rodada 2
+  (<code>specs/073-area-administrativa/confronto/confronto-decisao.md</code> § Glossário proposto: <em>limite de orçamento</em>,
   <em>sessão de agente</em>). Palavras de moldura (Teto, Consumo, Restante, Escopo, Consultar, Controle,
   Estado) são interface, não vocabulário de domínio.
   <span class="fonte">fonte: Princípio VIII (<code>docs/governance/principles.md</code>) e <code>docs/governance/glossary.md</code></span></p>
   <p><strong>Toda caixa, tabela e controle traz <code>data-fonte</code></strong> — a plataforma (ficha em
-  <code>pesquisa/</code>, que traz a URL externa) ou o requisito do método (princípio, ADR — <em>Architecture
+  <code>specs/073-area-administrativa/pesquisa/</code>, que traz a URL externa) ou o requisito do método (princípio, ADR — <em>Architecture
   Decision Record</em> — ux-design). Das fitness functions de UX (<em>User Experience</em> — experiência de uso)
   do ciclo 066, valem aqui
   <code>F1</code>
@@ -202,8 +202,8 @@ footer.rodape strong{color:var(--tinta)}
   <code>F10</code>–<code>F12</code> são <em>n/a</em> neste protótipo — supõem servidor e API, que ele não
   tem. Declarado, não omitido. <span class="fonte">fonte: specs/066-painel-de-regencia/ux-design.md §4 e §7</span></p>
   <p><strong>Navegação.</strong> A área administrativa entra no painel existente ao lado de Regência e de Chamados e
-  Gates, que ficam como estão. <span class="fonte">fonte: confronto/mapa-de-contextos.md §4 (o painel é projeção) ·
-  tasks.md (T3-readme-navegacao)</span></p>
+  Gates, que ficam como estão. <span class="fonte">fonte: specs/073-area-administrativa/confronto/mapa-de-contextos.md §4 (o painel é projeção) ·
+  specs/073-area-administrativa/tasks.md (T3-readme-navegacao)</span></p>
 </footer>
 
 </div>

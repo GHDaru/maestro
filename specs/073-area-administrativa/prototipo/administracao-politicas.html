@@ -7,7 +7,7 @@
 <!--
   Wireframe estático (ciclo 073, rodada 3). Sem servidor, sem JavaScript de dados.
   Convenção: todo elemento de bloco (cabeçalho, caixa, tabela, controle, link) traz `data-fonte`,
-  que nomeia a plataforma (ficha em pesquisa/, que traz a URL externa) ou o requisito do método
+  que nomeia a plataforma (ficha em specs/073-area-administrativa/pesquisa/, que traz a URL externa) ou o requisito do método
   (princípio, ADR (<em>Architecture Decision Record</em>), ux-design).
   Nenhum número inventado: valor ilustrativo vem marcado "exemplo"; valor vivo aparece como "—" com motivo.
 -->
@@ -52,7 +52,7 @@ footer.rodape strong{color:var(--tinta)}
 <header class="topo">
   <p class="migalha" data-referencia="true">Maestro · área administrativa · wireframe estático · ciclo 073, rodada 3</p>
   <h1 data-rotulo="OPA">Administração — política declarativa (allow/deny/ask)</h1>
-  <p class="contexto" data-fonte="confronto/mapa-de-contextos.md §2 e §6.5 (contexto Administração); confronto/confronto-decisao.md (linha do ENTRA políticas allow/deny/ask)">
+  <p class="contexto" data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §2 e §6.5 (contexto Administração); specs/073-area-administrativa/confronto/confronto-decisao.md (linha do ENTRA políticas allow/deny/ask)">
     <strong>Contexto delimitado:</strong> Administração (subdomínio genérico) ·
     <strong>ENTRA:</strong> políticas allow/deny/ask — o nome na linguagem ubíqua é <strong>política declarativa
     (allow/deny/ask)</strong>, que reusa o termo <strong>OPA</strong> (<em>Open Policy Agent</em> — motor de política
@@ -62,10 +62,10 @@ footer.rodape strong{color:var(--tinta)}
     autorização vive fora do modelo) e o <code>deny</code> que já roda (<code>scripts/hooks/guard-immutables.py</code>);
     plataforma Microsoft Agent 365 (política aplicada por modelo).
   </p>
-  <nav class="telas" aria-label="Telas da Administração" data-fonte="confronto/mapa-de-contextos.md §6.5 (os três ENTRA da Administração); tasks.md T3-telas-administracao">
-    <a href="administracao-catalogo.html" data-fonte="ENTRA cadastro de skills/ferramentas/modelos (confronto/confronto-decisao.md; pesquisa/litellm.md)">catálogo de skills/ferramentas/modelos</a>
-    <a href="administracao-politicas.html" aria-current="page" data-fonte="esta tela — ENTRA políticas allow/deny/ask (confronto/confronto-decisao.md; pesquisa/agent-365.md)">política declarativa (allow/deny/ask)</a>
-    <a href="administracao-orcamento.html" data-fonte="ENTRA limites de orçamento e de taxa (confronto/confronto-decisao.md; pesquisa/openai-platform.md)">limite de orçamento</a>
+  <nav class="telas" aria-label="Telas da Administração" data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §6.5 (os três ENTRA da Administração); specs/073-area-administrativa/tasks.md T3-telas-administracao">
+    <a href="administracao-catalogo.html" data-fonte="ENTRA cadastro de skills/ferramentas/modelos (specs/073-area-administrativa/confronto/confronto-decisao.md; specs/073-area-administrativa/pesquisa/litellm.md)">catálogo de skills/ferramentas/modelos</a>
+    <a href="administracao-politicas.html" aria-current="page" data-fonte="esta tela — ENTRA políticas allow/deny/ask (specs/073-area-administrativa/confronto/confronto-decisao.md; specs/073-area-administrativa/pesquisa/agent-365.md)">política declarativa (allow/deny/ask)</a>
+    <a href="administracao-orcamento.html" data-fonte="ENTRA limites de orçamento e de taxa (specs/073-area-administrativa/confronto/confronto-decisao.md; specs/073-area-administrativa/pesquisa/openai-platform.md)">limite de orçamento</a>
   </nav>
 </header>
 
@@ -77,17 +77,17 @@ footer.rodape strong{color:var(--tinta)}
   <span class="efeito">ask</span> — três efeitos, escritos fora do modelo. Quem decide é a política; o agente não
   a interpreta. Hoje <strong>só o <code>deny</code> roda</strong>; <code>allow</code> e <code>ask</code> estão
   declarados e ainda não são executáveis — é a lacuna que este ENTRA fecha.</p>
-  <span class="fonte">fonte: Princípio III (<code>docs/governance/principles.md</code>) · estado no Maestro: confronto/inventario-maestro.md (parcial)</span>
+  <span class="fonte">fonte: Princípio III (<code>docs/governance/principles.md</code>) · estado no Maestro: specs/073-area-administrativa/confronto/inventario-maestro.md (parcial)</span>
 </div>
 
 <h2>Os três efeitos</h2>
 <div class="grade">
-  <div class="caixa" data-fonte="docs/governance/principles.md — Princípio III (allow); pesquisa/agent-365.md (aplicar um modelo de política: allow/deny)">
+  <div class="caixa" data-fonte="docs/governance/principles.md — Princípio III (allow); specs/073-area-administrativa/pesquisa/agent-365.md (aplicar um modelo de política: allow/deny)">
     <span class="rotulo">Efeito</span>
     <h3><span class="efeito">allow</span></h3>
     <p>O que é permitido sem perguntar — o caso comum do dia.</p>
     <p class="vazio">estado hoje — motivo: declarado, não executável</p>
-    <span class="fonte">fonte: Princípio III · plataforma: Agent 365, modelo de política (<code>pesquisa/agent-365.md</code>)</span>
+    <span class="fonte">fonte: Princípio III · plataforma: Agent 365, modelo de política (<code>specs/073-area-administrativa/pesquisa/agent-365.md</code>)</span>
   </div>
   <div class="caixa" data-fonte="método — scripts/hooks/guard-immutables.py (o deny que roda); docs/governance/principles.md (Princípio III)">
     <span class="rotulo">Efeito</span>
@@ -107,7 +107,7 @@ footer.rodape strong{color:var(--tinta)}
 </div>
 
 <h2>As regras</h2>
-<table data-fonte="docs/governance/principles.md — Princípio III; scripts/hooks/guard-immutables.py (deny dos imutáveis); pesquisa/agent-365.md e pesquisa/litellm.md (formato de política por objeto)">
+<table data-fonte="docs/governance/principles.md — Princípio III; scripts/hooks/guard-immutables.py (deny dos imutáveis); specs/073-area-administrativa/pesquisa/agent-365.md e specs/073-area-administrativa/pesquisa/litellm.md (formato de política por objeto)">
   <caption>Cada regra tem um objeto, um efeito e o estado em que ela está. O que ainda não é executável aparece como
   <span class="vazio">—</span> com o motivo; nada é marcado "conferido" sem sê-lo.</caption>
   <thead>
@@ -120,7 +120,7 @@ footer.rodape strong{color:var(--tinta)}
       <td><span class="efeito">deny</span></td>
       <td><strong>roda</strong></td>
       <td>o gancho <code>scripts/hooks/guard-immutables.py</code></td>
-      <td><button type="button" data-fonte="método — scripts/hooks/guard-immutables.py (deny dos imutáveis) e docs/governance/principles.md (Princípio III); plataforma — Agent 365, política por objeto (pesquisa/agent-365.md)">abrir regra</button></td>
+      <td><button type="button" data-fonte="método — scripts/hooks/guard-immutables.py (deny dos imutáveis) e docs/governance/principles.md (Princípio III); plataforma — Agent 365, política por objeto (specs/073-area-administrativa/pesquisa/agent-365.md)">abrir regra</button></td>
     </tr>
     <tr>
       <td><span class="exemplo" data-exemplo="true">exemplo: leitura do repositório</span></td>
@@ -128,7 +128,7 @@ footer.rodape strong{color:var(--tinta)}
       <td><span class="efeito">allow</span></td>
       <td><span class="vazio">—</span> motivo: declarado, ainda não executável</td>
       <td>a política do projeto</td>
-      <td><button type="button" data-fonte="método — docs/governance/principles.md (Princípio III, allow) e operating-model.md; plataforma — pesquisa/agent-365.md (política padrão vs. customizada)">abrir regra</button></td>
+      <td><button type="button" data-fonte="método — docs/governance/principles.md (Princípio III, allow) e operating-model.md; plataforma — specs/073-area-administrativa/pesquisa/agent-365.md (política padrão vs. customizada)">abrir regra</button></td>
     </tr>
     <tr>
       <td><span class="exemplo" data-exemplo="true">exemplo: ação irreversível</span></td>
@@ -136,7 +136,7 @@ footer.rodape strong{color:var(--tinta)}
       <td><span class="efeito">ask</span></td>
       <td><span class="vazio">—</span> motivo: declarado, ainda não executável</td>
       <td>o humano (o agente vê somente leitura)</td>
-      <td><button type="button" data-fonte="método — docs/governance/principles.md (Princípio III, ask) e ux-design 066 §3; plataforma — pesquisa/agent-365.md (aprovar/restringir implantação exige papel de administrador)">abrir regra</button></td>
+      <td><button type="button" data-fonte="método — docs/governance/principles.md (Princípio III, ask) e ux-design 066 §3; plataforma — specs/073-area-administrativa/pesquisa/agent-365.md (aprovar/restringir implantação exige papel de administrador)">abrir regra</button></td>
     </tr>
     <tr>
       <td><span class="exemplo" data-exemplo="true">exemplo: ferramenta fora do papel</span></td>
@@ -144,18 +144,18 @@ footer.rodape strong{color:var(--tinta)}
       <td><span class="efeito">deny</span></td>
       <td>parcial — declarado em <code>scripts/check-roles.sh</code></td>
       <td>o papel (o registro do Agente)</td>
-      <td><button type="button" data-fonte="método — scripts/check-roles.sh e docs/agents/README.md; plataforma — pesquisa/litellm.md (políticas de ferramenta: untrusted/trusted/blocked) e pesquisa/agent-365.md">abrir regra</button></td>
+      <td><button type="button" data-fonte="método — scripts/check-roles.sh e docs/agents/README.md; plataforma — specs/073-area-administrativa/pesquisa/litellm.md (políticas de ferramenta: untrusted/trusted/blocked) e specs/073-area-administrativa/pesquisa/agent-365.md">abrir regra</button></td>
     </tr>
   </tbody>
 </table>
 
 <div class="grade">
-  <div class="caixa" data-fonte="confronto/confronto-decisao.md (lacuna do ENTRA: allow/ask executáveis) e confronto/inventario-maestro.md (parcial: só o deny roda)">
+  <div class="caixa" data-fonte="specs/073-area-administrativa/confronto/confronto-decisao.md (lacuna do ENTRA: allow/ask executáveis) e specs/073-area-administrativa/confronto/inventario-maestro.md (parcial: só o deny roda)">
     <span class="rotulo">Lacuna declarada</span>
     <p>O que falta é tornar <span class="efeito">allow</span> e <span class="efeito">ask</span>
     <strong>executáveis</strong> — hoje só o <code>deny</code> recusa de fato. A tela mostra o efeito e o estado,
     sem prometer o que não roda.</p>
-    <span class="fonte">fonte: confronto/confronto-decisao.md (coluna Lacuna) · confronto/inventario-maestro.md</span>
+    <span class="fonte">fonte: specs/073-area-administrativa/confronto/confronto-decisao.md (coluna Lacuna) · specs/073-area-administrativa/confronto/inventario-maestro.md</span>
   </div>
   <div class="caixa" data-fonte="docs/governance/principles.md — Princípio III (a autorização vive fora do modelo); docs/governance/glossary.md (RBAC, ABAC, ReBAC)">
     <span class="rotulo">Onde a autorização vive</span>
@@ -163,33 +163,33 @@ footer.rodape strong{color:var(--tinta)}
     <strong>ABAC</strong> (<em>Attribute-Based Access Control</em> — por atributo), <strong>ReBAC</strong>
     (<em>Relationship-Based Access Control</em> — por relação) — mas a autorização é decidida <strong>fora</strong> do
     modelo. Esta tela declara a política; não constrói motor de autorização.</p>
-    <span class="fonte">fonte: Princípio III · glossário (RBAC/ABAC/ReBAC) · confronto/confronto-decisao.md §NÃO PRECISA (papéis e permissões RBAC: fora do método)</span>
+    <span class="fonte">fonte: Princípio III · glossário (RBAC/ABAC/ReBAC) · specs/073-area-administrativa/confronto/confronto-decisao.md §NÃO PRECISA (papéis e permissões RBAC: fora do método)</span>
   </div>
 </div>
 
 <h2>O que o mercado ensina (referência, com fonte)</h2>
 <div class="grade">
-  <div class="caixa" data-fonte="pesquisa/agent-365.md — plano de controle: aplicar modelo de política existente, customizada ou padrão; controle de menor privilégio">
+  <div class="caixa" data-fonte="specs/073-area-administrativa/pesquisa/agent-365.md — plano de controle: aplicar modelo de política existente, customizada ou padrão; controle de menor privilégio">
     <span class="rotulo">Referência</span>
     <h3>Microsoft Agent 365</h3>
     <p>Ao subir um agente, aplica-se um <em>modelo de política</em> — existente, customizado ou o padrão — que
     controla quais usuários, dados e ferramentas o agente alcança. É <span class="efeito">allow</span> /
     <span class="efeito">deny</span> por política; <strong>não há <span class="efeito">ask</span></strong>.</p>
-    <span class="fonte">fonte: <code>pesquisa/agent-365.md</code> (Agent Registry — política por objeto)</span>
+    <span class="fonte">fonte: <code>specs/073-area-administrativa/pesquisa/agent-365.md</code> (Agent Registry — política por objeto)</span>
   </div>
-  <div class="caixa" data-fonte="pesquisa/litellm.md — políticas de ferramenta (untrusted/trusted/blocked) com sobrescrita por chave/time; guardrails bloqueiam; sem aprovação no meio da chamada">
+  <div class="caixa" data-fonte="specs/073-area-administrativa/pesquisa/litellm.md — políticas de ferramenta (untrusted/trusted/blocked) com sobrescrita por chave/time; guardrails bloqueiam; sem aprovação no meio da chamada">
     <span class="rotulo">Referência</span>
     <h3>LiteLLM</h3>
     <p>Política de ferramenta por rótulo — permitida, não confiável ou bloqueada — com sobrescrita por chave e por
     time. Também <strong>sem <span class="efeito">ask</span></strong>: nenhuma aprovação no meio da chamada.</p>
-    <span class="fonte">fonte: <code>pesquisa/litellm.md</code> (políticas de ferramenta)</span>
+    <span class="fonte">fonte: <code>specs/073-area-administrativa/pesquisa/litellm.md</code> (políticas de ferramenta)</span>
   </div>
 </div>
 
-<div class="caixa" data-fonte="ux-design 066 §4 anti-regra 1 (não promove) — arrastar/acionar sem evidência é recusado na origem; a plataforma que recusa devolve o motivo (pesquisa/openai-platform.md: limite rígido devolve 429)">
+<div class="caixa" data-fonte="ux-design 066 §4 anti-regra 1 (não promove) — arrastar/acionar sem evidência é recusado na origem; a plataforma que recusa devolve o motivo (specs/073-area-administrativa/pesquisa/openai-platform.md: limite rígido devolve 429)">
   <span class="rotulo">Controle</span>
   <p><label for="filtro-efeito">filtrar por efeito</label>
-    <select id="filtro-efeito" data-fonte="método — docs/governance/principles.md (Princípio III: os três efeitos allow/deny/ask); plataforma — pesquisa/agent-365.md (política por objeto)">
+    <select id="filtro-efeito" data-fonte="método — docs/governance/principles.md (Princípio III: os três efeitos allow/deny/ask); plataforma — specs/073-area-administrativa/pesquisa/agent-365.md (política por objeto)">
       <option>todos os efeitos</option>
       <option>allow</option>
       <option>deny</option>
@@ -218,20 +218,20 @@ footer.rodape strong{color:var(--tinta)}
   lado. <span class="fonte">fonte: ux-design 066 §4 (anti-regras verificáveis)</span></p>
   <p><strong>Rótulos.</strong> Os nomes de objeto vêm do vocabulário do contexto — o glossário
   (<code>docs/governance/glossary.md</code>: OPA, RBAC, ABAC, ReBAC), a linguagem ubíqua da Administração
-  (<code>confronto/mapa-de-contextos.md</code> §6.5: Agente, Projeto, Fronteira) e os termos ratificados na
-  rodada 2 (<code>confronto/confronto-decisao.md</code> § Glossário proposto: <em>política declarativa
+  (<code>specs/073-area-administrativa/confronto/mapa-de-contextos.md</code> §6.5: Agente, Projeto, Fronteira) e os termos ratificados na
+  rodada 2 (<code>specs/073-area-administrativa/confronto/confronto-decisao.md</code> § Glossário proposto: <em>política declarativa
   (allow/deny/ask)</em>). Palavras de moldura (Regra, Objeto, Efeito, Estado, Consultar, Controle) são
   interface, não vocabulário de domínio.
   <span class="fonte">fonte: Princípio VIII (<code>docs/governance/principles.md</code>) e <code>docs/governance/glossary.md</code></span></p>
   <p><strong>Toda caixa, tabela e controle traz <code>data-fonte</code></strong> — a plataforma (ficha em
-  <code>pesquisa/</code>, que traz a URL externa) ou o requisito do método (princípio, ADR, ux-design). Das fitness functions de UX
+  <code>specs/073-area-administrativa/pesquisa/</code>, que traz a URL externa) ou o requisito do método (princípio, ADR, ux-design). Das fitness functions de UX
   (<em>User Experience</em> — experiência de uso) do ciclo 066, valem aqui <code>F1</code> (todo número e selo com
   <code>data-fonte</code>), <code>F8</code> (todo "—" com motivo) e <code>F9</code> (nenhum controle só-ícone sem
   <code>aria-label</code>); <code>F2</code>–<code>F7</code> e <code>F10</code>–<code>F12</code> são <em>n/a</em> neste protótipo — supõem servidor e API, que ele não tem. Declarado, não omitido.
   <span class="fonte">fonte: specs/066-painel-de-regencia/ux-design.md §4 e §7</span></p>
   <p><strong>Navegação.</strong> A área administrativa entra no painel existente ao lado de Regência e de Chamados e
-  Gates, que ficam como estão. <span class="fonte">fonte: confronto/mapa-de-contextos.md §4 (o painel é projeção) ·
-  tasks.md (T3-readme-navegacao)</span></p>
+  Gates, que ficam como estão. <span class="fonte">fonte: specs/073-area-administrativa/confronto/mapa-de-contextos.md §4 (o painel é projeção) ·
+  specs/073-area-administrativa/tasks.md (T3-readme-navegacao)</span></p>
 </footer>
 
 </div>

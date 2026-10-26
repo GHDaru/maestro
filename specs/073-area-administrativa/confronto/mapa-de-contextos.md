@@ -289,7 +289,7 @@ repositório:
 
 | Nome | O que é no contexto A | O que é no contexto B | Como desambiguar |
 |---|---|---|---|
-| **"Fila"** | a **fila de decisões** (JSONL do regente, contexto Regência) | a **fila** do *outbox* (tabela SQLite, contexto Mensageria) | dizer sempre **"fila de decisões"** ou **"fila (outbox)"** — são dois depósitos, dois donos, dois append-only |
+| **"Fila"** | a **fila de decisões** (JSONL do regente, contexto Regência) | a **fila** do *outbox* (tabela SQLite, contexto Mensageria) | dizer sempre **"fila de decisões"** ou **"fila outbox"** — são dois depósitos, dois donos, dois append-only |
 | **"Caixa de entrada"** | a tela **Fila** do painel, que é entrada de **decisões** | a entrada de **mensagens** entre sessões, ainda sem feição nomeada | a tela do painel é Regência; "caixa de entrada" é Mensageria |
 | **"Livro de ponto"** | o *task ledger* (`docs/records/tarefas.jsonl`): tokens, custo e tentativas por tarefa | o **livro de mensagens** proposto: registro das mensagens entre sessões | nomear o primeiro por *task ledger* (glossário) e o segundo por "livro de mensagens" |
 | **"Sessão"** e **"agente"** | usados hoje como sinônimos ("a sessão W04") | com o termo proposto, **sessão de agente** é a execução e **agente** é o perfil registrado | a Administração registra o **agente**; o Workflow acompanha a **sessão** |

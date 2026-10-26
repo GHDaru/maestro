@@ -126,6 +126,28 @@ classes acima foram fechadas **só acrescentando atributos** — `data-referenci
 `data-rotulo` nos `th` de domínio —, sem reescrever o conteúdo de nenhuma tela: as telas não estavam
 erradas, o **contrato** é que não estava declarado.
 
+## Convenções
+
+**Base única de citação: todo caminho é relativo à raiz do repositório.** Vale para as 11 telas desta
+pasta — é a mesma base que as telas do Workflow já seguiam. Nada de caminho relativo ao ciclo
+(`confronto/…`, `pesquisa/…`) nem de nome solto de arquivo (`mapa-de-contextos.md`, `tasks.md`):
+
+| A citação | Base antiga (errada) | Base única (certa) |
+|---|---|---|
+| o confronto do ciclo | `confronto/confronto-decisao.md` | `specs/073-area-administrativa/confronto/confronto-decisao.md` |
+| a pesquisa do ciclo | `pesquisa/litellm.md` | `specs/073-area-administrativa/pesquisa/litellm.md` |
+| o mapa de contextos | `mapa-de-contextos.md` | `specs/073-area-administrativa/confronto/mapa-de-contextos.md` |
+| a decisão do confronto | `confronto-decisao.md` | `specs/073-area-administrativa/confronto/confronto-decisao.md` |
+| as tarefas do ciclo | `tasks.md` | `specs/073-area-administrativa/tasks.md` |
+| a spec do ciclo | `spec.md` | `specs/073-area-administrativa/spec.md` |
+
+**Aplicada em 26/10** (achado R9 da revisão da rodada 3,
+`specs/073-area-administrativa/revisao-073-rodada-3.md`): substituição **mecânica**, com **zero mudança
+de conteúdo** — só a base do caminho mudou; cada caminho resultante foi conferido contra o disco.
+
+> O corpo desta página guarda as citações da redação original (não foram reescritas nesta passagem,
+> para não colidir com a renomeação das telas da Administração em curso) — a convenção vale para as telas.
+
 ## Rastreabilidade
 
 `spec 073` ↔ `../tasks.md` (rodada 3) ↔ `confronto/confronto-decisao.md` (os 13 `ENTRA`) ↔
