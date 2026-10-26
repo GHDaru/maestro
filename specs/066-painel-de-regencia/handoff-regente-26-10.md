@@ -81,3 +81,6 @@ ADR via `python shutil.copyfile` do scratchpad. Nunca `rm -rf`, `Remove-Item`, `
   só lê os vereditos e decide. Se a correção 2 não mudar o diagnóstico, o laço para e o Darú decide.
 - Contexto da sessão regente em 93 %: a próxima sessão retoma por este handoff; primeiro ato é mandar
   o ref novo ao Gerente `[31ee4d]`.
+- **26/10 18:30 — teto elevado para 60 % pelo Darú** (`decisao-073-teto-60`): a segunda rodada de
+  juízes volta aos subagentes da regente (Sonnet, contexto fresco), com os mandatos de
+  `rodada-4/juiz-*.md`; os Workers só executam a correção 1.
