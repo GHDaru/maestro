@@ -11,6 +11,22 @@ FAILS when it finds:
   4. (ratification condition) a collision-prone term used unqualified: "fila"
      without its qualifier (decisões/outbox) and "portão" without its owner
      (chamado/regente) — the five name collisions the context map exposed.
+     The round-3 review proved NO real screen exercised this rule (it ran only
+     from check_label, so it saw labels alone, while the naked terms lived in
+     <p>, <td> and attribute values). It now runs on EVERY VISIBLE TEXT NODE
+     and on EVERY ATTRIBUTE VALUE. Two exemptions, both DECLARED, never
+     inferred:
+       (a) a text node or attribute inside a COLLISION-NAMING TABLE — a <table>
+           whose header declares data-rotulo="colisão de nomes" — names the
+           colliding terms on purpose (map §7, reproduced in mensageria-03) and
+           is skipped;
+       (b) an example-marked value (a data-exemplo ancestor, or "exemplo" in
+           the text), exactly as in rule 3.
+     Declared limit: the fence of (a) is the whole table — prose inside such a
+     table is exempt from rule 4, and the fresh review is what covers it.
+     Rule 4 does NOT exempt citation contexts (data-fonte/data-referencia): the
+     review found the naked terms precisely in citation prose, so exempting it
+     would leave the rule with nothing to accuse on the real screens.
 
 Markup contract (agreed with the screen authors — v2, after the first run over
 the real screens flagged citations as if they were metrics):
@@ -18,6 +34,8 @@ the real screens flagged citations as if they were metrics):
     term (validated here); the visible text is human phrasing and is not
     re-checked. Any element carrying data-rotulo is treated as a label.
   - `data-exemplo="true"`   marks an example VALUE (rule 3 satisfied).
+  - `data-rotulo="colisão de nomes"` on a HEADER CELL (`th`/`dt`) marks the
+    enclosing table as a COLLISION-NAMING TABLE: rule 4 does not run inside it.
   - `data-fonte` / `data-referencia` mark a CITATION context: digits inside are
     references (§7, ADR 0027, ciclo 073, file:line…), not metric values, so
     rule 3 exempts them. Digit-bearing acronyms (A2A, F1, T16…) are exempt
@@ -120,6 +138,7 @@ class ScreenParser(HTMLParser):
         self.terms = terms
         self.findings = []
         self.stack = []  # [tag, attrs-dict, label-text-so-far or None]
+        self.tables = []  # one bool per open <table>: collision-naming?
 
     def error(self, message):
         pass
@@ -138,11 +157,39 @@ class ScreenParser(HTMLParser):
     def inside_raw(self):
         return any(t in RAW_TEXT for t, _, _ in self.stack)
 
+    def inside_label(self):
+        """True while a label element is open — its text is checked by
+        check_label, so rule 4 must not also run over the raw data node."""
+        return any(text is not None for _, _, text in self.stack)
+
+    def inside_collision_table(self):
+        """Rule 4 exemption (a): inside a table that declares a
+        data-rotulo="colisão de nomes" header, the colliding terms are named on
+        purpose (map §7 reproduced) — declared in the markup, not inferred."""
+        return any(self.tables)
+
+    def collision_exempt(self, attrs=None):
+        """Rule 4 exemptions. `attrs` is passed when we are looking at the
+        element's OWN attributes (its data-exemplo is not on the stack yet)."""
+        if self.inside_collision_table() or self.inside_example():
+            return True
+        return "data-exemplo" in (attrs or {})
+
     def handle_starttag(self, tag, attrs):
         a = {k.lower(): (v or "") for k, v in attrs}
         if tag in INTERACTIVE and not a.get("data-fonte", "").strip():
             self.findings.append(
                 f"{self.path.name}: interactive <{tag}> without data-fonte")
+        if tag == "table":
+            self.tables.append(False)
+        if tag in ("th", "dt") and self.tables \
+                and "colisão de nomes" in a.get("data-rotulo", "").lower():
+            self.tables[-1] = True
+        # 4 (attribute pass). Attributes are read by whoever inspects the page:
+        # an aria-label, a tooltip or a citation can carry the naked term too.
+        if not self.collision_exempt(a):
+            for value in a.values():
+                self.check_collisions(value)
         if tag in VOID:
             return
         is_label = tag in LABEL_TAGS or "data-rotulo" in a
@@ -154,6 +201,8 @@ class ScreenParser(HTMLParser):
             if self.stack[i][0] == tag:
                 closed = self.stack[i:]
                 del self.stack[i:]
+                if any(e[0] == "table" for e in closed) and self.tables:
+                    self.tables.pop()
                 for _, attrs, text in closed:
                     if text is not None:
                         self.check_label(text.strip(), attrs)
@@ -169,6 +218,11 @@ class ScreenParser(HTMLParser):
                 and not self.inside_example() and not self.inside_citation():
             self.findings.append(
                 f'{self.path.name}: number without the "exemplo" mark: "{data.strip()}"')
+        # 4 (visible-text pass). Not inside a label (check_label runs rule 4 for
+        # those, at the closing tag) and not exempt: the naked term in prose is
+        # where the review found the real violations.
+        if not self.inside_label() and not self.collision_exempt():
+            self.check_collisions(data)
         # feed the innermost open label collector
         for entry in reversed(self.stack):
             if entry[2] is not None:
@@ -196,15 +250,27 @@ class ScreenParser(HTMLParser):
                         f'{self.path.name}: label outside the glossary: "{text}"')
         if not text:
             return
+        # 4. collision-prone terms must be qualified — same test as the visible
+        #    text and the attribute passes (check_collisions)
+        if not self.collision_exempt(attrs):
+            self.check_collisions(text)
+
+    def check_collisions(self, text):
+        """Rule 4: the colliding terms must be qualified wherever they surface.
+
+        The qualifier must be a WORD of its own (word-boundary, not a substring):
+        `painel/fila_outbox.py` names a file, it does not qualify the sentence
+        around it — without this, the naked "fila" inside an attribute that also
+        cites that path went unnoticed (R1b of the round-3 review). Same class of
+        false negative as RACI ⊂ "operacional", fixed the same way.
+        """
         low = text.lower()
-        # 4. collision-prone terms must be qualified
-        if re.search(r"\bfila\b", low) and "decis" not in low and "outbox" not in low:
+        if re.search(r"\bfila\b", low) and not re.search(r"\bdecis\w*|\boutbox\b", low):
             self.findings.append(
-                f'{self.path.name}: "fila" unqualified (decisões or outbox?): "{text}"')
-        if re.search(r"\bport[ãa]o\b", low) and "chamado" not in low \
-                and "regente" not in low:
+                f'{self.path.name}: "fila" unqualified (decisões or outbox?): "{text.strip()}"')
+        if re.search(r"\bport[ãa]o\b", low) and not re.search(r"\bchamado\b|\bregente\b", low):
             self.findings.append(
-                f'{self.path.name}: "portão" unqualified (chamado or regente?): "{text}"')
+                f'{self.path.name}: "portão" unqualified (chamado or regente?): "{text.strip()}"')
 
 
 def main():
