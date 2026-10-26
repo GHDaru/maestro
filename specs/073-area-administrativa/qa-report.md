@@ -629,3 +629,39 @@ Nada fora de `specs/073-area-administrativa/prototipo/` foi escrito (só o acré
 entrega a peça para o bar da rodada 4. Tokens (piso, soma do `message.usage` do transcript desde a
 1ª ocorrência do `[[TASK]]`): **≈2,56 M** (entrada 2.380.079 + saída 179.650, em 96 mensagens;
 `cache_read` 7.840.512 à parte).
+
+## Rodada 3 — correções da revisão fresca nas telas da Mensageria (Worker03, 26/10)
+
+**Escopo:** `T3-correcao-mensageria` (attempt=2, mandato do Gerente) — os achados **R1, R1b, R2 e
+R3** da revisão em contexto fresco (`revisao-073-rodada-3.md` §1.2) que tocam as quatro telas da
+Mensageria (commit desta correção, citando "ciclo 073"; worktree sincronizada em `dbfe3f2` com
+`git merge --ff-only`):
+
+| Achado | Onde | Antes | Depois |
+|---|---|---|---|
+| **R1** | `mensageria-01-caixa-de-entrada.html:78` | "A **fila** é *append-only*: …" | "A **fila outbox** é *append-only*: …" |
+| **R1b** | `mensageria-01-caixa-de-entrada.html:75` | `data-fonte="… ADR 0027 — a **fila** recusa DELETE …"` | `… — a **fila outbox** recusa DELETE …` |
+| **R2** | `mensageria-04-protocolo.html:61` | "(o **portão** vira contrato)" | "(o **portão do chamado** vira contrato)" |
+| **R3** | `mensageria-03-roteamento.html:74` | `… — “fila de decisões” × “fila outbox”` | `… — fila de decisões × fila outbox` (grafia única; `:73` e `:100` já a tinham) |
+
+**R6–R9:** nenhum é correção de uma linha das telas da Mensageria. **R9** (parte das telas da
+Mensageria — bases de citação mistas: `confronto/…` relativo ao ciclo convivendo com `docs/…`,
+`painel/…`, `specs/066-…` relativos à raiz, e `mapa-de-contextos.md` sem diretório) fica **dívida
+declarada da rodada 4**: unificar a base de citação é decisão de convenção **global** (vale para as
+11 telas), não correção pontual desta rodada.
+
+Verificação re-executada (antes de commitar):
+
+```text
+python specs/073-area-administrativa/prototipo/verifica-prototipo.py
+-- verifica-prototipo: 11 screen(s), 0 finding(s)   [exit 0]
+```
+
+**Nota sobre R3 (registrada para o fechamento):** a §7 do mapa escreve "**fila (outbox)**" *com*
+parênteses (`mapa-de-contextos.md:292`); o despacho fixou a grafia "**fila outbox**" *sem*
+parênteses — foi a seguida aqui. Se o fechamento quiser uma grafia só, a §7 é o outro lado a alinhar.
+
+### Limites
+
+Sem push, sem merge, sem código de produto, sem segredo; só as quatro telas da Mensageria e o
+acréscimo desta seção ao `qa-report.md`. Tokens (piso): declarados no `[[DONE]]`.
