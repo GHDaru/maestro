@@ -72,10 +72,10 @@
   <p class="nota">Idade da mais antiga não lida — <strong>do relógio do sistema</strong>, nunca digitada:
     <span class="metrica" data-fonte="relógio do sistema (idade calculada, não digitada — ux-design 066 F7)" data-exemplo="true">há 2 h 10 min (exemplo)</span>.</p>
   <p>
-    <button aria-label="drenar o outbox desta sessão" data-fonte="método: painel/fila_outbox.py (drenagem; ADR 0027 — a fila recusa DELETE, só registra a leitura)">Drenar outbox</button>
+    <button aria-label="drenar o outbox desta sessão" data-fonte="método: painel/fila_outbox.py (drenagem; ADR 0027 — a fila outbox recusa DELETE, só registra a leitura)">Drenar outbox</button>
     <button aria-label="ver o livro de mensagens" data-fonte="método: specs/073-area-administrativa/confronto/confronto-decisao.md § Glossário proposto (‘livro de mensagens’)">livro de mensagens</button>
   </p>
-  <p class="fonte" data-referencia="true">A fila é <em>append-only</em>: a leitura é registrada, a mensagem nunca é apagada (ADR 0027).</p>
+  <p class="fonte" data-referencia="true">A fila outbox é <em>append-only</em>: a leitura é registrada, a mensagem nunca é apagada (ADR 0027).</p>
 </div>
 
 <footer>
