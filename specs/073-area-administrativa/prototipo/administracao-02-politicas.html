@@ -62,7 +62,7 @@ footer.rodape strong{color:var(--tinta)}
     autorização vive fora do modelo) e o <code>deny</code> que já roda (<code>scripts/hooks/guard-immutables.py</code>);
     plataforma Microsoft Agent 365 (política aplicada por modelo).
   </p>
-  <nav class="telas" aria-label="Telas da Administração" data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §6.5 (os três ENTRA da Administração); specs/073-area-administrativa/tasks.md T3-telas-administracao">
+  <nav class="telas" aria-label="Telas da Administração" data-fonte="specs/073-area-administrativa/tasks.md T3-telas-administracao (as três telas deste contexto) e specs/073-area-administrativa/confronto/confronto-decisao.md (as três linhas ENTRA); a linguagem ubíqua do contexto é specs/073-area-administrativa/confronto/mapa-de-contextos.md §6.5">
     <a href="administracao-01-catalogo.html" data-fonte="ENTRA cadastro de skills/ferramentas/modelos (specs/073-area-administrativa/confronto/confronto-decisao.md; specs/073-area-administrativa/pesquisa/litellm.md)">catálogo de skills/ferramentas/modelos</a>
     <a href="administracao-02-politicas.html" aria-current="page" data-fonte="esta tela — ENTRA políticas allow/deny/ask (specs/073-area-administrativa/confronto/confronto-decisao.md; specs/073-area-administrativa/pesquisa/agent-365.md)">política declarativa (allow/deny/ask)</a>
     <a href="administracao-03-orcamento.html" data-fonte="ENTRA limites de orçamento e de taxa (specs/073-area-administrativa/confronto/confronto-decisao.md; specs/073-area-administrativa/pesquisa/openai-platform.md)">limite de orçamento</a>
@@ -75,9 +75,12 @@ footer.rodape strong{color:var(--tinta)}
   <span class="rotulo">A regra que a tela serve</span>
   <p><strong>Política declarativa</strong> <span class="efeito">allow</span> <span class="efeito">deny</span>
   <span class="efeito">ask</span> — três efeitos, escritos fora do modelo. Quem decide é a política; o agente não
-  a interpreta. Hoje <strong>só o <code>deny</code> roda</strong>; <code>allow</code> e <code>ask</code> estão
-  declarados e ainda não são executáveis — é a lacuna que este ENTRA fecha.</p>
-  <span class="fonte">fonte: Princípio III (<code>docs/governance/principles.md</code>) · estado no Maestro: specs/073-area-administrativa/confronto/inventario-maestro.md (parcial)</span>
+  a interpreta. No <strong>harness do Claude Code</strong> os três <em>são</em> executáveis: o bloco
+  <code>permissions</code> do <code>settings.json</code> declara <code>allow</code>, <code>ask</code> e
+  <code>deny</code>, e <code>permissions.defaultMode</code> fixa o padrão. O que falta ao <strong>Maestro</strong>
+  é declarar esse bloco no <code>.claude/settings.json</code> versionado — hoje <strong>só o <code>deny</code> dos
+  caminhos imutáveis roda</strong>, por um gancho. É a lacuna que este ENTRA fecha.</p>
+  <span class="fonte">fonte: Princípio III (<code>docs/governance/principles.md</code>) · plataforma: specs/073-area-administrativa/pesquisa/claude-code.md (permissions allow/ask/deny) · estado no Maestro: specs/073-area-administrativa/confronto/inventario-maestro.md</span>
 </div>
 
 <h2>Os três efeitos</h2>
@@ -86,7 +89,8 @@ footer.rodape strong{color:var(--tinta)}
     <span class="rotulo">Efeito</span>
     <h3><span class="efeito">allow</span></h3>
     <p>O que é permitido sem perguntar — o caso comum do dia.</p>
-    <p class="vazio">estado hoje — motivo: declarado, não executável</p>
+    <p><strong>estado hoje: executável no harness</strong> (<code>permissions.allow</code>) — no Maestro, declarado
+    (o bloco <code>permissions</code> ainda não existe no <code>.claude/settings.json</code>).</p>
     <span class="fonte">fonte: Princípio III · plataforma: Agent 365, modelo de política (<code>specs/073-area-administrativa/pesquisa/agent-365.md</code>)</span>
   </div>
   <div class="caixa" data-fonte="método — scripts/hooks/guard-immutables.py (o deny que roda); docs/governance/principles.md (Princípio III)">
@@ -94,14 +98,15 @@ footer.rodape strong{color:var(--tinta)}
     <h3><span class="efeito">deny</span></h3>
     <p>O que é recusado na origem — e recusar é o que o Maestro <em>já</em> faz: os caminhos imutáveis são
     barrados por um gancho.</p>
-    <p><strong>estado hoje: roda</strong> (o único efeito executável)</p>
+    <p><strong>estado hoje: roda</strong> (o único efeito que já roda no Maestro — por gancho)</p>
     <span class="fonte">fonte: método (<code>scripts/hooks/guard-immutables.py</code>; Princípio III)</span>
   </div>
   <div class="caixa" data-fonte="docs/governance/principles.md — Princípio III (ask: a decisão sobe ao humano); ux-design 066 §3 (sem permissão: a ação do humano aparece somente leitura ao agente)">
     <span class="rotulo">Efeito</span>
     <h3><span class="efeito">ask</span></h3>
     <p>O que espera o humano antes de acontecer — a ação irreversível.</p>
-    <p class="vazio">estado hoje — motivo: declarado, não executável</p>
+    <p><strong>estado hoje: executável no harness</strong> (<code>permissions.ask</code>) — no Maestro, declarado.
+    A ação irreversível espera o humano, no <strong>portão do chamado</strong>.</p>
     <span class="fonte">fonte: Princípio III · ux-design 066 §3 (portão do regente aparece somente leitura ao agente)</span>
   </div>
 </div>
@@ -126,7 +131,7 @@ footer.rodape strong{color:var(--tinta)}
       <td><span class="exemplo" data-exemplo="true">exemplo: leitura do repositório</span></td>
       <td>leitura e escrita na worktree do worker</td>
       <td><span class="efeito">allow</span></td>
-      <td><span class="vazio">—</span> motivo: declarado, ainda não executável</td>
+      <td>declarado; <strong>executável no harness</strong> (<code>permissions.allow</code>) — motivo: o Maestro não declara o bloco <code>permissions</code></td>
       <td>a política do projeto</td>
       <td><button type="button" data-fonte="método — docs/governance/principles.md (Princípio III, allow) e operating-model.md; plataforma — specs/073-area-administrativa/pesquisa/agent-365.md (política padrão vs. customizada)">abrir regra</button></td>
     </tr>
@@ -134,7 +139,7 @@ footer.rodape strong{color:var(--tinta)}
       <td><span class="exemplo" data-exemplo="true">exemplo: ação irreversível</span></td>
       <td>merge, promoção, publicação — o que não se desfaz</td>
       <td><span class="efeito">ask</span></td>
-      <td><span class="vazio">—</span> motivo: declarado, ainda não executável</td>
+      <td>declarado; <strong>executável no harness</strong> (<code>permissions.ask</code>) — motivo: idem; a ação espera o humano (portão do chamado)</td>
       <td>o humano (o agente vê somente leitura)</td>
       <td><button type="button" data-fonte="método — docs/governance/principles.md (Princípio III, ask) e ux-design 066 §3; plataforma — specs/073-area-administrativa/pesquisa/agent-365.md (aprovar/restringir implantação exige papel de administrador)">abrir regra</button></td>
     </tr>
@@ -150,12 +155,13 @@ footer.rodape strong{color:var(--tinta)}
 </table>
 
 <div class="grade">
-  <div class="caixa" data-fonte="specs/073-area-administrativa/confronto/confronto-decisao.md (lacuna do ENTRA: allow/ask executáveis) e specs/073-area-administrativa/confronto/inventario-maestro.md (parcial: só o deny roda)">
+  <div class="caixa" data-fonte="specs/073-area-administrativa/rodada-4/juiz-1-controle.md (P11: as referências 'sem ask' omitiam Claude Code e Kiro) e specs/073-area-administrativa/pesquisa/claude-code.md (permissions.allow/ask/deny) — correção 1 da rodada 4">
     <span class="rotulo">Lacuna declarada</span>
-    <p>O que falta é tornar <span class="efeito">allow</span> e <span class="efeito">ask</span>
-    <strong>executáveis</strong> — hoje só o <code>deny</code> recusa de fato. A tela mostra o efeito e o estado,
-    sem prometer o que não roda.</p>
-    <span class="fonte">fonte: specs/073-area-administrativa/confronto/confronto-decisao.md (coluna Lacuna) · specs/073-area-administrativa/confronto/inventario-maestro.md</span>
+    <p>O que falta <strong>não</strong> é tornar <span class="efeito">allow</span> e <span class="efeito">ask</span>
+    executáveis — o harness do Claude Code já os executa. Falta ao <strong>Maestro</strong> declarar o bloco
+    <code>permissions</code> no <code>.claude/settings.json</code> versionado: hoje só o <code>deny</code> dos
+    caminhos imutáveis recusa de fato, por gancho. A tela mostra o efeito e o estado, sem prometer o que não roda.</p>
+    <span class="fonte">fonte: specs/073-area-administrativa/rodada-4/correcao-1.md · specs/073-area-administrativa/confronto/inventario-maestro.md · plataforma: <code>specs/073-area-administrativa/pesquisa/claude-code.md</code></span>
   </div>
   <div class="caixa" data-fonte="docs/governance/principles.md — Princípio III (a autorização vive fora do modelo); docs/governance/glossary.md (RBAC, ABAC, ReBAC)">
     <span class="rotulo">Onde a autorização vive</span>
@@ -184,6 +190,24 @@ footer.rodape strong{color:var(--tinta)}
     time. Também <strong>sem <span class="efeito">ask</span></strong>: nenhuma aprovação no meio da chamada.</p>
     <span class="fonte">fonte: <code>specs/073-area-administrativa/pesquisa/litellm.md</code> (políticas de ferramenta)</span>
   </div>
+  <div class="caixa" data-fonte="specs/073-area-administrativa/pesquisa/claude-code.md — o harness executa permissions.allow/ask/deny e permissions.defaultMode; 'sim, e não perguntar de novo' grava a regra allow (correção 1 da rodada 4: referência que faltava)">
+    <span class="rotulo">Referência</span>
+    <h3>Claude Code</h3>
+    <p>O harness executa os três efeitos: <code>permissions.allow</code>, <code>permissions.ask</code> e
+    <code>permissions.deny</code>, com <code>permissions.defaultMode</code> fixando o padrão. Aprovar uma ação com
+    "sim, e não perguntar de novo" grava uma regra <span class="efeito">allow</span>. <strong>Tem
+    <span class="efeito">ask</span>: sim</strong>.</p>
+    <span class="fonte">fonte: <code>specs/073-area-administrativa/pesquisa/claude-code.md</code> (políticas allow/deny/ask; aprovação humana)</span>
+  </div>
+  <div class="caixa" data-fonte="specs/073-area-administrativa/pesquisa/kiro-crew.md — permissions com effect allow/deny; governança por teto (política ∩ perfil, o mais restritivo vence); comandos negados nunca contornados (correção 1 da rodada 4: referência que faltava)">
+    <span class="rotulo">Referência</span>
+    <h3>Kiro</h3>
+    <p>Política por <code>effect: "allow"</code> / <code>"deny"</code> e uma governança por teto (a política
+    encontra o perfil e <em>o mais restritivo vence</em>). Comandos negados nunca são contornados.
+    <strong>Tem <span class="efeito">ask</span>: sim</strong> — a aprovação humana existe como modo interativo, antes
+    do modo autônomo.</p>
+    <span class="fonte">fonte: <code>specs/073-area-administrativa/pesquisa/kiro-crew.md</code> (permissões, governança e aprovação humana)</span>
+  </div>
 </div>
 
 <div class="caixa" data-fonte="ux-design 066 §4 anti-regra 1 (não promove) — arrastar/acionar sem evidência é recusado na origem; a plataforma que recusa devolve o motivo (specs/073-area-administrativa/pesquisa/openai-platform.md: limite rígido devolve 429)">
@@ -199,6 +223,125 @@ footer.rodape strong{color:var(--tinta)}
   </p>
   <span class="fonte">a tela exibe e propõe; quem grava a política é o dono dela — o protótipo não executa nada.</span>
 </div>
+
+<h2>Precedência e padrão</h2>
+<div class="grade">
+  <div class="caixa" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (P11: precedência deny > ask > allow e padrão default-deny); plataformas — LiteLLM (o mais restritivo vence) e Kiro (teto de governança: a interseção vence)">
+    <span class="rotulo">Ordem de precedência</span>
+    <p>Quando duas regras alcançam o mesmo objeto, vence a <strong>mais restritiva</strong>:
+    <span class="efeito">deny</span> &gt; <span class="efeito">ask</span> &gt; <span class="efeito">allow</span>.
+    É a leitura das plataformas de referência — o LiteLLM diz "o mais restritivo vence" e o Kiro aplica um teto de
+    governança (a política encontra o perfil).</p>
+    <span class="fonte">fonte: método (<code>rodada-4/correcao-1.md</code>) · plataformas: <code>specs/073-area-administrativa/pesquisa/litellm.md</code>, <code>specs/073-area-administrativa/pesquisa/kiro-crew.md</code></span>
+  </div>
+  <div class="caixa" data-fonte="docs/governance/principles.md (Princípio III: a autorização vive fora do modelo); docs/governance/glossary.md (RBAC) e specs/073-area-administrativa/rodada-4/correcao-1.md (padrão default-deny)">
+    <span class="rotulo">Padrão (default)</span>
+    <p>O padrão é <strong>negar</strong> (<em>default-deny</em>): o que nenhuma regra permite não acontece. Só entra
+    o que uma regra declara de forma explícita — o caso comum do dia vira uma regra
+    <span class="efeito">allow</span> escrita, não um silêncio.</p>
+    <span class="fonte">fonte: Princípio III (<code>docs/governance/principles.md</code>) · <code>rodada-4/correcao-1.md</code></span>
+  </div>
+</div>
+
+<h2>Escopo — agente, papel, projeto</h2>
+<div class="grade">
+  <div class="caixa" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (P11: escopo agente, papel, projeto); plataforma — Claude Code (permissionMode por agente) e LiteLLM (permissão por chave de agente)">
+    <span class="rotulo">Agente</span>
+    <p>A regra vale para um <strong>agente</strong> nomeado. No Claude Code isso é o <code>permissionMode</code>
+    declarado no arquivo do agente; no LiteLLM, a permissão por chave de agente.</p>
+    <span class="fonte">fonte: plataformas: <code>specs/073-area-administrativa/pesquisa/claude-code.md</code>, <code>specs/073-area-administrativa/pesquisa/litellm.md</code></span>
+  </div>
+  <div class="caixa" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (P11: escopo papel); método — o papel do agente é o que scripts/check-roles.sh verifica; plataforma — LiteLLM (RBAC por papel)">
+    <span class="rotulo">Papel</span>
+    <p>A regra vale para um <strong>papel</strong> (o que o agente é), não para a pessoa. É o recorte que o
+    <code>scripts/check-roles.sh</code> já usa: a ferramenta fora do papel é recusada.</p>
+    <span class="fonte">fonte: método (<code>scripts/check-roles.sh</code>; <code>docs/agents/README.md</code>) · plataforma: <code>specs/073-area-administrativa/pesquisa/litellm.md</code></span>
+  </div>
+  <div class="caixa" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (P11: escopo projeto e ligação com o bloco permissions do settings.json); plataforma — LiteLLM (hierarquia por projeto)">
+    <span class="rotulo">Projeto</span>
+    <p>A regra vale dentro de um <strong>projeto</strong>. A política do projeto é declarada no bloco
+    <code>permissions</code> do <code>settings.json</code> — e a precedência entre arquivos é a do harness: o mais
+    específico vence.</p>
+    <span class="fonte">fonte: plataforma: <code>specs/073-area-administrativa/pesquisa/claude-code.md</code>, <code>specs/073-area-administrativa/pesquisa/litellm.md</code></span>
+  </div>
+</div>
+
+<h2>O caminho do ask até o ruling</h2>
+<ul class="estados" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (P11: fluxo do ask até a fila de decisões e o ruling humano; decisão 5: quem autoriza) e docs/governance/operating-model.md (o pedido de decisão sobe ao humano)">
+  <li><strong>A política declara <span class="efeito">ask</span></strong> — a ação não acontece sozinha.</li>
+  <li><strong>Nasce um pedido de decisão</strong> — com o objeto, o efeito e quem pediu (<code>nome · ref · projeto</code>).</li>
+  <li><strong>O pedido entra na fila de decisões</strong> — a mesma fila de decisões que o painel de Regência exibe.</li>
+  <li><strong>O humano dá o ruling</strong> — aprova ou recusa; o agente vê o pedido somente leitura.</li>
+  <li><strong>O desfecho volta como regra</strong> — o ruling vira linha no histórico desta tela.</li>
+  <li class="vazio">fonte: <code>rodada-4/correcao-1.md</code> · <code>docs/governance/operating-model.md</code></li>
+</ul>
+
+<h2>O que os efeitos fazem com o envio de mensagem</h2>
+<div class="caixa" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (P11: o que allow/deny/ask faz com envio de mensagem); specs/073-area-administrativa/confronto/mapa-de-contextos.md §4 relação 3 e §6.6 (roteamento por nome/ref); plataforma — LiteLLM (permissão de agente por chave: o mais restritivo vence)">
+  <span class="rotulo">Endereçar é uma ação da política</span>
+  <p>Enviar mensagem a outra sessão é uma ação como as outras, e cai sob a política:</p>
+  <ul class="estados">
+    <li><span class="efeito">allow</span> — <strong>pode endereçar</strong>: a mensagem sai para o destino resolvido.</li>
+    <li><span class="efeito">deny</span> — <strong>recusa na origem</strong>: a mensagem não sai e o remetente recebe o motivo.</li>
+    <li><span class="efeito">ask</span> — <strong>confirmação humana antes de entregar</strong> a um destino não resolvido ou de risco.</li>
+  </ul>
+  <p>Endereço ambíguo nunca é resolvido por adivinhação: é recusado, e o pedido entra na fila de decisões. A mesma
+  leitura vale para o teto — estourá-lo também endereça uma mensagem, na tela
+  <code>specs/073-area-administrativa/prototipo/administracao-03-orcamento.html</code>.</p>
+  <span class="fonte">fonte: método (<code>rodada-4/correcao-1.md</code>; <code>confronto/mapa-de-contextos.md</code> §4 relação 3 e §6.6) · plataforma: <code>specs/073-area-administrativa/pesquisa/litellm.md</code></span>
+</div>
+
+<h2>Propor regra (proposto — a tela não executa)</h2>
+<div class="caixa" data-fonte="specs/073-area-administrativa/rodada-4/juiz-2-administracao-gerenciamento.md (P11: 'Propor regra' sem formulário) e specs/073-area-administrativa/rodada-4/correcao-1.md (quem edita e o rastro da mudança); hoje a área é somente leitura — specs/073-area-administrativa/confronto/inventario-maestro.md">
+  <span class="rotulo">Fluxo de escrita — desenhado, não executado</span>
+  <p>
+    <label for="pol-escopo">aplicar a</label>
+    <select id="pol-escopo" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (P11: escopo agente, papel, projeto); a tela não grava">
+      <option>agente</option>
+      <option>papel</option>
+      <option>projeto</option>
+    </select>
+    <label for="pol-objeto">objeto</label>
+    <input id="pol-objeto" type="text" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (P11: objeto da regra); a tela não grava">
+    <label for="pol-efeito-form">efeito</label>
+    <select id="pol-efeito-form" data-fonte="docs/governance/principles.md (Princípio III: allow/deny/ask); a tela não grava">
+      <option>allow</option>
+      <option>deny</option>
+      <option>ask</option>
+    </select>
+  </p>
+  <p><strong>Quem edita a política:</strong> o humano, no <strong>portão do chamado</strong> — a autorização vive
+  fora do modelo, e o protótipo não grava. A escrita nunca é de quem apenas consulta.</p>
+  <p><strong>Identidade de quem edita:</strong> <code>nome · ref · projeto</code> — lida agora pelo harness:
+  <code>Worker04 [4d000a] · projeto exemplo</code>. <strong>O ref muda ao reiniciar</strong>.</p>
+  <span class="fonte">fonte: <code>rodada-4/correcao-1.md</code> (decisões 2 e 5) · Princípio III</span>
+</div>
+
+<h2>Histórico de mudanças (auditoria administrativa)</h2>
+<table data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (decisão 4: auditoria administrativa entra como ENTRA desta rodada — histórico de mudanças com changed_by); plataforma — LiteLLM (audit_logs com changed_by) e Kiro (registro de eventos de segurança)">
+  <caption>Quem mudou a política, quando. O autor é o campo <code>changed_by</code>. A linha ilustrativa vem marcada
+  <span class="exemplo" data-exemplo="true">exemplo</span>; o valor vivo aparece como <span class="vazio">—</span> com o motivo.</caption>
+  <thead>
+    <tr><th>Data</th><th>Objeto</th><th>Descrição</th><th>Quem</th><th>Consultar</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><span class="exemplo" data-exemplo="true">exemplo: 26/10/2026</span></td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: uma regra</span></td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: efeito alterado</span></td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: changed_by</span></td>
+      <td><button type="button" data-fonte="rodada-4/correcao-1.md (decisão 4) e specs/073-area-administrativa/pesquisa/litellm.md (auditoria com changed_by)">abrir mudança</button></td>
+    </tr>
+    <tr>
+      <td><span class="vazio">—</span> motivo: o Maestro ainda não registra mudança de política com autor</td>
+      <td><span class="vazio">—</span></td>
+      <td><span class="vazio">—</span></td>
+      <td><span class="vazio">—</span></td>
+      <td><span class="vazio">—</span> motivo: nada a abrir enquanto a trilha não existir</td>
+    </tr>
+  </tbody>
+</table>
+<p class="fonte" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (decisão 4: auditoria administrativa como ENTRA desta rodada); plataformas: LiteLLM (audit_logs com changed_by; exige licença Enterprise) e Kiro (registro de eventos de segurança); Claude Code fica parcial — os eventos existem, o console de auditoria não.</p>
 
 <h2>Estados desta tela</h2>
 <ul class="estados" data-fonte="ux-design 066 §3 (vazio, carregando, erro de fonte, sem permissão) e §4 (anti-regras)">

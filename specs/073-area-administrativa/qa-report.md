@@ -1076,3 +1076,24 @@ python specs/073-area-administrativa/prototipo/verifica-prototipo.py
 **Limites:** nenhum `push`, `merge` (além do `ff-only 6a32e24` do despacho), código de produto ou
 segredo. As duas tabelas de colisão do mapa seguem separadas (termo no §7 × endereço na tela de
 roteamento); a tabela de colisões de **endereço** do mapa é do Worker02.
+
+## Rodada 4 — correção 1: Administração (Worker04, 26/10)
+
+Fatia de `rodada-4/correcao-1.md` (P10 a P12 dos juízes 1 e 2; preâmbulo R8 já integrado em `6a32e24`).
+Três telas da Administração; nenhum arquivo fora delas.
+
+| Tela | O que a correção acrescentou | Fontes citadas |
+|---|---|---|
+| `administracao-01-catalogo.html` | seção "Cadastrar (proposto — a tela não executa)" com os campos do Modelo (provedor, preço por milhão de tokens, quem pode usar, projeto) e a identidade `nome · ref · projeto`; seção "Unicidade de nomes e o que o catálogo alimenta" (unicidade/colisão de nomes, ligação com a tabela de roteamento e com a política); seção "Histórico de mudanças (auditoria administrativa)" com `changed_by`; correção do `data-fonte` do `nav` (§ 6.5 vs. tasks/confronto-decisao) | `rodada-4/correcao-1.md`; `rodada-4/juiz-1..3`; `confronto/mapa-de-contextos.md` §4, §6.6, §7; `pesquisa/kiro-crew.md`; `pesquisa/claude-code.md`; `pesquisa/litellm.md`; `docs/governance/glossary.md` |
+| `administracao-02-politicas.html` | correção do estado de `allow`/`ask` (o harness do Claude Code executa `permissions.allow/ask/deny`; falta ao Maestro declarar o bloco `permissions` no `.claude/settings.json` versionado); precedência `deny > ask > allow` e padrão default-deny; escopo agente/papel/projeto; caminho do `ask` até a fila de decisões e o ruling humano; o que os efeitos fazem com o envio de mensagem; referências Claude Code e Kiro (ask = sim) acrescentadas; formulário "Propor regra"; histórico de mudanças | `rodada-4/correcao-1.md`; `rodada-4/juiz-1..2`; `pesquisa/claude-code.md`; `pesquisa/kiro-crew.md`; `pesquisa/litellm.md`; `docs/governance/principles.md`; `.claude/settings.json` |
+| `administracao-03-orcamento.html` | cota de 40 % relabelada (cota semanal da sessão do regente, não teto por agente/projeto); idade do relógio no consumo (F7); limite de taxa rebaixado formalmente a DEPOIS; efeito ao estourar (avisar/recusar/suspender) com quem autoriza; tabela de tetos por projeto/agente/modelo com unidade (tokens e dólar estimado); limiar de alerta; histórico de mudanças; identidade `nome · ref · projeto` junto da ação | `rodada-4/correcao-1.md`; `rodada-4/juiz-1..2`; `pesquisa/openai-platform.md`; `pesquisa/litellm.md`; `spec.md` §Clarify; `docs/records/decisoes.jsonl` |
+
+**Gate (fitness function `verifica-prototipo.py`), após a correção:**
+
+```
+-- verifica-prototipo: 11 screen(s), 0 finding(s)
+```
+
+exit 0. Convenções de markup respeitadas (todo controle com `data-fonte`; rótulo de domínio com `data-rotulo` ou só moldura; todo número vivo com fonte/`exemplo`; "fila" e "portão" sempre qualificados).
+
+**Limites declarados desta fatia:** (1) as citações § 2/§ 6.3/§ 6.5 do mapa ainda apontam o limite de orçamento ao Workflow — a correção da decisão 1 é do Worker02; (2) a **regra 5** do verificador (identidade de sessão) é do Worker02, então a identidade `nome · ref · projeto` foi escrita por disciplina, ainda não exigida pelo gate; (3) os refs `[4d000a]` e o projeto "exemplo" foram lidos do harness e de `painel/projetos/exemplo.json` — envelhecem.

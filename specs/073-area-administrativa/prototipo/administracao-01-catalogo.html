@@ -59,7 +59,7 @@ footer.rodape strong{color:var(--tinta)}
     <strong>fonte do ENTRA:</strong> método (<code>skills/&lt;nome&gt;/SKILL.md</code> e o catálogo que o instalador gera)
     e plataforma LiteLLM (<em>Skills Registry</em>).
   </p>
-  <nav class="telas" aria-label="Telas da Administração" data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §6.5 (os três ENTRA da Administração); specs/073-area-administrativa/tasks.md T3-telas-administracao (as três telas deste contexto)">
+  <nav class="telas" aria-label="Telas da Administração" data-fonte="specs/073-area-administrativa/tasks.md T3-telas-administracao (as três telas deste contexto) e specs/073-area-administrativa/confronto/confronto-decisao.md (as três linhas ENTRA); a linguagem ubíqua do contexto é specs/073-area-administrativa/confronto/mapa-de-contextos.md §6.5">
     <a href="administracao-01-catalogo.html" aria-current="page" data-fonte="esta tela — ENTRA cadastro de skills/ferramentas/modelos (specs/073-area-administrativa/confronto/confronto-decisao.md; specs/073-area-administrativa/pesquisa/litellm.md)">catálogo de skills/ferramentas/modelos</a>
     <a href="administracao-02-politicas.html" data-fonte="ENTRA políticas allow/deny/ask (specs/073-area-administrativa/confronto/confronto-decisao.md; specs/073-area-administrativa/pesquisa/agent-365.md)">política declarativa (allow/deny/ask)</a>
     <a href="administracao-03-orcamento.html" data-fonte="ENTRA limites de orçamento e de taxa (specs/073-area-administrativa/confronto/confronto-decisao.md; specs/073-area-administrativa/pesquisa/openai-platform.md)">limite de orçamento</a>
@@ -93,7 +93,8 @@ footer.rodape strong{color:var(--tinta)}
     <span class="rotulo">Tipo de registro — lacuna declarada</span>
     <h3>Modelo</h3>
     <p class="vazio">Hoje o modelo é escolhido <em>por sessão</em>, não registrado por projeto. É a lacuna que este
-    catálogo fecha: o modelo passa a ter linha própria.</p>
+    catálogo fecha: o modelo passa a ter linha própria — com provedor, preço por milhão de tokens, quem pode
+    usar e por projeto.</p>
     <span class="fonte">fonte: método (<code>scripts/multi-session.py</code>) · specs/073-area-administrativa/confronto/inventario-maestro.md (parcial)</span>
   </div>
 </div>
@@ -148,6 +149,92 @@ footer.rodape strong{color:var(--tinta)}
     <span class="fonte">fonte: ux-design 066 §3 e §4</span>
   </div>
 </div>
+
+<h2>Cadastrar (proposto — a tela não executa)</h2>
+<div class="caixa" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (fatia da Administração, P10: formulário 'cadastrar' com os campos do Modelo) e specs/073-area-administrativa/rodada-4/juiz-2-administracao-gerenciamento.md; hoje a área é somente leitura — specs/073-area-administrativa/confronto/inventario-maestro.md">
+  <span class="rotulo">Fluxo de escrita — desenhado, não executado</span>
+  <p>
+    <label for="cad-nome" data-rotulo="catálogo de skills/ferramentas/modelos">nome</label>
+    <input id="cad-nome" type="text" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (P10: campo do cadastro); a tela não grava">
+    <label for="cad-tipo" data-rotulo="catálogo de skills/ferramentas/modelos">tipo</label>
+    <select id="cad-tipo" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (P10: campo do cadastro); a tela não grava">
+      <option>Skill</option>
+      <option>Ferramenta</option>
+      <option>Modelo</option>
+    </select>
+  </p>
+  <p>
+    <label for="cad-provedor" data-rotulo="catálogo de skills/ferramentas/modelos">provedor</label>
+    <input id="cad-provedor" type="text" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (P10: campos do Modelo)">
+    <label for="cad-preco" data-rotulo="catálogo de skills/ferramentas/modelos">preço por milhão de tokens</label>
+    <input id="cad-preco" type="text" placeholder="exemplo: preço por milhão de tokens" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (P10: campos do Modelo)">
+    <label for="cad-quem" data-rotulo="catálogo de skills/ferramentas/modelos">quem pode usar</label>
+    <input id="cad-quem" type="text" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (P10: campos do Modelo)">
+    <label for="cad-projeto" data-rotulo="catálogo de skills/ferramentas/modelos">projeto</label>
+    <input id="cad-projeto" type="text" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (P10: campos do Modelo)">
+  </p>
+  <p class="vazio">estado hoje: somente leitura — motivo: a área administrativa inteira não tem rota de escrita
+  (nenhum formulário existe no repositório); o que está desenhado é o fluxo, não uma promessa de que ele roda.</p>
+  <p><strong>Quem autoriza a escrita:</strong> o humano (portão) ou o regente por delegação; a <strong>sessão
+  dona</strong> cadastra o que é dela — a escrita nunca é de quem apenas consulta.
+  <span class="vazio">o registro da autorização —</span> motivo: ainda não há trilha de autorização desenhada
+  fora deste campo.</p>
+  <p><strong>Identidade de quem escreve:</strong> <code>nome · ref · projeto</code> — lida agora pelo harness:
+  <code>Worker04 [4d000a] · projeto exemplo</code>. <strong>O ref muda ao reiniciar</strong> (o harness o troca a
+  cada sessão nova; por isso o ref acompanha o nome, não o substitui).</p>
+  <span class="fonte">fonte: decisão 5 da regente (<code>rodada-4/correcao-1.md</code>: toda ação de escrita diz quem autoriza) e decisão 2 (identidade <code>nome · ref · projeto</code>, com o aviso do ref) · harness: <code>ListAgents</code> · projeto do painel: <code>painel/projetos/exemplo.json</code></span>
+</div>
+
+<h2>Unicidade de nomes e o que o catálogo alimenta</h2>
+<div class="grade">
+  <div class="caixa" data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §7 (colisão de nomes) e §6.6 (roteamento por nome/ref); specs/073-area-administrativa/rodada-4/juiz-3-intercomunicabilidade.md (P10: nomes únicos); plataforma: Kiro — nome desconhecido falha em vez de cair num padrão (specs/073-area-administrativa/pesquisa/kiro-crew.md)">
+    <span class="rotulo">Regra declarada — nomes únicos</span>
+    <p>Nome de skill, de ferramenta e de modelo é <strong>único</strong> no escopo em que vale. Dois itens com o
+    mesmo nome são <strong>colisão de nomes</strong>: o registro <em>recusa</em> o segundo — não resolve o empate.
+    A plataforma ensina a mesma disciplina: nome desconhecido falha, não cai num padrão.</p>
+    <span class="fonte">fonte: método (<code>confronto/mapa-de-contextos.md</code> §7 e §6.6) · plataforma (<code>pesquisa/kiro-crew.md</code>: "fail rather than fall back")</span>
+  </div>
+  <div class="caixa" data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §4 relação 3 (Administração → Mensageria, conformista: a fonte dos nomes é a Administração) e §6.6 (roteamento por nome/ref, com tabela de resolução)">
+    <span class="rotulo">Ligação — tabela de roteamento</span>
+    <p>Endereçar uma mensagem exige um nome, e <strong>quem publica o nome é este registro</strong> (relação 3 do
+    mapa, conformista). A tabela de endereços que consome o registro é a do roteamento —
+    <code>specs/073-area-administrativa/prototipo/mensageria-03-roteamento.html</code>.</p>
+    <span class="fonte">fonte: método (<code>confronto/mapa-de-contextos.md</code> §4 relação 3 e §6.6; <code>docs/governance/glossary.md</code>: roteamento por nome/ref)</span>
+  </div>
+  <div class="caixa" data-fonte="specs/073-area-administrativa/prototipo/administracao-02-politicas.html (a política declarativa); plataforma: Claude Code — modelos permitidos e negados na configuração (specs/073-area-administrativa/pesquisa/claude-code.md)">
+    <span class="rotulo">Ligação — a política</span>
+    <p>A linha do <strong>Modelo</strong> não é só registro: ela é o que a <strong>política declarativa
+    (allow/deny/ask)</strong> usa para dizer <em>qual modelo cada agente pode usar</em>. A tela irmã é
+    <code>specs/073-area-administrativa/prototipo/administracao-02-politicas.html</code>.</p>
+    <span class="fonte">fonte: método (a autorização vive fora do modelo — Princípio III) · plataforma (<code>pesquisa/claude-code.md</code>: <code>availableModels</code> / <code>deniedModels</code>)</span>
+  </div>
+</div>
+
+<h2>Histórico de mudanças (auditoria administrativa)</h2>
+<table data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (decisão 4: auditoria administrativa entra como ENTRA desta rodada — histórico de mudanças com changed_by); plataforma: LiteLLM — audit_logs com changed_by, licença Enterprise (specs/073-area-administrativa/pesquisa/litellm.md) e Kiro — security event log (specs/073-area-administrativa/pesquisa/kiro-crew.md)">
+  <caption>Quem mudou o quê, quando. O autor é o campo <code>changed_by</code>. A linha ilustrativa vem marcada
+  <span class="exemplo" data-exemplo="true">exemplo</span>; o valor vivo aparece como <span class="vazio">—</span> com o motivo.</caption>
+  <thead>
+    <tr><th>Data</th><th>Objeto</th><th>Descrição</th><th>Quem</th><th>Consultar</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><span class="exemplo" data-exemplo="true">exemplo: 26/10/2026</span></td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: linha do catálogo</span></td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: provedor do modelo alterado</span></td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: changed_by</span></td>
+      <td><button type="button" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (decisão 4) e specs/073-area-administrativa/pesquisa/litellm.md (auditoria com changed_by)">abrir mudança</button></td>
+    </tr>
+    <tr>
+      <td><span class="vazio">—</span> motivo: o Maestro ainda não registra mudança administrativa com autor</td>
+      <td><span class="vazio">—</span></td>
+      <td><span class="vazio">—</span></td>
+      <td><span class="vazio">—</span></td>
+      <td><span class="vazio">—</span> motivo: nada a abrir enquanto a trilha não existir</td>
+    </tr>
+  </tbody>
+</table>
+<p class="fonte" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (decisão 4: auditoria administrativa como ENTRA desta rodada); specs/073-area-administrativa/confronto/confronto-decisao.md (registrava auditoria como NÃO PRECISA — reaberta nesta rodada); plataformas: LiteLLM (audit_logs com changed_by; exige licença Enterprise) e Kiro (registro de eventos de segurança); Claude Code fica parcial — os eventos existem, o console de auditoria não.</p>
 
 <h2>Coluna de contexto — cadastro de agentes (registro que já existe)</h2>
 <div class="caixa" data-fonte="método — docs/agents/README.md (perfil ↔ executável) e scripts/check-agents.sh (invariantes); specs/073-area-administrativa/confronto/confronto-decisao.md §NÃO PRECISA (cadastro de agentes: já coberto)">
