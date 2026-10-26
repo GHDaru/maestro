@@ -99,7 +99,7 @@ exemplo.json:103`); a daqui é `C--Users-ghdaru-Documents-010-PROJETOS-410-MAEST
 e **não têm sessão viva neste projeto em 26/10** — por isso `—` **com o motivo**, e nunca um `ref`
 inventado.
 
-**Regra 5 (despachada à Worker02 nesta rodada; ainda não está no script).** O verificador passa a exigir
+**Regra 5 (entregue pela Worker02 nesta rodada; já está no script, v4).** O verificador exige
 o `ref` no formato `[xxxxxx]` depois de toda menção a um nome do catálogo, **salvo** em tabela marcada
 `data-rotulo="colisão de nomes"`.
 
@@ -193,8 +193,8 @@ Administração, e ela mudou.
 python specs/073-area-administrativa/prototipo/verifica-prototipo.py
 ```
 
-A fitness function (`verifica-prototipo.py`, v3 — `da85def`) percorre os `*.html` e falha em quatro
-regras hoje — a **quinta** é despachada nesta rodada (abaixo):
+A fitness function (`verifica-prototipo.py`, v4 — regra 5 da Worker02, `11efa79`) percorre os
+`*.html` e falha em **cinco** regras:
 
 1. elemento interativo **sem `data-fonte`** — onde a ideia foi achada;
 2. **rótulo fora da allowlist** — o `docs/governance/glossary.md` **mais** os 12 termos ratificados
@@ -206,9 +206,10 @@ regras hoje — a **quinta** é despachada nesta rodada (abaixo):
 4. **termo de colisão sem qualificador** — `fila` sem *decisões*/*outbox*, `portão` sem
    *chamado*/*regente*. **Trava dois dos cinco** pares de termo do mapa § 7; os outros três
    (`caixa de entrada`, `livro de ponto`, `sessão × agente`) não são executáveis por script hoje;
-5. *(despachada à Worker02 nesta rodada, ainda não no script)* **identidade de sessão** — toda menção a
-   um nome do catálogo (`Gerente`, `WorkerNN`, `MAESTRO`, `Office`, `Assistente`) seguida do `ref` no
-   formato `[xxxxxx]`, salvo em tabela marcada `data-rotulo="colisão de nomes"`.
+5. **identidade de sessão** — toda menção a um nome do catálogo (`Gerente`, `WorkerNN`, `MAESTRO`,
+   `Office`, `Assistente`) seguida do `ref` no formato `[xxxxxx]`, em todo texto visível e atributo,
+   salvo em tabela marcada `data-rotulo="colisão de nomes"` (a isenção **não** cobre a tabela de
+   colisões de **endereço**, que lista os refs nas próprias células).
 
 **Medido em 25/10, no topo `20f352c`** (script v3): **7 telas · 45 achados**, e **só duas classes**:
 

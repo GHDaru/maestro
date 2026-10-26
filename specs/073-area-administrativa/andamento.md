@@ -77,7 +77,8 @@ máx. 2), despachada por dono a partir de `6a32e24`:
 | correção 1 — Mensageria (4 telas) | Worker03 | **integrado** — `edbb32f`+`80a4c6d` → `d83920e`; gate 11 telas, 0 achados |
 | correção 1 — Administração (3 telas) | Worker04 | **integrado** — `5be4a31` → `bfe1da5`; gate 11 telas, 0 achados |
 | correção 1 — Workflow (4 telas) + inventário | Worker05 | **integrado** — `952ce53` (derrubar por confirmação com regente protegido, reiniciar no lugar de subir, ações por estado, travada com limiar, custo estimado em US$ com teto da Administração; inventário com SendMessage/ListAgents de primeira classe); gate 11/0 |
-| correção 1 — confronto + mapa + regra 5 do verificador (identidade `nome · ref · projeto`, com mutação e fixture) | Worker02 | despachada |
+| correção 1 — confronto + mapa + regra 5 do verificador (identidade `nome · ref · projeto`, com mutação e fixture) | Worker02 | **integrado** — `11efa79` → `eb638b2` (ENTRA 15 · NÃO PRECISA 6 · DEPOIS 11; mapa com o orçamento na Administração, invariante de endereço ambíguo e § 7.1; regra 5 v4 com mutação 36→6 e fixtures) |
+| fechamento da regra 5 nas telas (identidade `nome · ref · projeto` adjacente) | W03 + W05 | **despachada** — gate com a regra 5 viva no topo integrado: 11 telas, **39 achados**, todos da regra 5 (Mensageria 34 → W03; Workflow 4 → W05; o corpus do W02 acusava 29 porque não tinha as telas da correção 1 do W03/W05) |
 | correção 1 — matriz (`plataformas.md`) | Worker06 | despachada |
 | correção 1 — README + glossário | Worker01 | **integrado** — `0deccf4` (tabela de identidade, colisões termo × endereço, ENTRA 12 e 17, prosa obsoleta reescrita; glossário +2 termos); gate 11/0, check-language ✓ |
 
