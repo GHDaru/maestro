@@ -76,7 +76,7 @@ máx. 2), despachada por dono a partir de `6a32e24`:
 | preâmbulo R9 (base de citação única + § Convenções + mapa §7 "fila outbox") | Worker02 | **integrado** — `46d254c` → `6a32e24` (conflitos do nav: hrefs do R8 + base nova) |
 | correção 1 — Mensageria (4 telas) | Worker03 | **integrado** — `edbb32f`+`80a4c6d` → `d83920e`; gate 11 telas, 0 achados |
 | correção 1 — Administração (3 telas) | Worker04 | **integrado** — `5be4a31` → `bfe1da5`; gate 11 telas, 0 achados |
-| correção 1 — Workflow (4 telas) + inventário | Worker05 | despachada |
+| correção 1 — Workflow (4 telas) + inventário | Worker05 | **integrado** — `952ce53` (derrubar por confirmação com regente protegido, reiniciar no lugar de subir, ações por estado, travada com limiar, custo estimado em US$ com teto da Administração; inventário com SendMessage/ListAgents de primeira classe); gate 11/0 |
 | correção 1 — confronto + mapa + regra 5 do verificador (identidade `nome · ref · projeto`, com mutação e fixture) | Worker02 | despachada |
 | correção 1 — matriz (`plataformas.md`) | Worker06 | despachada |
 | correção 1 — README + glossário | Worker01 | **integrado** — `0deccf4` (tabela de identidade, colisões termo × endereço, ENTRA 12 e 17, prosa obsoleta reescrita; glossário +2 termos); gate 11/0, check-language ✓ |
