@@ -16,6 +16,7 @@
   th, td { border:1px solid #dfe3e9; padding:8px 10px; text-align:left; font-size:.9rem; vertical-align:top; }
   th { background:#eceef2; font-weight:600; }
   .metrica { font-variant-numeric: tabular-nums; }
+  .mono { font-family: ui-monospace, monospace; }
   .falta { color:#7a3d00; }
   .ok { color:#1f5a2a; }
   button { font:inherit; background:#eceef2; border:1px solid #b9bfc9; border-radius:5px; padding:6px 10px; cursor:pointer; }
@@ -27,13 +28,52 @@
 <body>
 
 <header class="cx">
-  <h1 class="rotulo" data-rotulo="protocolo de intercomunicação" data-fonte="método: specs/073-area-administrativa/confronto/confronto-decisao.md § Glossário proposto (‘protocolo de intercomunicação’); MCP já no glossary.md">protocolo de intercomunicação</h1>
-  <p class="nota">Contexto <strong>Mensageria</strong> — o contrato pelo qual uma <strong>sessão de agente</strong> expõe e consome
+  <h1 class="rotulo" data-rotulo="protocolo de intercomunicação" data-fonte="método: docs/governance/glossary.md (Protocolo de intercomunicação); specs/073-area-administrativa/confronto/confronto-decisao.md § Glossário proposto">protocolo de intercomunicação</h1>
+  <p class="nota" data-referencia="true">Contexto <strong>Mensageria</strong> — o contrato pelo qual uma <strong>sessão de agente</strong> expõe e consome
     ferramentas: <strong>MCP</strong> (*Model Context Protocol*) para o que ela <em>expõe</em>, e <strong>A2A</strong>
     (*Agent-to-Agent*) para par a par. <span class="fonte" data-referencia="true">Fonte da ideia: método — servidor MCP do painel,
     <code>painel/mcp_painel.py</code>; plataforma: LiteLLM, <code>https://www.litellm.ai/</code> (A2A real, ficha
     <code>specs/073-area-administrativa/pesquisa/litellm.md</code>, <code>sim</code>).</span></p>
+  <p class="nota">Identidade de sessão: sempre <strong>nome · ref · projeto</strong>.
+    <span class="fonte" data-referencia="true">O ref muda ao reiniciar — a leitura e a escrita abaixo endereçam por ref (rodada 4, decisão 2).</span></p>
 </header>
+
+<h2>Por onde a mensagem trafega hoje</h2>
+
+<div class="cx">
+  <p class="nota">O confronto pede o canal real: as três ferramentas MCP <em>não</em> enviam nem leem mensagem — quem carrega a mensagem entre sessões é o <em>harness</em>.</p>
+  <table>
+    <thead>
+      <tr>
+        <th class="rotulo" data-rotulo="mensagem entre agentes" data-fonte="método: specs/073-area-administrativa/confronto/inventario-maestro.md (mecanismos de primeira classe)">canal</th>
+        <th class="rotulo" data-rotulo="protocolo de intercomunicação" data-fonte="método: docs/governance/glossary.md (Mensagem entre agentes, Outbox)">o que carrega</th>
+        <th class="rotulo" data-rotulo="outbox" data-fonte="método: specs/073-area-administrativa/confronto/inventario-maestro.md">estado hoje</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code data-fonte="método: specs/073-area-administrativa/confronto/inventario-maestro.md (SendMessage/ListAgents)">SendMessage</code> / <code data-fonte="método: specs/073-area-administrativa/confronto/inventario-maestro.md (SendMessage/ListAgents)">ListAgents</code> (harness)</td>
+        <td><span class="fonte" data-referencia="true">a mensagem entre agentes na mesma máquina, entregue na hora; <code>ListAgents</code> lista quem está vivo.</span></td>
+        <td class="ok"><span data-fonte="método: specs/073-area-administrativa/confronto/inventario-maestro.md" data-exemplo="true">é o canal de hoje (exemplo)</span></td>
+      </tr>
+      <tr>
+        <td>arquivo commitado (fallback)</td>
+        <td><span class="fonte" data-referencia="true">a cópia do <code>[[DONE]]</code> / do handoff, quando a sessão de destino não está viva para receber.</span></td>
+        <td class="ok"><span data-fonte="método: specs/073-area-administrativa/confronto/inventario-maestro.md" data-exemplo="true">fallback real (exemplo)</span></td>
+      </tr>
+      <tr>
+        <td>fila outbox (<em>SQLite</em>)</td>
+        <td><span class="fonte" data-referencia="true">a mensagem endereçada gravada na fila outbox; os hooks leem e drenam.</span></td>
+        <td class="ok"><span data-fonte="método: painel/fila_outbox.py" data-exemplo="true">carrega mensagem (exemplo)</span></td>
+      </tr>
+      <tr>
+        <td>MCP <code>maestro-painel</code></td>
+        <td><span class="falta" data-fonte="método: painel/mcp_painel.py (tools/list) · specs/073-area-administrativa/rodada-4/juiz-3-intercomunicabilidade.md" data-exemplo="true">— <span class="fonte" data-referencia="true">motivo: as três ferramentas são estado e registro, não uma caixa de mensagens</span> (exemplo)</span></td>
+        <td><span class="falta" data-fonte="método: painel/mcp_painel.py" data-exemplo="true">não carrega mensagem (exemplo)</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 <h2>O que a sessão de agente EXPÕE</h2>
 
@@ -71,7 +111,7 @@
   <table>
     <thead>
       <tr>
-        <th class="rotulo" data-rotulo="sessão de agente" data-fonte="método: termo ratificado ‘sessão de agente’">consumidor</th>
+        <th class="rotulo" data-rotulo="sessão de agente" data-fonte="método: docs/governance/glossary.md (Sessão de agente)">consumidor</th>
         <th class="rotulo" data-rotulo="protocolo de intercomunicação" data-fonte="método: painel/mcp_painel.py · painel/fila_outbox.py">consome</th>
       </tr>
     </thead>
@@ -95,32 +135,43 @@
 <h2>A2A — nomeado, não construído</h2>
 
 <div class="cx">
-  <p class="nota">Ligar uma sessão a outra por A2A ainda <strong>não existe</strong> no Maestro. A tela mostra “—” com o motivo, nunca um botão que finge:</p>
+  <p class="nota">Ligar uma sessão a outra por A2A ainda <strong>não existe</strong> no Maestro. A tela mostra o que o A2A <em>exibiria</em> e marca tudo como desabilitado — nunca um botão que finge:</p>
   <table>
     <thead>
       <tr>
-        <th class="rotulo" data-rotulo="protocolo de intercomunicação" data-fonte="método: specs/066-painel-de-regencia/ux-design.md:81 (A2A só nomeado)">ligação A2A</th>
-        <th class="rotulo" data-rotulo="protocolo de intercomunicação" data-fonte="método: specs/066-painel-de-regencia/ux-design.md §8 (fora deste ciclo)">capacidade</th>
+        <th class="rotulo" data-rotulo="protocolo de intercomunicação" data-fonte="método: specs/066-painel-de-regencia/ux-design.md:81 (A2A só nomeado)">objeto A2A (desabilitado)</th>
+        <th class="rotulo" data-rotulo="protocolo de intercomunicação" data-fonte="método: specs/066-painel-de-regencia/ux-design.md §8 (fora deste ciclo)">o que exibiria</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td><span class="falta metrica" data-fonte="método: specs/066-painel-de-regencia/ux-design.md:81" data-exemplo="true">— <span class="fonte" data-referencia="true">motivo: A2A nomeado, não construído (<code>specs/066-…/ux-design.md:81</code>; ciclo futuro)</span></span></td>
-        <td><span class="fonte" data-referencia="true">Abrir agente / ligar via A2A é ação de regência; aqui só o <strong>objeto</strong> é nomeado.</span></td>
+        <td><span class="falta" data-fonte="método: specs/066-painel-de-regencia/ux-design.md:81" data-exemplo="true">— agent card (exemplo) <span class="fonte" data-referencia="true">motivo: A2A nomeado, não construído</span></span></td>
+        <td><span class="fonte" data-referencia="true">nome · ref · projeto, o estado do agente vivo e as ferramentas que a sessão expõe — a identidade do par.</span></td>
+      </tr>
+      <tr>
+        <td><span class="falta" data-fonte="método: specs/066-painel-de-regencia/ux-design.md:81" data-exemplo="true">— pares (exemplo) <span class="fonte" data-referencia="true">motivo: A2A nomeado, não construído</span></span></td>
+        <td><span class="fonte" data-referencia="true">a lista de sessões com quem esta pode falar, endereçada por ref — hoje inexistente.</span></td>
       </tr>
     </tbody>
   </table>
+  <p class="nota">Abrir agente / ligar via A2A é ação de regência; aqui só o <strong>objeto</strong> é nomeado.</p>
+</div>
+
+<div class="cx">
   <p>
     <button aria-label="chamar a ferramenta estado_atual" data-fonte="método: painel/mcp_painel.py:24 (ferramenta estado_atual)">Chamar estado_atual</button>
     <button aria-label="registrar o status da sessão" data-fonte="método: painel/mcp_painel.py:29 (ferramenta registrar_status)">Registrar status</button>
   </p>
+  <p class="nota"><strong>Quem autoriza:</strong> <em>Chamar estado_atual</em> é <strong>leitura</strong> — qualquer sessão de agente chama.
+    <em>Registrar status</em> é <strong>escrita</strong> — autorizada pela <strong>sessão dona</strong>: ela só acrescenta ao próprio status, e a ferramenta recusa estado fora da lista permitida.</p>
   <p class="fonte" data-referencia="true">A2A por plataforma: LiteLLM é a única referência <code>sim</code> entre as 25 (ficha <code>specs/073-area-administrativa/pesquisa/litellm.md</code>) — a ideia a copiar, não a dependência.</p>
 </div>
 
 <footer>
   <p class="fonte" data-referencia="true">Fontes — método: <code>painel/mcp_painel.py</code> (servidor <code>maestro-painel</code>, ferramentas
   <code>estado_atual</code>/<code>registrar_status</code>/<code>registrar_peca</code>) · <code>painel/fila_outbox.py</code> ·
-  <code>docs/governance/glossary.md</code> (MCP, Outbox) · <code>specs/073-area-administrativa/confronto/mapa-de-contextos.md</code> §6.6 ·
+  <code>docs/governance/glossary.md</code> (MCP, Outbox, Mensagem entre agentes) · <code>specs/073-area-administrativa/confronto/inventario-maestro.md</code> ·
+  <code>specs/073-area-administrativa/confronto/mapa-de-contextos.md</code> §6.6 · <code>specs/073-area-administrativa/rodada-4/correcao-1.md</code> (decisão 5) ·
   <code>specs/066-painel-de-regencia/ux-design.md</code> §2 (linha A2A), §8 (F1, F8, F9). Plataforma: LiteLLM,
   <code>https://www.litellm.ai/</code> e <code>https://docs.litellm.ai/</code> (ficha <code>specs/073-area-administrativa/pesquisa/litellm.md</code>, <code>sim</code>).</p>
   <p class="nota">Todo elemento interativo tem <code>data-fonte</code>; todo número/estado é <code>(exemplo)</code> — wireframe, não dado real.</p>
