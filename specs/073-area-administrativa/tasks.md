@@ -167,4 +167,9 @@
 - [x] TAIL:review — independent review in fresh context, by whoever did not execute
 - [x] TAIL:security — security pass proportional to the risk class
 - [x] TAIL:mutation — a rodada 1 era documental (n/a na época), mas a rodada 3 criou o gate executável `prototipo/verifica-prototipo.py` e ele foi mutado: regra 3 e regra 4 cegas separadamente pelo Worker02 em contexto fresco (`d1e9cc7` §2, depois re-rodada com a regra ampliada em `9cf0118`/`1264194`), achados que sumiram copiados da saída, script restaurado byte a byte (SHA-256 conferido) — evidência no qa-report § "Rodada 3 — a regra 4 passa a cobrir o texto visível"
-- [ ] TAIL:gate — DoD green -> guardian verdict -> human merge gate (not delegable)
+- [x] TAIL:gate — DoD green -> guardian verdict -> human merge gate (not delegable) — as quatro
+      leituras da rodada 4: **47 das 48 células (3 juízes × 16) em nota ≥ 9** e a célula restante
+      (P1 do Flowise, `plataformas.md:69` sem fonte na ficha) **corrigida** — `avisa?` com motivo,
+      recontagem 12/1/3 (W06 `750d718` → `b9a5afd`); gate 11 telas/0 achados/seis regras e
+      conformance verde nos dois modos no HEAD de fechamento (qa-report § "fechamento do ciclo");
+      o merge na `dev` e a promoção são da regente (não delegável)

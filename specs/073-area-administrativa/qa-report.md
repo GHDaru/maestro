@@ -1545,7 +1545,7 @@ integrar (ordem da regente).
 | W04 — 3 telas da Administração (teto com precedência, "Quem emite o aviso", regra MCP `#regra-ferramenta-mcp`, "Agente (perfil)") | `fef2910` | `6de4995` |
 | W03 — 4 telas da Mensageria (caixa "De onde vêm os nomes", ponteiro para a regra, linha de aviso `msg-0418` com `data-fonte: painel/custo.py`) | `7a57301` | `143f76d` |
 | W05 — 4 telas do Workflow + reconciliação stop/rm (attempt 2) | `d6be33f` + `c5557a7` | `c6bf822` + `9412203` |
-| W06 — matriz D1 (13 `corta` · 1 `avisa` · 2 `avisa?`) + ficha `claude-code.md:59/:61` corrigida + conformance + segurança | `c6a72e9` | `2e99d22` |
+| W06 — matriz D1 (leitura por célula; **12 `corta` · 1 `avisa` · 3 `avisa?`** no fechamento — 13/1/2 na entrega desta fatia, a célula do Flowise virou `avisa?` no fechamento) + ficha `claude-code.md:59/:61` corrigida + conformance + segurança | `c6a72e9` | `2e99d22` |
 | W02 — confronto (D1/D2/D3, ENTRA 4 reescrito, ENTRA 5 com escopo MCP) + verbete + mapa § 6.5 (5º ENTRA) | `cc10191` | `2db2a11` |
 
 ### Gate após cada merge
@@ -1590,3 +1590,50 @@ fechamento. Nenhuma regra nova nesta correção (decisão da regente: só rodar)
 Correção 3 fechada: as três decisões de escopo aplicadas por dono, gate 11/0 nas seis regras após
 cada merge, conformance verde nos dois modos, coerência cruzada conferida. **A leitura dos juízes é
 da regente** — o Gerente não despacha juízes (a nota < 9 duas vezes é laço para o Darú).
+
+## Rodada 4 — fechamento do ciclo: quarta leitura e a célula do Flowise (27/10, mandato `073-fechamento`)
+
+### A quarta leitura (regente, `735966b`)
+
+Juiz 2 **16/16**, juiz 3 **16/16** sem regressão, juiz 1 **15/16** — único P1: a célula do Flowise
+em `pesquisa/plataformas.md:69` marcava `parcial (corta)` **sem fonte na ficha**
+(`pesquisa/flowise.md:28` só lista *rate limit* entre os controles). Decisão da regente: **sem nova
+rodada de juízes** — só a célula, despachada ao Worker06 (`073-fechamento-W06`).
+
+### Fatia integrada
+
+| Fatia | Commit do dono | Merge na 066 |
+|---|---|---|
+| W06 — célula do Flowise `parcial (corta)` → `parcial (avisa?)` com motivo ("ficha só lista *rate limit* entre os controles"), linha do Flowise na tabela de fontes, recontagem **12 `corta` · 1 `avisa` · 3 `avisa?`** em `plataformas.md:165` e `confronto-decisao.md:30` | `750d718` | `b9a5afd` |
+
+Nenhum símbolo da matriz mudou (reconferido por script no dono): `sim` 168 · `parcial` 226 · `não`
+12 · `—` 244 (650 células); a linha do orçamento segue com 6 `sim`; CONTROLE/GERENCIAMENTO intactos.
+
+### Gate no HEAD de fechamento
+
+`python specs/073-area-administrativa/prototipo/verifica-prototipo.py` → **11 screen(s),
+0 finding(s)**, seis regras, exit 0.
+
+### Conformance 073 — verde nos dois modos (27/10, HEAD de fechamento do ciclo)
+
+- Modo normal: `scripts/check-conformance.sh 073` → exit 0.
+- Modo ticked-only: `scripts/check-conformance.sh 073 --ticked-only` → exit 0 (o modo é a flag).
+
+### TAIL:gate — a evidência das quatro leituras
+
+As quatro leituras da rodada 4 somam **47 das 48 células (3 juízes × 16) em nota ≥ 9**; a célula
+restante — o P1 do Flowise — foi **corrigida** (`750d718`: marca `avisa?` com motivo, recontagem
+12/1/3), não re julgada. O gate humano final (merge na `dev` e promoção) é da regente, não
+delegável; o Gerente não despacha juízes.
+
+### Tokens do fechamento (piso — mesmo método: soma de `message.usage` desde a 1ª ocorrência do `[[TASK]]`)
+
+| Dono | Tokens (piso) |
+|---|---|
+| Worker06 (`073-fechamento-W06`) | ≈444k (input 414k + output 30k; cache_read 5,95M à parte) |
+
+### Veredito
+
+Ciclo 073 fechado na 066: quarta leitura registrada, célula corrigida, gate 11/0 nas seis regras,
+conformance verde nos dois modos, `TAIL:gate` com a evidência das quatro leituras. Merge na `dev`,
+promoção e registro do gate final: regente.

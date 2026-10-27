@@ -118,12 +118,30 @@ só após a T02 do 074 integrar (ordem da regente — prioridade da correção 3
 | as 3 telas da Administração (tabela do teto com precedência, § "Quem emite o aviso", regra de exemplo MCP com âncora `#regra-ferramenta-mcp`, "Agente (perfil)" no catálogo) | Worker04 | **integrado** — `fef2910` → `6de4995`; a regra 6 pegou 3 achados dele pré-commit |
 | as 4 telas da Mensageria (caixa "De onde vêm os nomes", terceira coluna apontando a regra de política, ids/remetentes idênticos 01/02, linha de aviso de teto `msg-0418` com `data-fonte: painel/custo.py`) | Worker03 | **integrado** — `7a57301` → `143f76d`; ponteiro D2 confere contra a âncora do W04 |
 | as 4 telas do Workflow (cartão "caída", exemplo Worker02 idêntico 01/02/03, `data-fonte` do ledger, linha de aviso de teto) + **reconciliação stop/rm** (attempt 2) | Worker05 | **integrado** — `d6be33f` → `c6bf822` + `c5557a7` → `9412203` (sem "a confirmar": `stop` reata por `attach`/`respawn`; `rm` tira linha e worktree, o transcrito retoma por `--resume`) |
-| matriz D1 (marca `corta`/`avisa`/`avisa?` por célula: 13/1/2) + **ficha `claude-code.md:59/:61` corrigida da doc oficial** + conformance dois modos + segurança | Worker06 | **integrado** — `c6a72e9` → `2e99d22` (a assimetria "stop religável × rm irreversível" era inferência — ressalva do juiz 1 ao P13; nenhum símbolo da matriz mudou) |
+| matriz D1 (marca `corta`/`avisa`/`avisa?` por célula: **12/1/3** no fechamento — 13/1/2 na entrega desta fatia; a célula do Flowise, sem fonte na ficha, virou `avisa?` depois) + **ficha `claude-code.md:59/:61` corrigida da doc oficial** + conformance dois modos + segurança | Worker06 | **integrado** — `c6a72e9` → `2e99d22` (a assimetria "stop religável × rm irreversível" era inferência — ressalva do juiz 1 ao P13; nenhum símbolo da matriz mudou) |
 | confronto (bloco D1/D2/D3, ENTRA 4 "declarar teto + avisar, com emissor desenhado", ENTRA 5 com a ferramenta MCP como escopo) + verbete "limite de orçamento" + mapa § 6.5 (política declarativa como 5º ENTRA — fecha o P5 do juiz 1) | Worker02 | **integrado** — `cc10191` → `2db2a11`; totais intactos 16/5/11 = 32 |
 | fechamento | Gerente | **entregue** — gate **11 telas, 0 achados, seis regras, exit 0** após cada merge; conformance verde nos dois modos; tokens por dono no DONE (piso) |
 
+### Fechamento do ciclo — quarta leitura dos juízes (27/10, mandato `073-fechamento` da regente)
+
+| Fatia | Dono | Estado |
+|---|---|---|
+| célula do Flowise (`plataformas.md:69`): `parcial (corta)` → `parcial (avisa?)` com motivo ("ficha só lista *rate limit* entre os controles"), linha do Flowise na tabela de fontes, recontagem **12/1/3** em `plataformas.md:165` e `confronto-decisao.md:30` | Worker06 | **integrado** — `750d718` → `b9a5afd` (nenhum símbolo mudou: `sim` 168 · `parcial` 226 · `não` 12 · `—` 244, reconferido por script) |
+| fechamento do ciclo | Gerente | **entregue** — gate **11 telas, 0 achados, seis regras, exit 0**; conformance verde nos dois modos; `TAIL:gate` com a evidência das quatro leituras (47/48 células em nota 9 + a célula corrigida); DONE à regente com HEAD |
+
 ## Histórico
 
+- 2026-10-27 — **ciclo 073 fechado (Gerente, mandato `073-fechamento` da regente)**. Quarta leitura
+  dos juízes (regente, `735966b`): juiz 2 16/16, juiz 3 16/16 sem regressão, juiz 1 **15/16** —
+  único P1: a célula do Flowise em `plataformas.md:69` marcava `parcial (corta)` sem fonte na
+  ficha (`flowise.md:28` só lista *rate limit*). Decisão da regente: **sem nova rodada** — a
+  célula vira `parcial (avisa?)` com motivo e a matriz é recontada **12 `corta` · 1 `avisa` ·
+  3 `avisa?`** (W06 `750d718`, integrado em `b9a5afd`). Gate: **11 telas, 0 achados, seis
+  regras, exit 0**; conformance 073 verde nos dois modos; `TAIL:gate` fechado com a evidência
+  das quatro leituras — 47 das 48 células (3 juízes × 16) em nota 9 e a célula restante
+  corrigida. As citações 13/1/2 do fechamento da correção 3 (qa-report, andamento, CHANGELOG)
+  foram corrigidas para 12/1/3 com a nota da entrega da fatia. O merge na `dev`, a promoção e o
+  registro do gate final são da regente; o Gerente não despacha juízes.
 - 2026-10-27 — **correção 3 da rodada 4 fechada (Gerente)**. O Darú reabriu com três decisões de
   escopo (`rodada-4/correcao-3.md`, `04c0505`): **D1** a linha de orçamento/taxa fica uma só na
   matriz, distinguida pela leitura por célula `corta`/`avisa`/`avisa?`; **D2** a ferramenta MCP é

@@ -10,10 +10,18 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **Ciclo 073 fechado — quarta leitura dos juízes** (27/10): juiz 2 16/16, juiz 3 16/16 sem
+  regressão, juiz 1 15/16 — único P1: Flowise `parcial (corta)` em `plataformas.md:69` sem fonte
+  na ficha (`flowise.md:28` só lista *rate limit* entre os controles). Decisão da regente: sem
+  nova rodada de juízes; a célula vira `parcial (avisa?)` com motivo e a matriz é recontada
+  **12 `corta` · 1 `avisa` · 3 `avisa?`** (Worker06, `750d718`). Gate **11 telas, 0 achados,
+  seis regras**; conformance 073 verde nos dois modos; `TAIL:gate` fechado com a evidência da
+  quarta leitura — 47 das 48 células (3 juízes × 16) em nota 9 e a célula restante corrigida.
+  O merge na `dev` e a promoção são da regente.
 - **Correção 3 da rodada 4 fechada** (ciclo 073, 27/10): as três decisões de escopo do Darú
   (`rodada-4/correcao-3.md`) aplicadas por dono e integradas — **D1** a linha de orçamento/taxa
-  fica uma só na matriz, com a leitura por célula `corta`/`avisa`/`avisa?` (13/1/2, W06
-  `c6a72e9`); **D2** a ferramenta MCP como escopo da política `allow/deny/ask` — regra de exemplo
+  fica uma só na matriz, com a leitura por célula `corta`/`avisa`/`avisa?` (**12/1/3** no
+  fechamento — 13/1/2 na entrega da fatia; W06 `c6a72e9` + `750d718`); **D2** a ferramenta MCP como escopo da política `allow/deny/ask` — regra de exemplo
   com âncora nas políticas (W04), ponteiro na mensageria-04 (W03), política listada como 5º ENTRA
   no mapa § 6.5, fechando o P5 do juiz 1 (W02 `cc10191`); **D3** o emissor do aviso de teto é a
   ingestão de consumo (`painel/custo.py`), desenhado na tela do orçamento e ecoado nas linhas de
