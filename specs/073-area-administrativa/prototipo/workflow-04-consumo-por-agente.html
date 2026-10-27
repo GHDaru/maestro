@@ -84,9 +84,8 @@ footer.rodape strong{color:var(--tinta)}
   </div>
   <div class="caixa">
     <span class="rotulo">teto vigente — o da Administração</span>
-    <span class="num" data-fonte="exemplo — nenhum dado real" data-exemplo="true">60% (exemplo)</span>
-    <span class="barra" data-fonte="exemplo — nenhum dado real" data-exemplo="true" role="img" aria-label="barra de consumo, valor de exemplo"><i style="width:60%"></i></span>
-    <span class="fonte" data-referencia="true">a tela <strong>compara</strong> contra o teto definido e guardado pela Administração (decisão 1); não define nem corta (Princípio III)</span>
+    <span class="num vazio" data-fonte="specs/073-area-administrativa/prototipo/administracao-03-orcamento.html (o teto vivo, quando declarado)">— (nenhum teto declarado)</span>
+    <span class="fonte" data-referencia="true">o teto vem da Administração <strong>com unidade</strong> — tokens ou US$ estimado —, nunca um percentual solto; a tela <strong>compara</strong> o consumo contra ele (decisões 1 e 6) e não define nem corta (Princípio III)</span>
   </div>
 </div>
 
@@ -95,7 +94,7 @@ footer.rodape strong{color:var(--tinta)}
   <caption>Uma linha por <strong>agente</strong>; as <strong>sessões</strong> do agente vêm agrupadas dentro da linha, com a identidade completa <strong>nome · ref · projeto</strong>. Os valores marcados <span class="exemplo">exemplo</span> ilustram o layout — não são dados do repositório.</caption>
   <thead>
     <tr>
-      <th class="rotulo" data-rotulo="consumo por agente" data-fonte="método: specs/073-area-administrativa/confronto/mapa-de-contextos.md §7 (colisão «sessão» × «agente»: o agente é o par perfil ↔ executável)">agente</th>
+      <th class="rotulo" data-rotulo="consumo por agente" data-fonte="método: specs/073-area-administrativa/confronto/mapa-de-contextos.md §7 (colisão «sessão» × «agente»: o agente é o par perfil ↔ executável)">agente (perfil)</th>
       <th class="rotulo" data-rotulo="sessão de agente" data-fonte="método: ListAgents (nome e ref) · specs/073-area-administrativa/pesquisa/claude-code.md (roteamento por nome/ref = sim)">sessões na janela (nome · ref · projeto)</th>
       <th class="rotulo" data-rotulo="consumo por agente" data-fonte="método: transcript da sessão (message.usage); piso declarado, não total">tokens na janela (piso)</th>
       <th class="rotulo" data-rotulo="custo por sessão" data-fonte="método: tabela de preços do modelo no catálogo (administracao-01-catalogo.html) × tokens; docs/governance/glossary.md (Custo por sessão, ciclo 068)">custo estimado (US$)</th>
@@ -104,11 +103,11 @@ footer.rodape strong{color:var(--tinta)}
   </thead>
   <tbody>
     <tr>
-      <td><span data-fonte="exemplo — nenhum dado real; o ref vem logo depois do nome; as sessões do agente vêm agrupadas aqui" data-exemplo="true">Worker05 [78d88f] · [c4d5e6] (agente — sessões agrupadas) (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real; o agente é o perfil (sem ref) — a sessão é a instância, com ref" data-exemplo="true">dev-implementer (agente — perfil, sem ref) (exemplo)</span></td>
       <td>
         <ul>
           <li><span data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»" data-exemplo="true">Worker05 [78d88f] · 410_MAESTRO (exemplo)</span></li>
-          <li><span data-fonte="exemplo — nenhum dado real; sessão reiniciada, ref novo" data-exemplo="true">Worker05 [c4d5e6] · 410_MAESTRO (exemplo)</span></li>
+          <li><span data-fonte="exemplo — nenhum dado real; a sessão reiniciou — o ref novo vem depois da seta" data-exemplo="true">Worker05 [78d88f] → [c4d5e6] · 410_MAESTRO (exemplo)</span></li>
         </ul>
       </td>
       <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">1,2 M (piso) (exemplo)</span></td>
@@ -116,7 +115,7 @@ footer.rodape strong{color:var(--tinta)}
       <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">deepseek-v4.1-flash: 1,0 M · glm-5.3: 0,2 M (exemplo)</span></td>
     </tr>
     <tr>
-      <td><span data-fonte="exemplo — nenhum dado real; o ref vem logo depois do nome" data-exemplo="true">Gerente [31ee4d] (agente) (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real; o agente é o perfil (sem ref)" data-exemplo="true">process-guardian (agente — perfil, sem ref) (exemplo)</span></td>
       <td>
         <ul>
           <li><span data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»" data-exemplo="true">Gerente [31ee4d] · 410_MAESTRO (exemplo)</span></li>
@@ -127,7 +126,7 @@ footer.rodape strong{color:var(--tinta)}
       <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">glm-5.3: 3,4 M (exemplo)</span></td>
     </tr>
     <tr>
-      <td><span data-fonte="exemplo — nenhum dado real; o ref vem logo depois do nome" data-exemplo="true">Worker02 [31f7bf] (agente) (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real; o agente é o perfil (sem ref)" data-exemplo="true">qa (agente — perfil, sem ref) (exemplo)</span></td>
       <td>
         <ul>
           <li><span data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»" data-exemplo="true">Worker02 [31f7bf] · 410_MAESTRO (exemplo)</span></li>
@@ -145,11 +144,11 @@ footer.rodape strong{color:var(--tinta)}
 <div class="caixa" data-fonte="specs/073-area-administrativa/rodada-4/juiz-2-administracao-gerenciamento.md (P12: «sem dólar, janela de tempo ou ranking») · specs/073-area-administrativa/rodada-4/correcao-1.md (decisão 1)">
   <p>Ordem por consumo na janela, do maior ao menor — <strong>piso</strong>, e por isso mesmo um ranking de <em>piso</em>: quem tiver transcript faltando aparece menor do que é.</p>
   <ol>
-    <li><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">Gerente [31ee4d] — 3,4 M (piso) (exemplo)</span></li>
-    <li><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker05 [78d88f] — 1,2 M (piso) (exemplo)</span></li>
-    <li><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker02 [31f7bf] — sem transcript na janela (exemplo)</span></li>
+    <li><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">process-guardian — 3,4 M (piso) (exemplo)</span></li>
+    <li><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">dev-implementer — 1,2 M (piso) (exemplo)</span></li>
+    <li><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">qa — sem transcript na janela (exemplo)</span></li>
   </ol>
-  <p class="fonte" data-referencia="true">O ranking é leitura, não limite: não corta nada por si (Princípio III).</p>
+  <p class="fonte" data-referencia="true">O ranking é por <strong>agente</strong> (o perfil) — as sessões de um mesmo perfil somam nele (decisão 5); o ref de cada sessão fica na tabela acima. É leitura, não limite: não corta nada por si (Princípio III).</p>
 </div>
 
 <h2>declarado — o risco de subcontagem (piso)</h2>
@@ -164,9 +163,11 @@ footer.rodape strong{color:var(--tinta)}
 </div>
 
 <h2>teto — o da Administração</h2>
-<div class="caixa" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (decisão 1: o limite de orçamento é da Administração; o Workflow só mede e exibe) · método: specs/073-area-administrativa/prototipo/administracao-03-orcamento.html (tela do teto)">
+<div class="caixa" data-fonte="specs/073-area-administrativa/rodada-4/correcao-2.md (decisão 6: o cartão do resumo reconcilia com esta seção) · correcao-1.md (decisão 1: o limite de orçamento é da Administração; o Workflow só mede e exibe) · método: specs/073-area-administrativa/prototipo/administracao-03-orcamento.html (tela do teto)">
   <p>O <strong>teto</strong> é definido e guardado pela <strong>Administração</strong> — a tela <code>administracao-03-orcamento.html</code>; aqui ele é <strong>lido</strong> e comparado ao consumo, nada mais. O que corta é limite <em>executável</em>; o que esta tela faz é <em>mostrar</em>.</p>
-  <p class="vazio">— motivo: nenhum teto declarado neste protótipo (valor vivo, não digitado)</p>
+  <p>O teto lido da Administração vem <strong>com unidade</strong> — <strong>tokens</strong> ou <strong>US$ estimado</strong>, por projeto, agente ou modelo —, <strong>nunca um percentual solto</strong>: é a mesma unidade que o cartão «teto vigente», no resumo, exige.</p>
+  <p><strong>Comparar contra um piso pode estourar sem aviso:</strong> o consumo desta tela é <em>piso</em> (só soma o que tem transcript), então o teto pode ser ultrapassado e esta leitura não vê — a leitura honesta é «no mínimo isto» (decisão 6).</p>
+  <p class="vazio">— motivo: nenhum teto declarado neste protótipo (valor vivo, não digitado; o cartão do resumo mostra o mesmo «—»)</p>
 </div>
 
 </main>
