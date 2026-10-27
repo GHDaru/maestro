@@ -56,9 +56,9 @@
 
 | Grupo | Item | Resultado | Fonte (URL — o que foi visto) |
 |---|---|---|---|
-| CONTROLE | subir/derrubar sessão ou agente | **sim** | `agent-view` — `claude --bg "…"` sobe sessão em segundo plano; `claude stop <id>` e `claude rm <id>` derrubam; `claude respawn <id>` ressuscita |
+| CONTROLE | subir/derrubar sessão ou agente | **sim** | `agent-view` — `claude --bg "…"` sobe sessão em segundo plano; `claude stop <id>` (*"Stop a session. Also accepts `claude kill`"*) **para** a sessão; `claude rm <id>` (*"Remove a session from the list, along with a worktree Claude created for it when that's safe to delete"*) **tira da lista**, não apaga a conversa — *"The conversation transcript stays on your local machine and remains available through `claude --resume`"*; `claude respawn <id>` (*"Restart a session, running or stopped… A session that has a saved conversation resumes it"*) reinicia |
 | CONTROLE | pausar | **parcial** | `agent-view` — dá para *destacar/desanexar* a sessão (`←` no prompt vazio, `Ctrl+Z`) e parar (`claude stop`), mas a página não descreve uma pausa que suspenda o processo e o retome |
-| CONTROLE | retomar | **sim** | `agent-view` — `claude attach <id|name>`; `sub-agents` — *"Resume via `SendMessage` with agent ID/name"* |
+| CONTROLE | retomar | **sim** | `agent-view` — `claude attach <id\|name>` (*"Attach to a session in this terminal"*; por **nome** só enquanto o processo roda — *"pass the ID instead to restart a stopped session"*); `claude --resume <id\|name>` (`claude -r`) retoma a conversa; `sub-agents` — *"Resume via `SendMessage` with agent ID/name"* |
 | CONTROLE | limites de orçamento e de taxa | **parcial** | `settings` — tetos de política (`availableModels`, `maxEffortLevel`); a doc **não** descreve teto de orçamento por sessão no CLI (isso mora na assinatura/Console) |
 | CONTROLE | políticas allow/deny/ask | **sim** | `settings` — blocos `permissions.allow` / `ask` / `deny` e `permissions.defaultMode`; `sub-agents` — frontmatter `permissionMode` por agente |
 | CONTROLE | aprovação humana | **sim** | `settings` — prompt de permissão ("Yes, and don't ask again" grava regra `allow`); modo `plan`; `monitoring-usage` — evento `claude_code.tool_decision` |
@@ -91,6 +91,18 @@
   e pode mudar; telemetria OTel é opt-in por variável de ambiente.
 - **Lacuna**: não há, na doc lida, teto de orçamento por sessão nem livro de mensagens; MCP é o único
   protocolo de intercomunicação citado (A2A ausente).
+- **Correção 3 da rodada 4 (27/10)** — *`stop` × `rm` × `attach`/`--resume`, conferido na doc*
+  (`agent-view`, reverificado por WebFetch em 27/10): a linha 59 dizia só que `stop` e `rm`
+  "derrubam" e que `respawn` ressuscita — a **assimetria** "`stop` religável × `rm` irreversível"
+  era **inferência** (ressalva do juiz 1 ao P13). A doc é explícita: `claude stop <id>` **para** a
+  sessão (*"Stop a session. Also accepts `claude kill`"*; a conversa fica em disco e reata por
+  `claude attach`/resposta ou `claude respawn`) e `claude rm <id>` **remove a sessão da lista** (e o
+  *worktree* "when that's safe to delete") — mas **o transcript não se perde**: *"The conversation
+  transcript stays on your local machine and remains available through `claude --resume`"*. Ou seja:
+  o que o `rm` tira é a **linha/worktree**, não a conversa. A retomada citada pela tela
+  (`claude --resume`) **está** na ficha (`:61`, junto de `claude attach <id|name>`; `claude -r`).
+  A remoção pode ainda ser **recusada** por commits não publicados (escape: `--discard-unpushed`,
+  `--force-remove-worktree`). *Agent view* segue **research preview**.
 - **Correção da rodada 4 (26/10)** — *busca explícita por mailbox/inbox, com URL*: as páginas
   `agent-teams.md` e `cross-session-messaging.md` (acima) **documentam** o transporte real — *mailbox*
   JSON por agente (`~/.claude/teams/{team}/inboxes/{agent}.json`) e *inbox socket* por sessão —, o que
