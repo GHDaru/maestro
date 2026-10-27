@@ -65,7 +65,7 @@ footer.rodape strong{color:var(--tinta)}
   <nav class="telas" aria-label="Telas da Administração" data-fonte="specs/073-area-administrativa/tasks.md T3-telas-administracao (as três telas deste contexto) e specs/073-area-administrativa/confronto/confronto-decisao.md (as três linhas ENTRA); a linguagem ubíqua do contexto é specs/073-area-administrativa/confronto/mapa-de-contextos.md §6.5">
     <a href="administracao-01-catalogo.html" data-fonte="ENTRA cadastro de skills/ferramentas/modelos (specs/073-area-administrativa/confronto/confronto-decisao.md; specs/073-area-administrativa/pesquisa/litellm.md)">catálogo de skills/ferramentas/modelos</a>
     <a href="administracao-02-politicas.html" aria-current="page" data-fonte="esta tela — ENTRA políticas allow/deny/ask (specs/073-area-administrativa/confronto/confronto-decisao.md; specs/073-area-administrativa/pesquisa/agent-365.md)">política declarativa (allow/deny/ask)</a>
-    <a href="administracao-03-orcamento.html" data-fonte="ENTRA limites de orçamento e de taxa (specs/073-area-administrativa/confronto/confronto-decisao.md; specs/073-area-administrativa/pesquisa/openai-platform.md)">limite de orçamento</a>
+    <a href="administracao-03-orcamento.html" data-fonte="ENTRA limite de orçamento (specs/073-area-administrativa/confronto/confronto-decisao.md; specs/073-area-administrativa/pesquisa/openai-platform.md)">limite de orçamento</a>
   </nav>
 </header>
 
@@ -112,15 +112,18 @@ footer.rodape strong{color:var(--tinta)}
 </div>
 
 <h2>As regras</h2>
-<table data-fonte="docs/governance/principles.md — Princípio III; scripts/hooks/guard-immutables.py (deny dos imutáveis); specs/073-area-administrativa/pesquisa/agent-365.md e specs/073-area-administrativa/pesquisa/litellm.md (formato de política por objeto)">
-  <caption>Cada regra tem um objeto, um efeito e o estado em que ela está. O que ainda não é executável aparece como
-  <span class="vazio">—</span> com o motivo; nada é marcado "conferido" sem sê-lo.</caption>
+<table data-fonte="docs/governance/principles.md — Princípio III; scripts/hooks/guard-immutables.py (deny dos imutáveis); specs/073-area-administrativa/rodada-4/correcao-2.md (decisão 4: coluna de escopo na tabela de regras e uma regra de modelo de exemplo); plataformas em specs/073-area-administrativa/pesquisa/agent-365.md e specs/073-area-administrativa/pesquisa/litellm.md (formato de política por objeto)">
+  <caption>Cada regra tem um <strong>escopo</strong> (a quem ela se aplica: agente, papel ou projeto), um objeto, um efeito
+  e o estado em que ela está. O escopo é o primeiro passo da precedência — o mais específico decide <em>qual</em> regra se
+  aplica. O que ainda não é executável aparece como <span class="vazio">—</span> com o motivo; nada é marcado "conferido"
+  sem sê-lo.</caption>
   <thead>
-    <tr><th>Regra</th><th>Objeto</th><th>Efeito</th><th>Estado hoje</th><th>Quem decide</th><th>Consultar</th></tr>
+    <tr><th>Regra</th><th data-rotulo="OPA">Escopo</th><th>Objeto</th><th>Efeito</th><th>Estado hoje</th><th>Quem decide</th><th>Consultar</th></tr>
   </thead>
   <tbody>
     <tr>
       <td><span class="exemplo" data-exemplo="true">exemplo: imutáveis do método</span></td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: projeto</span></td>
       <td>corpo de ADR (<em>Architecture Decision Record</em>), índice de decisões append-only, ideias datadas</td>
       <td><span class="efeito">deny</span></td>
       <td><strong>roda</strong></td>
@@ -129,6 +132,7 @@ footer.rodape strong{color:var(--tinta)}
     </tr>
     <tr>
       <td><span class="exemplo" data-exemplo="true">exemplo: leitura do repositório</span></td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: projeto</span></td>
       <td>leitura e escrita na worktree do worker</td>
       <td><span class="efeito">allow</span></td>
       <td>declarado; <strong>executável no harness</strong> (<code>permissions.allow</code>) — motivo: o Maestro não declara o bloco <code>permissions</code></td>
@@ -137,6 +141,7 @@ footer.rodape strong{color:var(--tinta)}
     </tr>
     <tr>
       <td><span class="exemplo" data-exemplo="true">exemplo: ação irreversível</span></td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: projeto</span></td>
       <td>merge, promoção, publicação — o que não se desfaz</td>
       <td><span class="efeito">ask</span></td>
       <td>declarado; <strong>executável no harness</strong> (<code>permissions.ask</code>) — motivo: idem; a ação espera o humano (portão do chamado)</td>
@@ -145,11 +150,21 @@ footer.rodape strong{color:var(--tinta)}
     </tr>
     <tr>
       <td><span class="exemplo" data-exemplo="true">exemplo: ferramenta fora do papel</span></td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: papel</span></td>
       <td>ferramenta que o papel do agente não declara</td>
       <td><span class="efeito">deny</span></td>
       <td>parcial — declarado em <code>scripts/check-roles.sh</code></td>
       <td>o papel (o registro do Agente)</td>
       <td><button type="button" data-fonte="método — scripts/check-roles.sh e docs/agents/README.md; plataforma — specs/073-area-administrativa/pesquisa/litellm.md (políticas de ferramenta: untrusted/trusted/blocked) e specs/073-area-administrativa/pesquisa/agent-365.md">abrir regra</button></td>
+    </tr>
+    <tr>
+      <td><span class="exemplo" data-exemplo="true">exemplo: modelo permitido por agente</span></td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: agente</span></td>
+      <td>qual <strong>modelo</strong> cada agente pode usar — a linha do Modelo no catálogo (<code>specs/073-area-administrativa/prototipo/administracao-01-catalogo.html</code>)</td>
+      <td><span class="efeito">allow</span></td>
+      <td>declarado; <strong>executável no harness</strong> (<code>permissions.allow</code>) — motivo: o Maestro ainda não declara o bloco <code>permissions</code></td>
+      <td>a política do projeto</td>
+      <td><button type="button" data-fonte="método — specs/073-area-administrativa/rodada-4/correcao-2.md (decisão 4: a regra de modelo espelha a tabela do Modelo); plataforma — specs/073-area-administrativa/pesquisa/claude-code.md (availableModels / deniedModels)">abrir regra</button></td>
     </tr>
   </tbody>
 </table>
@@ -219,20 +234,22 @@ footer.rodape strong{color:var(--tinta)}
       <option>deny</option>
       <option>ask</option>
     </select>
-    <button type="button" data-fonte="método — docs/governance/principles.md (Princípio III) e ux-design 066 §4 (anti-regra 1: a UI não promove; recusa na origem com motivo)">propor regra (exemplo)</button>
   </p>
-  <span class="fonte">a tela exibe e propõe; quem grava a política é o dono dela — o protótipo não executa nada.</span>
+  <span class="fonte">a tela exibe e filtra; quem grava a política é o dono dela — o protótipo não executa nada. O formulário de proposta vive em "Propor regra", abaixo (decisão 4: o botão de exemplo sai, o formulário fica).</span>
 </div>
 
 <h2>Precedência e padrão</h2>
 <div class="grade">
-  <div class="caixa" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (P11: precedência deny > ask > allow e padrão default-deny); plataformas — LiteLLM (o mais restritivo vence) e Kiro (teto de governança: a interseção vence)">
+  <div class="caixa" data-fonte="specs/073-area-administrativa/rodada-4/correcao-2.md (decisão 4: a precedência fica em dois passos e passa a ser decisão de projeto — o mais específico decide qual regra se aplica; entre regras do mesmo escopo, deny > ask > allow); specs/073-area-administrativa/rodada-4/correcao-1.md (P11: precedência e padrão default-deny)">
     <span class="rotulo">Ordem de precedência</span>
-    <p>Quando duas regras alcançam o mesmo objeto, vence a <strong>mais restritiva</strong>:
-    <span class="efeito">deny</span> &gt; <span class="efeito">ask</span> &gt; <span class="efeito">allow</span>.
-    É a leitura das plataformas de referência — o LiteLLM diz "o mais restritivo vence" e o Kiro aplica um teto de
-    governança (a política encontra o perfil).</p>
-    <span class="fonte">fonte: método (<code>rodada-4/correcao-1.md</code>) · plataformas: <code>specs/073-area-administrativa/pesquisa/litellm.md</code>, <code>specs/073-area-administrativa/pesquisa/kiro-crew.md</code></span>
+    <p>A precedência tem <strong>dois passos</strong>. Primeiro, <strong>o mais específico decide qual regra se
+    aplica</strong> — entre a regra do agente, a do papel e a do projeto, vence a de escopo mais estreito. Só então,
+    <strong>entre regras do mesmo escopo</strong>, vence a <strong>mais restritiva</strong>:
+    <span class="efeito">deny</span> &gt; <span class="efeito">ask</span> &gt; <span class="efeito">allow</span>.</p>
+    <p>As duas leituras deixam de se contradizer e passam a ser <strong>decisão de projeto</strong> — não a leitura
+    direta de uma plataforma. Do LiteLLM ("o mais restritivo vence") e do Kiro (teto de governança: a política encontra
+    o perfil) vem o espírito; a regra é nossa e está escrita aqui.</p>
+    <span class="fonte">fonte: método (<code>rodada-4/correcao-2.md</code>, decisão 4 — decisão de projeto; <code>rodada-4/correcao-1.md</code>) · plataformas: <code>specs/073-area-administrativa/pesquisa/litellm.md</code>, <code>specs/073-area-administrativa/pesquisa/kiro-crew.md</code></span>
   </div>
   <div class="caixa" data-fonte="docs/governance/principles.md (Princípio III: a autorização vive fora do modelo); docs/governance/glossary.md (RBAC) e specs/073-area-administrativa/rodada-4/correcao-1.md (padrão default-deny)">
     <span class="rotulo">Padrão (default)</span>
@@ -260,8 +277,9 @@ footer.rodape strong{color:var(--tinta)}
   <div class="caixa" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (P11: escopo projeto e ligação com o bloco permissions do settings.json); plataforma — LiteLLM (hierarquia por projeto)">
     <span class="rotulo">Projeto</span>
     <p>A regra vale dentro de um <strong>projeto</strong>. A política do projeto é declarada no bloco
-    <code>permissions</code> do <code>settings.json</code> — e a precedência entre arquivos é a do harness: o mais
-    específico vence.</p>
+    <code>permissions</code> do <code>settings.json</code> — e a precedência entre escopos é a decisão de projeto
+    acima: o mais específico decide qual regra se aplica; entre regras do mesmo escopo, <span class="efeito">deny</span>
+    &gt; <span class="efeito">ask</span> &gt; <span class="efeito">allow</span>.</p>
     <span class="fonte">fonte: plataforma: <code>specs/073-area-administrativa/pesquisa/claude-code.md</code>, <code>specs/073-area-administrativa/pesquisa/litellm.md</code></span>
   </div>
 </div>
@@ -313,7 +331,7 @@ footer.rodape strong{color:var(--tinta)}
   <p><strong>Quem edita a política:</strong> o humano, no <strong>portão do chamado</strong> — a autorização vive
   fora do modelo, e o protótipo não grava. A escrita nunca é de quem apenas consulta.</p>
   <p><strong>Identidade de quem edita:</strong> <code>nome · ref · projeto</code> — lida agora pelo harness:
-  <code>Worker04 [4d000a] · projeto exemplo</code>. <strong>O ref muda ao reiniciar</strong>.</p>
+  <code>Worker04 [4d000a] · 410_MAESTRO</code>. <strong>O ref muda ao reiniciar</strong>.</p>
   <span class="fonte">fonte: <code>rodada-4/correcao-1.md</code> (decisões 2 e 5) · Princípio III</span>
 </div>
 
