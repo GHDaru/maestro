@@ -12,8 +12,16 @@
 > faltarem (recibo de entrega, reentrega, *dead-letter*, *broadcast*/cópia, estabilidade de ref)
 > entram como `DEPOIS` com gatilho escrito. O confronto passa a cobrir **32 funcionalidades**
 > (26 + 6) e os totais foram refeitos.
+>
+> **Correção 2 da rodada 4** (decisão da regente, `rodada-4/correcao-2.md`): o **mecanismo de
+> execução** do controle sai de `ENTRA` e vira `DEPOIS` com gatilho ("recusar a chamada seguinte" e
+> "suspender a sessão" são **o mesmo ponto de execução** — um *hook* que lê o consumo medido, a
+> desenhar na raia *infra*), então o **`ENTRA` 4 (limite de orçamento)** fica com **declarar o teto +
+> avisar**; o **cadastro de agentes** sobe de `NÃO PRECISA` a **`ENTRA` 16**, como **leitura do
+> catálogo de perfis** — os totais passam a **16/5/11 = 32**; a *"mensagem desviada"* sai de `alertas`
+> (já tem tela) e as citações a `claude-code.md` foram **revalidadas contra o HEAD**.
 
-- **Data**: 2026-10-25 · **Corrigido em**: 2026-10-26 · **Ciclo**: 073 (área administrativa) · **Rodada**: 2 (confronto) · **Passo**: 2 (decisão)
+- **Data**: 2026-10-25 · **Corrigido em**: 2026-10-27 (correção 2 da rodada 4) · **Ciclo**: 073 (área administrativa) · **Rodada**: 2 (confronto) · **Passo**: 2 (decisão)
 - **Autor**: Worker03 · **Insumos**: `pesquisa/plataformas.md` (matriz 25×26, notação normalizada) + `confronto/inventario-maestro.md` (estado do Maestro, `tem 8 · parcial 16 · não tem 2`)
 - **Prioridade do regente**: INTERCOMUNICAÇÃO decide primeiro — é onde **não se encontrou fonte na documentação lida** (caixa de entrada e livro de mensagens com **0 `sim` em 25**, o que é contagem de `—`, não prova de que não exista; `plataformas.md:42,88,90,210-213`) e onde o Maestro já opera à mão.
 
@@ -40,23 +48,23 @@ Cada `ENTRA` declara quais juízes serve.
 
 ## A tabela de decisão (26 × {referência, estado, lacuna, decisão})
 
-### CONTROLE (6)
+### CONTROLE (7)
 
 | Funcionalidade | Melhor referência (ficha) | Estado no Maestro | Lacuna | Decisão |
 |---|---|---|---|---|
 | subir/derrubar sessão ou agente | Claude Code — sessão de ponta a ponta (`claude-code.md`) | **parcial** — só **subir** (`scripts/multi-session.py:140`); derrubar fora de escopo (`specs/072-…/spec.md:229`) | **derrubar**; e o ciclo "sessão de agente" como objeto nomeado | **ENTRA** |
-| pausar | Windmill (`windmill.md`) — 3 `sim` em 25 | **não tem** (`não encontrado`, inventário §CONTROLE) | suspender sem perder o fio | **DEPOIS** |
-| retomar | Claude Code — `claude attach <id\|name>`, `claude --resume` (`claude-code.md:47`, `sim`) | **não tem** — o `--resume` do lançador reabre a janela, não o estado (`multi-session.py:19`) | retomar o **estado** do trabalho | **DEPOIS** |
-| limites de orçamento | OpenAI Platform — limite de gasto devolve 429 (`openai-platform.md:43`) | **parcial** — orçamento declarado (`operating-model.md:118-120`), teto 40% (`decisoes.jsonl:172`) | limite **executável** por sessão/projeto | **ENTRA** |
+| pausar | Windmill (`windmill.md`) — 3 `sim` em 25 | **não tem** (`não encontrado`, inventário §CONTROLE) | suspender **sem perder o fio** e **cortar o gasto**: o ponto de execução (decisão 2) | **DEPOIS** |
+| retomar | Claude Code — `claude attach <id\|name>`, `claude --resume` (`claude-code.md:61`, `sim`) | **não tem** — o `--resume` do lançador reabre a janela, não o estado (`multi-session.py:19`) | retomar o **estado** do trabalho | **DEPOIS** |
+| limites de orçamento | OpenAI Platform — limite de gasto devolve 429 (`openai-platform.md:43`) | **parcial** — orçamento declarado (`operating-model.md:118-120`), teto 40% (`decisoes.jsonl:172`) | **declarar o teto + avisar** (mensagem endereçada ao dono e ao regente); o corte **executável** vira o ponto de execução em `DEPOIS` (decisão 2) | **ENTRA** |
 | limite de taxa *(desdobrada da linha 4 — antes "limites de orçamento **e de taxa**", que cortava a taxa em silêncio)* | LiteLLM — `tpm_limit`/`rpm_limit` por projeto (`litellm.md:94`); OpenAI Platform — RPM (*requests per minute*)/TPM (*tokens per minute*) por organização e projeto (`openai-platform.md:43`) | **não tem** (inventário §CONTROLE: "taxa não existe") | teto de **taxa** por sessão/projeto, executável | **DEPOIS** |
-| políticas allow/deny/ask | Agent 365 — plano de controle (`agent-365.md`) | **parcial** — declarado (Princípio III, `principles.md:37`); só o `deny` roda (`hooks/guard-immutables.py:149`) | `allow`/`ask` **executáveis** | **ENTRA** |
+| políticas allow/deny/ask | Agent 365 — plano de controle (`agent-365.md`) | **parcial** — declarado (Princípio III, `principles.md:37`); só o `deny` roda (`hooks/guard-immutables.py:149`) | **bloco `permissions` não declarado no repositório** | **ENTRA** |
 | aprovação humana | LangSmith/LangGraph — *human-in-the-loop* (`langsmith-langgraph.md`) | **tem** — `operating-model.md:200`, `:186-198`; ADR 0026; `painel/regencia/fila.py:60` | — | **NÃO PRECISA** |
 
 ### ADMINISTRAÇÃO (6)
 
 | Funcionalidade | Melhor referência (ficha) | Estado no Maestro | Lacuna | Decisão |
 |---|---|---|---|---|
-| cadastro de agentes | Portkey — Agent Registry (`portkey.md`) | **tem** — `docs/agents/README.md:14-40` (13 executáveis); `scripts/check-agents.sh` | — | **NÃO PRECISA** |
+| cadastro de agentes | Portkey — *Agent Registry* (`portkey.md`) | **tem** — `docs/agents/README.md:14-40` (13 executáveis); `scripts/check-agents.sh`; os perfis são **arquivos versionados** (`.claude/agents/*.md`) | — o **cadastro é o arquivo**; a tela **lê** o catálogo de perfis (`ls .claude/agents`) e liga ao roteamento | **ENTRA** |
 | papéis e permissões RBAC (*Role-Based Access Control*) | LiteLLM — 5 papéis (`litellm.md`) | **parcial** — RACI (*Responsible, Accountable, Consulted, Informed*) (`operating-model.md:67-93`); RBAC é termo de glossário (`glossary.md:13`) | **motor** RBAC — mas a autorização vive **fora** do modelo | **NÃO PRECISA** |
 | cadastro de skills/ferramentas/modelos | LiteLLM — *Skills Registry* (`litellm.md`) | **parcial** — skills sim (`skills/<nome>/SKILL.md`); **modelos não** (escolhidos por sessão, `multi-session.py:91-92`) | registro de **modelos** | **ENTRA** |
 | chaves e segredos | LiteLLM — backends Vault/Azure/AWS (`litellm.md`) | **parcial** — política: token fora do repo (`decisoes.jsonl:155`); **sem cofre nem gate de varredura** | cofre / gate de segredos | **DEPOIS** |
@@ -83,9 +91,9 @@ Cada `ENTRA` declara quais juízes serve.
 | mensagem entre agentes | CrewAI AMP (`crewai-amp.md`) | **tem** — protocolo `[[TASK]]`/`[[DONE]]` (`task-ledger.md:28-31`); *outbox* (`fila_outbox.py:121`) | superfície **nomeada** (o método prefere artefato a chat, `comunicacao.md:6`) | **ENTRA** |
 | protocolos (A2A, MCP (*Model Context Protocol*)) | LiteLLM — A2A real (`litellm.md`) | **parcial** — MCP implementado (`painel/mcp_painel.py:2`; `glossary.md:34`); **A2A só nomeado** (`specs/066-…/ux-design.md:81`) | **A2A** construído | **ENTRA** |
 | caixa de entrada | Maestri canvas — `parcial` (empatada com Claude Code; melhor por juízo — **0 `sim` em 25**) | **parcial** — *drain* do outbox (`fila_outbox.py:140`), sem feição/rota **nomeada** | caixa de entrada nomeada | **ENTRA** |
-| roteamento por nome/ref | Claude Code — `SendMessage` por ID/nome, refs por `ListAgents` (`claude-code.md:68`, `sim`) | **parcial** — destinatário por nome livre (`server.py:479` — `contatos()`, `norm_sessao` `ingest.py:199`) | tabela de resolução de nome | **ENTRA** |
+| roteamento por nome/ref | Claude Code — `SendMessage` por ID/nome, refs por `ListAgents` (`claude-code.md:82`, `sim`) | **parcial** — destinatário por nome livre (`server.py:479` — `contatos()`, `norm_sessao` `ingest.py:199`) | tabela de resolução de nome | **ENTRA** |
 | livro de mensagens | Maestri canvas — `parcial` (empatada de seis; melhor por juízo — **0 `sim` em 25**) | **parcial** — registros append-only (`ingest.py:66,78`; `tarefas.jsonl`), sem livro unificado | livro de mensagens unificado | **ENTRA** |
-| colisão de nomes | Kiro Crew `sim` × Claude Code `parcial` — **mesmo critério** (precedência de escopo) (`kiro-crew.md:57`, `claude-code.md:71`) | **parcial** — incidente real (`specs/066-…/qa-report.md:35`); guarda de ids (`fila.py:52-56`) | controle de colisão de **nomes** | **ENTRA** |
+| colisão de nomes | Kiro Crew `sim` × Claude Code `parcial` — **mesmo critério** (precedência de escopo) (`kiro-crew.md:57`, `claude-code.md:84`) | **parcial** — incidente real (`specs/066-…/qa-report.md:35`); guarda de ids (`fila.py:52-56`) | controle de colisão de **nomes** | **ENTRA** |
 
 **Duas bases corrigidas na correção 1:**
 
@@ -93,15 +101,15 @@ Cada `ENTRA` declara quais juízes serve.
   seleciona a ferramenta por nome"* e para "roteamento de jobs por *tag* de worker group"
   (`windmill.md:49,51`) — isso é roteamento de **ferramenta** e de **job**, **não** endereçamento de
   **sessão** por nome/ref. A base passa a ser o Claude Code, que endereça por ID/nome na
-  `SendMessage` e exibe refs por `ListAgents` (`claude-code.md:68`).
+  `SendMessage` e exibe refs por `ListAgents` (`claude-code.md:82`).
 - **Colisão de nomes — Kiro Crew e Claude Code, com o MESMO critério.** Antes as duas eram julgadas
   com perguntas diferentes. O critério agora é um par explícito: *(i)* a plataforma resolve homônimo
   por **precedência de escopo**? — Kiro Crew **sim** ("workspace agents take precedence"), Claude
   Code **sim** (managed > `--agents` > projeto > usuário > plugin); *(ii)* a plataforma **detecta** a
   colisão? — **nenhuma das duas** (o Claude Code só resolve por precedência). Por isso o Claude Code
-  fica `parcial`: mesma resolução, sem detecção (`kiro-crew.md:57`, `claude-code.md:71`).
+  fica `parcial`: mesma resolução, sem detecção (`kiro-crew.md:57`, `claude-code.md:84`).
 
-### ACRESCENTADAS NA CORREÇÃO 1 (6) — `DEPOIS`, com gatilho escrito
+### ACRESCENTADAS NA CORREÇÃO 1 (5) — `DEPOIS`, com gatilho escrito
 
 Estas não estavam nas 26 da tabela fixa; o juiz 3 (P3/P4) mostrou que faltavam — nem como `DEPOIS`.
 
@@ -117,13 +125,14 @@ Estas não estavam nas 26 da tabela fixa; o juiz 3 (P3/P4) mostrou que faltavam 
 
 ## Detalhe das decisões
 
-### ENTRA — 15 (nome na linguagem ubíqua + juízes + fonte)
+### ENTRA — 16 (nome na linguagem ubíqua + juízes + fonte)
 
 | # | Funcionalidade | Nome na linguagem ubíqua | Juízes (rodada 4) | Fonte |
 |---|---|---|---|---|
 | 1 | subir/derrubar sessão ou agente | **sessão de agente** *(novo)* | Controle · Administração/Gerenciamento | método: o "subir" existe (`multi-session.py:140`) e o derrubar é escopo declarado (`specs/072-…/spec.md:229`); plataforma: Claude Code:66 `sim`/Windmill:66 `parcial` |
-| 4 | limites de orçamento | **limite de orçamento** *(novo)* | Controle | método: `operating-model.md:118-120` ("fixed time and variable scope") + teto de 40% (`decisoes.jsonl:172`); plataforma: OpenAI Platform:43 `sim` ("limite de gasto devolve 429") |
+| 4 | limites de orçamento | **limite de orçamento** *(novo)* | Controle | método: `operating-model.md:118-120` ("fixed time and variable scope") + teto de 40% (`decisoes.jsonl:172`); plataforma: OpenAI Platform:43 `sim` ("limite de gasto devolve 429"). **Escopo da correção 2 (decisão 2): declarar o teto + avisar** — o aviso é mensagem endereçada `nome · ref · projeto` à sessão dona **e** ao regente; o **corte executável** é o ponto de execução, em `DEPOIS` |
 | 5 | políticas allow/deny/ask | **política declarativa (allow/deny/ask)** — reusa **OPA** (*Open Policy Agent*, `glossary.md:36*) | Controle · Administração/Gerenciamento | método: Princípio III (`principles.md:37`) + `deny` que já roda (`guard-immutables.py:149`); plataforma: Agent 365:70 `sim` |
+| 7 | cadastro de agentes | **agente (perfil)** *(novo: **perfil** × **sessão**)* | Administração/Gerenciamento | método: os perfis são **arquivos versionados** (`docs/agents/README.md:14-40`, `.claude/agents/*.md`) e os invariantes já os verificam (`scripts/check-agents.sh`); plataforma: Portkey:72 `sim` (*Agent Registry*) |
 | 9 | cadastro de skills/ferramentas/modelos | **catálogo de skills/ferramentas/modelos** *(novo)* | Administração/Gerenciamento | método: `skills/<nome>/SKILL.md` + catálogo gerado (`install-maestro.sh:99-104`); plataforma: LiteLLM:74 `sim` (*Skills Registry*) |
 | 12 | auditoria administrativa | **auditoria administrativa** *(novo; extensão de **Auditoria**)* | Controle · Administração/Gerenciamento | método: índice append-only imutável (`record-decision.sh:46-50` + `guard-immutables.py:44-49`), mas sem `changed_by`; plataforma: LiteLLM:95 `sim` (*audit logs* com `changed_by`) |
 | 13 | lista de agentes vivos com estado | **estado do agente vivo** *(novo)* | Administração/Gerenciamento · Controle | método: read-model existe (`painel/server.py:60,27`), falta detecção; plataforma: Claude Code:78 `sim` |
@@ -133,16 +142,15 @@ Estas não estavam nas 26 da tabela fixa; o juiz 3 (P3/P4) mostrou que faltavam 
 | 21 | mensagem entre agentes | **mensagem entre agentes** *(novo)* | Intercomunicabilidade | método: `[[TASK]]`/`[[DONE]]` (`task-ledger.md:28-31`) + *outbox* (`fila_outbox.py:121`); plataforma: CrewAI AMP:86 `sim` (mas é delegação, não par a par) |
 | 22 | protocolos (A2A, MCP) | **protocolo de intercomunicação** — **MCP** no glossário (`glossary.md:34`), **A2A** a expandir | Intercomunicabilidade | método: MCP implementado (`painel/mcp_painel.py:2`); plataforma: LiteLLM:87 `sim` (A2A real) |
 | 23 | caixa de entrada | **caixa de entrada** *(novo)* | Intercomunicabilidade | método: *drain* do *outbox* (`fila_outbox.py:140`), sem nome; **não encontrado na documentação lida: 0 `sim` em 25** (melhor: Maestri canvas:88 `parcial`, empatada com Claude Code — melhor por juízo) |
-| 24 | roteamento por nome/ref | **roteamento por nome/ref** *(novo)* | Intercomunicabilidade | método: `server.py:479` (`contatos()`), `ingest.py:199` (`norm_sessao`); plataforma: Claude Code:68 `sim` (`SendMessage` por ID/nome) — **não** Windmill, que roteia ferramenta por nome e job por *tag* (`windmill.md:49,51`) |
+| 24 | roteamento por nome/ref | **roteamento por nome/ref** *(novo)* | Intercomunicabilidade | método: `server.py:479` (`contatos()`), `ingest.py:199` (`norm_sessao`); plataforma: Claude Code:82 `sim` (`SendMessage` por ID/nome) — **não** Windmill, que roteia ferramenta por nome e job por *tag* (`windmill.md:49,51`) |
 | 25 | livro de mensagens | **livro de mensagens** *(novo; análogo a **Task ledger**)* | Intercomunicabilidade | método: registros append-only (`ingest.py:66,78`); **não encontrado na documentação lida: 0 `sim` em 25** (melhor: Maestri canvas:90 `parcial`, empatada de seis — melhor por juízo) |
-| 26 | colisão de nomes | **colisão de nomes** *(novo)* | Intercomunicabilidade | método: incidente real (`specs/066-…/qa-report.md:35`); plataforma: Kiro Crew:91 e Claude Code:71 — **mesmo critério** (resolvem por precedência de escopo; nenhuma **detecta**) |
+| 26 | colisão de nomes | **colisão de nomes** *(novo)* | Intercomunicabilidade | método: incidente real (`specs/066-…/qa-report.md:35`); plataforma: Kiro Crew:91 e Claude Code:84 — **mesmo critério** (resolvem por precedência de escopo; nenhuma **detecta**) |
 
-### NÃO PRECISA — 6 (com o motivo)
+### NÃO PRECISA — 5 (com o motivo)
 
 | Funcionalidade | Motivo |
 |---|---|
 | aprovação humana | **já coberto** — é o núcleo do método (Princípio II/III: gates humanos não delegáveis; `operating-model.md:200`, ADR 0026). Reconstruir seria duplicar função já servida (Princípio VI). |
-| cadastro de agentes | **já coberto** — 13 executáveis com invariantes que os verificam (`check-agents.sh`, `check-roles.sh`); é registro, não processo vivo. Exibir já é coberto por *estado do agente vivo*. |
 | papéis e permissões RBAC | **fora do método** — papéis existem (RACI), mas a autorização vive **fora** do modelo (Princípio III; ABAC (*Attribute-Based Access Control*)/RBAC no glossário, `:12-13`). Não se constrói motor RBAC dentro da área administrativa. |
 | configuração por projeto | **já coberto** — instalador grava `install-options.json`/`manifest.tsv` e a fronteira é o `boundary.json` (ADR 0018). |
 | última atividade | **já coberto** — o painel já mostra `idade_min` e o histórico de status (`server.py:77,82`). |
@@ -152,21 +160,26 @@ Estas não estavam nas 26 da tabela fixa; o juiz 3 (P3/P4) mostrou que faltavam 
 deixam de ser "já coberto" e viram `ENTRA`. Antes eles eram `NÃO PRECISA` apoiados em **índice de
 decisões** e em **tokens** — que não dão ao administrador onde operar; era o achado P3 do juiz 2.)*
 
+*(Na **correção 2** saiu também o **cadastro de agentes**: o argumento de "já coberto, é registro e
+não processo vivo" confundia **registro** com **tela**. O cadastro continua sendo o arquivo
+versionado, mas a área passa a **ler** o catálogo de perfis (`.claude/agents/*.md`) e a ligá-lo ao
+roteamento — vira **`ENTRA` 16**, `agente (perfil)`.)*
+
 ### DEPOIS — 11 (com o gatilho escrito)
 
 | Funcionalidade | Gatilho que a traz de volta |
 |---|---|
-| pausar | quando o **teto executável de orçamento** (`ENTRA` **limite de orçamento**) precisar suspender uma sessão **sem perdê-la**. Justificativa corrigida: **o mercado não é vazio** — 3 `sim` em 25 (`windmill.md`), e os outros `—` são "não encontrado na documentação lida"; o que falta é fonte para o **estado suspenso**, não "o mercado não tem". |
-| retomar | **acoplado a pausar**. Justificativa corrigida: **existe** no Claude Code (`claude attach <id\|name>`, `claude --resume`; `claude-code.md:47`) e o lançador do Maestro já reabre a janela (`multi-session.py:19`) — o que **não** existe, em nenhuma fonte lida, é retomar o **estado** do trabalho. "Sem fonte", não "o mercado não tem". |
+| pausar | quando a **execução do controle** precisar suspender uma sessão **sem perdê-la**: existe um ponto de execução que corta **gasto de modelo** (não só uso de ferramenta) — um *hook* que lê o **consumo medido**, a desenhar na raia *infra* (decisão 2). "Recusar a chamada seguinte" e "suspender a sessão" são **o mesmo mecanismo** — por isso vivem aqui, em `DEPOIS`, e **não** em `ENTRA`: o `ENTRA` 4 pedir o teto **executável** era a circularidade que o juiz apontou, já que só `DEPOIS` desenha o ponto de execução. Justificativa do mercado: **não é vazio** — 3 `sim` em 25 (`windmill.md`), e os outros `—` são "não encontrado na documentação lida"; o que falta é fonte para o **estado suspenso**, não "o mercado não tem". |
+| retomar | **acoplado a pausar**. Justificativa corrigida: **existe** no Claude Code (`claude attach <id\|name>`, `claude --resume`; `claude-code.md:61`) e o lançador do Maestro já reabre a janela (`multi-session.py:19`) — o que **não** existe, em nenhuma fonte lida, é retomar o **estado** do trabalho. "Sem fonte", não "o mercado não tem". |
 | chaves e segredos | quando houver **>1 segredo por projeto** ou a **primeira rotação** que precise ser automatizada (aí o cofre se paga). |
-| limite de taxa | quando a taxa passar a ser medida: o teto executável (`ENTRA` **limite de orçamento**) é quem a torna necessária; hoje o Maestro não mede taxa, e a linha 4 a cortava em silêncio. |
+| limite de taxa | quando a taxa passar a ser medida: é o **mesmo ponto de execução** do `DEPOIS` **pausar** (o *hook* que lê o consumo medido) que a torna necessária; hoje o Maestro não mede taxa, e a linha 4 a cortava em silêncio. |
 | rastro/replay de sessão | quando uma sessão precisar ser **reproduzida** para diagnosticar — hoje a trilha por chamado basta. |
 | recibo de entrega (*ack*) | quando a entrega tiver de ser **provada sem inspeção manual**: hoje o livro mostra pretendido × real, mas ninguém confirma o recebimento. |
 | reentrega | quando a **primeira falha de entrega** deixar de ser visível a olho — hoje a linha desviada aparece no livro, mas não há retentativa. |
 | *dead-letter* | quando o **volume de não entregues** exigir um depósito próprio — hoje o desvio é uma linha marcada no livro. |
 | *broadcast*/cópia | quando uma mensagem/tarefa precisar ir a **mais de uma sessão de uma vez** — hoje cada `[[TASK]]` tem um destinatário (`task-ledger.md:28-31`). |
 | estabilidade de ref | quando uma mensagem endereçada tiver de **sobreviver ao reinício** — hoje o ref muda (é o ciclo de vida do ref, achado P4 do juiz 3); depende de **colisão de endereço** (mapa § 7). |
-| alertas | quando o **nº de sessões simultâneas** tornar os gates inline insuficientes (o aviso no início de sessão não escala) — **inclusive o alerta "mensagem desviada"** que o `ux-design` do ciclo 066 já pedia (`ux-design.md:79`). |
+| alertas | quando o **nº de sessões simultâneas** tornar os gates inline insuficientes (o aviso no início de sessão não escala) — a peça é a **notificação ativa** (empurra o alerta, em vez de esperar a sessão ler no início). A *"mensagem desviada"* **sai daqui** (decisão 8): já tem tela na Mensageria — o livro marca a linha desviada — e o `ux-design` do ciclo 066 já a pedia (`ux-design.md:79`). |
 
 ---
 
@@ -174,8 +187,8 @@ decisões** e em **tokens** — que não dão ao administrador onde operar; era 
 
 | Decisão | Quantas | Funcionalidades |
 |---|---|---|
-| **ENTRA** | **15** | subir/derrubar · limites de orçamento · políticas allow/deny/ask · cadastro de skills/ferramentas/modelos · **auditoria administrativa** · lista de agentes vivos com estado · tarefa aberta · consumo por agente · **custo estimado por agente** · mensagem entre agentes · protocolos (A2A, MCP) · caixa de entrada · roteamento por nome/ref · livro de mensagens · colisão de nomes |
-| **NÃO PRECISA** | **6** | aprovação humana · cadastro de agentes · papéis e permissões RBAC · configuração por projeto · última atividade · filas e workers |
+| **ENTRA** | **16** | subir/derrubar · limites de orçamento · políticas allow/deny/ask · **cadastro de agentes (perfis)** · cadastro de skills/ferramentas/modelos · **auditoria administrativa** · lista de agentes vivos com estado · tarefa aberta · consumo por agente · **custo estimado por agente** · mensagem entre agentes · protocolos (A2A, MCP) · caixa de entrada · roteamento por nome/ref · livro de mensagens · colisão de nomes |
+| **NÃO PRECISA** | **5** | aprovação humana · papéis e permissões RBAC · configuração por projeto · última atividade · filas e workers |
 | **DEPOIS** | **11** | pausar · retomar · chaves e segredos · **limite de taxa** · rastro/replay de sessão · **recibo de entrega** · **reentrega** · ***dead-letter*** · ***broadcast*/cópia** · **estabilidade de ref** · alertas |
 | **Total** | **32** | 26 da tabela fixa + 6 acrescentadas na correção 1 |
 
@@ -184,10 +197,15 @@ decisões** e em **tokens** — que não dão ao administrador onde operar; era 
 a taxa vira `DEPOIS`; e cinco funcionalidades de intercomunicação entram como `DEPOIS` (5 → 11).
 Confere: 15 + 6 + 11 = 32 = 26 + 6.
 
-Por grupo (nas 6/6/8/6 fixas): INTERCOMUNICAÇÃO **6 ENTRA de 6** (a prioridade — nenhum `NÃO PRECISA`,
-nenhum `DEPOIS`), **+ 5 acrescentadas em `DEPOIS`**; CONTROLE **3 ENTRA · 1 NÃO PRECISA · 2 DEPOIS**,
-**+ 1 acrescentada** (`limite de taxa`, desdobrada); ADMINISTRAÇÃO **2 ENTRA de 6** (o grupo mais
-coberto ganhou a auditoria); GERENCIAMENTO **4 ENTRA de 8** (ganhou o custo por agente).
+**O movimento da correção 2**: `cadastro de agentes` passou de `NÃO PRECISA` a `ENTRA` (15 → 16 e
+6 → 5); o mecanismo de execução do controle **não** mexeu no total — ele **realocou** o escopo do
+`ENTRA` 4 para o `DEPOIS` `pausar`. Confere: **16 + 5 + 11 = 32** = 26 + 6.
+
+Por grupo (nas **7** do CONTROLE — a linha 4 desdobrada — e nas 6/8/6 fixas): INTERCOMUNICAÇÃO
+**6 ENTRA de 6** (a prioridade — nenhum `NÃO PRECISA`, nenhum `DEPOIS`), **+ 5 acrescentadas em
+`DEPOIS`**; CONTROLE **3 ENTRA · 1 NÃO PRECISA · 3 DEPOIS** (**+ 1 acrescentada**, `limite de taxa`,
+desdobrada); ADMINISTRAÇÃO **3 ENTRA de 6** (ganhou a auditoria na correção 1 e o cadastro de agentes
+— leitura dos perfis — na correção 2); GERENCIAMENTO **4 ENTRA de 8** (ganhou o custo por agente).
 
 ## Glossário proposto (termos novos — a ratificar)
 
@@ -197,6 +215,7 @@ no glossário **reusa** o existente.
 | Termo proposto | Definição curta | Observação |
 |---|---|---|
 | **sessão de agente** | Uma execução de agente que o humano sobe, acompanha e derruba; a unidade de administração. | novo (hoje "sessão" só existe implícito no lançador) |
+| **agente (perfil)** | O **perfil** versionado de um agente (`.claude/agents/*.md`) — o cadastro **é** o arquivo; a **sessão** é a instância com ref. | novo (correção 2, decisão 5; distingue-se de **sessão de agente**) |
 | **estado do agente vivo** | O estado corrente de uma sessão (trabalhando/esperando/sem tarefa/bloqueado) com detecção de processo, não só *heartbeat*. | novo (reusa os estados de `server.py:27`) |
 | **tarefa aberta** | A tarefa ativa **por agente** — o que ele está fazendo agora, com o `start` sem `stop`. | novo; análogo ao **Task ledger** |
 | **consumo por agente** | Tokens por agente (não só por sessão/modelo). | novo; extensão de **Custo por sessão** |
@@ -242,9 +261,29 @@ no glossário **reusa** o existente.
     Claude Code — o que falta é **fonte** para retomar o **estado**, e isso se escreve **"não
     encontrado na documentação lida"**, nunca "lacuna de mercado" (decisão 6);
   - o gatilho de todo `DEPOIS` passou a ser **escrito** (regra 3).
-- **Fora do alcance desta peça**: a identidade `nome · ref · projeto` (decisão 2) é regra das
-  **telas** e do **verificador** (regra 5, `prototipo/verifica-prototipo.py`), não desta tabela; a
-  colisão de **endereço** (decisão 3) mora no **mapa de contextos** (§ 7).
+- **Correção 2 da rodada 4** (o que mudou, e por quê):
+  - o **mecanismo de execução do controle** saiu de `ENTRA` para `DEPOIS` (decisão 2): "recusar a
+    chamada seguinte" e "suspender a sessão" são **o mesmo ponto de execução** — *hook* que lê o
+    **consumo medido**, a desenhar na raia *infra*. O `ENTRA` 4 fica com **declarar o teto + avisar**;
+  - `cadastro de agentes` subiu de `NÃO PRECISA` a **`ENTRA` 16** — **leitura do catálogo de perfis**
+    (o cadastro é o arquivo versionado, não a tela);
+  - a *"mensagem desviada"* saiu de `alertas` (já tem tela): o `DEPOIS` passa a ser **notificação
+    ativa**;
+  - as citações a `claude-code.md` foram **revalidadas contra o HEAD** (`:47→:61`, `:68→:82`,
+    `:71→:84`).
+- **Lacunas declaradas (não silenciadas)** — decisão 2, comuns ao confronto e ao inventário:
+  - **o ponto de execução do controle é dívida**: hoje o Maestro **avisa** o teto, não **corta**; o
+    *hook* que lê o consumo medido e corta o gasto de modelo está **a desenhar na raia *infra***;
+  - **o caminho de aprovação do derrubar** (a passagem pelo pedido de decisão da Regência, relação 5
+    do mapa; decisão 3) é **documentado**, não construído;
+  - **o `tarefas.jsonl` (o *ledger* de tarefas) parou no ciclo 064** — todo custo por agente lido
+    dele é **piso**, não total;
+  - **a área administrativa é somente leitura nesta rodada**: nenhuma tela opera o sistema real.
+- **Fora do alcance desta peça**: a identidade `nome · ref · projeto` (decisão 2) e o **roster**
+  (decisão 1) são regra das **telas** e do **verificador** (regras 5 e 6,
+  `prototipo/verifica-prototipo.py`), não desta tabela; a colisão de **endereço** (decisão 3) mora no
+  **mapa de contextos** (§ 7), e a **ambiguidade de endereço não é verificada por script** — fica
+  declarada no README do protótipo e no mapa (§ 8).
 - **Siglas expandidas na primeira ocorrência** (Princípio VIII): RBAC (*Role-Based Access Control*),
   RACI (*Responsible, Accountable, Consulted, Informed*), MCP (*Model Context Protocol*), A2A
   (*Agent-to-Agent*), ADR (*Architecture Decision Record*), OPA (*Open Policy Agent*), YAGNI

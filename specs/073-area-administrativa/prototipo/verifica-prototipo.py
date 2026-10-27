@@ -38,6 +38,19 @@ FAILS when it finds:
      does NOT exempt rule 5: the identity format is a presentation convention
      and must hold in example rows too — that is what the screens must learn.
      Declared limit: the fence is the whole table, as in rule 4.
+  6. (correction 2 of round 4) the ROSTER — one ref, one name, per screen. The
+     regent's decision 1: within a screen a ref `[xxxxxx]` is glued to a SINGLE
+     name, and every name of the roster carries the roster's ref. The example
+     roster is the real one of 2026-10-26, all `· 410_MAESTRO` (listed in ROSTER
+     below) — fixture data, it does NOT track the live session refs; another
+     project's sessions use their own refs and never a roster ref. Rule 6 closes
+     what rule 5 left open: rule 5 only asks that SOME ref follow the name, so a
+     ref swapped between two sessions passed it (the round-4 judges found the
+     swap). Like rules 4 and 5 it runs on every visible text node and every
+     attribute value, and it has the SAME single exemption — a COLLISION-NAMING
+     TABLE, where the collisions are named on purpose. Declared limit: the full
+     ADDRESS ambiguity (a name reaching several refs or several projects) is NOT
+     verified by script — declared in the README and in the map § 8.
 
 Markup contract (agreed with the screen authors — v2, after the first run over
 the real screens flagged citations as if they were metrics):
@@ -123,6 +136,20 @@ SESSION = re.compile(r"\b(?:Gerente|Worker\d+|MAESTRO|Office|Assistente)\b")
 SESSION_REF = re.compile(r"\s*·?\s*\[[0-9a-fA-F]{6}\]")
 # a ref's digits are a reference, not a metric: rule 3 strips them
 SESSION_REF_TOKEN = re.compile(r"\[[0-9a-fA-F]{6}\]")
+# rule 6: the example roster of decision 1 (2026-10-26) — name -> ref, all
+# `· 410_MAESTRO`. FIXTURE data for the example screens; it does NOT track the
+# live session refs (which change on restart). A ref is glued to a single name
+# and every roster name carries the roster's ref.
+ROSTER = {
+    "Gerente": "31ee4d",
+    "Worker01": "9a1b27",
+    "Worker02": "31f7bf",
+    "Worker03": "ad66d6",
+    "Worker04": "4d000a",
+    "Worker05": "78d88f",
+    "Worker06": "c85948",
+    "MAESTRO": "7c8d05",
+}
 
 
 def glossary_terms():
@@ -158,6 +185,7 @@ class ScreenParser(HTMLParser):
         self.findings = []
         self.stack = []  # [tag, attrs-dict, label-text-so-far or None]
         self.tables = []  # one bool per open <table>: collision-naming?
+        self.ref_names = {}  # rule 6: ref -> set of names glued to it
 
     def error(self, message):
         pass
@@ -320,13 +348,43 @@ class ScreenParser(HTMLParser):
         Every mention of a catalogue name has to carry its ref right after it.
         The bare name is not an address — that is the failure the round-4 judges
         named ("Gerente" alone, a ref column without the project, a ref that
-        changes when the session restarts).
+        changes when the session restarts). Each (name, ref) pair it does see is
+        handed to record_identity for rule 6.
         """
         for m in SESSION.finditer(text):
-            if not SESSION_REF.match(text, m.end()):
+            name = m.group(0)
+            ref_m = SESSION_REF.match(text, m.end())
+            if not ref_m:
                 self.findings.append(
-                    f'{self.path.name}: session "{m.group(0)}" without a ref '
+                    f'{self.path.name}: session "{name}" without a ref '
                     f'[xxxxxx] (nome · ref · projeto): "{text.strip()}"')
+                continue
+            ref = re.search(r"[0-9a-fA-F]{6}", ref_m.group(0)).group(0).lower()
+            self.record_identity(name, ref, text)
+
+    def record_identity(self, name, ref, text):
+        """Rule 6, per mention: a ref is glued to a single name, and a roster
+        name carries the roster's ref. Runs wherever rule 5 runs (same fence)."""
+        self.ref_names.setdefault(ref, set()).add(name)
+        if name in ROSTER and ref != ROSTER[name]:
+            self.findings.append(
+                f'{self.path.name}: session "{name}" carries ref [{ref}], not '
+                f'the roster ref [{ROSTER[name]}] (nome · ref · projeto): '
+                f'"{text.strip()}"')
+
+    def finish(self):
+        """Rule 6, per screen: a ref `[xxxxxx]` belongs to ONE name.
+
+        The swap the round-4 judges found ("Worker05 [4d000a]") passes this only
+        if no other name wears [4d000a] on the same screen — so the pair of
+        checks (roster ref + unique ref) is what actually closes it.
+        """
+        for ref in sorted(self.ref_names):
+            names = self.ref_names[ref]
+            if len(names) > 1:
+                self.findings.append(
+                    f'{self.path.name}: ref [{ref}] is glued to more than one '
+                    f'name ({", ".join(sorted(names))}) — one ref, one name')
 
 
 def main():
@@ -340,6 +398,7 @@ def main():
     for path in screens:
         parser = ScreenParser(path, terms)
         parser.feed(path.read_text(encoding="utf-8"))
+        parser.finish()  # rule 6 is per SCREEN, after the whole file is read
         findings.extend(parser.findings)
     for f in findings:
         print("FINDING:", f)

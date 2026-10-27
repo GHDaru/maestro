@@ -7,9 +7,9 @@
 > contexto fala**. É leitura do repositório, não arquitetura decidida: nada aqui se constrói —
 > os wireframes (rodada 3) e o bar de três críticos (rodada 4) vêm depois.
 
-- **Data**: 2026-10-25 · **Corrigido em**: 2026-10-26 (correção 1 da rodada 4) · **Ciclo**: 073 (área administrativa) · **Rodada**: 2 (confronto) · **Passo**: 3 (mapa)
+- **Data**: 2026-10-25 · **Corrigido em**: 2026-10-27 (correções 1 e 2 da rodada 4) · **Ciclo**: 073 (área administrativa) · **Rodada**: 2 (confronto) · **Passo**: 3 (mapa)
 - **Autor**: Worker02 · **Base**: `02dae14` (correção sobre `6a32e24`) · **Insumos**: `confronto/confronto-decisao.md` (as 26
-  funcionalidades + 6 acrescentadas, e as 15 `ENTRA`), `confronto/inventario-maestro.md` (onde as coisas vivem hoje),
+  funcionalidades + 6 acrescentadas, e as 16 `ENTRA`), `confronto/inventario-maestro.md` (onde as coisas vivem hoje),
   `docs/governance/` (`principles.md`, `operating-model.md`, `task-ledger.md`, glossário),
   `painel/` e os ADR (*Architecture Decision Record* — registro de decisão de arquitetura) 0018
   (fronteira interna) e 0027 (fila e append-only mecânico).
@@ -35,7 +35,7 @@ Três usos concretos deste mapa:
 1. **A rodada 3** (wireframes, que por decisão do regente são "sobre contexto delimitado de DDD e
    linguagem ubíqua", `spec.md`) precisa saber **a que contexto cada tela pertence** — senão a
    tela da fila de decisões e a tela de mensagens nascem parecidas e divergem.
-2. **As 15 `ENTRA`** (13 da rodada 2 + 2 da correção 1) precisam de casa: cada funcionalidade que
+2. **As 16 `ENTRA`** (13 da rodada 2 + 2 da correção 1 + 1 da correção 2) precisam de casa: cada funcionalidade que
    entra vai pertencer a **um** contexto, com invariante declarado (é a disciplina
    `DOM:invariants=` que o 067 já exige de todo plano).
 3. **Quem mexer num contexto amanhã** precisa saber o que quebra longe dali — os relacionamentos
@@ -74,7 +74,8 @@ declarado ao fim desta seção.
 - **Os grupos CONTROLE e GERENCIAMENTO da matriz não viram contexto.** As funcionalidades
   `ENTRA` desses grupos caem em dois contextos que já existem — **Workflow de sessões** (sessão de
   agente, estado do agente vivo, tarefa aberta, consumo por agente, **custo estimado por agente**)
-  e **Administração** (catálogo de skills/ferramentas/modelos, **limite de orçamento**, **auditoria
+  e **Administração** (catálogo de skills/ferramentas/modelos, **cadastro de agentes** — leitura dos
+  perfis, correção 2 —, **limite de orçamento**, **auditoria
   administrativa**). Cortar por grupo da pesquisa seria cortar por **assunto de compra**, não por
   **domínio** — o mapa é de domínio.
 - **O `limite de orçamento` é da Administração, não do Workflow** (correção 1, decisão 1). Quem
@@ -87,7 +88,9 @@ declarado ao fim desta seção.
   blocos `permissions.allow`/`ask`/`deny`, `maxEffortLevel`); a **execução** é do *harness*, que
   roda **fora** dos cinco contextos — mesma categoria do painel (§2), declarado fora do corte em vez
   de virar contexto. É ali que "**quem autoriza**" (decisão 5) deixa de ser texto e vira efeito:
-  hook que recusa é o único ponto em que a política é *executável*, não declarada.
+  o hook que recusa é **o ponto executável no repositório**, além do `permissions` do *harness* —
+  que executa **fora** do corte, e cujo bloco **não está declarado no repositório** (correção 2,
+  decisão 8). Declarar a política não é o mesmo que ter ponto de execução.
 
 ## 3. O mapa
 
@@ -214,7 +217,7 @@ não o core — quem guarda a verdade é o Chamado.
 | **Core domain** | Chamados e Gates | é onde a tese do método vive e onde ninguém compra pronto |
 | **Subdomínio de apoio** | Regência | existe para o humano **agir** sobre o core; a fila é o balcão de atendimento da decisão |
 | **Subdomínio de apoio** | Workflow de sessões | é a execução que **produz** a evidência que o core julga |
-| **Subdomínio genérico** | Administração | registro, papéis e configuração — o mercado vende isso pronto e o método já o tem por inteiro (3 dos 6 `NÃO PRECISA` da correção 1 são daqui; a **auditoria** e o **custo** saíram do `NÃO PRECISA` e viraram `ENTRA`) |
+| **Subdomínio genérico** | Administração | registro, papéis e configuração — o mercado vende isso pronto e o método já o tem por inteiro (2 dos 5 `NÃO PRECISA` de hoje são daqui — o **cadastro de agentes** subiu a `ENTRA` na correção 2, junto com a **auditoria** e o **custo**, que saíram do `NÃO PRECISA` e viraram `ENTRA` na correção 1) |
 | **Subdomínio genérico — com uma ressalva medida** | Mensageria | transporte entre processos é genérico por natureza, **mas a pesquisa mediu o mercado em `0 sim` em 25** para caixa de entrada e livro de mensagens: não há prateleira para se conformar. Fica genérico **no conceito** e de apoio **no investimento** |
 
 ## 6. Linguagem ubíqua por contexto
@@ -240,7 +243,7 @@ isso ficam fora do mapa de dependências.
 | **Eval** (*evaluation*) | juízo (não teste de igualdade, não *benchmark*) para saída que não se compara por igualdade | glossário |
 | **YAGNI** | não construir o especulativo; podar o que não se paga | glossário |
 | **ADR** | registro **imutável** de decisão (contexto → decisão → consequências) | glossário |
-| **Task tag** (`[[TASK]]` / `[[DONE]]`) | tag de uma linha que marca tarefa entregue e tarefa concluída; **núcleo compartilhado** (relação 5) | glossário |
+| **Task tag** (`[[TASK]]` / `[[DONE]]`) | tag de uma linha que marca tarefa entregue e tarefa concluída; **núcleo compartilhado** (relação 6) | glossário |
 
 ### 6.2 Chamados e Gates *(core domain)*
 
@@ -297,12 +300,14 @@ declarado pelo administrador, não medido pelo Workflow; ver § 6.5.)*
 | **RBAC** / **ABAC** / **ReBAC** | autorização por papel / por atributo / por relação — **declarada, mas decidida fora do modelo** | glossário |
 | **Fronteira** (domínio interno) | a declaração, em `boundary.json`, de que todo arquivo tem dono (dois domínios, `shared` no meio); verificada por `check-boundary.sh` | ADR 0018 |
 | **catálogo de skills/ferramentas/modelos** | o registro **consultável** de skills, ferramentas e **modelos** por projeto (hoje: skills em pasta, modelos escolhidos por sessão) | **proposto** |
-| **limite de orçamento** | o teto de consumo por projeto/agente/modelo, **declarado pelo administrador** e **executável** (não só declarado no papel) | **proposto** (é daqui — correção 1, decisão 1) |
+| **limite de orçamento** | o teto de consumo por projeto/agente/modelo, **declarado pelo administrador** e **avisado** (mensagem endereçada ao dono e ao regente); o corte **executável** é o ponto de execução, em `DEPOIS` | **proposto** (é daqui — correção 1, decisão 1; escopo ajustado na correção 2, decisão 2) |
+| **agente (perfil)** | o **perfil** versionado de um agente (`.claude/agents/*.md`); o cadastro **é** o arquivo — a **sessão** é a instância com ref | **proposto** (correção 2, decisão 5) |
 | **auditoria administrativa** | a trilha de **quem** mudou o quê (`changed_by`), na área administrativa | **proposto** (extensão de **Auditoria**) |
 
-**Os três `ENTRA` da Administração** são, portanto: **catálogo de skills/ferramentas/modelos**,
-**limite de orçamento** e **auditoria administrativa** — o cabeçalho das telas que citar "§ 6.5"
-passa a ter os três para citar (antes o § 6.5 listava só o catálogo).
+**Os quatro `ENTRA` da Administração** são, portanto: **cadastro de agentes** (como leitura dos
+perfis — `agente (perfil)`), **catálogo de skills/ferramentas/modelos**, **limite de orçamento** e
+**auditoria administrativa** — o cabeçalho das telas que citar "§ 6.5" passa a ter os quatro para
+citar (antes o § 6.5 listava só o catálogo; a correção 1 levou os três, a correção 2 o quarto).
 
 ### 6.6 Mensageria
 
@@ -385,3 +390,17 @@ de decisões, que recusa ruling sem autor ou sem destino (relação 4). As três
     do painel.
   - **Fora do alcance desta peça**: o ciclo de vida do ref depois do reinício só entra como `DEPOIS`
     com gatilho (**estabilidade de ref**); a correção que o fecha é das telas e do verificador.
+- **Correção 2 da rodada 4** (o que mudou aqui, e por quê):
+  - **§ 6.1 — Relação 6, não 5**: o **núcleo compartilhado** entre Workflow de sessões e Mensageria
+    (a gramática `[[TASK]]`/`[[DONE]]` e o `tarefas.jsonl`) é a **relação 6** do § 4; a § 6.1 citava
+    "relação 5" por engano — a 5 é **Workflow → Regência**.
+  - **§ 2 — a política executável**: o hook que recusa é **o ponto executável no repositório**, além
+    do `permissions` do *harness* (que executa fora do corte; o bloco **não está declarado no
+    repositório**). Corrige o "único ponto" que a decisão 8 mandou reescrever.
+  - **A ambiguidade de endereço não é verificada por script** (decisão 1): a **regra 6** do
+    verificador (`prototipo/verifica-prototipo.py`) exige **um ref por nome** e o **ref do roster**
+    para cada nome do roster, mas **não resolve** a ambiguidade de endereço — esta fica **declarada**
+    (§ 7.1) e no README do protótipo, coberta pela leitura fresca, não por *fitness function*.
+  - **§ 6.5** — o `limite de orçamento` passa a **declarar o teto + avisar** (o corte executável é
+    `DEPOIS`, decisão 2), e o **cadastro de agentes** entra como `ENTRA` (**agente (perfil)**): a
+    Administração passa a listar **quatro** `ENTRA`.

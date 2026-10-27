@@ -1425,3 +1425,104 @@ conformance 073 **verde nos dois modos** (exit 0). Nada mais havia a corrigir ne
 **Tokens (piso — `tarefas.jsonl` parou no ciclo 064):** soma de `message.usage` do transcript desde
 a 1ª ocorrência do `[[TASK 073-C2-W06]]` — **piso 320.487** tokens (input 207.360 + output 113.127),
 com `cache_read` **7.274.560** à parte (total bruto ≈ **7,6 M**); é **piso**, não o gasto real.
+
+## Rodada 4 — correção 2: a **regra 6** do verificador (Worker02, 27/10)
+
+Fatia `073-C2-W02` (decisão 1 da regente, `rodada-4/correcao-2.md`): **um ref, um nome, por tela** —
+dentro de uma tela, um ref `[xxxxxx]` aparece colado a **um único nome**, e **todo nome do roster**
+vem com o **ref do roster** (o roster real de 26/10, listado no script). A regra 6 entra no
+`prototipo/verifica-prototipo.py` (o **sexto** corpo de regra; o script foi de 5 para 6) e roda onde a
+regra 5 roda — **todo nó de texto visível e todo valor de atributo** —, mais um passo `finish()` ao
+fim do arquivo, porque o par *(ref × nome)* só fecha por tela.
+
+**A MESMA isenção da regra 5, declarada:** a **tabela de colisão de nomes** (um `<table>` cujo
+cabeçalho declara `data-rotulo="colisão de nomes"`). É a cerca que a `mensageria-03` usa na tabela de
+resolução (nome nu na coluna "nome pretendido", refs na coluna ao lado): ali o nome nu é colisão
+**nomeada de propósito**, não violação. A marca de exemplo (`data-exemplo`) **não** isenta a regra 6 —
+como não isentava a 5.
+
+**O que a regra 6 fecha (o que a 5 deixava passar):** a regra 5 só pede que **algum** ref siga o nome,
+então uma ref **trocada entre duas sessões** passava por ela. A regra 6 acusa o par: *(i)* um ref
+colado a **dois** nomes; *(ii)* um nome do roster com ref que **não** é a do roster.
+
+### O gate no corpus real (11 telas, seis regras)
+
+```text
+python specs/073-area-administrativa/prototipo/verifica-prototipo.py
+-- verifica-prototipo: 11 screen(s), 0 finding(s)   [exit 0]
+```
+
+**0 achados** com as **seis** regras sobre as telas já corrigidas (W03/W04/W05). Não é um gate que
+nasceu verde: contra as telas do estado **anterior** (`b8c5038`, antes das correções das telas) a
+regra 6 acusava **28** achados — foi a correção das telas que a fechou.
+
+### A mutação (prova de que a regra 6 não é vazia)
+
+Arnês fora do repositório (`%TEMP%`), o **mesmo** `ScreenParser`, cegando a regra 6 nas **duas
+metades** (`record_identity` e `finish` viram no-op), sobre as 11 telas **mais** a dupla de fixtures:
+
+```text
+FIXTURES + CORPUS (HEAD)
+ANTES (regra 6 viva)    -- 9 finding(s)
+MUTADO (regra 6 cega)   -- 7 finding(s)
+desaparecem (regra 6)   -- 2
+```
+
+Os **2** que somem são da regra 6 na fixture ruim (o **discriminador**), literais:
+
+```text
+GONE: tela-ruim.html: session "Worker05" carries ref [4d000a], not the roster ref [78d88f] (nome · ref · projeto): "Worker05 [4d000a]"
+GONE: tela-ruim.html: ref [b7e3a2] is glued to more than one name (Assistente, Office) — one ref, one name
+```
+
+Os **7** que sobrevivem são das **outras** regras, e **todos** em `tela-ruim.html` (rótulo fora do
+glossário ×2, `fila` nua ×2, `<button>` sem `data-fonte`, número sem marca, e o `Gerente` sem ref da
+**regra 5**) — a regra cega não leva nenhum junto. A fixture **boa** prova o outro lado:
+`tela-bom.html` fica com **0 achados** com a regra 6 viva (o roster com os refs certos **passa**, e a
+tabela de colisão **isenta**), 0 também cega.
+
+**A prova na tela real, não só na fixture** — o **mesmo** parser sobre o corpus no estado
+pré-correção (objetos do git, sem tocar na árvore):
+
+```text
+PRE-FIX (b8c5038): 11 screen(s) | regra 6 viva 28 | regra 6 cega 0 | desaparecem 28
+HEAD             : 11 screen(s) | regra 6 viva  0 | regra 6 cega 0 | desaparecem  0
+```
+
+Os **28** do estado anterior eram **todos** da regra 6 — nomes do roster com ref trocada
+(`Worker05 [4d000a]`, `Worker03 [9a1b27]`, `Gerente [6f0c21]`, `Worker01 [1a2b3c]`) e dois refs
+colados a mais de um nome. É exatamente a ref trocada que a **regra 5 não via** — a razão de a 6
+existir.
+
+### Fixtures (o par)
+
+- `prototipo/fixtures/tela-bom.html` — oráculo **positivo**: três nomes do roster com os refs certos
+  (`Gerente [31ee4d]`, `Worker01 [9a1b27]`, `MAESTRO [7c8d05]`), uma **tabela de colisão marcada**
+  (o mesmo nome em duas refs — **isenta**) e o resto limpo ⇒ **0 achados**.
+- `prototipo/fixtures/tela-ruim.html` — oráculo **negativo**: além dos achados das regras 1–5, um nome
+  do roster com a ref errada (`Worker05 [4d000a]`, quando o roster diz `[78d88f]`) e um ref colado a
+  **dois** nomes (`Office [b7e3a2]` × `Assistente [b7e3a2]`) ⇒ acusa a regra 6.
+
+### Restauração provada (sem resíduo)
+
+```text
+H0  (antes)      92D95462BBA6B33BC3BA78AFA6034D761FC5F18B36870143D234B070C9FF588D
+H   (viva)       92D95462BBA6B33BC3BA78AFA6034D761FC5F18B36870143D234B070C9FF588D
+H   (cega)       92D95462BBA6B33BC3BA78AFA6034D761FC5F18B36870143D234B070C9FF588D
+inalterado? True
+```
+
+A mutação é **em memória** (sobre a classe já carregada) e o arnês **lê** o verificador sem escrever
+nada — por isso o SHA-256 do script é idêntico nas três leituras. Nenhum artefato temporário na
+árvore.
+
+### Limites declarados (não silenciados)
+
+- **A ambiguidade de endereço NÃO é verificada por script** (decisão 1): a regra 6 exige *um ref por
+  nome* e *o ref do roster para cada nome do roster*, mas **não resolve** qual ref é o destino certo
+  quando o nome casa com vários. Isso fica **declarado** no `prototipo/README.md` (fatia do W01) e no
+  mapa de contextos (§ 8, fatia do W02) — coberto pela **leitura fresca**, não por *fitness function*.
+- **A cerca é a tabela inteira**: a prosa dentro de uma tabela de colisão fica isenta da regra 6, como
+  fica da 4 e da 5; quem cobre é a leitura fresca.
+- **O roster é dado de fixture** (os refs reais de 26/10) e **não** segue os refs vivos das sessões,
+  que mudam ao reiniciar — é o ciclo de vida do ref, achado P4 do juiz 3, tratado como `DEPOIS`.

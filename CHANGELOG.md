@@ -10,6 +10,28 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **Correção 2 da rodada 4 — a regra 6, o confronto e o mapa** (ciclo 073, `073-C2-W02`): a decisão
+  da regente vira três artefatos. (a) `prototipo/verifica-prototipo.py` — **regra 6**: dentro de uma
+  tela, um ref `[xxxxxx]` cola em **um único nome** e **todo nome do roster** (o de 26/10, listado no
+  script) vem com o **ref do roster**; roda onde a regra 5 roda, mais um passo ao fim do arquivo, com
+  a **mesma** isenção declarada (tabela de colisão de nomes). Fecha o que a regra 5 deixava passar —
+  a **ref trocada entre duas sessões**. Fixture dupla (`fixtures/tela-bom.html` positivo,
+  `tela-ruim.html` negativo) e mutação no `qa-report.md`: **9 → 7** com a regra cegada em
+  fixtures+corpus, **28 → 0** no corpus anterior (`b8c5038`), restauração provada por SHA-256.
+  (b) `confronto/confronto-decisao.md` — o **mecanismo de execução** do controle sai de `ENTRA` e
+  vira `DEPOIS` com gatilho ("recusar a chamada seguinte" e "suspender a sessão" são o mesmo ponto de
+  execução), então o `ENTRA` 4 fica com **declarar o teto + avisar**; `cadastro de agentes` sobe de
+  `NÃO PRECISA` a **`ENTRA` 16** como **leitura do catálogo de perfis** (`agente (perfil)`) — totais
+  **16 `ENTRA` · 5 `NÃO PRECISA` · 11 `DEPOIS` = 32**; a lacuna de `políticas` vira "bloco
+  `permissions` não declarado no repositório"; "mensagem desviada" sai de `alertas` (vira
+  **notificação ativa**); citações a `claude-code.md` revalidadas contra o HEAD (`:47→:61`, `:68→:82`,
+  `:71→:84`); títulos de grupo conferidos com as linhas (CONTROLE 7, acrescentadas 5); e as **lacunas
+  declaradas** (ponto de execução do controle, caminho de aprovação do derrubar, `tarefas.jsonl`
+  parado no ciclo 064, área somente leitura nesta rodada) entram na seção "Limites". (c)
+  `confronto/mapa-de-contextos.md` — o § 6.1 passa a citar a **relação 6** (núcleo compartilhado
+  Workflow ↔ Mensageria; a 5 é Workflow → Regência), o § 2 troca "o único ponto" por **"o ponto
+  executável no repositório, além do `permissions` do harness"**, e o § 8 declara que **a ambiguidade
+  de endereço não é verificada por script**. Gate: **11 telas, 0 achados, seis regras, exit 0**.
 - **Ajustes do gate de spec (B1, B2, S1–S6) e o `ux-design.md`** (ciclo 074,
   `074-prototipo-navegavel`): a spec aprovada com ajustes recebe as correções do gate —
   **B1** (os cinco contextos são os do mapa; os seis itens do menu são **vistas**; o kanban
