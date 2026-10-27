@@ -67,16 +67,16 @@ footer.rodape strong{color:var(--tinta)}
 </div>
 
 <h2>tarefas abertas</h2>
-<table data-fonte="método: <code>docs/records/tarefas.jsonl</code> (Task ledger do ciclo) e <code>painel/server.py</code> (read-model); plataforma Claude Code — <em>agent view</em>, <code>https://code.claude.com/docs/en/agent-view</code> (ficha <code>specs/073-area-administrativa/pesquisa/claude-code.md</code>)">
+<table data-fonte="método: <code>docs/records/tarefas.jsonl</code> (Task ledger — <strong>parado no ciclo 064</strong>) e <code>painel/server.py</code> (read-model); plataforma Claude Code — <em>agent view</em>, <code>https://code.claude.com/docs/en/agent-view</code> (ficha <code>specs/073-area-administrativa/pesquisa/claude-code.md</code>)">
   <caption>Uma linha por tarefa despachada e ainda não fechada, com o <strong>destinatário</strong> e o <strong>despachante</strong> na identidade completa <strong>nome · ref · projeto</strong>. Os valores marcados <span class="exemplo">exemplo</span> ilustram o layout — não são dados do repositório.</caption>
   <thead>
     <tr>
       <th class="rotulo" data-rotulo="sessão de agente" data-fonte="método: ListAgents (nome e ref) · specs/073-area-administrativa/pesquisa/claude-code.md (roteamento por nome/ref = sim)">destinatário (nome · ref · projeto)</th>
       <th class="rotulo" data-rotulo="tarefa aberta" data-fonte="método: docs/records/tarefas.jsonl (id da TASK despachada) · docs/governance/glossary.md (Tarefa aberta, ciclo 073)">tarefa aberta</th>
       <th class="rotulo" data-rotulo="roteamento por nome/ref" data-fonte="método: docs/governance/task-ledger.md (quem despacha escreve a TASK) · specs/066-painel-de-regencia/andamento.md:112-113 (endereçar sempre com o ref lido)">despachada por (nome · ref · projeto)</th>
-      <th class="rotulo" data-rotulo="tarefa aberta" data-fonte="método: docs/records/tarefas.jsonl (carimbo do despacho); a idade não é digitada (ux-design 066 §7, F7)">desde</th>
-      <th class="rotulo" data-rotulo="tarefa aberta" data-fonte="método: docs/records/tarefas.jsonl (campo attempt= e o histórico de despachos)">tentativas</th>
-      <th class="rotulo" data-rotulo="custo por sessão" data-fonte="método: docs/records/tarefas.jsonl (tokens da TASK, quando houver) · docs/governance/glossary.md (Custo por sessão, ciclo 068 — contagem, nunca conteúdo)">tokens da tarefa</th>
+      <th class="rotulo" data-rotulo="tarefa aberta" data-fonte="método: docs/records/tarefas.jsonl (carimbo do despacho) — livro de ponto <strong>parado no ciclo 064</strong>: o carimbo não é mais gravado, então o valor vivo é «— (ledger parado no 064)»; a idade não é digitada (ux-design 066 §7, F7)">desde</th>
+      <th class="rotulo" data-rotulo="tarefa aberta" data-fonte="método: docs/records/tarefas.jsonl (campo attempt= e o histórico de despachos) — livro de ponto <strong>parado no ciclo 064</strong> (valor vivo «— (ledger parado no 064)»); do 065 em diante a tentativa é projetada do transcrito, como piso">tentativas</th>
+      <th class="rotulo" data-rotulo="custo por sessão" data-fonte="método: docs/records/tarefas.jsonl (tokens da TASK, quando houver) — livro de ponto <strong>parado no ciclo 064</strong> (valor vivo «— (ledger parado no 064)»); do 065 em diante os tokens saem do transcrito, como piso · docs/governance/glossary.md (Custo por sessão, ciclo 068 — contagem, nunca conteúdo)">tokens da tarefa</th>
       <th class="rotulo" data-rotulo="tarefa aberta" data-fonte="método: specs/073-area-administrativa/rodada-4/correcao-1.md (P15: a regra de «travada»)">estado da tarefa</th>
     </tr>
   </thead>
