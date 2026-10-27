@@ -66,7 +66,7 @@ Siglas expandidas na primeira ocorrência: **RBAC** (*Role-Based Access Control*
 | CONTROLE | subir/derrubar sessão ou agente | sim | sim | parcial | parcial | parcial | parcial | parcial | sim | parcial | parcial | sim | parcial | parcial | parcial | parcial | não | parcial | — | parcial | parcial | parcial | não | não | não | não |
 | CONTROLE | pausar | sim | — | parcial | parcial | — | — | parcial | parcial | — | não | parcial | sim | — | — | — | — | — | — | — | — | sim | — | — | — | — |
 | CONTROLE | retomar | sim | — | parcial | parcial | — | — | parcial | sim | — | sim | sim | parcial | — | — | — | — | — | — | parcial | parcial | parcial | — | — | — | — |
-| CONTROLE | limites de orçamento e de taxa | parcial | — | parcial | parcial | sim | — | sim | parcial | — | parcial | sim | parcial | sim | sim | sim | parcial | parcial | — | parcial | — | — | — | parcial | — | — |
+| CONTROLE | limites de orçamento e de taxa | parcial (corta) | — | parcial (corta) | parcial (corta) | sim (corta) | — | sim (corta) | parcial (avisa?) | — | parcial (corta) | sim (corta) | parcial (corta) | sim (corta) | sim (corta) | sim (corta) | parcial (corta) | parcial (avisa) | — | parcial (avisa?) | — | — | — | parcial (corta) | — | — |
 | CONTROLE | políticas allow/deny/ask | — | parcial | parcial | parcial | sim | sim | parcial | sim | — | sim | sim | parcial | parcial | parcial | parcial | parcial | — | — | — | — | — | — | parcial | — | — |
 | CONTROLE | aprovação humana | — | — | parcial | — | parcial | sim | sim | sim | — | sim | parcial | sim | — | parcial | parcial | — | — | parcial | sim | sim | parcial | — | sim | — | — |
 | ADMINISTRAÇÃO | cadastro de agentes | — | sim | parcial | parcial | sim | sim | — | sim | sim | sim | sim | parcial | sim | sim | parcial | — | parcial | — | parcial | parcial | sim | parcial | sim | não | não |
@@ -90,12 +90,33 @@ Siglas expandidas na primeira ocorrência: **RBAC** (*Role-Based Access Control*
 | INTERCOMUNICAÇÃO | livro de mensagens | — | — | — | — | — | — | — | — | parcial | — | parcial | parcial | parcial | — | parcial | — | — | — | — | — | parcial | — | — | — | — |
 | INTERCOMUNICAÇÃO | colisão de nomes | parcial | — | — | — | — | — | — | parcial | — | sim | — | sim | — | — | — | — | — | — | — | — | — | — | — | — | — |
 
-> **Nota de coluna — "corta × avisa"** (decisão da rodada 4). Duas linhas parecem a mesma coisa e não
-> são: **limites de orçamento e de taxa** (grupo CONTROLE) é o **limite que corta** — estourou, a
-> chamada é recusada (a OpenAI Platform devolve 429 acima do teto de gasto); **alertas** (grupo
-> GERENCIAMENTO) é o **aviso que só notifica**, sem bloquear nada (a própria doc do Portkey declara os
-> alertas "work in progress and not sent today"). Um `sim` na linha de alertas diz que a plataforma
-> **avisa** — não que ela **corta**.
+> **Marcas da linha "limites de orçamento e de taxa" — `corta` × `avisa`** (decisão **D1** da
+> correção 3, 27/10). A linha continua **uma só** (tabela fixa de 26 mantida); o que era nota de
+> coluna virou **marca por célula**: cada `sim`/`parcial` leva a marca, com a ficha como fonte.
+> **`corta`** = estourou, a chamada é recusada/limitada (429, *throttling*, `deny`, *cap* que barra);
+> **`avisa`** = a plataforma só **notifica/detecta**, sem bloquear; **`avisa?`** = a ficha **não dá
+> fonte** para a distinção (nem corte nem aviso descritos). As `—` (sem fonte) permanecem sem marca.
+> A distinção que gerou as marcas: *limites de orçamento e de taxa* é o **limite**; *alertas* (grupo
+> GERENCIAMENTO) é o **aviso** — um `sim` lá diz que a plataforma **avisa**, não que **corta**
+> (Portkey: alertas "work in progress and not sent today").
+>
+> | Plataforma | Marca | Fonte (ficha) |
+> |---|---|---|
+> | Temporal | `corta` | `temporal-web-ui.md:86` — *throttling* por APS/RPS (só taxa, Cloud) |
+> | Prefect | `corta` | `prefect.md:35` — *rate limits* por plano |
+> | Dagster | `corta` | `dagster.md:42` — "429 - Too Many Requests" + *run queue limits* |
+> | Copilot Studio | `corta` | `copilot-studio.md:32` — quotas RPM/RPH + *credit caps* ("service denial") |
+> | n8n | `corta` | `n8n.md:30` — teto de execuções/concorrência por plano |
+> | Claude Code | `avisa?` | `claude-code.md:62` — tetos de política; **sem** teto de orçamento no CLI |
+> | Kiro Crew | `corta` | `kiro-crew.md:36` — *cap* por créditos ("overages disabled by default") |
+> | AgentCore | `corta` | `aws-bedrock-agentcore.md:30` — "further payment requests are denied"; 429 |
+> | Windmill | `corta` | `windmill.md:29` — *concurrency limits* |
+> | LiteLLM | `corta` | `litellm.md:82` — `max_budget`/`tpm_limit`/`rpm_limit` |
+> | Portkey | `corta` | `portkey.md:36` — estouro **429**, orçamento estourado **412** |
+> | OpenAI Platform | `corta` | `openai-platform.md:43` — "Enforce a hard limit" → **429** |
+> | Helicone | `corta` | `helicone.md:38` — *rate limit* → **429** |
+> | AgentOps | `avisa` | `agentops.md:30` — "Token limit overflow flags" (**detecta**, não capa) |
+> | LangSmith/LG | `avisa?` | `langsmith-langgraph.md:30` — limites são assunto de *billing* |
 
 ## Como acrescentar uma plataforma
 
@@ -136,6 +157,15 @@ Siglas expandidas na primeira ocorrência: **RBAC** (*Role-Based Access Control*
 > contra a matriz, **valendo sobre os números acima**: **`sim` 168 · `parcial` 226 · `não` 12 ·
 > `—` 244** (650 células); **ADMINISTRAÇÃO 75/150 = 50%**; **GERENCIAMENTO 42/200 = 21%**
 > (inalterado). Nenhuma célula `—` → `sim` (FR3 intocado).
+>
+> **Corrigido em 27/10 (correção 3 da rodada 4, D1).** **Nenhum símbolo mudou** — os totais acima
+> seguem valendo (`sim` 168 · `parcial` 226 · `não` 12 · `—` 244; 650 células). O que mudou foi a
+> **forma**: a nota de coluna "corta × avisa" virou **marca por célula** na linha *limites de
+> orçamento e de taxa* (cada `sim`/`parcial` ganhou `corta`, `avisa` ou `avisa?` **com a ficha como
+> fonte**; ver a tabela de marcas logo abaixo da matriz). 13 células `corta`, 1 `avisa` (AgentOps) e
+> 2 `avisa?` (Claude Code, LangSmith/LG) — as `—` ficam sem marca. As contagens de `sim` por
+> funcionalidade **não** mudam (a marca acompanha o símbolo, não o substitui): a linha continua
+> **6 `sim`**.
 
 **Por grupo** — `sim` sobre o total de células do grupo, nas 25 plataformas:
 
