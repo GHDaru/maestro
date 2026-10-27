@@ -161,10 +161,12 @@
   <p>
     <button aria-label="chamar a ferramenta estado_atual" data-fonte="método: painel/mcp_painel.py:24 (ferramenta estado_atual)">Chamar estado_atual</button>
     <button aria-label="registrar o status da sessão" data-fonte="método: painel/mcp_painel.py:29 (ferramenta registrar_status)">Registrar status</button>
+    <button aria-label="registrar a transição de uma peça" data-fonte="método: painel/mcp_painel.py:35 (ferramenta registrar_peca)">Registrar peça</button>
   </p>
   <p class="nota"><strong>Quem autoriza:</strong> <em>Chamar estado_atual</em> é <strong>leitura</strong> — qualquer sessão de agente chama.
-    <em>Registrar status</em> é <strong>escrita</strong> — autorizada pela <strong>sessão dona</strong>: ela só acrescenta ao próprio status, e a ferramenta recusa estado fora da lista permitida.</p>
-  <p class="fonte" data-referencia="true">A2A por plataforma: LiteLLM é a única referência <code>sim</code> entre as 25 (ficha <code>specs/073-area-administrativa/pesquisa/litellm.md</code>) — a ideia a copiar, não a dependência.</p>
+    <em>Registrar status</em> é <strong>escrita</strong> — autorizada pela <strong>sessão dona</strong>: ela só acrescenta ao próprio status, e a ferramenta recusa estado fora da lista permitida.
+    <em>Registrar peça</em> é <strong>escrita com evidência</strong> — autorizada por quem <strong>move a peça</strong> (a sessão dona da fatia ou o regente por delegação), e a ferramenta <strong>recusa a transição sem a evidência exigida pelo estado</strong> (o portão do chamado vira contrato).</p>
+  <p class="fonte" data-referencia="true">A2A por plataforma: <strong>A2A tem 5 <code>sim</code> na matriz</strong> — a plataforma LiteLLM (ficha <code>specs/073-area-administrativa/pesquisa/litellm.md</code>) é uma delas, ao lado das demais linhas <code>sim</code> de <em>protocolos (A2A, MCP)</em>; a ideia a copiar, não a dependência. <span class="fonte" data-referencia="true">Correção factual da rodada 4 (decisão 7): antes a tela dizia “a única <code>sim</code> entre as 25”.</span></p>
 </div>
 
 <footer>

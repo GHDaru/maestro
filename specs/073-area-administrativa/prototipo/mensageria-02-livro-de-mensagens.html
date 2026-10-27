@@ -33,6 +33,7 @@
     <span class="fonte" data-referencia="true">Fonte real do registro hoje: a <strong>fila outbox</strong> (SQLite, <code>painel/fila_outbox.py</code>) — o livro é a leitura unificada dela.
     Não é o <strong>livro de ponto</strong> (Task ledger, <code>docs/records/tarefas.jsonl</code>): mesmo nome, outro objeto (mapa §7).</span></p>
   <p class="nota">Regra do livro: <strong>nunca se apaga uma linha</strong> — corrigir é acrescentar. A leitura é marcada, não removida.</p>
+  <p class="nota">Ordem do livro: <strong>da mais antiga à mais nova</strong> — a ordem de registro acompanha a hora. <span class="fonte" data-referencia="true">Rodada 4, decisão 7 (ordem 8 a 12): a lista passa a respeitar o próprio título.</span></p>
 </header>
 
 <div class="cx">
@@ -51,64 +52,76 @@
       <th class="rotulo" data-rotulo="mensagem entre agentes" data-fonte="método: specs/066-painel-de-regencia/ux-design.md (F7 — carimbo do relógio, nunca digitado)">hora</th>
       <th class="rotulo" data-rotulo="livro de mensagens" data-fonte="método: painel/fila_outbox.py (identificador da mensagem)">id</th>
       <th class="rotulo" data-rotulo="livro de mensagens" data-fonte="método: painel/fila_outbox.py (ordem de registro, append-only)">ordem</th>
+      <th class="rotulo" data-rotulo="tarefa aberta" data-fonte="método: docs/governance/task-ledger.md (tag [[TASK id]]) · rodada 4, decisão 7">tarefa (da tag [[TASK]])</th>
       <th class="rotulo" data-rotulo="mensagem entre agentes" data-fonte="método: docs/governance/glossary.md (Mensagem entre agentes) — além das task tags [[TASK]]/[[DONE]]">mensagem entre agentes</th>
       <th class="rotulo" data-rotulo="sessão de agente" data-fonte="método: docs/governance/glossary.md (Sessão de agente) · rodada 4, decisão 2 (nome · ref · projeto)">remetente (nome · ref · projeto)</th>
       <th class="rotulo" data-rotulo="roteamento por nome/ref" data-fonte="método: painel/ingest.py (norm_sessao) · rodada 4, decisão 3">destinatário (pretendido × real)</th>
+      <th class="rotulo" data-rotulo="task ledger" data-fonte="método: docs/records/tarefas.jsonl (Task ledger, parado no ciclo 064) · rodada 4, decisão 7">custo</th>
       <th class="rotulo" data-rotulo="outbox" data-fonte="método: docs/governance/glossary.md (Outbox) · painel/fila_outbox.py (entrega)">estado da entrega</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">09:14 (exemplo)</span></td>
-      <td><span class="metrica mono" data-fonte="exemplo — nenhum dado real" data-exemplo="true">msg-0417 (exemplo)</span></td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">12 (exemplo)</span></td>
-      <td>“Segue o inventário para o confronto.”</td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker05 [4d000a] · projeto: maestro (exemplo)</span></td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">pretendido: Worker03 [9a1b27] · real: Worker03 [9a1b27] (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">07:05 (exemplo)</span></td>
+      <td><span class="metrica mono" data-fonte="exemplo — nenhum dado real" data-exemplo="true">msg-0413 (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">8 (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">— (mensagem livre, sem tag [[TASK]]) (exemplo)</span></td>
+      <td>“Segue o recorte; confirma o recebimento.”</td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Office [b7e3a2] · projeto: Hindiana (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">pretendido: Worker03 [ad66d6] · 410_MAESTRO · real: Worker03 [ad66d6] · 410_MAESTRO (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">— (ledger parado no 064) (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">enviada, a caminho (exemplo)</span></td>
+    </tr>
+    <tr class="desvio">
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">07:20 (exemplo)</span></td>
+      <td><span class="metrica mono" data-fonte="exemplo — nenhum dado real" data-exemplo="true">msg-0414 (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">9 (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">072-R1 (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">[[DONE id=072-R1]] (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker01 [9a1b27] · 410_MAESTRO (exemplo)</span></td>
+      <td><span class="falta" data-fonte="exemplo — nenhum dado real" data-exemplo="true">pretendido: Office [b7e3a2] · projeto: Hindiana · real: — recusa por colisão de endereço (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">— (ledger parado no 064) (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">falhou (exemplo)</span></td>
+    </tr>
+    <tr class="desvio">
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">07:48 (exemplo)</span></td>
+      <td><span class="metrica mono" data-fonte="exemplo — nenhum dado real" data-exemplo="true">msg-0415 (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">10 (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">073-T2-mapa (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">[[TASK id=073-T2-mapa]] (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Gerente [31ee4d] · 410_MAESTRO (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">pretendido: Worker02 [31f7bf] · 410_MAESTRO · real: Worker04 [4d000a] · 410_MAESTRO (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">— (ledger parado no 064) (exemplo)</span></td>
       <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">entregue (exemplo)</span></td>
     </tr>
     <tr>
       <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">08:02 (exemplo)</span></td>
       <td><span class="metrica mono" data-fonte="exemplo — nenhum dado real" data-exemplo="true">msg-0416 (exemplo)</span></td>
       <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">11 (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">— (mensagem livre, sem tag [[TASK]]) (exemplo)</span></td>
       <td>“Revisão fresca aceita; nada pendente de ti.”</td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Gerente [6f0c21] · projeto: maestro (exemplo)</span></td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">pretendido: Worker03 [9a1b27] · real: Worker03 [9a1b27] (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Gerente [31ee4d] · 410_MAESTRO (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">pretendido: Worker03 [ad66d6] · 410_MAESTRO · real: Worker03 [ad66d6] · 410_MAESTRO (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">— (ledger parado no 064) (exemplo)</span></td>
       <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">lida (exemplo)</span></td>
     </tr>
-    <tr class="desvio">
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">07:48 (exemplo)</span></td>
-      <td><span class="metrica mono" data-fonte="exemplo — nenhum dado real" data-exemplo="true">msg-0415 (exemplo)</span></td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">10 (exemplo)</span></td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">[[TASK id=073-T2-mapa]] (exemplo)</span></td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Gerente [6f0c21] · projeto: maestro (exemplo)</span></td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">pretendido: Worker02 [31f7bf] · real: Worker04 [4d000a] (exemplo)</span></td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">entregue (exemplo)</span></td>
-    </tr>
-    <tr class="desvio">
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">07:20 (exemplo)</span></td>
-      <td><span class="metrica mono" data-fonte="exemplo — nenhum dado real" data-exemplo="true">msg-0414 (exemplo)</span></td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">9 (exemplo)</span></td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">[[DONE id=072-R1]] (exemplo)</span></td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker01 [9a1b27] · projeto: maestro (exemplo)</span></td>
-      <td><span class="falta" data-fonte="exemplo — nenhum dado real" data-exemplo="true">pretendido: Office [b7e3a2] · real: — recusa por colisão de endereço (exemplo)</span></td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">falhou (exemplo)</span></td>
-    </tr>
     <tr>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">07:05 (exemplo)</span></td>
-      <td><span class="metrica mono" data-fonte="exemplo — nenhum dado real" data-exemplo="true">msg-0413 (exemplo)</span></td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">8 (exemplo)</span></td>
-      <td>“Segue o recorte; confirma o recebimento.”</td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Office [b7e3a2] · projeto: maestro (exemplo)</span></td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">pretendido: Worker03 [9a1b27] · real: Worker03 [9a1b27] (exemplo)</span></td>
-      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">enviada, a caminho (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">09:14 (exemplo)</span></td>
+      <td><span class="metrica mono" data-fonte="exemplo — nenhum dado real" data-exemplo="true">msg-0417 (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">12 (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">— (mensagem livre, sem tag [[TASK]]) (exemplo)</span></td>
+      <td>“Segue o inventário para o confronto.”</td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker05 [78d88f] · 410_MAESTRO (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">pretendido: Worker03 [ad66d6] · 410_MAESTRO · real: Worker03 [ad66d6] · 410_MAESTRO (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">— (ledger parado no 064) (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">entregue (exemplo)</span></td>
     </tr>
   </tbody>
 </table>
 
 <div class="cx">
   <p class="nota"><strong>Destinatário pretendido × real.</strong> O livro guarda os dois: quando diferem, a linha fica marcada — é a prova de entrega errada, antes só visível à mão.</p>
-  <p class="nota"><strong>Quem pode ver o livro de outra sessão:</strong> a leitura é do time — qualquer <strong>sessão de agente</strong> lê as linhas. Filtrar as mensagens <em>de outra sessão</em> exige a ref dela e não altera nada (o livro é <em>append-only</em>).</p>
+  <p class="nota"><strong>Quem pode ver o livro:</strong> a leitura é <strong>restrita ao projeto</strong> — só as sessões do mesmo <code data-referencia="true">410_MAESTRO</code> leem as linhas do projeto, coerente com o <em>default-deny</em>. <span class="fonte" data-referencia="true">Rodada 4, decisão 7 (a restrição ao projeto é declarada, não inferida). Ler o livro de outra sessão do mesmo projeto exige a ref dela e não altera nada — o livro é <em>append-only</em>.</span></p>
   <p class="nota"><strong>Quem pode escrever:</strong> só a <strong>sessão dona</strong> da mensagem acrescenta a própria linha. Nem o regente reescreve uma linha — corrigir é acrescentar.</p>
   <p>
     <button aria-label="filtrar por mensagem desviada" data-fonte="método: specs/066-painel-de-regencia/ux-design.md §2.4 (‘mensagem desviada’) — objeto nomeado, agora com fonte no livro">Ver entregas erradas</button>
@@ -118,7 +131,8 @@
 
 <footer>
   <p class="fonte" data-referencia="true">Fontes — método: <code>painel/fila_outbox.py</code> · <code>docs/governance/glossary.md</code> (Livro de mensagens, Task ledger, Outbox, Mensagem entre agentes) ·
-  <code>specs/073-area-administrativa/confronto/mapa-de-contextos.md</code> §6.6 e §7 · <code>specs/073-area-administrativa/rodada-4/correcao-1.md</code> (decisões 2 e 3) ·
+  <code>specs/073-area-administrativa/confronto/mapa-de-contextos.md</code> §6.6, §7 e §7.1 · <code>specs/073-area-administrativa/rodada-4/correcao-1.md</code> (decisões 2 e 3) ·
+  <code>specs/073-area-administrativa/rodada-4/correcao-2.md</code> (decisões 1 e 7) ·
   <code>specs/066-painel-de-regencia/ux-design.md</code> §2.4 e §5 (F1, F7, F8, F9). Plataforma (ideia de leitura): Temporal Web UI,
   <code>https://docs.temporal.io/web-ui</code> (ficha <code>specs/073-area-administrativa/pesquisa/temporal-web-ui.md</code>, <code>sim</code> em rastro/replay).</p>
   <p class="nota">Todo elemento interativo tem <code>data-fonte</code>; todo número/estado é <code>(exemplo)</code>.</p>
