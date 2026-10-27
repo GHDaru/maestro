@@ -85,24 +85,29 @@
       <tr>
         <th class="rotulo" data-rotulo="protocolo de intercomunicação" data-fonte="método: painel/mcp_painel.py (tools/list)">ferramenta exposta</th>
         <th class="rotulo" data-rotulo="protocolo de intercomunicação" data-fonte="método: painel/mcp_painel.py (descrição da ferramenta)">o que faz</th>
+        <th class="rotulo" data-rotulo="protocolo de intercomunicação" data-fonte="método: specs/073-area-administrativa/rodada-4/correcao-3.md (D2 — quem pode chamar qual ferramenta MCP é escopo da política allow/deny/ask por agente)">regra de política que autoriza a chamada (escopo ferramenta MCP)</th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td><code data-fonte="método: painel/mcp_painel.py:24">estado_atual</code></td>
         <td><span class="fonte" data-referencia="true">Estado atual derivado do projeto (equipe, decisões, barra, desvios, riscos); com <code>sessao</code>, o estado daquela sessão. “Chame no início de cada sessão em vez de confiar no estado escrito à mão.”</span></td>
+        <td data-referencia="true"><span class="fonte" data-referencia="true">a chamada é regida pela <strong>política de escopo <code>ferramenta MCP</code></strong> — a tabela de regras de <code>specs/073-area-administrativa/prototipo/administracao-02-politicas.html</code> é a fonte; o protocolo só aponta.</span></td>
       </tr>
       <tr>
         <td><code data-fonte="método: painel/mcp_painel.py:29">registrar_status</code></td>
         <td><span class="fonte" data-referencia="true">Registra o status da sessão — <strong>só acrescenta</strong>; recusa estado fora da lista permitida.</span></td>
+        <td data-referencia="true"><span class="fonte" data-referencia="true">mesma política de escopo <code>ferramenta MCP</code>: quem pode chamar <code>registrar_status</code> é uma regra por agente, declarada em <code>specs/073-area-administrativa/prototipo/administracao-02-politicas.html</code>.</span></td>
       </tr>
       <tr>
         <td><code data-fonte="método: painel/mcp_painel.py:35">registrar_peca</code></td>
         <td><span class="fonte" data-referencia="true">Registra a transição de uma peça; <strong>recusado sem a evidência exigida pelo estado</strong> (o portão do chamado vira contrato).</span></td>
+        <td data-referencia="true"><span class="fonte" data-referencia="true">regra de exemplo da política (escopo <code>ferramenta MCP</code>): <code>ask</code> para Worker, <code>allow</code> para o regente por delegação, <code>deny</code> para sessão de outro projeto — escrita em <code>specs/073-area-administrativa/prototipo/administracao-02-politicas.html</code>; a Mensageria <strong>não duplica</strong> a regra, só aponta para ela.</span></td>
       </tr>
     </tbody>
   </table>
   <p class="fonte" data-referencia="true">Superfície pequena de propósito: só o que o painel realmente serve hoje — nada de ferramenta nomeada sem implementação.</p>
+  <p class="nota"><strong>Quem pode chamar qual ferramenta é política, não protocolo.</strong> A autorização por ferramenta (<code>ask</code> / <code>allow</code> / <code>deny</code>) é uma <strong>regra de escopo <code>ferramenta MCP</code></strong> na tela de políticas — o protocolo <strong>aponta</strong> para ela em cada linha acima e não a repete. <span class="fonte" data-referencia="true">Rodada 4, correção 3, D2: MCP sob a política allow/deny/ask por agente.</span></p>
 </div>
 
 <h2>O que a sessão de agente CONSOME</h2>
@@ -174,6 +179,7 @@
   <code>estado_atual</code>/<code>registrar_status</code>/<code>registrar_peca</code>) · <code>painel/fila_outbox.py</code> ·
   <code>docs/governance/glossary.md</code> (MCP, Outbox, Mensagem entre agentes) · <code>specs/073-area-administrativa/confronto/inventario-maestro.md</code> ·
   <code>specs/073-area-administrativa/confronto/mapa-de-contextos.md</code> §6.6 · <code>specs/073-area-administrativa/rodada-4/correcao-1.md</code> (decisão 5) ·
+  <code>specs/073-area-administrativa/rodada-4/correcao-3.md</code> (D2 — cada ferramenta MCP sob a regra de política de escopo <code>ferramenta MCP</code>) ·
   <code>specs/066-painel-de-regencia/ux-design.md</code> §2 (linha A2A), §8 (F1, F8, F9). Plataforma: LiteLLM,
   <code>https://www.litellm.ai/</code> e <code>https://docs.litellm.ai/</code> (ficha <code>specs/073-area-administrativa/pesquisa/litellm.md</code>, <code>sim</code>).</p>
   <p class="nota">Todo elemento interativo tem <code>data-fonte</code>; todo número/estado é <code>(exemplo)</code> — wireframe, não dado real.</p>
