@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Protótipo navegável do painel de regência — Maestro</title>
+<!--
+  Casca única do protótipo (ciclo 074, T02 — FR1, FR2, FR4, FR6).
+
+  O que é: a casca por onde se anda — a navegação (seis itens como vistas sobre os cinco
+  contextos do mapa) e o contêiner onde `app.js` injeta o fragmento da rota
+  `#/<contexto>/<tela>`. O roteador cai na tela inicial sem erro quando a rota não existe
+  (FR1), o estado vive só em memória, inicializado das fixtures (recarregar restaura, FR4)
+  e todo botão de escrita é declaradamente simulado (ux-design §5).
+
+  O que não é: não é o produto. Zero dependência (FR6) — sem framework, sem build, sem
+  rede; servido por `python -m http.server` na própria pasta (`prototipo-074` do
+  `.claude/launch.json`) e nada além disso. Nenhum dado pessoal real.
+
+  Fronteira: este arquivo e `app.js` são do Worker02; os efeitos por contexto vivem em
+  `acoes/<contexto>.js`, um arquivo por dono.
+-->
+<link rel="stylesheet" href="tokens.css">
+<!-- ícone vazio em data URI: evita o pedido de /favicon.ico, que responderia 404 e sujaria
+     o console (FR6: nada externo — o valor é inline) -->
+<link rel="icon" href="data:,">
+</head>
+<body>
+
+<div class="casca">
+
+  <nav class="menu" id="menu" aria-label="Navegação do protótipo" data-rotulo="navegação"
+       data-fonte="spec 074 FR2/B1 (os seis itens como vistas sobre os cinco contextos do mapa) e design system §4 (objeto navegação)">
+    <span class="menu-marca">maestro <span class="ajuda">(exemplo)</span></span>
+    <ul>
+      <li><a href="#/regencia/inicial" data-vai-para="telas/regencia/inicial.html" data-fonte="FR2 (Regência → tela inicial, a frase-chave do regente)">Regência</a></li>
+      <li><a href="#/chamados-e-gates/kanban-por-gate" data-vai-para="telas/chamados-e-gates/kanban-por-gate.html" data-fonte="FR2/B1 (Chamados → kanban por gate, contexto core domain chamados-e-gates)">Chamados</a></li>
+      <li><a href="#/regencia/fila-de-decisoes" data-vai-para="telas/regencia/fila-de-decisoes.html" data-fonte="FR2 (Fila → fila de decisões, contexto regencia)">Fila</a></li>
+      <li><a href="#/workflow-de-sessoes/sessao-de-agente" data-vai-para="telas/workflow-de-sessoes/sessao-de-agente.html" data-fonte="FR2 (Sessões → workflow de sessões)">Sessões</a></li>
+      <li><a href="#/administracao/catalogo" data-vai-para="telas/administracao/catalogo.html" data-fonte="FR2 (Administração → catálogo)">Administração</a></li>
+      <li><a href="#/mensageria/caixa-de-entrada" data-vai-para="telas/mensageria/caixa-de-entrada.html" data-fonte="FR2 (Mensageria → caixa de entrada)">Mensageria</a></li>
+    </ul>
+  </nav>
+
+  <main class="conteudo" id="tela" data-contexto="regencia" data-rota="regencia/inicial">
+    <div class="conteudo-interior">
+      <p class="migalha" data-referencia="true">Maestro · protótipo navegável · ciclo 074</p>
+      <h1 class="titulo-pagina">Abrindo a tela inicial…</h1>
+      <p class="ajuda">Estado <strong>carregando</strong> da casca — o fragmento da rota está sendo lido da pasta <code>telas/</code> (ux-design 074 §7: o carregando é da casca, curto e local).</p>
+    </div>
+  </main>
+
+</div>
+
+<p class="fonte" id="fixtures" role="status" data-fonte="fixtures de prototipo/fixtures/*.json — um JSON por agregado do mapa (spec 074 FR5; contrato em specs/074-prototipo-navegavel/data-model.md)"></p>
+
+<div class="toast" id="toast" role="status" hidden></div>
+<p class="aviso-simulacao" id="aviso-simulacao" data-aviso="simulado" role="status" hidden></p>
+
+<script src="app.js"></script>
+
+</body>
+</html>
