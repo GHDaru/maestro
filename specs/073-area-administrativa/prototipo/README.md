@@ -11,9 +11,9 @@
 > `exemplo` — **nenhum valor é inventado**. As medições datadas (25/10 e 26/10) estão declaradas
 > abaixo: **hoje o verificador fecha verde**.
 
-- **Ciclo**: 073 (área administrativa) · **Rodada**: 3 (wireframes) · **correção 1 da rodada 4**
+- **Ciclo**: 073 (área administrativa) · **Rodada**: 3 (wireframes) · **correções 1 e 2 da rodada 4**
   (26/10) · **Fonte de verdade**: `confronto/confronto-decisao.md` (§ "ENTRA — 13", que esta página
-  passa a ler como **15** depois da decisão 4)
+  passa a ler como **16** depois das decisões 4 e 5)
 - **Juízes (rodada 4)**: **controle** · **administração e gerenciamento de agentes** ·
   **intercomunicabilidade** — o bar dá nota **0 a 10 por peça** e só passa com os **três** em 9 ou mais.
 - **Rodada 4 — correção 1 (26/10)**: as decisões da regente (`specs/073-area-administrativa/rodada-4/correcao-1.md`) mudam o que
@@ -23,6 +23,13 @@
   separadas (decisão 3); e o **limite de orçamento é da Administração** (decisão 1) — a divergência
   que esta página declarava, resolvida. Os três pareceres frescos (`specs/073-area-administrativa/rodada-4/juiz-1..3-*.md`) deram
   **barra não atingida** (máximo 8 de 10).
+- **Rodada 4 — correção 2 (26/10)**: a consolidação da regente
+  (`specs/073-area-administrativa/rodada-4/correcao-2.md`) fecha o que restava e mexe em quatro pontos
+  desta página: o **cadastro de agentes** vira `ENTRA` (**o 16º**, decisão 5) como **leitura do
+  catálogo de perfis**; o verificador ganha a **regra 6** — o *roster* de exemplo e o **ref único por
+  nome** dentro de cada tela (decisão 1); a ambiguidade de **endereço** continua **não verificada por
+  script** (declarado abaixo); e a **citação de ficha passa a ser revalidada no mesmo commit que muda
+  a ficha** (decisão 8, ver "Convenções").
 - **Siglas** (Princípio VIII, expandidas na 1ª ocorrência): **ADR** (*Architecture Decision Record*),
   **A2A** (*Agent-to-Agent*), **MCP** (*Model Context Protocol*).
 
@@ -34,7 +41,7 @@
 | `mensageria-02-livro-de-mensagens.html` | 25 · **livro de mensagens** | Mensageria | INTERCOMUNICAÇÃO | Intercomunicabilidade | **neste ramo** |
 | `mensageria-03-roteamento.html` | 24 · **roteamento por nome/ref** · 26 · **colisão de nomes** (visível) | Mensageria | INTERCOMUNICAÇÃO | Intercomunicabilidade | **neste ramo** |
 | `mensageria-04-protocolo.html` | 22 · **protocolo de intercomunicação** · 21 · **mensagem entre agentes** | Mensageria | INTERCOMUNICAÇÃO | Intercomunicabilidade | **neste ramo** |
-| `administracao-01-catalogo.html` | 9 · **catálogo de skills/ferramentas/modelos** | Administração | ADMINISTRAÇÃO | Administração/Gerenciamento | **neste ramo** (`5ce4a5f`, Worker04) |
+| `administracao-01-catalogo.html` | 9 · **catálogo de skills/ferramentas/modelos** · **cadastro de agentes** | Administração | ADMINISTRAÇÃO | Administração/Gerenciamento | **neste ramo** (`5ce4a5f`, Worker04) |
 | `administracao-02-politicas.html` | 5 · **política declarativa (allow/deny/ask)** | Administração | CONTROLE | Controle · Administração/Gerenciamento | **neste ramo** (`5ce4a5f`, Worker04) |
 | `administracao-03-orcamento.html` | 4 · **limite de orçamento** | Administração | CONTROLE | Controle | **neste ramo** (`5ce4a5f`, Worker04) |
 | `workflow-01-sessao-de-agente.html` | 1 · **sessão de agente** (subir/derrubar) | Workflow de sessões | CONTROLE | Controle · Administração/Gerenciamento | **neste ramo** (`365f59d`, Worker05) |
@@ -42,7 +49,7 @@
 | `workflow-03-tarefa-aberta.html` | 14 · **tarefa aberta** | Workflow de sessões | GERENCIAMENTO | Administração/Gerenciamento | **neste ramo** (`365f59d`, Worker05) |
 | `workflow-04-consumo-por-agente.html` | 16 · **consumo por agente** | Workflow de sessões | GERENCIAMENTO | Administração/Gerenciamento | **neste ramo** (`365f59d`, Worker05) |
 
-**Os 15 `ENTRA` cabem em 11 telas** — quatro deles não têm tela própria de propósito:
+**Os 16 `ENTRA` cabem em 11 telas** — cinco deles não têm tela própria de propósito:
 
 - **21 · mensagem entre agentes** é o **objeto** que as quatro telas da Mensageria exibem (o remetente e
   o destinatário da caixa de entrada, a linha do livro, o consumo pelo protocolo). Coberto, não órfão.
@@ -55,10 +62,19 @@
 - **17 · custo estimado em dólar por agente** *(entra na correção 1)* — uma **coluna** em
   `workflow-04-consumo-por-agente.html`, com a fonte declarada (o **preço do modelo** no catálogo) e a
   marca **estimado**. O confronto dizia `NÃO PRECISA` (`specs/073-area-administrativa/confronto/confronto-decisao.md:63`).
+- **cadastro de agentes** *(entra na correção 2, decisão 5; **o 16º `ENTRA`**)* — o cadastro **é o
+  arquivo versionado** (o perfil: `.claude/agents/*.md`, `data-fonte: ls .claude/agents`); a tela
+  **lista os perfis reais** — papel, ferramentas e modelo padrão — na seção **"Agentes (perfis)"** de
+  `administracao-01-catalogo.html`, e liga ao roteamento. Não é tela nova: é **leitura** do catálogo
+  de perfis. O confronto dizia `NÃO PRECISA`; a decisão 5 o promove a `ENTRA` (o administrador não
+  tinha onde ver os perfis).
 
-Os dois `ENTRA` novos estão **despachados nesta rodada** (Worker04 e Worker05,
-`specs/073-area-administrativa/rodada-4/correcao-1.md`), e as seções/colunas **ainda não estão neste ramo**: a coluna "Estado" da
-tabela acima continua sendo o retrato do topo `6a32e24`, medido hoje.
+Os `ENTRA` novos das duas correções da rodada 4 — **12 · auditoria administrativa** e **17 · custo
+estimado em dólar por agente** (correção 1, `specs/073-area-administrativa/rodada-4/correcao-1.md`) e
+**cadastro de agentes** (correção 2, `specs/073-area-administrativa/rodada-4/correcao-2.md`) — entram
+nas telas **já existentes** (a auditoria nas três da Administração, o dólar por agente em
+`workflow-04`, os perfis no catálogo). A coluna "Estado" da tabela acima continua sendo o retrato do
+topo `faca232`, medido em 26/10.
 
 **A divergência do orçamento está resolvida (decisão 1).** O despacho da rodada 3 deu **4 · limite de
 orçamento** e **5 · políticas allow/deny/ask** ao contexto **Administração**; a matriz do confronto as
@@ -99,9 +115,20 @@ exemplo.json:103`); a daqui é `C--Users-ghdaru-Documents-010-PROJETOS-410-MAEST
 e **não têm sessão viva neste projeto em 26/10** — por isso `—` **com o motivo**, e nunca um `ref`
 inventado.
 
-**Regra 5 (entregue pela Worker02 nesta rodada; já está no script, v4).** O verificador exige
+**Decisão 1 (correção 2): esta tabela é o *roster* único de exemplo de todas as telas.** Todo nome do
+*roster* vem com o `ref` do *roster*, e **nenhum `ref` pertence a dois nomes na mesma tela** — as
+sessões de outro projeto (a Hindiana Office) usam `ref` próprio e nunca um `ref` do *roster*. É o
+*fixture* da **regra 6** (abaixo): os `ref`s acima são o **retrato de 26/10**, que segue os `ref`s de
+então — não os novos das sessões de hoje.
+
+**Regra 5 (entregue pela Worker02 na correção 1; já no script, v4).** O verificador exige
 o `ref` no formato `[xxxxxx]` depois de toda menção a um nome do catálogo, **salvo** em tabela marcada
 `data-rotulo="colisão de nomes"`.
+
+**Regra 6 (correção 2, decisão 1; entregue pela Worker02).** O *roster* desta página vira lista no
+script: dentro de uma tela, **um `ref` `[xxxxxx]` só aparece colado a um único nome**, e **todo nome do
+*roster* vem com o `ref` do *roster*. É a regra que fecha a colisão *de exemplo* — `Worker01 [9a1b27]`
+e `Worker03 [9a1b27]` na mesma tela deixam de passar. O *fixture* e a mutação acompanham.
 
 ## As colisões: de **termo** e de **endereço** (são duas coisas diferentes)
 
@@ -137,8 +164,12 @@ script hoje.
 | **`ref` obsoleto após reinício** | a sessão reinicia, o `ref` é outro; o antigo deixa de resolver | mensagem ou tarefa no `ref` antigo não chega — e o recibo de entrega (**ack**, *acknowledgement*) é `DEPOIS` (decisão 4), não existe hoje |
 
 A **tabela de colisões de endereço** entra no mapa por Worker02, **separada** das cinco de termo
-(decisão 3). A regra **executável** para o endereço ambíguo — que o juiz 3 pediu para chegar a 9 —
-**não está despachada nesta rodada**: o verificador ganha só a regra 5 (identidade). Fica **declarado**.
+(decisão 3). **A ambiguidade de endereço continua não verificada por script** (decisão 1 da correção
+2): o verificador ganha as **regras 5 e 6** — a identidade `nome · ref · projeto` e o **ref único por
+nome** dentro de cada tela, com o *roster* no script — e isso cobre o sintoma mais comum (*o mesmo
+`ref` em dois nomes na mesma tela*); as três classes acima (*nome em N refs*, *nome em dois projetos*,
+*`ref` obsoleto após reinício*) seguem **fora do alcance da fitness function**. Fica **declarado** —
+aqui e no mapa (§ 8).
 
 ## Onde cada tela entra na navegação do painel existente
 
@@ -193,8 +224,8 @@ Administração, e ela mudou.
 python specs/073-area-administrativa/prototipo/verifica-prototipo.py
 ```
 
-A fitness function (`verifica-prototipo.py`, v4 — regra 5 da Worker02, `11efa79`) percorre os
-`*.html` e falha em **cinco** regras:
+A fitness function (`verifica-prototipo.py`, v5 — regra 5 da Worker02 na correção 1 e **regra 6** na
+correção 2) percorre os `*.html` e falha em **seis** regras:
 
 1. elemento interativo **sem `data-fonte`** — onde a ideia foi achada;
 2. **rótulo fora da allowlist** — o `docs/governance/glossary.md` **mais** os 12 termos ratificados
@@ -209,7 +240,12 @@ A fitness function (`verifica-prototipo.py`, v4 — regra 5 da Worker02, `11efa7
 5. **identidade de sessão** — toda menção a um nome do catálogo (`Gerente`, `WorkerNN`, `MAESTRO`,
    `Office`, `Assistente`) seguida do `ref` no formato `[xxxxxx]`, em todo texto visível e atributo,
    salvo em tabela marcada `data-rotulo="colisão de nomes"` (a isenção **não** cobre a tabela de
-   colisões de **endereço**, que lista os refs nas próprias células).
+   colisões de **endereço**, que lista os refs nas próprias células);
+6. **roster e ref único por nome** — dentro de uma tela, um `ref` `[xxxxxx]` só aparece colado a um
+   **único** nome, e todo nome do *roster* (a lista vive no script) vem com o `ref` do *roster*; o
+   *fixture* e a mutação acompanham. É a **regra 6** (correção 2, decisão 1) — a fitness function
+   cobre **este** sintoma de endereço; as três classes de colisão de **endereço** acima continuam
+   **não verificadas por script**.
 
 **Medido em 25/10, no topo `20f352c`** (script v3): **7 telas · 45 achados**, e **só duas classes**:
 
@@ -233,9 +269,11 @@ classes acima foram fechadas **só acrescentando atributos** — `data-referenci
 `data-rotulo` nos `th` de domínio —, sem reescrever o conteúdo de nenhuma tela: as telas não estavam
 erradas, o **contrato** é que não estava declarado.
 
-**Remedido em 26/10, no topo `6a32e24`,** antes desta correção (mesmo script v3): **11 telas · 0
-achados** — o verde atravessou a renomeação da Administração e a troca da base de citação. A próxima
-medição, já com a **regra 5**, é da regente, depois da correção 1.
+**Remedido em 26/10, no topo `6a32e24`,** antes da correção 1 (mesmo script v3): **11 telas · 0
+achados** — o verde atravessou a renomeação da Administração e a troca da base de citação. Depois da
+correção 1 a regente fechou **11 telas · 0 achados com as cinco regras** (`specs/073-area-administrativa/done-073-correcao-1.md`).
+A próxima medição — a **terceira leitura da regente**, depois da correção 2 — é a primeira com as
+**seis** regras.
 
 ## Convenções
 
@@ -256,6 +294,13 @@ pasta — é a mesma base que as telas do Workflow já seguiam. Nada de caminho 
 `specs/073-area-administrativa/revisao-073-rodada-3.md`): substituição **mecânica**, com **zero mudança
 de conteúdo** — só a base do caminho mudou; cada caminho resultante foi conferido contra o disco.
 
+**Citação de ficha é revalidada no mesmo commit que muda a ficha** (decisão 8 da correção 2). Toda
+citação `arquivo:linha` a uma ficha de plataforma (`specs/073-area-administrativa/pesquisa/*.md`)
+**anda com ela**: quem edita a ficha confere e corrige as linhas citadas — no `inventario-maestro.md`,
+no `confronto-decisao.md` e nas telas — **no mesmo commit**. A `claude-code.md` deste ciclo é o caso
+vivo: as linhas citadas andaram (`:47→:61`, `:49→:63`, `:65→:79`, `:68→:82`, `:71→:84`) e a citação
+velha passou a apontar para outra coisa.
+
 > O corpo desta página ainda guarda as citações da redação original (as da coluna "base antiga" acima):
 > na passagem do R9 elas não foram reescritas, para não colidir com a renomeação das telas da
 > Administração, que se concluiu em `6a32e24`. **O que a correção 1 acrescentou — identidade, colisões,
@@ -268,6 +313,8 @@ de conteúdo** — só a base do caminho mudou; cada caminho resultante foi conf
 `specs/073-area-administrativa/confronto/confronto-decisao.md` (os `ENTRA`) ↔
 `specs/073-area-administrativa/confronto/mapa-de-contextos.md` (contexto dono e as cinco colisões) ↔ as
 telas desta pasta ↔ `specs/073-area-administrativa/prototipo/verifica-prototipo.py` (quem julga) ↔
-`specs/073-area-administrativa/rodada-4/juiz-1..3-*.md` (os três pareceres frescos, barra não atingida) ↔
-`specs/073-area-administrativa/rodada-4/correcao-1.md` (as seis decisões da regente e as fatias) ↔ esta
+`specs/073-area-administrativa/rodada-4/juiz-1..3-*.md` (os três pareceres frescos da 1ª rodada, barra não atingida) ↔
+`specs/073-area-administrativa/rodada-4/correcao-1.md` (as seis decisões da regente e as fatias) ↔
+`specs/073-area-administrativa/rodada-4/juiz-1..3-*-rodada-2.md` e
+`specs/073-area-administrativa/rodada-4/correcao-2.md` (a segunda rodada de juízes e a correção 2) ↔ esta
 página.
