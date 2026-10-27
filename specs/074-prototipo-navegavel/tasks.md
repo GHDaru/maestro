@@ -20,7 +20,7 @@
 
 `[[TASK id=074-T01 kind=implement attempt=1 cycle=074]]`
 
-- [ ] T01 — Worker02: `prototipo/tokens.css` (tokens medidos do design system v1, nomes em
+- [x] T01 — Worker02: `prototipo/tokens.css` (tokens medidos do design system v1, nomes em
   português) e `prototipo/amostra.html` (cada componente da §4 do design system com os objetos
   do Maestro) — **a primeira entrega, antes de qualquer tela** (FR7). A constante de quebra
   **768 px** entra como constante **comentada** em `tokens.css` (a forma exata está no
@@ -32,7 +32,7 @@
 
 `[[TASK id=074-T02 kind=implement attempt=1 cycle=074]]`
 
-- [ ] T02 — Worker02: `prototipo/index.html` (casca) + `prototipo/app.js` — roteador
+- [x] T02 — Worker02: `prototipo/index.html` (casca) + `prototipo/app.js` — roteador
   `#/contexto/tela` com queda **sem erro** na tela inicial (FR1); navegação lateral em desktop
   e inferior abaixo de 768 px, com os **seis itens como vistas** sobre os cinco contextos
   (FR2, B1: Regência → inicial; Chamados → kanban `chamados-e-gates`; Fila → `regencia`;
@@ -55,7 +55,7 @@
 
 `[[TASK id=074-T07 kind=implement attempt=1 cycle=074]]`
 
-- [ ] T07 — Worker01 (o Worker06 está na correção 3 do 073 — decisão da regente; começa
+- [x] T07 — Worker01 (o Worker06 está na correção 3 do 073 — decisão da regente; começa
   **junto com a T01**, B4): fixtures — os oito JSON de `prototipo/fixtures/` (**um por
   agregado do mapa**: `sessao.json`, `tarefa.json`, `chamado.json`, `pedido-de-decisao.json`,
   `mensagem.json`, `politica.json`, `orcamento.json`, `catalogo.json`), com os valores
@@ -73,7 +73,7 @@
 
 `[[TASK id=074-T12 kind=docs attempt=1 cycle=074]]`
 
-- [ ] T12 — Worker01: glossário — `docs/governance/glossary.md` (inglês, ADR 0014, coluna
+- [x] T12 — Worker01: glossário — `docs/governance/glossary.md` (inglês, ADR 0014, coluna
   "Cycle 074"): **frase-chave** (*key phrase*), **trilha de contexto** (*context trail*),
   **aviso de simulação** (*simulation notice*) e as quatro ações como **verbos sobre termos**:
   **Propor regra** (*propose rule*), **Endereçar por ref** (*address by ref*), **Registrar

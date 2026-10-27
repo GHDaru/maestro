@@ -10,6 +10,18 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **Base do protótipo navegável integrada** (ciclo 074, 27/10): T01 tokens/amostra do design
+  system (16 objetos da §4 + primitivas de interação, zero dependência externa) e T02 casca —
+  roteador `#/contexto/tela` com queda declarada na tela inicial, estado em memória das oito
+  fixtures, motor de ações com confirmação irreversível (`data-perde`/`data-reverte`) e aviso
+  de simulação (Worker02, `3809fb9`+`55e16d8`); esqueleto do `verifica-navegacao.py` com as
+  nove checagens (a)–(i) e corpus de mutação embutido, nascido antes das telas (Princípio IV,
+  vermelho de propósito até T03–T06); T07 fixtures dos oito agregados (Worker01, `9c47050`) e
+  T12 glossário — sete termos "Cycle 074" em inglês (Worker01, `e0c1b43`). Contrato novo da
+  casca para os donos de fragmentos: raiz declara `data-acoes="acoes/<contexto>.js"` e toda
+  página leva `<link rel="icon" href="data:,">`. No 073, a reconciliação stop/rm do
+  workflow-01 (Worker05, `c5557a7`): `stop` para e reata por `attach`/`respawn`; `rm` tira a
+  linha e o worktree, mas o transcrito permanece e retoma por `--resume` — sem "a confirmar".
 - **Ajustes do gate de plano do 074** (`gate-plan.md`, 27/10): B1 `## Complexity Tracking` com
   veredito no `plan.md`; B2 linha `DoD:` com comando e esperado em toda tarefa do `tasks.md`;
   B3 T12 antes da T03 (uma tarefa ativa por sessão); B4 T07 junto com a T01 (e vai ao Worker01,
