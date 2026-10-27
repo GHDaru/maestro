@@ -10,6 +10,17 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **Correção 3 da rodada 4 fechada** (ciclo 073, 27/10): as três decisões de escopo do Darú
+  (`rodada-4/correcao-3.md`) aplicadas por dono e integradas — **D1** a linha de orçamento/taxa
+  fica uma só na matriz, com a leitura por célula `corta`/`avisa`/`avisa?` (13/1/2, W06
+  `c6a72e9`); **D2** a ferramenta MCP como escopo da política `allow/deny/ask` — regra de exemplo
+  com âncora nas políticas (W04), ponteiro na mensageria-04 (W03), política listada como 5º ENTRA
+  no mapa § 6.5, fechando o P5 do juiz 1 (W02 `cc10191`); **D3** o emissor do aviso de teto é a
+  ingestão de consumo (`painel/custo.py`), desenhado na tela do orçamento e ecoado nas linhas de
+  aviso da Mensageria e do Workflow. Ficha `claude-code.md:59/:61` corrigida da doc oficial (o
+  transcrito sobrevive ao `claude rm` e retoma por `claude --resume`) e citação do workflow-01
+  reconciliada sem "a confirmar" (W05 `c5557a7`). Gate **11 telas, 0 achados, seis regras** após
+  cada merge; conformance 073 verde nos dois modos; totais do confronto intactos (16/5/11 = 32).
 - **Base do protótipo navegável integrada** (ciclo 074, 27/10): T01 tokens/amostra do design
   system (16 objetos da §4 + primitivas de interação, zero dependência externa) e T02 casca —
   roteador `#/contexto/tela` com queda declarada na tela inicial, estado em memória das oito

@@ -23,7 +23,10 @@
   consolidados na **correção 2** (`rodada-4/correcao-2.md`, `cda6d91`); **correção 2 fechada
   (27/10)**: as seis fatias integradas (ver tabela abaixo), **gate 11 telas, 0 achados com as SEIS
   regras** (`2cd7d44`), conformance 073 verde nos dois modos, segurança documental 0 achados;
-  **terceira leitura é da regente** — peça < 9 não gera correção 3, o laço para e o Darú decide
+  **correção 3 fechada (27/10)** — o Darú reabriu com três decisões de escopo (D1/D2/D3,
+  `rodada-4/correcao-3.md`): as seis fatias integradas (ver tabela abaixo), **gate 11 telas, 0
+  achados com as seis regras** após cada merge, conformance 073 verde nos dois modos; **a leitura
+  dos juízes é da regente** — o Gerente não despacha juízes
 - **Spec**: `spec.md` (rascunho aberto pelo Gerente a partir do despacho do regente)
 
 ## Rodada 1 — pesquisa de plataformas
@@ -89,7 +92,7 @@ máx. 2), despachada por dono a partir de `6a32e24`:
 | correção 1 — matriz (`plataformas.md`) | Worker06 | **integrado** — `4257101` → `cb8a11a` (6 células corrigidas, nenhuma `—`→`sim`; contagens por script 169/225/12/244; nota "corta × avisa"; "não encontrado na documentação lida"; ficha do Claude Code com mailbox/agent teams) |
 | correção 1 — README + glossário | Worker01 | **integrado** — `0deccf4` (tabela de identidade, colisões termo × endereço, ENTRA 12 e 17, prosa obsoleta reescrita; glossário +2 termos); gate 11/0, check-language ✓ |
 
-### Correção 2 (a última, 26–27/10) — decisões fixas da regente, uma rodada
+### Correção 2 (26–27/10) — decisões fixas da regente, uma rodada
 
 Despachada pelo Gerente por dono a partir do `b8c5038` (refs novos pós-VPN; roster de fixture da
 decisão 1 mantido com os refs de 26/10, dado de exemplo):
@@ -104,8 +107,33 @@ decisão 1 mantido com os refs de 26/10, dado de exemplo):
 | matriz (`:155`, `:227-228`, Langfuse auditoria → parcial) + segurança documental + conformance | Worker06 | **integrado** — `0b1a465` (contagens por script 168/226/12/244; 0 achados de segurança; conformance 073 verde nos dois modos, colado no qa-report) |
 | fechamento | Gerente | **entregue** — gate **11 telas, 0 achados, seis regras, exit 0**; conformance verde nos dois modos; tokens por dono no DONE (piso) |
 
+### Correção 3 (27/10) — três decisões de escopo (D1/D2/D3), o Darú reabriu
+
+Despachada pelo Gerente por dono a partir do `04c0505` (`rodada-4/correcao-3.md`); a fatia do W02
+só após a T02 do 074 integrar (ordem da regente — prioridade da correção 3 sobre o 074):
+
+| Fatia | Dono | Estado |
+|---|---|---|
+| README (seção D1/D2/D3, ENTRA 4 reescrito) + glossário ("Ferramenta MCP como escopo de política", "Emissor do aviso") | Worker01 | **integrado** — `aa29969` (ff) |
+| as 3 telas da Administração (tabela do teto com precedência, § "Quem emite o aviso", regra de exemplo MCP com âncora `#regra-ferramenta-mcp`, "Agente (perfil)" no catálogo) | Worker04 | **integrado** — `fef2910` → `6de4995`; a regra 6 pegou 3 achados dele pré-commit |
+| as 4 telas da Mensageria (caixa "De onde vêm os nomes", terceira coluna apontando a regra de política, ids/remetentes idênticos 01/02, linha de aviso de teto `msg-0418` com `data-fonte: painel/custo.py`) | Worker03 | **integrado** — `7a57301` → `143f76d`; ponteiro D2 confere contra a âncora do W04 |
+| as 4 telas do Workflow (cartão "caída", exemplo Worker02 idêntico 01/02/03, `data-fonte` do ledger, linha de aviso de teto) + **reconciliação stop/rm** (attempt 2) | Worker05 | **integrado** — `d6be33f` → `c6bf822` + `c5557a7` → `9412203` (sem "a confirmar": `stop` reata por `attach`/`respawn`; `rm` tira linha e worktree, o transcrito retoma por `--resume`) |
+| matriz D1 (marca `corta`/`avisa`/`avisa?` por célula: 13/1/2) + **ficha `claude-code.md:59/:61` corrigida da doc oficial** + conformance dois modos + segurança | Worker06 | **integrado** — `c6a72e9` → `2e99d22` (a assimetria "stop religável × rm irreversível" era inferência — ressalva do juiz 1 ao P13; nenhum símbolo da matriz mudou) |
+| confronto (bloco D1/D2/D3, ENTRA 4 "declarar teto + avisar, com emissor desenhado", ENTRA 5 com a ferramenta MCP como escopo) + verbete "limite de orçamento" + mapa § 6.5 (política declarativa como 5º ENTRA — fecha o P5 do juiz 1) | Worker02 | **integrado** — `cc10191` → `2db2a11`; totais intactos 16/5/11 = 32 |
+| fechamento | Gerente | **entregue** — gate **11 telas, 0 achados, seis regras, exit 0** após cada merge; conformance verde nos dois modos; tokens por dono no DONE (piso) |
+
 ## Histórico
 
+- 2026-10-27 — **correção 3 da rodada 4 fechada (Gerente)**. O Darú reabriu com três decisões de
+  escopo (`rodada-4/correcao-3.md`, `04c0505`): **D1** a linha de orçamento/taxa fica uma só na
+  matriz, distinguida pela leitura por célula `corta`/`avisa`/`avisa?`; **D2** a ferramenta MCP é
+  escopo da política `allow/deny/ask`, não tela; **D3** o emissor do aviso de teto é a ingestão de
+  consumo (`painel/custo.py`). As seis fatias integradas na `066-painel-de-regencia`: W01 `aa29969`,
+  W04 `fef2910`, W03 `7a57301`, W05 `d6be33f`+`c5557a7` (reconciliação stop/rm, attempt 2), W06
+  `c6a72e9` (ficha `claude-code.md` corrigida da doc oficial: o transcrito sobrevive ao `rm` e retoma
+  por `--resume`), W02 `cc10191` (só após a T02 do 074, ordem da regente). **Gate: 11 telas, 0
+  achados, seis regras, exit 0** após cada merge; conformance 073 verde nos dois modos; a leitura
+  dos juízes é da regente — o Gerente não despacha juízes. DONE à regente com HEAD e tokens (piso).
 - 2026-10-27 — **correção 2 da rodada 4 fechada (Gerente)**. As seis fatias da
   `rodada-4/correcao-2.md` despachadas por dono (26/10, ~23:40, refs novos pós-VPN) e integradas
   na `066-painel-de-regencia`: W01 `9af433c`+`e147380`, W02 `2cd7d44`, W03 `e5b1f87`,

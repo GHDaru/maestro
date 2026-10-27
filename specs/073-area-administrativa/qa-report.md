@@ -1526,3 +1526,67 @@ nada — por isso o SHA-256 do script é idêntico nas três leituras. Nenhum ar
   fica da 4 e da 5; quem cobre é a leitura fresca.
 - **O roster é dado de fixture** (os refs reais de 26/10) e **não** segue os refs vivos das sessões,
   que mudam ao reiniciar — é o ciclo de vida do ref, achado P4 do juiz 3, tratado como `DEPOIS`.
+
+## Rodada 4 — correção 3: fechamento do Gerente (27/10)
+
+O Darú reabriu a rodada com três decisões de escopo (`rodada-4/correcao-3.md`, `04c0505`):
+**D1** a linha "limites de orçamento e de taxa" fica **uma só** na matriz fixa, distinguida pela
+leitura **por célula** (`corta`/`avisa`/`avisa?`, com a ficha como fonte); **D2** a ferramenta MCP
+(*Model Context Protocol*) é **escopo da política `allow/deny/ask` por agente**, não tela própria;
+**D3** o **emissor do aviso de teto** é a **ingestão de consumo** (`painel/custo.py`), que enfileira
+mensagem endereçada ao cruzar o limiar. Despachada por dono; a fatia do W02 só após a T02 do 074
+integrar (ordem da regente).
+
+### Fatias integradas (um merge por fatia, gate após cada uma)
+
+| Fatia | Commit do dono | Merge na 066 |
+|---|---|---|
+| W01 — README (D1/D2/D3, ENTRA 4) + glossário (2 termos) | `aa29969` | ff |
+| W04 — 3 telas da Administração (teto com precedência, "Quem emite o aviso", regra MCP `#regra-ferramenta-mcp`, "Agente (perfil)") | `fef2910` | `6de4995` |
+| W03 — 4 telas da Mensageria (caixa "De onde vêm os nomes", ponteiro para a regra, linha de aviso `msg-0418` com `data-fonte: painel/custo.py`) | `7a57301` | `143f76d` |
+| W05 — 4 telas do Workflow + reconciliação stop/rm (attempt 2) | `d6be33f` + `c5557a7` | `c6bf822` + `9412203` |
+| W06 — matriz D1 (13 `corta` · 1 `avisa` · 2 `avisa?`) + ficha `claude-code.md:59/:61` corrigida + conformance + segurança | `c6a72e9` | `2e99d22` |
+| W02 — confronto (D1/D2/D3, ENTRA 4 reescrito, ENTRA 5 com escopo MCP) + verbete + mapa § 6.5 (5º ENTRA) | `cc10191` | `2db2a11` |
+
+### Gate após cada merge
+
+`python specs/073-area-administrativa/prototipo/verifica-prototipo.py` → **11 screen(s),
+0 finding(s)**, seis regras, exit 0 — verificado após **cada** um dos merges acima e no HEAD de
+fechamento. Nenhuma regra nova nesta correção (decisão da regente: só rodar).
+
+### Coerência cruzada conferida na integração
+
+- **D2 ponteiro ↔ âncora**: a terceira coluna da mensageria-04 (W03) aponta a regra de política e
+  a âncora `id="regra-ferramenta-mcp"` existe na `administracao-02-politicas.html:169` (W04).
+- **D3 tela ↔ ficha ↔ workflow**: a seção "Quem emite o aviso" (W04), a linha `msg-0418` com
+  `data-fonte: painel/custo.py` (W03, W05) e a ficha corrigida (W06) dizem o mesmo; a citação
+  stop/rm do workflow-01 (W05, attempt 2) cita `:59`/`:61` **sem** "a confirmar" — a ressalva do
+  juiz 1 ao P13 fechou: a assimetria "stop religável × rm irreversível" era inferência; o `rm` tira
+  a **linha e o worktree**, o transcrito permanece e retoma por `claude --resume`.
+- **Totais do confronto intactos**: 16/5/11 = 32 (nenhuma linha mudou de casa — decisões de escopo).
+
+### Conformance 073 — verde nos dois modos (27/10, HEAD de fechamento)
+
+- Modo normal: `scripts/check-conformance.sh 073` → exit 0 (evidência colada acima, na saída do
+  script: Constitution Check 8/8, artefatos condicionais declarados com motivo, caudas com
+  evidência).
+- Modo ticked-only: `scripts/check-conformance.sh 073 --ticked-only` → exit 0 (o modo é a flag;
+  a variável de ambiente é ignorada — ADR da correção 2).
+
+### Tokens da correção 3 (pisos — o ledger `tarefas.jsonl` parou no ciclo 064; soma de
+`message.usage` do transcript de cada sessão desde a 1ª ocorrência do `[[TASK]]`)
+
+| Dono | Tokens (piso) |
+|---|---|
+| Worker01 | ≈3,35M (606k in+out) |
+| Worker03 | ≈8,11M |
+| Worker04 | ≈8,76M |
+| Worker05 | ≈10,0M (correção 3) + ≈20,6M (attempt 2, com cache) |
+| Worker06 | ≈2,36M (cache_read 4,40M à parte) |
+| Worker02 | ≈6,81M sem cache (65,07M com cache_read) |
+
+### Veredito
+
+Correção 3 fechada: as três decisões de escopo aplicadas por dono, gate 11/0 nas seis regras após
+cada merge, conformance verde nos dois modos, coerência cruzada conferida. **A leitura dos juízes é
+da regente** — o Gerente não despacha juízes (a nota < 9 duas vezes é laço para o Darú).
