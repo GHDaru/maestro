@@ -20,8 +20,26 @@
 > avisar**; o **cadastro de agentes** sobe de `NÃO PRECISA` a **`ENTRA` 16**, como **leitura do
 > catálogo de perfis** — os totais passam a **16/5/11 = 32**; a *"mensagem desviada"* sai de `alertas`
 > (já tem tela) e as citações a `claude-code.md` foram **revalidadas contra o HEAD**.
+>
+> **Correção 3 da rodada 4** (decisão do Darú, `rodada-4/correcao-3.md`): fecha a rodada com três
+> decisões **de escopo** — nenhuma linha muda de casa e os totais continuam **16/5/11 = 32**; o que
+> muda é **o que cada `ENTRA` pede**. **(D1)** a linha "limites de orçamento e de taxa" volta a ficar
+> **uma só** na matriz fixa (a tabela de 26 é mantida); o que a distingue é a leitura **por célula** —
+> cada `sim`/`parcial` ganha a marca **`corta`** (estourou, a chamada é recusada ou limitada) ou
+> **`avisa`** (só notifica), com a ficha da plataforma como fonte, e `avisa?` onde a ficha não
+> distingue; é o que `pesquisa/plataformas.md` agora mostra: **13 `corta` · 1 `avisa`** (AgentOps) e
+> **2 `avisa?`** (Claude Code, LangSmith/LG). **(D2)** a **ferramenta MCP** (*Model Context
+> Protocol*) entra como **escopo da política `allow/deny/ask` por agente** — não como tela própria: a
+> regra de exemplo mora na tela de políticas (`prototipo/administracao-02-politicas.html`,
+> `#regra-ferramenta-mcp`) e cada ferramenta do protocolo aponta de volta para ela. **(D3)** o
+> **emissor do aviso de teto** é a **ingestão de consumo do painel** (`painel/custo.py`): ao ingerir,
+> ela compara o consumo medido com o **teto** e o **limiar** declarados na Administração e, ao cruzar
+> o limiar, **enfileira uma mensagem** na *fila (outbox)* endereçada à sessão dona **e** ao regente
+> (`nome · ref · projeto`) — *aviso atrasado, nunca perdido*; o **corte** (recusar, suspender) segue
+> em `DEPOIS`. Em uma linha: o **`ENTRA` 4** passa a se ler **"declarar teto + avisar, com emissor
+> desenhado"** e o **`ENTRA` 5** ganha a ferramenta MCP como escopo.
 
-- **Data**: 2026-10-25 · **Corrigido em**: 2026-10-27 (correção 2 da rodada 4) · **Ciclo**: 073 (área administrativa) · **Rodada**: 2 (confronto) · **Passo**: 2 (decisão)
+- **Data**: 2026-10-25 · **Corrigido em**: 2026-10-27 (correções 2 e 3 da rodada 4) · **Ciclo**: 073 (área administrativa) · **Rodada**: 2 (confronto) · **Passo**: 2 (decisão)
 - **Autor**: Worker03 · **Insumos**: `pesquisa/plataformas.md` (matriz 25×26, notação normalizada) + `confronto/inventario-maestro.md` (estado do Maestro, `tem 8 · parcial 16 · não tem 2`)
 - **Prioridade do regente**: INTERCOMUNICAÇÃO decide primeiro — é onde **não se encontrou fonte na documentação lida** (caixa de entrada e livro de mensagens com **0 `sim` em 25**, o que é contagem de `—`, não prova de que não exista; `plataformas.md:42,88,90,210-213`) e onde o Maestro já opera à mão.
 
@@ -130,8 +148,8 @@ Estas não estavam nas 26 da tabela fixa; o juiz 3 (P3/P4) mostrou que faltavam 
 | # | Funcionalidade | Nome na linguagem ubíqua | Juízes (rodada 4) | Fonte |
 |---|---|---|---|---|
 | 1 | subir/derrubar sessão ou agente | **sessão de agente** *(novo)* | Controle · Administração/Gerenciamento | método: o "subir" existe (`multi-session.py:140`) e o derrubar é escopo declarado (`specs/072-…/spec.md:229`); plataforma: Claude Code:66 `sim`/Windmill:66 `parcial` |
-| 4 | limites de orçamento | **limite de orçamento** *(novo)* | Controle | método: `operating-model.md:118-120` ("fixed time and variable scope") + teto de 40% (`decisoes.jsonl:172`); plataforma: OpenAI Platform:43 `sim` ("limite de gasto devolve 429"). **Escopo da correção 2 (decisão 2): declarar o teto + avisar** — o aviso é mensagem endereçada `nome · ref · projeto` à sessão dona **e** ao regente; o **corte executável** é o ponto de execução, em `DEPOIS` |
-| 5 | políticas allow/deny/ask | **política declarativa (allow/deny/ask)** — reusa **OPA** (*Open Policy Agent*, `glossary.md:36*) | Controle · Administração/Gerenciamento | método: Princípio III (`principles.md:37`) + `deny` que já roda (`guard-immutables.py:149`); plataforma: Agent 365:70 `sim` |
+| 4 | limites de orçamento | **limite de orçamento** *(novo)* | Controle | método: `operating-model.md:118-120` ("fixed time and variable scope") + teto de 40% (`decisoes.jsonl:172`); plataforma: OpenAI Platform:43 `sim` ("limite de gasto devolve 429"). **Escopo das correções 2 e 3 (decisões 2 e D3): declarar o teto + avisar, com emissor desenhado** — o **emissor** é a **ingestão de consumo** (`painel/custo.py`): ao cruzar o **limiar**, enfileira na *fila (outbox)* uma mensagem endereçada `nome · ref · projeto` à sessão dona **e** ao regente, com `data-fonte` apontando o módulo (`administracao-03-orcamento.html`, § "Quem emite o aviso"); o **corte executável** (recusar, suspender) é o ponto de execução, em `DEPOIS` |
+| 5 | políticas allow/deny/ask | **política declarativa (allow/deny/ask)** — reusa **OPA** (*Open Policy Agent*, `glossary.md:36*) | Controle · Administração/Gerenciamento | método: Princípio III (`principles.md:37`) + `deny` que já roda (`guard-immutables.py:149`); plataforma: Agent 365:70 `sim`. **Escopo da correção 3 (decisão D2): a ferramenta MCP é escopo da política** — a regra de exemplo nomeia o **agente** e a **ferramenta** (`administracao-02-politicas.html`, `#regra-ferramenta-mcp`: `registrar_peca` em `ask` para Worker, `allow` para o regente por delegação, `deny` para sessão de outro projeto), e cada ferramenta do protocolo aponta de volta para ela |
 | 7 | cadastro de agentes | **agente (perfil)** *(novo: **perfil** × **sessão**)* | Administração/Gerenciamento | método: os perfis são **arquivos versionados** (`docs/agents/README.md:14-40`, `.claude/agents/*.md`) e os invariantes já os verificam (`scripts/check-agents.sh`); plataforma: Portkey:72 `sim` (*Agent Registry*) |
 | 9 | cadastro de skills/ferramentas/modelos | **catálogo de skills/ferramentas/modelos** *(novo)* | Administração/Gerenciamento | método: `skills/<nome>/SKILL.md` + catálogo gerado (`install-maestro.sh:99-104`); plataforma: LiteLLM:74 `sim` (*Skills Registry*) |
 | 12 | auditoria administrativa | **auditoria administrativa** *(novo; extensão de **Auditoria**)* | Controle · Administração/Gerenciamento | método: índice append-only imutável (`record-decision.sh:46-50` + `guard-immutables.py:44-49`), mas sem `changed_by`; plataforma: LiteLLM:95 `sim` (*audit logs* com `changed_by`) |
@@ -219,7 +237,9 @@ no glossário **reusa** o existente.
 | **estado do agente vivo** | O estado corrente de uma sessão (trabalhando/esperando/sem tarefa/bloqueado) com detecção de processo, não só *heartbeat*. | novo (reusa os estados de `server.py:27`) |
 | **tarefa aberta** | A tarefa ativa **por agente** — o que ele está fazendo agora, com o `start` sem `stop`. | novo; análogo ao **Task ledger** |
 | **consumo por agente** | Tokens por agente (não só por sessão/modelo). | novo; extensão de **Custo por sessão** |
-| **limite de orçamento** | O teto de consumo de uma sessão/projeto, **executável** (não só declarado). | novo |
+| **limite de orçamento** | O teto de consumo de uma sessão/projeto, **declarado** pelo administrador — **teto** e **limiar** são campos da Administração — e **avisado** ao cruzar o limiar. | novo (correção 3, decisão D3: lê-se **"declarado + aviso"**; quem **emite o aviso** é a ingestão de consumo do painel, o **corte** vem depois) |
+| **emissor do aviso** | A **ingestão de consumo** do painel (`painel/custo.py`) que compara o consumo medido com o **teto** e o **limiar** e, ao cruzar o limiar, **enfileira** a mensagem endereçada à sessão dona e ao regente. | novo (correção 3, decisão D3; *aviso atrasado, nunca perdido* — o **corte** não é do emissor) |
+| **ferramenta MCP como escopo de política** | "Qual agente pode chamar qual **ferramenta MCP**" é **escopo da política `allow/deny/ask` por agente** — a regra nomeia a ferramenta; não há tela própria. | novo (correção 3, decisão D2; reusa **MCP**; regra de exemplo em `administracao-02-politicas.html`) |
 | **catálogo de skills/ferramentas/modelos** | O registro consultável de skills, ferramentas e **modelos** por projeto. | novo (skills já existem em pasta) |
 | **mensagem entre agentes** | Troca endereçada entre sessões, por artefato/*outbox*, não por chat. | novo; ligado a **Outbox** |
 | **protocolo de intercomunicação** | O protocolo pelo qual agentes expõem e consomem ferramentas (**MCP**) e conversam entre pares (**A2A**). | **MCP** já no glossário; **A2A** entra expandido |
@@ -271,9 +291,25 @@ no glossário **reusa** o existente.
     ativa**;
   - as citações a `claude-code.md` foram **revalidadas contra o HEAD** (`:47→:61`, `:68→:82`,
     `:71→:84`).
+- **Correção 3 da rodada 4** (o que mudou, e por quê) — as três decisões são **de escopo**, e os
+  totais seguem **16/5/11 = 32**; o que muda é **o que cada `ENTRA` pede**:
+  - **D1** — a linha "limites de orçamento e de taxa" **não foi desdobrada na matriz fixa**: o que a
+    distingue é a leitura **por célula** (`corta` / `avisa` / `avisa?`, com a ficha como fonte), como
+    `pesquisa/plataformas.md` agora mostra. O desdobramento em duas linhas existe **no confronto**,
+    por decisão da correção 1 — as duas leituras convivem de propósito: a matriz fixa mede o mercado,
+    o confronto decide o escopo do Maestro;
+  - **D2** — a **ferramenta MCP** vira **escopo da política `allow/deny/ask`** em vez de tela: a regra
+    de exemplo em `administracao-02-politicas.html` (`#regra-ferramenta-mcp`) nomeia agente e
+    ferramenta, e cada ferramenta do protocolo aponta de volta para ela;
+  - **D3** — o **emissor do aviso de teto deixa de ser "a desenhar"**: é a **ingestão de consumo**
+    (`painel/custo.py`), que ao cruzar o limiar enfileira a mensagem endereçada — desenhado em
+    `administracao-03-orcamento.html`, § "Quem emite o aviso". Onde a correção 2 dizia "avisar", a
+    correção 3 diz **como**: o `ENTRA` 4 passa a se ler **"declarar teto + avisar, com emissor
+    desenhado"**, e o **corte** segue em `DEPOIS`.
 - **Lacunas declaradas (não silenciadas)** — decisão 2, comuns ao confronto e ao inventário:
-  - **o ponto de execução do controle é dívida**: hoje o Maestro **avisa** o teto, não **corta**; o
-    *hook* que lê o consumo medido e corta o gasto de modelo está **a desenhar na raia *infra***;
+  - **o corte do controle é dívida — o aviso já não é**: o **emissor do aviso** está **desenhado**
+    (a ingestão de consumo, `painel/custo.py` — decisão D3); o que falta é o **corte**, o *hook* que
+    lê o consumo medido e corta o gasto de modelo, **a desenhar na raia *infra***;
   - **o caminho de aprovação do derrubar** (a passagem pelo pedido de decisão da Regência, relação 5
     do mapa; decisão 3) é **documentado**, não construído;
   - **o `tarefas.jsonl` (o *ledger* de tarefas) parou no ciclo 064** — todo custo por agente lido

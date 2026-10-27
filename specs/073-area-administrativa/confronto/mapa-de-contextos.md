@@ -299,15 +299,18 @@ declarado pelo administrador, não medido pelo Workflow; ver § 6.5.)*
 | **RACI** | matriz de responsabilidade: **R/C/I** delegáveis a agentes, **A** sempre humano | glossário |
 | **RBAC** / **ABAC** / **ReBAC** | autorização por papel / por atributo / por relação — **declarada, mas decidida fora do modelo** | glossário |
 | **Fronteira** (domínio interno) | a declaração, em `boundary.json`, de que todo arquivo tem dono (dois domínios, `shared` no meio); verificada por `check-boundary.sh` | ADR 0018 |
+| **política declarativa (allow/deny/ask)** | a regra que diz **quem pode o quê**, declarada **fora do modelo**; o **escopo** é por agente e por **ferramenta MCP** — a ferramenta **não** tem tela própria: a regra de exemplo mora na tela de políticas e cada ferramenta do protocolo aponta de volta para ela | **proposto** (correção 3, decisão D2; reusa **OPA**, glossário) |
 | **catálogo de skills/ferramentas/modelos** | o registro **consultável** de skills, ferramentas e **modelos** por projeto (hoje: skills em pasta, modelos escolhidos por sessão) | **proposto** |
-| **limite de orçamento** | o teto de consumo por projeto/agente/modelo, **declarado pelo administrador** e **avisado** (mensagem endereçada ao dono e ao regente); o corte **executável** é o ponto de execução, em `DEPOIS` | **proposto** (é daqui — correção 1, decisão 1; escopo ajustado na correção 2, decisão 2) |
+| **limite de orçamento** | o teto de consumo por projeto/agente/modelo, **declarado pelo administrador** e **avisado** (mensagem endereçada ao dono e ao regente); o corte **executável** é o ponto de execução, em `DEPOIS` (quem **emite o aviso** é a ingestão de consumo do painel) | **proposto** (é daqui — correção 1, decisão 1; escopo ajustado na correção 2, decisão 2; emissor desenhado na correção 3, decisão D3) |
 | **agente (perfil)** | o **perfil** versionado de um agente (`.claude/agents/*.md`); o cadastro **é** o arquivo — a **sessão** é a instância com ref | **proposto** (correção 2, decisão 5) |
 | **auditoria administrativa** | a trilha de **quem** mudou o quê (`changed_by`), na área administrativa | **proposto** (extensão de **Auditoria**) |
 
-**Os quatro `ENTRA` da Administração** são, portanto: **cadastro de agentes** (como leitura dos
-perfis — `agente (perfil)`), **catálogo de skills/ferramentas/modelos**, **limite de orçamento** e
-**auditoria administrativa** — o cabeçalho das telas que citar "§ 6.5" passa a ter os quatro para
-citar (antes o § 6.5 listava só o catálogo; a correção 1 levou os três, a correção 2 o quarto).
+**Os cinco `ENTRA` da Administração** são, portanto: **cadastro de agentes** (como leitura dos
+perfis — `agente (perfil)`), **catálogo de skills/ferramentas/modelos**, **limite de orçamento**,
+**política declarativa (allow/deny/ask)** e **auditoria administrativa** — o cabeçalho das telas que
+citar "§ 6.5" passa a ter os cinco para citar (antes o § 6.5 listava só o catálogo; a correção 1
+levou os três, a correção 2 o quarto e a correção 3 o quinto — a **política**, com a **ferramenta
+MCP** como seu escopo, decisão D2).
 
 ### 6.6 Mensageria
 
