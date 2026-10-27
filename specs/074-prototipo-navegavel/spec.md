@@ -1,6 +1,8 @@
 # Spec 074 — Protótipo navegável do painel de regência
 
-- **Status**: Draft · **Lane**: plena (com o ramo de interface) · **Data**: 2026-10-26
+- **Status**: Aprovada com ajustes no gate de spec (`gate-spec.md`, 26/10/2026) — B1, B2,
+  S1, S2, S3, S5, S6 aplicados · **Lane**: plena (com o ramo de interface) ·
+  **Data**: 2026-10-26
 - **Origem**: briefing da regente (`specs/074-prototipo-navegavel/briefing-regente.md`,
   26/10/2026). Pedido do Darú (26/10, 20:25): *"Vamos agora começar a construir os
   protótipos funcionais com telas e simulação da navegabilidade."*
@@ -13,10 +15,8 @@
 - **Siglas** (Princípio VIII, expandidas na 1ª ocorrência): DoD (*Definition of Done*), ADR
   (*Architecture Decision Record*), DDD (*Domain-Driven Design*), FR (*functional
   requirement*, requisito funcional), NFR (*non-functional requirement*, requisito não
-  funcional), JSON (*JavaScript Object Notation*), HTML (*HyperText Markup Language*), CSS
-  (*Cascading Style Sheets*), CDN (*Content Delivery Network*), HTTP (*HyperText Transfer
-  Protocol*), UX (*user experience*), CI (*Continuous Integration*), DoR (*Definition of
-  Ready*).
+  funcional), JSON (*JavaScript Object Notation*), HTML (*HyperText Markup Language*),
+  CDN (*Content Delivery Network*), UX (*user experience*).
 
 ## Contexto e intenção
 
@@ -49,38 +49,53 @@ viva do 072 (capturas por script versionado + heurística datada).
   `prototipo/index.html` é a casca única e `prototipo/app.js` roteia por
   `#/contexto/tela`, carregando o fragmento `prototipo/telas/<contexto>/<tela>.html`;
   WHEN a rota não existe THEN a casca cai na tela inicial sem erro.
-- **FR2 — Navegação por contexto** (decisão 2): WHEN a casca renderiza THEN a navegação é
-  lateral em desktop e inferior em largura estreita, com os seis itens — **Regência ·
-  Chamados · Fila · Sessões · Administração · Mensageria** —; a tela inicial é a
-  **frase-chave do regente** (ex.: "você tem N decisões esperando, a mais velha há X h",
+- **FR2 — Navegação por contexto** (decisão 2, ajuste B1 do gate de spec): WHEN a casca
+  renderiza THEN a navegação é lateral em desktop e inferior em largura estreita, com os
+  seis itens — **Regência · Chamados · Fila · Sessões · Administração · Mensageria** —
+  como **vistas sobre os cinco contextos do mapa** (Chamados e Gates · Workflow de sessões
+  · Regência · Administração · Mensageria): Regência → tela inicial (frase-chave);
+  Chamados → kanban por gate, `data-contexto="chamados-e-gates"` (core domain, não
+  esvaziar); Fila e ruling → `regencia`; Sessões → `workflow-de-sessoes`; Administração;
+  Mensageria — **cada item de menu resolve para um fragmento existente**; a tela inicial é
+  a **frase-chave do regente** (ex.: "você tem N decisões esperando, a mais velha há X h",
   design system §4); toda tela é alcançável em **no máximo 3 cliques** a partir da inicial;
-  toda tela diz em que contexto está (atributo `data-contexto`).
-- **FR3 — Todas as telas dos cinco contextos** (decisões 1 e 2): o protótipo entrega **14
-  fragmentos** — 3 da Regência (kanban por gate, fila de decisões, ruling) + 4 da
-  Mensageria + 3 da Administração + 4 do Workflow de sessões —, todos preservando o
+  toda tela diz em que contexto está (atributo `data-contexto`, um dos cinco valores
+  acima).
+- **FR3 — Todas as telas dos cinco contextos** (decisões 1 e 2, ajuste B1): o protótipo
+  entrega **14 fragmentos** — 3 reproduzidas do 072 (kanban por gate — contexto
+  **Chamados e Gates** —, fila de decisões, ruling) + 4 da Mensageria + 3 da Administração
+  + 4 do Workflow de sessões —, todos preservando o
   contrato de marcação do 073 (`data-fonte`, `data-rotulo`, `data-exemplo`,
   `data-referencia`) e a **regra 5** de identidade de sessão `nome · ref · projeto` em
   todo texto visível e atributo. As telas da Regência são reproduzidas a partir do
   `painel/index.html` e do `ux-design.md` do 072, sobre os tokens novos, com os mesmos
   dados de exemplo.
-- **FR4 — Ações simuladas com contrato** (decisão 3): WHEN um botão de escrita existe THEN
-  ele declara `data-acao` (verbo da linguagem ubíqua), `data-autoriza` (humano · regente
-  por delegação · sessão dona), `data-simulado="sim"` e `data-efeito` (o que muda na
-  tela); WHEN a ação é confirmada THEN o efeito ocorre **só em memória** (recarregar volta
-  às fixtures) e é visível na tela; WHEN a ação é irreversível (derrubar, entregar a
-  destino não resolvido, estourar teto) THEN a confirmação mostra **o que se perde e como
-  reverter**, como desenhado no 073; o **Gerente nunca é derrubável** pela tela.
-- **FR5 — Fixtures coerentes** (decisões 1 e 4): os dados de exemplo vivem em
-  `prototipo/fixtures/*.json`, **um JSON por agregado do mapa** (sessão, tarefa, chamado,
-  pedido de decisão, mensagem, política, orçamento, catálogo), lidos do que já existe
-  (`painel/projetos/exemplo.json`); as fixtures são **coerentes entre contextos** — a
-  mesma sessão `Worker03 [ad66d6] · maestro` aparece em todas as telas que a citam; todo
-  número é fixture marcada `(exemplo)` ou vem de `painel/projetos/exemplo.json` com
-  `data-fonte`; `—` sempre com motivo; **nenhum dado pessoal real** (fixtures saem dos
-  exemplos do repositório).
-- **FR6 — Zero dependência externa** (decisão 1): o protótipo abre **offline** — sem
-  framework, sem build, sem CDN — e é servido por `python -m http.server`, com a entrada
-  declarada em `.claude/launch.json`.
+- **FR4 — Ações simuladas com contrato** (decisão 3, ajustes B2 e S1 do gate): **botão de
+  escrita** é todo `<button>`, `<form>` ou `[role=button]` sem `href="#/…"` e sem
+  `data-vai-para` (S1). WHEN um botão de escrita existe THEN ele declara `data-acao`
+  (verbo da linguagem ubíqua), `data-autoriza` (humano · regente por delegação · sessão
+  dona), `data-simulado="sim"` e `data-efeito` (o que muda na tela); WHEN a ação é
+  confirmada THEN o efeito ocorre **só em memória** (recarregar volta às fixtures) e é
+  visível na tela; WHEN a ação é irreversível (derrubar, entregar a destino não resolvido,
+  estourar teto) THEN a confirmação mostra **o que se perde e como reverter**, como
+  desenhado no 073, e o botão aponta para uma confirmação que carrega os atributos
+  `data-perde` e `data-reverte` (B2-i; nome final no `ux-design.md`); nenhum botão com
+  `data-acao="derrubar"` tem o Gerente como alvo (B2-h) — o **Gerente nunca é derrubável**
+  pela tela.
+- **FR5 — Fixtures coerentes** (decisões 1 e 4, ajustes S3 e S6 do gate): os dados de
+  exemplo vivem em `prototipo/fixtures/*.json`, **um JSON por agregado do mapa** (sessão,
+  tarefa, chamado, pedido de decisão, mensagem, política, orçamento, catálogo),
+  **derivados na autoria** a partir de `painel/projetos/exemplo.json`, com `data-fonte`
+  apontando a origem (S3); as fixtures são **coerentes entre contextos** — a mesma sessão
+  `Worker03 [ad66d6] · maestro` aparece em todas as telas que a citam e o projeto é
+  **`maestro` em toda tela** (S6: o valor de `exemplo.json`); todo número é fixture
+  marcada `(exemplo)` ou vem de `painel/projetos/exemplo.json` com `data-fonte`; `—`
+  sempre com motivo; **nenhum dado pessoal real** (fixtures saem dos exemplos do
+  repositório).
+- **FR6 — Zero dependência externa** (decisão 1, ajuste S3): o protótipo abre **offline** —
+  sem framework, sem build, sem CDN — e é servido por `python -m http.server` rodando em
+  `prototipo/` (offline, sem `../painel`; S3), com a entrada declarada em
+  `.claude/launch.json`.
 - **FR7 — Design system como primeira entrega** (decisão 1, briefing §2):
   `prototipo/tokens.css` (tokens medidos do design system v1, nomes em português) e
   `prototipo/amostra.html` (cada componente da seção 4 do design system com os objetos do
@@ -94,15 +109,24 @@ viva do 072 (capturas por script versionado + heurística datada).
 
 ## Requisitos não funcionais
 
-- **NFR1 — DoD executável** (decisão 5): `prototipo/verifica-navegacao.py` falha alto em
-  seis verificações, além do verificador do 073 sobre as telas:
+- **NFR1 — DoD executável** (decisão 5, ajuste B2 do gate): `prototipo/verifica-navegacao.py`
+  falha alto em **nove verificações**, além do verificador do 073 sobre as telas:
   - (a) todo `href="#/…"` e todo `data-vai-para` resolve para um fragmento existente;
-  - (b) toda tela é alcançável em ≤ 3 cliques (grafo a partir da inicial);
+  - (b) toda tela é alcançável em ≤ 3 cliques (grafo a partir da inicial como **raiz**,
+    incluindo as arestas dos seis itens da casca; S2);
   - (c) todo botão de escrita tem os quatro atributos da decisão 3 (FR4);
-  - (d) toda tela tem `data-contexto` em um dos cinco contextos;
+  - (d) toda tela tem `data-contexto` em um dos **cinco contextos do mapa** — o verificador
+    aceita exatamente `chamados-e-gates`, `regencia`, `workflow-de-sessoes`,
+    `administracao`, `mensageria` (B1);
   - (e) nenhum `<link>`/`<script>` externo;
   - (f) corpus de mutação com fixtures boa/ruim (o verificador tem de **falhar** com a
-    fixture ruim, provando que discrimina).
+    fixture ruim, provando que discrimina);
+  - (g) os fragmentos de `prototipo/telas/` passam nas regras do
+    `verifica-prototipo.py` do 073 — as cinco da correção 1, **seis depois da correção 2**
+    do 073 —, invocado sobre essa pasta ou importando suas regras, com **0 achados** (B2);
+  - (h) nenhum botão com `data-acao="derrubar"` tem o Gerente como alvo (B2);
+  - (i) todo botão irreversível aponta para uma confirmação com os atributos `data-perde`
+    e `data-reverte` (B2; nome final no `ux-design.md`).
 - **NFR2 — Fitness functions do repositório**: `scripts/check-conformance.sh 074` verde
   nos dois modos; `scripts/check-language.sh` verde; `scripts/check-links.sh` verde.
 - **NFR3 — Jornada viva** (skill `living-journey`): `docs/jornada/074-prototipo-navegavel.md`
@@ -118,7 +142,7 @@ viva do 072 (capturas por script versionado + heurística datada).
   do `ux-design.md` clicando; cada um dos **15 ENTRA** do 073 **mais** as **3 telas da
   regência** é alcançado e sua ação simulada produz o efeito declarado. Passa com
   **nota ≥ 9 por jornada**; vale a **regra das duas rodadas**.
-- `prototipo/verifica-navegacao.py` termina verde com as seis verificações (a)–(f) de
+- `prototipo/verifica-navegacao.py` termina verde com as **nove verificações (a)–(i)** de
   NFR1, e **vermelho** sobre o corpus de mutação (fixture ruim).
 - `specs/073-area-administrativa/prototipo/verifica-prototipo.py` termina verde: 11 telas,
   0 achados (FR8).
@@ -153,24 +177,29 @@ o que é dela continua no briefing):
    quiser a frase-chave contada como tela do contexto, é um acréscimo declarado no gate de
    spec.
 2. **Seis itens de navegação × cinco contextos** — a decisão 2 diz "cada item é um contexto
-   delimitado", mas há seis itens e cinco contextos, e "Chamados" e "Fila" são vistas que o
-   mapa coloca na Regência (o painel de regência exibe "a fila, os chamados por portão e a
-   jornada"). Interpretação: os itens seguem o design system (cinco) **mais** Mensageria;
-   o atributo `data-contexto` de cada tela declara um dos **cinco** contextos (verificação
-   d da decisão 5), com o kanban e a fila declarando `regencia`. Se a regente quiser
-   "Chamados" apontando a um contexto próprio, é decisão dela no gate de UX.
+   delimitado", mas há seis itens e cinco contextos. **Resolvido pelo gate de spec (B1)**:
+   os cinco contextos são os do mapa (Chamados e Gates · Workflow de sessões · Regência ·
+   Administração · Mensageria) e os seis itens são **vistas**: Regência → tela inicial
+   (frase-chave); Chamados → kanban por gate com `data-contexto="chamados-e-gates"` (é o
+   core domain; não esvaziar); Fila e ruling → `regencia`; Sessões →
+   `workflow-de-sessoes`; Administração; Mensageria. O verificador (d) aceita exatamente
+   esses cinco valores; cada item de menu resolve para um fragmento existente.
 3. **"Os 15 ENTRA alcançados e sua ação simulada"** — quatro ENTRA não têm tela própria de
    propósito (mensagem entre agentes é objeto; colisão de nomes é condição visível;
    auditoria administrativa é seção; custo estimado é coluna). Interpretação: cada ENTRA é
    alcançado **por sua tela** e o elemento que o serve é visível; a "ação simulada"
    aplica-se onde o ENTRA tem ação de escrita — para objeto/seção/coluna, alcançar e ver o
-   elemento com o efeito declarado (quando houver) é o critério.
+   elemento com o efeito declarado (quando houver) é o critério. **S5 do gate**: o
+   `ux-design.md` traz a tabela **ENTRA → tela → elemento alcançado** com as 15 linhas dos
+   ENTRA **mais** as 3 telas da regência (18 linhas).
 4. **Verificador do 073 sobre os fragmentos** — a decisão 5 diz "além do verificador do
    073 sobre as telas", sem dizer se o `verifica-prototipo.py` passa a percorrer
    `prototipo/telas/` também. Interpretação tomada: o verificador do 073 **continua sobre
    a pasta dele** (FR8, nunca vermelho) e os fragmentos seguem o mesmo contrato, cobrado
-   pelo `verifica-navegacao.py`; estender o caminho do verificador do 073 é decisão do
-   plano (Gerente), não da spec.
+   pelo `verifica-navegacao.py` **na verificação (g) do NFR1** — que roda as regras do
+   `verifica-prototipo.py` (as cinco da correção 1, seis depois da correção 2 do 073)
+   sobre `prototipo/telas/`, com 0 achados; estender o caminho do verificador do 073 é
+   decisão do plano (Gerente), não da spec.
 5. **Ponto de quebra da navegação inferior** — "lateral em desktop, inferior em largura
    estreita" sem valor de quebra. Interpretação: o valor exato fica para o `ux-design.md`
    e o design system; a spec só exige as duas formas.
@@ -182,4 +211,5 @@ o que é dela continua no briefing):
 7. **Projeto na identidade das fixtures** — o critério de coerência usa
    `Worker03 [ad66d6] · maestro`; o retrato do 073 usa `410_MAESTRO` como projeto.
    Interpretação: o valor do projeto nas fixtures vem de `painel/projetos/exemplo.json` e é
-   o **mesmo** em todas as telas; a forma `nome · ref · projeto` é o que a regra 5 verifica.
+   o **mesmo** em todas as telas — **`maestro`** (S6 do gate); a forma `nome · ref ·
+   projeto` é o que a regra 5 verifica.

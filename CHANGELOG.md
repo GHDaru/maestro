@@ -10,6 +10,25 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **Ajustes do gate de spec (B1, B2, S1–S6) e o `ux-design.md`** (ciclo 074,
+  `074-prototipo-navegavel`): a spec aprovada com ajustes recebe as correções do gate —
+  **B1** (os cinco contextos são os do mapa; os seis itens do menu são **vistas**; o kanban
+  por gate declara `data-contexto="chamados-e-gates"`, core domain não esvaziado), **B2**
+  (o NFR1 ganha as verificações **(g)** fragmentos de `prototipo/telas/` passam nas regras
+  do `verifica-prototipo.py` do 073 — cinco da correção 1, seis depois da correção 2 —,
+  **(h)** nenhum `data-acao="derrubar"` tem o Gerente como alvo e **(i)** todo botão
+  irreversível aponta para confirmação com `data-perde`/`data-reverte`; nove no total),
+  **S1** (definição mecânica de botão de escrita), **S2** (grafo de cliques com raiz na
+  tela inicial e arestas dos seis itens), **S3** (fixtures derivadas na autoria de
+  `painel/projetos/exemplo.json`; servidor rodando em `prototipo/`), **S5** (tabela ENTRA →
+  tela → elemento no `ux-design.md`) e **S6** (projeto `maestro` em toda fixture); as
+  siglas não usadas (DoR, HTTP, CI, CSS) são podadas. O **`ux-design.md`** nasce no mesmo
+  commit: papel semântico dos 15 objetos (tela inicial + 14 fragmentos), cinco jornadas
+  andáveis (J1 Regência · J2 Chamados e Gates · J3 Workflow · J4 Administração · J5
+  Mensageria), a tabela S5 com **18 linhas** (15 ENTRA + 3 telas da regência) mais o
+  **acréscimo declarado** do ENTRA 16 (cadastro de agentes, correção 2 do 073), os nomes
+  finais `data-perde`/`data-reverte` e a proposta **`--quebra-nav: 768px`** a absorver pelo
+  design system.
 - **Correção 1 da rodada 4 — confronto, mapa e a regra 5 do verificador** (ciclo 073,
   `073-T4-correcao-1-confronto`): a decisão da regente vira três artefatos. (a) `confronto/
   confronto-decisao.md` — a linha 4 é **desdobrada** (orçamento `ENTRA`, taxa `DEPOIS`), `auditoria`
