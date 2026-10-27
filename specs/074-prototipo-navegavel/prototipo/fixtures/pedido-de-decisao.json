@@ -1,0 +1,79 @@
+{
+  "_fonte": "specs/072-painel-de-regencia/data-model.md §1 (pedido de decisão, com o Ruling dentro) + painel/projetos/exemplo.json (regencia.pessoas, fila_decisoes)",
+  "_exemplo": true,
+  "projeto": "maestro",
+  "pedidos": [
+    {
+      "id": "D-012",
+      "pedido_por": "Worker04 [4d000a] · maestro",
+      "pergunta": "Declarar o `deny` de `Bash(rm -rf*)` no projeto maestro? (exemplo)",
+      "opcoes": [
+        {
+          "id": "a",
+          "descricao": "aprovar como está (exemplo)"
+        },
+        {
+          "id": "b",
+          "descricao": "restringir o `deny` ao Bash de escrita (exemplo)"
+        },
+        {
+          "id": "c",
+          "descricao": "adiar até a auditoria administrativa (exemplo)"
+        }
+      ],
+      "recomendacao": "aprovar como está — a autorização vive fora do modelo e o `deny` já está declarado (exemplo)",
+      "prazo": "2026-10-28T18:00:00-03:00",
+      "destrava": [],
+      "destino": "Gerente [31ee4d] · maestro",
+      "status": "aguardando",
+      "criado_em": "2026-10-27T16:00:00-03:00",
+      "rulings": []
+    },
+    {
+      "id": "D-013",
+      "pedido_por": "Worker05 [78d88f] · maestro",
+      "pergunta": "O fragmento de protocolo entra no protótipo navegável do 074? (exemplo)",
+      "opcoes": [
+        {
+          "id": "a",
+          "descricao": "entra, com o mesmo contrato de marcação das outras telas (exemplo)"
+        },
+        {
+          "id": "b",
+          "descricao": "fica para o ciclo seguinte (exemplo)"
+        }
+      ],
+      "recomendacao": "entra — a tela já existe no 073 e o fragmento é arquivo novo (exemplo)",
+      "prazo": "2026-10-28T18:00:00-03:00",
+      "destrava": [],
+      "destino": "Gerente [31ee4d] · maestro",
+      "status": "aguardando",
+      "criado_em": "2026-10-27T14:00:00-03:00",
+      "rulings": []
+    },
+    {
+      "id": "D-014",
+      "pedido_por": "Worker03 [ad66d6] · maestro",
+      "pergunta": "Sigo para os fragmentos do 074 antes de o julgamento do 073 fechar? (exemplo)",
+      "opcoes": [
+        {
+          "id": "a",
+          "descricao": "seguir só depois do julgamento (exemplo)"
+        },
+        {
+          "id": "b",
+          "descricao": "seguir agora, com retrabalho se o 073 mudar (exemplo)"
+        }
+      ],
+      "recomendacao": "seguir só depois do julgamento — a emenda do 073 é condicional (exemplo)",
+      "prazo": "2026-10-27T16:00:00-03:00 (exemplo)",
+      "destrava": [
+        "073"
+      ],
+      "destino": "Worker03 [ad66d6] · maestro",
+      "status": "aguardando",
+      "criado_em": "2026-10-27T11:00:00-03:00",
+      "rulings": []
+    }
+  ]
+}

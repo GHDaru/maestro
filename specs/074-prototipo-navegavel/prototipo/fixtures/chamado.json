@@ -1,0 +1,66 @@
+{
+  "_fonte": "painel/chamados.py (GATES e o conferidor) + specs/072-painel-de-regencia/data-model.md §4 (projeção do kanban) + painel/projetos/exemplo.json (frentes) + specs/072-painel-de-regencia/contracts/esquemas.md:110 (formato do selo)",
+  "_exemplo": true,
+  "projeto": "maestro",
+  "chamados": [
+    {
+      "id": "072",
+      "frente": "painel",
+      "gate": "G3",
+      "veredito_original": "DEVOLVIDO",
+      "veredito_normalizado": "devolvido",
+      "idade": "há 7 h (exemplo)",
+      "dono": "Worker01 [9a1b27] · maestro",
+      "autor_da_peca": "Ana Exemplo",
+      "por": "Beto Exemplo",
+      "selo_evidencia": "G3-vermelho-9a1b27-4f2c11.md (exemplo)",
+      "portao_do_regente": false,
+      "motivos": {
+        "autor_da_peca": "autores diferentes — marcador \"builder ≠ crítico\", sem vermelho (FR4 do 072)",
+        "selo_evidencia": "nome de arquivo de exemplo, marcado (exemplo); o formato vem de specs/072-painel-de-regencia/contracts/esquemas.md:110"
+      }
+    },
+    {
+      "id": "073",
+      "frente": "administrativa",
+      "gate": "G7",
+      "veredito_original": "—",
+      "veredito_normalizado": "—",
+      "idade": "há 2 h (exemplo)",
+      "dono": "MAESTRO [7c8d05] · maestro",
+      "autor_da_peca": "—",
+      "por": "—",
+      "selo_evidencia": "—",
+      "portao_do_regente": true,
+      "motivos": {
+        "veredito_original": "G7 é o portão do regente — sem veredito registrado na fixture",
+        "veredito_normalizado": "G7 é o portão do regente — sem veredito registrado na fixture",
+        "dono": "portão do regente — o dono é o regente, cujo ref no retrato é o do roster",
+        "autor_da_peca": "cabeçalho do gate sem autor_da_peca (FR5: sem ele, o marcador exibe — , nunca um verde presumido)",
+        "por": "cabeçalho do gate sem autor_da_peca (FR5)",
+        "selo_evidencia": "sem cabeçalho de gate a citar enquanto o veredito não existe"
+      }
+    },
+    {
+      "id": "074",
+      "frente": "painel",
+      "gate": "G0",
+      "veredito_original": "—",
+      "veredito_normalizado": "—",
+      "idade": "há 1 h (exemplo)",
+      "dono": "—",
+      "autor_da_peca": "—",
+      "por": "—",
+      "selo_evidencia": "—",
+      "portao_do_regente": false,
+      "motivos": {
+        "veredito_original": "G0 aberto — sem veredito",
+        "veredito_normalizado": "G0 aberto — sem veredito",
+        "dono": "G0 aberto — nenhum dono atribuído na fixture",
+        "autor_da_peca": "cabeçalho do gate sem autor_da_peca (FR5)",
+        "por": "cabeçalho do gate sem autor_da_peca (FR5)",
+        "selo_evidencia": "sem cabeçalho de gate a citar enquanto o veredito não existe"
+      }
+    }
+  ]
+}
