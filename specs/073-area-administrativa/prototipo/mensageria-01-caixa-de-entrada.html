@@ -33,8 +33,10 @@
     Wireframe estático (ciclo 073, rodada 4). <span class="fonte" data-referencia="true">Fonte da ideia: método — drenagem do outbox, <code>painel/fila_outbox.py</code>; mercado: 0 <code>sim</code> em 25 plataformas.</span></p>
   <p class="nota">Identidade de sessão: sempre <strong>nome · ref · projeto</strong>.
     <span class="fonte" data-referencia="true">O ref muda ao reiniciar — por isso a ação de drenar endereça por ref, nunca só pelo nome (rodada 4, decisões 2 e 7).</span></p>
+  <p class="nota">As mesmas linhas do <strong>livro de mensagens</strong> (<code data-fonte="método: docs/governance/glossary.md (Livro de mensagens)">mensageria-02-livro-de-mensagens.html</code>), em ordem inversa: <strong>ids e remetentes idênticos nas duas telas</strong>.
+    <span class="fonte" data-referencia="true">Rodada 4, correção 3: a coerência entre a caixa e o livro é exigida das duas telas.</span></p>
   <p class="nota"><strong>Contagem de não lidas:</strong>
-    <span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">3 não lidas (exemplo)</span>.
+    <span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">4 não lidas (exemplo)</span>.
     Idade da mais antiga — <strong>do relógio do sistema</strong>, nunca digitada:
     <span class="metrica" data-fonte="relógio do sistema (idade calculada, não digitada — ux-design 066 F7)" data-exemplo="true">há 2 h 10 min (exemplo)</span>.</p>
 </header>
@@ -49,12 +51,20 @@
       <th class="rotulo" data-rotulo="mensagem entre agentes" data-fonte="método: docs/governance/glossary.md (Mensagem entre agentes)">mensagem entre agentes</th>
       <th class="rotulo" data-rotulo="sessão de agente" data-fonte="método: docs/governance/glossary.md (Sessão de agente) · rodada 4, decisão 2 (nome · ref · projeto)">remetente (nome · ref · projeto)</th>
       <th class="rotulo" data-rotulo="roteamento por nome/ref" data-fonte="método: painel/ingest.py (norm_sessao) · rodada 4, decisão 3 (endereço ambíguo é recusado, nunca resolvido)">destinatário (pretendido × resolvido)</th>
-      <th class="rotulo" data-rotulo="caixa de entrada" data-fonte="método: docs/governance/glossary.md (Caixa de entrada)">estado</th>
+      <th class="rotulo" data-rotulo="caixa de entrada" data-fonte="método: docs/governance/glossary.md (Caixa de entrada)">estado da leitura</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><span class="metrica mono" data-fonte="exemplo — nenhum dado real" data-exemplo="true">msg-0421 (exemplo)</span></td>
+      <td><span class="metrica mono" data-fonte="exemplo — nenhum dado real" data-exemplo="true">msg-0418 (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">09:40 (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Aviso: o consumo medido cruzou o limiar de alerta do teto. (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="método: painel/custo.py (ingestão de consumo — emissor do aviso de teto, rodada 4, correção 3 D3)" data-exemplo="true">painel · ingestão de consumo (painel/custo.py) (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">pretendido: Worker03 [ad66d6] · 410_MAESTRO e MAESTRO [7c8d05] · 410_MAESTRO (regente) · resolvido: entregue aos dois (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">não lida (exemplo)</span></td>
+    </tr>
+    <tr>
+      <td><span class="metrica mono" data-fonte="exemplo — nenhum dado real" data-exemplo="true">msg-0417 (exemplo)</span></td>
       <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">09:14 (exemplo)</span></td>
       <td>“Segue o inventário para o confronto.”</td>
       <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker05 [78d88f] · 410_MAESTRO (exemplo)</span></td>
@@ -62,15 +72,15 @@
       <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">não lida (exemplo)</span></td>
     </tr>
     <tr>
-      <td><span class="metrica mono" data-fonte="exemplo — nenhum dado real" data-exemplo="true">msg-0420 (exemplo)</span></td>
+      <td><span class="metrica mono" data-fonte="exemplo — nenhum dado real" data-exemplo="true">msg-0416 (exemplo)</span></td>
       <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">08:02 (exemplo)</span></td>
-      <td>“Revisão fresca aceita; nada pendente de ti.”</td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">[[TASK id=073-T2-mapa]] — despacho da fatia do mapa. (exemplo)</span></td>
       <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Gerente [31ee4d] · 410_MAESTRO (exemplo)</span></td>
       <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">pretendido: Worker03 [ad66d6] · 410_MAESTRO · resolvido: Worker03 [ad66d6] · 410_MAESTRO (exemplo)</span></td>
       <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">lida (exemplo)</span></td>
     </tr>
     <tr class="desvio">
-      <td><span class="metrica mono" data-fonte="exemplo — nenhum dado real" data-exemplo="true">msg-0419 (exemplo)</span></td>
+      <td><span class="metrica mono" data-fonte="exemplo — nenhum dado real" data-exemplo="true">msg-0415 (exemplo)</span></td>
       <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">07:48 (exemplo)</span></td>
       <td>“Fila de decisões: um pedido te espera.”</td>
       <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker06 [c85948] · 410_MAESTRO (exemplo)</span></td>
@@ -78,18 +88,27 @@
       <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">não lida (exemplo)</span></td>
     </tr>
     <tr class="desvio">
-      <td><span class="metrica mono" data-fonte="exemplo — nenhum dado real" data-exemplo="true">msg-0418 (exemplo)</span></td>
+      <td><span class="metrica mono" data-fonte="exemplo — nenhum dado real" data-exemplo="true">msg-0414 (exemplo)</span></td>
       <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">07:20 (exemplo)</span></td>
       <td>“Segue o recorte do inventário.”</td>
       <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Worker05 [78d88f] · 410_MAESTRO (exemplo)</span></td>
       <td><span class="falta" data-fonte="exemplo — nenhum dado real" data-exemplo="true">pretendido: Office [c9f1d4] · projeto: Hindiana · resolvido: — chegou aqui (410_MAESTRO), era para outro projeto (exemplo)</span></td>
       <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">não lida (exemplo)</span></td>
     </tr>
+    <tr>
+      <td><span class="metrica mono" data-fonte="exemplo — nenhum dado real" data-exemplo="true">msg-0413 (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">07:05 (exemplo)</span></td>
+      <td>“Segue o recorte; confirma o recebimento.”</td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">Office [b7e3a2] · projeto: Hindiana (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">pretendido: Worker03 [ad66d6] · 410_MAESTRO · resolvido: Worker03 [ad66d6] · 410_MAESTRO (exemplo)</span></td>
+      <td><span class="metrica" data-fonte="exemplo — nenhum dado real" data-exemplo="true">lida (exemplo)</span></td>
+    </tr>
   </tbody>
 </table>
 
 <div class="cx">
   <p class="nota"><strong>Quem pode drenar:</strong> a <strong>sessão dona</strong> drena a própria caixa; o <strong>regente</strong> pode drenar por delegação. A tela nunca drena a caixa de outra sessão sem aquele pedido explícito — o ref de quem pede é o que autoriza.</p>
+  <p class="nota"><strong>Duas linhas marcadas</strong> chegaram por engano (<code class="mono">.desvio</code>): uma foi endereçada a outro projeto; a outra foi <strong>recusada</strong> por colisão de endereço. O desvio fica visível onde foi registrado — também no livro.</p>
   <p>
     <button aria-label="drenar o outbox desta sessão" data-fonte="método: painel/fila_outbox.py (drenagem; ADR 0027 — a fila outbox recusa DELETE, só registra a leitura)">Drenar outbox</button>
     <button aria-label="ver o livro de mensagens" data-fonte="método: specs/073-area-administrativa/confronto/confronto-decisao.md § Glossário proposto (‘livro de mensagens’)">livro de mensagens</button>
@@ -99,8 +118,9 @@
 
 <footer>
   <p class="fonte" data-referencia="true">Fontes — método: <code>docs/governance/glossary.md</code> (Outbox, Caixa de entrada, Mensagem entre agentes, Sessão de agente) ·
-  <code>painel/fila_outbox.py</code> · <code>painel/ingest.py</code> · <code>specs/073-area-administrativa/confronto/mapa-de-contextos.md</code> §6.6, §7 e §7.1 ·
-  <code>specs/073-area-administrativa/rodada-4/correcao-1.md</code> (decisões 2 e 3) · <code>specs/073-area-administrativa/rodada-4/correcao-2.md</code> (decisões 1 e 7) · <code>specs/066-painel-de-regencia/ux-design.md</code> (F1, F7, F8, F9).
+  <code>painel/fila_outbox.py</code> · <code>painel/custo.py</code> · <code>painel/ingest.py</code> · <code>specs/073-area-administrativa/confronto/mapa-de-contextos.md</code> §6.6, §7 e §7.1 ·
+  <code>specs/073-area-administrativa/rodada-4/correcao-1.md</code> (decisões 2 e 3) · <code>specs/073-area-administrativa/rodada-4/correcao-2.md</code> (decisões 1 e 7) ·
+  <code>specs/073-area-administrativa/rodada-4/correcao-3.md</code> (D3 — o emissor do aviso de teto desenhado) · <code>specs/066-painel-de-regencia/ux-design.md</code> (F1, F7, F8, F9).
   Plataforma (ideia de leitura): Maestri canvas, <code>https://www.themaestri.app/pt-br</code> (ficha <code>specs/073-area-administrativa/pesquisa/maestri-canvas.md</code>, <code>parcial</code>).</p>
   <p class="nota">Todo elemento interativo tem <code>data-fonte</code>; todo número/estado é <code>(exemplo)</code> — wireframe, não dado real.</p>
 </footer>
