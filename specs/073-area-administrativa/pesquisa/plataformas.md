@@ -74,7 +74,7 @@ Siglas expandidas na primeira ocorrência: **RBAC** (*Role-Based Access Control*
 | ADMINISTRAÇÃO | cadastro de skills/ferramentas/modelos | — | sim | — | — | sim | parcial | sim | sim | parcial | sim | sim | sim | sim | sim | parcial | parcial | parcial | parcial | parcial | sim | sim | sim | sim | parcial | parcial |
 | ADMINISTRAÇÃO | chaves e segredos | sim | sim | sim | sim | parcial | — | parcial | sim | — | sim | sim | sim | sim | sim | sim | parcial | parcial | sim | parcial | — | parcial | parcial | sim | — | parcial |
 | ADMINISTRAÇÃO | configuração por projeto | sim | sim | sim | sim | parcial | — | sim | sim | sim | sim | parcial | sim | sim | sim | sim | — | — | sim | — | parcial | parcial | sim | sim | — | parcial |
-| ADMINISTRAÇÃO | auditoria | parcial | parcial | sim | sim | sim | sim | parcial | parcial | — | sim | sim | sim | sim | sim | sim | — | — | sim | — | parcial | — | — | parcial | — | — |
+| ADMINISTRAÇÃO | auditoria | parcial | parcial | sim | sim | sim | sim | parcial | parcial | — | sim | sim | sim | sim | sim | sim | — | — | parcial | — | parcial | — | — | parcial | — | — |
 | GERENCIAMENTO | lista de agentes vivos com estado | parcial | sim | parcial | parcial | sim | sim | — | sim | parcial | parcial | sim | parcial | parcial | — | — | não | parcial | — | — | — | parcial | — | — | não | não |
 | GERENCIAMENTO | tarefa aberta | parcial | — | parcial | parcial | — | parcial | parcial | sim | parcial | sim | parcial | sim | — | — | — | — | — | — | — | — | parcial | — | — | — | — |
 | GERENCIAMENTO | última atividade | parcial | — | parcial | parcial | sim | parcial | sim | parcial | parcial | parcial | parcial | parcial | parcial | parcial | parcial | sim | parcial | parcial | parcial | parcial | parcial | sim | parcial | parcial | sim |
@@ -128,12 +128,20 @@ Siglas expandidas na primeira ocorrência: **RBAC** (*Role-Based Access Control*
 > mailbox/*agent teams* achou fonte, ver `claude-code.md`). Totais reconferidos por script contra a
 > matriz, **valendo sobre os números acima**: **`sim` 169 · `parcial` 225 · `não` 12 · `—` 244**
 > (650 células = 26 funcionalidades × 25 plataformas); **GERENCIAMENTO 42/200 = 21%**.
+>
+> **Corrigido em 26/10 (correção 2 da rodada 4).** Uma célula mudou: **Langfuse** *auditoria*
+> `sim` → `parcial` — o `sim` apoiava-se em "*audit logs* listados entre os controles"
+> (`langfuse.md:47`), lista de itens da página de segurança, o **mesmo tipo de apoio** que já
+> rebaixara o *custo* (`langfuse.md:57`) e que o juiz 2 (P1) nomeou. Totais reconferidos por script
+> contra a matriz, **valendo sobre os números acima**: **`sim` 168 · `parcial` 226 · `não` 12 ·
+> `—` 244** (650 células); **ADMINISTRAÇÃO 75/150 = 50%**; **GERENCIAMENTO 42/200 = 21%**
+> (inalterado). Nenhuma célula `—` → `sim` (FR3 intocado).
 
 **Por grupo** — `sim` sobre o total de células do grupo, nas 25 plataformas:
 
 | Grupo | `sim` | Células | Aproveitamento | Leitura |
 |---|---|---|---|---|
-| ADMINISTRAÇÃO | 76 | 150 | **51%** | o que o mercado sabe fazer: cadastro, RBAC, segredos, por projeto, auditoria |
+| ADMINISTRAÇÃO | 75 | 150 | **50%** | o que o mercado sabe fazer: cadastro, RBAC, segredos, por projeto, auditoria |
 | GERENCIAMENTO | 42 | 200 | **21%** | metade é observabilidade; "agentes vivos" e consumo por agente quase não existem |
 | CONTROLE | 30 | 150 | **20%** | ciclo de vida é o buraco: pausar tem 3 `sim` em 25 |
 | INTERCOMUNICAÇÃO | 21 | 150 | **14%** | **o grupo mais fraco** — e é exatamente o que o Maestro já opera a mão |
@@ -144,7 +152,8 @@ Siglas expandidas na primeira ocorrência: **RBAC** (*Role-Based Access Control*
 |---|---|---|
 | configuração por projeto | 15 | o mais maduro do conjunto |
 | papéis e permissões RBAC · cadastro de skills/ferramentas/modelos · chaves e segredos | 13 cada | a base de administração é commodity |
-| cadastro de agentes · auditoria | 11 cada | o "cadastro de agentes" é **registro**, quase nunca processo vivo |
+| cadastro de agentes | 11 | o "cadastro de agentes" é **registro**, quase nunca processo vivo |
+| auditoria | 10 | desceu na correção 2 com o rebaixamento do Langfuse (apoio só na página de segurança) |
 | aprovação humana · alertas · mensagem entre agentes | 8 cada | human-in-the-loop existe onde há grafo de execução; e a mensagem entre agentes é quase toda delegação dentro do processo, não mensagem entre pares |
 | custo · rastro/replay de sessão | 7 cada | custo de *token* é comum, custo de operação de agente não; e o rastro desceu com os rebaixamentos por apoio só em marketing/README |
 | limites de orçamento e de taxa · roteamento por nome/ref | 6 cada | orçamento por chave/projeto, raramente por agente |
@@ -152,7 +161,7 @@ Siglas expandidas na primeira ocorrência: **RBAC** (*Role-Based Access Control*
 | subir/derrubar sessão ou agente · retomar · filas e workers | 4 cada | |
 | pausar · tarefa aberta · consumo por agente/sessão/modelo | 3 cada | consumo por agente em **Copilot Studio**, **Claude Code** e **LiteLLM** |
 | colisão de nomes | 2 | |
-| **caixa de entrada** · **livro de mensagens** | **0 cada** | nenhuma das 25 tem `sim` — no máximo `parcial` (Claude Code e Maestri na *caixa de entrada*; nenhuma no *livro de mensagens*): **nenhuma** das 25 entrega |
+| **caixa de entrada** · **livro de mensagens** | **0 cada** | nenhuma das 25 tem `sim` — no máximo `parcial` (Claude Code e Maestri na *caixa de entrada*; nenhuma no *livro de mensagens*): **não encontrado na documentação lida** |
 
 **Por plataforma** — uma linha cada (as 12 primeiras são da fatia do Worker06):
 
@@ -205,8 +214,10 @@ Siglas expandidas na primeira ocorrência: **RBAC** (*Role-Based Access Control*
   (consultar dados), não um gateway.
 - **AgentOps** — quase todo `—`/`parcial`; nem um `sim`: custo e rastro/replay apoiavam-se só no
   README (não na UI) e desceram para `parcial` na correção da rodada 4 (ver `agentops.md`).
-- **Langfuse** — o **melhor bloco de administração entre as 9 do Worker05** (RBAC, chaves, por
-  projeto e auditoria = `sim`); o ciclo de vida (subir/pausar/retomar) fica todo `—`.
+- **Langfuse** — o **melhor bloco de administração entre as 9 do Worker05** (RBAC, chaves e por
+  projeto = `sim`; *auditoria* e *custo* `parcial` após as correções 1 e 2 — apoio só em lista de
+  itens da página de segurança e em página de visão, não em página que documente o mecanismo); o
+  ciclo de vida (subir/pausar/retomar) fica todo `—`.
 - **LangSmith/LangGraph** — o único do bloco com **aprovação humana** forte
   (*human-in-the-loop*/*interrupts*), rastro/replay e alertas; RBAC e auditoria não aparecem.
 - **CrewAI AMP** — um dos dois do bloco com **A2A** e o único com **mensagem entre agentes** além
@@ -224,9 +235,9 @@ Siglas expandidas na primeira ocorrência: **RBAC** (*Role-Based Access Control*
 
 Três leituras para a rodada 2 (confronto e decisão):
 
-1. **A caixa de entrada e o livro de mensagens não têm `sim` em nenhuma das 25.** O que o Maestro já
-   faz — mensagem endereçada por nome entre sessões, com registro — não tem equivalente pronto para
-   copiar: **não encontrado na documentação lida**, não falta de pesquisa. E o grupo INTERCOMUNICAÇÃO
+1. **A caixa de entrada e o livro de mensagens: `sim` em nenhuma das 25 — não encontrado na
+   documentação lida.** O que o Maestro já faz — mensagem endereçada por nome entre sessões, com
+   registro — não tem equivalente pronto para copiar nas fontes lidas. E o grupo INTERCOMUNICAÇÃO
    é o mais fraco (14%) — converge com o achado do Worker05.
 2. **Intercomunicação com A2A é minoria: 5 fichas** (LiteLLM, CrewAI AMP, Copilot Studio, Agent 365,
    AgentCore). Nas demais o protocolo é só **MCP** — e em duas (AutoGen Studio, Arize Phoenix)
