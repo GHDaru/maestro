@@ -1,0 +1,415 @@
+/* ============================================================================
+   tokens.css — design system do painel de regência, v1 (medido em 26/10/2026)
+
+   Base da FR7 (spec 074): os tokens da §1 do design system do 073
+   (`specs/073-area-administrativa/design-system.md`), com nomes em português, e a
+   camada de componentes da §4 — os objetos do Maestro sobre esses tokens.
+
+   Por que a camada de componentes vive aqui, e não em cada fragmento: a §4 é a
+   base compartilhada dos cinco contextos; se cada dono de contexto reescrevesse o
+   estilo do cartão, do chip e da linha, o design system deixaria de existir como
+   base (função duplicada — Princípio VI). `tokens.css` é o único arquivo de estilo
+   do protótipo; os fragmentos trazem só marcação.
+
+   Zero dependência externa (FR6): nenhum `@import`, nenhuma fonte remota, nenhum
+   endereço de rede. A família `Inter` é referenciada pelo nome — quem a tem no
+   sistema a usa, quem não tem cai em `system-ui`.
+   ============================================================================ */
+
+:root {
+  /* --- §1 · cor ---------------------------------------------------------- */
+  --fundo: hsl(220 27% 98%);            /* fundo da página */
+  --superficie: hsl(0 0% 100%);         /* cartão, popover */
+  --superficie-2: hsl(210 40% 96%);     /* chip inativo, fundo de ícone, campo de busca */
+  --tinta: hsl(222 47% 11%);            /* texto principal, segmento ativo (fundo) */
+  --texto-2: hsl(215 16% 47%);          /* texto secundário, legenda, placeholder */
+  --borda: hsl(214 32% 91%);            /* borda de cartão, chip e campo (a cor mais usada) */
+  --borda-2: hsl(220 28% 82%);          /* borda de ênfase, "sem sinal" */
+  --primaria: hsl(21 100% 55%);         /* ação principal, destaque numérico, link de ação */
+  --primaria-escura: hsl(21 100% 41%);  /* hover do primário */
+  --primaria-clara: hsl(21 100% 96%);   /* fundo de ícone laranja, realce suave */
+  --sucesso: hsl(159 74% 48%);          /* estado saudável, item de navegação ativo */
+  --alerta: hsl(42 93% 58%);            /* atenção, "esperando" */
+  --erro: hsl(4 79% 58%);               /* erro, bloqueado, "para revisar" */
+  --info: hsl(239 84% 67%);             /* informação, série secundária */
+
+  /* séries de gráfico: laranja, laranja-claro, vermelho, âmbar, índigo */
+  --grafico-1: hsl(21 100% 55%);
+  --grafico-2: hsl(21 100% 86%);
+  --grafico-3: hsl(4 79% 58%);
+  --grafico-4: hsl(42 93% 58%);
+  --grafico-5: hsl(239 84% 67%);
+
+  /* fundos a 10 % — medidos na referência (item ativo, chip de estado) */
+  --sucesso-10: hsl(159 74% 48% / 10%);
+  --erro-10: hsl(4 79% 58% / 10%);
+  --texto-2-10: hsl(215 16% 47% / 10%);
+
+  /* --- §1 · raio --------------------------------------------------------- */
+  --raio-sm: 6px;        /* campos e ícones */
+  --raio: 12px;          /* chips, botões secundários, linha de lista */
+  --raio-lg: 16px;       /* cartões */
+  --raio-xl: 20px;       /* cartões grandes */
+  --raio-pilula: 9999px; /* botões, segmentos, pílulas */
+
+  /* --- §1 · sombra ------------------------------------------------------- */
+  --sombra-sm: 0 1px 2px hsl(220 25% 20% / 4%);
+  --sombra: 0 1px 3px hsl(220 25% 20% / 5%), 0 1px 2px hsl(220 25% 20% / 3%);
+  --sombra-md: 0 2px 6px hsl(220 25% 20% / 6%);
+  --sombra-lg: 0 8px 24px hsl(220 25% 20% / 8%);
+  --sombra-xl: 0 16px 40px hsl(220 25% 20% / 10%);
+
+  /* --- §1 · tipografia medida ------------------------------------------- */
+  --fonte: Inter, system-ui, sans-serif;
+  --fonte-mono: ui-monospace, "Cascadia Mono", "Consolas", monospace;
+  --texto-pagina: 22px;      /* título de página / saudação */
+  --altura-pagina: 27.5px;
+  --texto-cartao: 14px;      /* título de cartão */
+  --texto-corpo: 14px;
+  --altura-corpo: 21px;
+  --texto-secundario: 13px;
+  --altura-secundario: 19.5px;
+  --texto-chip: 11.5px;
+  --texto-contador: 12px;
+  --texto-rotulo: 10px;      /* rótulo de categoria em caixa alta */
+  --espaco-rotulo: 0.06em;
+  --texto-navegacao: 12px;   /* rótulo da barra inferior */
+  --peso-medio: 500;
+  --peso-forte: 600;
+  --peso-contador: 700;
+
+  /* --- medidas de componente (medidas na §1) ---------------------------- */
+  --altura-botao: 36px;
+  --altura-chip: 28px;
+  --altura-icone: 32px;
+  --altura-campo: 36px;
+  --espaco-1: 4px;
+  --espaco-2: 8px;
+  --espaco-3: 12px;
+  --espaco-4: 16px;
+  --espaco-5: 24px;          /* padding do cartão */
+  --espaco-6: 32px;
+  --largura-conteudo: 1100px; /* a coluna de conteúdo do protótipo */
+  --largura-menu: 216px;      /* menu lateral de seis itens com rótulo legível */
+
+  /* --- §1 · gradiente ---------------------------------------------------- */
+  --gradiente-primario: linear-gradient(135deg, hsl(21 100% 55%), hsl(14 95% 50%));
+}
+
+/* ----------------------------------------------------------------------------
+   PROVISÓRIO (gate de UX 074): quebra da navegação — 768px. NÃO é variável
+   consumível em @media. Confirmação: captura do build real a 360px na jornada
+   viva ("Administração" cabe a 12px?); se não couber, a constante anda no
+   mesmo commit da captura.
+
+   Abaixo de 768px a navegação é a barra inferior (ícone sobre rótulo a 12px,
+   ativo em --sucesso com fundo a 10 %); acima, lateral. O valor literal aparece
+   na media query da camada de navegação, mais abaixo — é o `768px` desta
+   constante, e só ele.
+   ---------------------------------------------------------------------------- */
+
+/* ============================================================================
+   Camada de componentes — os objetos da §4 do design system
+   ============================================================================ */
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  background: var(--fundo);
+  color: var(--tinta);
+  font-family: var(--fonte);
+  font-size: var(--texto-corpo);
+  line-height: var(--altura-corpo);
+}
+
+a { color: var(--primaria); text-decoration: none; }
+a:hover { color: var(--primaria-escura); }
+
+code, .mono { font-family: var(--fonte-mono); font-size: var(--texto-secundario); }
+
+/* --- casca: menu lateral (desktop) / barra inferior (estreito) ------------- */
+
+.casca { display: flex; min-height: 100%; }
+
+.menu {
+  flex: 0 0 var(--largura-menu);
+  background: var(--superficie);
+  border-right: 1px solid var(--borda);
+  padding: var(--espaco-5) var(--espaco-4);
+}
+
+.menu-marca { display: block; font-weight: var(--peso-forte); margin-bottom: var(--espaco-5); }
+
+.menu ul { list-style: none; margin: 0; padding: 0; }
+
+.menu a {
+  display: block;
+  padding: var(--espaco-2) var(--espaco-3);
+  margin-bottom: 2px;
+  border-radius: var(--raio);
+  color: var(--texto-2);
+  font-size: var(--texto-secundario);
+}
+
+.menu a[aria-current="page"] {
+  background: var(--sucesso-10);
+  color: var(--sucesso);
+  font-weight: var(--peso-forte);
+}
+
+.conteudo { flex: 1 1 auto; min-width: 0; padding: var(--espaco-5); }
+
+.conteudo-interior { max-width: var(--largura-conteudo); margin: 0 auto; }
+
+/* a quebra provisória de 768px (ver comentário da constante, acima) */
+@media (max-width: 767.98px) {
+  .casca { display: block; }
+  .menu {
+    position: sticky; bottom: 0;
+    flex: none;
+    border-right: 0;
+    border-top: 1px solid var(--borda);
+    padding: var(--espaco-2);
+    order: 2;
+  }
+  .menu-marca { display: none; }
+  .menu ul { display: flex; justify-content: space-between; gap: var(--espaco-1); }
+  .menu li { flex: 1 1 0; text-align: center; }
+  .menu a { font-size: var(--texto-navegacao); padding: var(--espaco-1); margin: 0; }
+  .menu a[aria-current="page"] { background: var(--sucesso-10); }
+  .conteudo { padding: var(--espaco-4); }
+}
+
+/* --- cabeçalho da tela ----------------------------------------------------- */
+
+.migalha {
+  margin: 0 0 var(--espaco-2);
+  color: var(--texto-2);
+  font-size: var(--texto-rotulo);
+  text-transform: uppercase;
+  letter-spacing: var(--espaco-rotulo);
+}
+
+.titulo-pagina { font-size: var(--texto-pagina); line-height: var(--altura-pagina); font-weight: var(--peso-forte); margin: 0 0 var(--espaco-3); }
+
+/* --- frase-chave do regente ----------------------------------------------- */
+
+.frase-chave { font-size: var(--texto-pagina); line-height: var(--altura-pagina); font-weight: var(--peso-forte); margin: 0 0 var(--espaco-4); }
+.frase-chave .destaque { color: var(--primaria); }
+.frase-chave .idade { color: var(--texto-2); font-weight: 400; font-size: var(--texto-corpo); }
+.frase-chave .seta { color: var(--primaria); }
+
+/* --- trilha de contexto ---------------------------------------------------- */
+
+.trilha { margin: var(--espaco-4) 0 0; display: flex; flex-wrap: wrap; gap: var(--espaco-2); }
+.trilha a {
+  display: inline-block;
+  border: 1px solid var(--borda);
+  background: var(--superficie);
+  border-radius: var(--raio);
+  padding: var(--espaco-1) var(--espaco-3);
+  color: var(--texto-2);
+  font-size: var(--texto-secundario);
+}
+.trilha a[aria-current="page"] { background: var(--sucesso-10); color: var(--sucesso); border-color: transparent; font-weight: var(--peso-forte); }
+
+/* --- cartão --------------------------------------------------------------- */
+
+.cartao {
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio-lg);
+  box-shadow: var(--sombra);
+  padding: var(--espaco-5);
+  margin: 0 0 var(--espaco-4);
+}
+.cartao-grande { border-radius: var(--raio-xl); }
+.cartao-titulo { font-size: var(--texto-cartao); font-weight: var(--peso-forte); margin: 0 0 var(--espaco-1); }
+.cartao-subtitulo { font-size: var(--texto-secundario); line-height: var(--altura-secundario); color: var(--texto-2); margin: 0; }
+
+.grade { display: flex; flex-wrap: wrap; gap: var(--espaco-4); }
+.grade > * { flex: 1 1 260px; min-width: 260px; }
+
+/* --- cartão de lista ------------------------------------------------------ */
+
+.cartao-lista { display: flex; align-items: flex-start; gap: var(--espaco-3); }
+.tile {
+  flex: 0 0 var(--altura-icone); width: var(--altura-icone); height: var(--altura-icone);
+  display: flex; align-items: center; justify-content: center;
+  border-radius: var(--raio);
+  background: var(--primaria-clara);
+  color: var(--primaria-escura);
+  font-weight: var(--peso-forte);
+  font-size: var(--texto-secundario);
+}
+.tile-neutro { background: var(--superficie-2); color: var(--texto-2); }
+.cartao-lista-corpo { flex: 1 1 auto; min-width: 0; }
+.cartao-lista-rodape { display: flex; align-items: center; justify-content: space-between; gap: var(--espaco-3); margin-top: var(--espaco-3); }
+
+.rotulo-categoria {
+  display: block;
+  font-size: var(--texto-rotulo);
+  font-weight: var(--peso-medio);
+  letter-spacing: var(--espaco-rotulo);
+  text-transform: uppercase;
+  color: var(--texto-2);
+}
+
+/* --- linha de lista compacta --------------------------------------------- */
+
+.linha-lista {
+  display: flex; align-items: center; gap: var(--espaco-3);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  padding: var(--espaco-3);
+  margin-bottom: var(--espaco-2);
+}
+.linha-lista .titulo { font-size: var(--texto-secundario); font-weight: var(--peso-forte); }
+.linha-lista .subtitulo { font-size: var(--texto-contador); color: var(--texto-2); }
+.linha-lista .ref { font-family: var(--fonte-mono); color: var(--texto-2); font-size: var(--texto-secundario); }
+.linha-lista .chevron { margin-left: auto; color: var(--texto-2); }
+.linha-caida .titulo { color: var(--texto-2); text-decoration: line-through; }
+.linha-caida { border-style: dashed; border-color: var(--borda-2); }
+
+/* --- botões, chips e segmentos -------------------------------------------- */
+
+.botao-primario {
+  display: inline-flex; align-items: center; gap: var(--espaco-2);
+  min-height: var(--altura-botao);
+  padding: 0 var(--espaco-4);
+  border: 0; border-radius: var(--raio-pilula);
+  background: var(--primaria); color: #fff;
+  font: inherit; font-size: var(--texto-corpo); font-weight: var(--peso-medio);
+  box-shadow: var(--sombra); cursor: pointer;
+}
+.botao-primario:hover { background: var(--primaria-escura); }
+.botao-primario .mais { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: var(--raio-pilula); background: hsl(0 0% 100% / 25%); }
+
+.botao {
+  display: inline-flex; align-items: center; gap: var(--espaco-2);
+  min-height: var(--altura-chip);
+  padding: 0 var(--espaco-3);
+  border: 1px solid var(--borda); border-radius: var(--raio-pilula);
+  background: var(--superficie); color: var(--tinta);
+  font: inherit; font-size: var(--texto-secundario); cursor: pointer;
+}
+.botao:hover { border-color: var(--borda-2); }
+
+.chip {
+  display: inline-flex; align-items: center; gap: var(--espaco-2);
+  min-height: var(--altura-chip);
+  padding: 0 var(--espaco-3);
+  border: 1px solid var(--borda); border-radius: var(--raio-pilula);
+  background: var(--fundo); color: var(--tinta);
+  font-size: var(--texto-chip); font-weight: var(--peso-medio);
+}
+.chip-ativo { background: var(--primaria); border-color: var(--primaria); color: #fff; }
+.chip-ativo .contador { background: hsl(0 0% 100% / 25%); border-radius: var(--raio-pilula); padding: 0 var(--espaco-2); }
+.chip-erro { background: var(--erro-10); border-color: transparent; color: var(--erro); }
+.chip-estado { background: var(--superficie-2); border-color: transparent; color: var(--texto-2); }
+
+.segmento {
+  display: inline-flex; align-items: center;
+  background: var(--superficie-2); border-radius: var(--raio-pilula);
+  padding: var(--espaco-1);
+}
+.segmento button {
+  border: 0; border-radius: var(--raio-pilula);
+  background: transparent; color: var(--texto-2);
+  font: inherit; font-size: var(--texto-secundario); font-weight: var(--peso-medio);
+  padding: var(--espaco-1) var(--espaco-4); cursor: pointer;
+}
+.segmento button[aria-pressed="true"] { background: var(--tinta); color: var(--fundo); box-shadow: var(--sombra); }
+
+/* --- tabela --------------------------------------------------------------- */
+
+.tabela { border-collapse: collapse; width: 100%; font-size: var(--texto-secundario); }
+.tabela caption { text-align: left; color: var(--texto-2); font-size: var(--texto-contador); padding-bottom: var(--espaco-2); }
+.tabela th, .tabela td { border: 1px solid var(--borda); padding: var(--espaco-2) var(--espaco-3); text-align: left; vertical-align: top; }
+.tabela thead th { background: var(--superficie-2); font-weight: var(--peso-forte); }
+
+/* --- status, ponto, veredito --------------------------------------------- */
+
+.ponto { display: inline-block; width: 8px; height: 8px; border-radius: var(--raio-pilula); background: var(--texto-2); }
+.ponto-sucesso { background: var(--sucesso); }
+.ponto-alerta { background: var(--alerta); }
+.ponto-erro { background: var(--erro); }
+.ponto-sem-sinal { background: var(--borda-2); }
+
+.veredito {
+  display: inline-block; border-radius: var(--raio);
+  padding: 0 var(--espaco-2);
+  font-size: var(--texto-chip); font-weight: var(--peso-medio);
+}
+.veredito-aprovado { background: var(--sucesso-10); color: var(--sucesso); }
+.veredito-devolvido { background: var(--primaria-clara); color: var(--primaria-escura); }
+.veredito-vermelho { background: var(--erro-10); color: var(--erro); }
+.veredito-em-curso { background: var(--superficie-2); color: var(--texto-2); }
+.veredito-invalido { background: var(--superficie-2); color: var(--texto-2); text-decoration: line-through; }
+
+/* --- barra de consumo ----------------------------------------------------- */
+
+.numero-grande { font-size: var(--texto-pagina); font-weight: var(--peso-forte); }
+.barra { height: 8px; border-radius: var(--raio-pilula); background: var(--superficie-2); overflow: hidden; }
+.barra > span { display: block; height: 100%; border-radius: var(--raio-pilula); background: var(--grafico-2); }
+.barra-atencao > span { background: var(--primaria); }
+.barra-estourada > span { background: var(--erro); }
+
+/* --- caixa de entrada / livro de mensagens -------------------------------- */
+
+.mensagem { display: flex; gap: var(--espaco-3); padding: var(--espaco-3) 0; border-bottom: 1px solid var(--borda); }
+.mensagem:last-child { border-bottom: 0; }
+.mensagem .assunto { font-weight: var(--peso-forte); font-size: var(--texto-secundario); }
+.mensagem .endereco { font-family: var(--fonte-mono); font-size: var(--texto-contador); color: var(--texto-2); }
+.mensagem-nao-lida .assunto { color: var(--tinta); }
+.mensagem-lida .assunto { color: var(--texto-2); font-weight: 400; }
+
+/* --- aviso de simulação e toast ------------------------------------------- */
+
+.aviso-simulacao {
+  display: inline-block;
+  margin: var(--espaco-2) 0 0;
+  padding: var(--espaco-2) var(--espaco-3);
+  border-radius: var(--raio);
+  background: var(--superficie-2);
+  color: var(--texto-2);
+  font-size: var(--texto-contador);
+}
+.toast {
+  position: fixed; left: 50%; bottom: var(--espaco-5); transform: translateX(-50%);
+  background: var(--tinta); color: var(--fundo);
+  border-radius: var(--raio-pilula);
+  padding: var(--espaco-3) var(--espaco-5);
+  box-shadow: var(--sombra-lg);
+  font-size: var(--texto-secundario);
+  z-index: 10;
+}
+
+/* --- confirmação irreversível --------------------------------------------- */
+
+.confirmacao {
+  border: 1px solid var(--borda-2);
+  border-radius: var(--raio-lg);
+  background: var(--superficie);
+  padding: var(--espaco-5);
+  box-shadow: var(--sombra-lg);
+  margin: 0 0 var(--espaco-4);
+}
+.confirmacao dt { font-weight: var(--peso-forte); font-size: var(--texto-secundario); margin-top: var(--espaco-3); }
+.confirmacao dd { margin: var(--espaco-1) 0 0; color: var(--texto-2); font-size: var(--texto-secundario); }
+
+/* --- fonte, citação e vazio ---------------------------------------------- */
+
+.fonte { display: block; color: var(--texto-2); font-size: var(--texto-contador); font-family: var(--fonte-mono); }
+.vazio { color: var(--texto-2); font-style: italic; }
+.ajuda { color: var(--texto-2); font-size: var(--texto-secundario); }
+
+/* --- amostra (a página que mostra os objetos) ----------------------------- */
+
+.amostra-secao { margin-bottom: var(--espaco-6); }
+.amostra-cabecalho { border-bottom: 1px solid var(--borda); padding-bottom: var(--espaco-2); margin-bottom: var(--espaco-4); }
+.amostra-cabecalho h2 { font-size: var(--texto-corpo); font-weight: var(--peso-forte); margin: 0; }
+.amostra-cabecalho p { margin: var(--espaco-1) 0 0; color: var(--texto-2); font-size: var(--texto-secundario); }

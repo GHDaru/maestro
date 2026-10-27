@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>corpus ruim — fixture do verificador de navegação (074)</title>
+<!--
+  FIXTURE SINTÉTICA do verificador (verificação (f) do NFR1 do 074). Esta árvore TEM de
+  falhar: é a prova de que o verificador discrimina. Cada defeito aqui é injetado de
+  propósito — (a) rota que não resolve, (b) fragmento órfão, (c) botão sem os quatro
+  atributos, (d) contexto fora do mapa, (e) referência externa, (h) `derrubar` sem alvo
+  e `derrubar` com o Gerente como alvo, (i) irreversível sem confirmação.
+-->
+<link rel="icon" href="data:,">
+<script src="https://exemplo.invalido/qualquer.js"></script>
+</head>
+<body>
+
+<nav id="menu" data-rotulo="navegação" data-fonte="fixture ruim do verificador 074">
+  <ul>
+    <li><a href="#/regencia/nao-existe"
+           data-fonte="fixture ruim do verificador 074 (rota que não resolve)">Regência</a></li>
+  </ul>
+</nav>
+
+<p id="fixtures" role="status" data-fonte="fixture ruim do verificador 074"></p>
+
+</body>
+</html>
