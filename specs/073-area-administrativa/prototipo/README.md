@@ -171,6 +171,11 @@ nome** dentro de cada tela, com o *roster* no script — e isso cobre o sintoma 
 *`ref` obsoleto após reinício*) seguem **fora do alcance da fitness function**. Fica **declarado** —
 aqui e no mapa (§ 8).
 
+Na `mensageria-03-roteamento.html` essa isenção é **concreta e declarada na própria tela**: a
+**tabela de resolução nome → ref** traz o **nome nu como foi digitado** na coluna "nome pretendido"
+(decisão 7) e está marcada `data-rotulo="colisão de nomes"` — é o ponto que o script **não** verifica,
+e a tela o diz por escrito. Detalhe em "Convenções", abaixo.
+
 ## Onde cada tela entra na navegação do painel existente
 
 O painel navega por grupos temáticos (`painel/index.html:216-240`): **Agora** (Board de agentes · Fluxo
@@ -239,11 +244,14 @@ correção 2) percorre os `*.html` e falha em **seis** regras:
    (`caixa de entrada`, `livro de ponto`, `sessão × agente`) não são executáveis por script hoje;
 5. **identidade de sessão** — toda menção a um nome do catálogo (`Gerente`, `WorkerNN`, `MAESTRO`,
    `Office`, `Assistente`) seguida do `ref` no formato `[xxxxxx]`, em todo texto visível e atributo,
-   salvo em tabela marcada `data-rotulo="colisão de nomes"` (a isenção **não** cobre a tabela de
-   colisões de **endereço**, que lista os refs nas próprias células);
+   **salvo** em tabela marcada `data-rotulo="colisão de nomes"` — a cerca que a **regra 6** herda. A
+   **tabela de resolução nome → ref** da `mensageria-03-roteamento.html` **está** marcada assim
+   (decisão 7: o **nome nu digitado** na coluna "nome pretendido", as refs na coluna ao lado), com a
+   isenção **declarada na própria tela**;
 6. **roster e ref único por nome** — dentro de uma tela, um `ref` `[xxxxxx]` só aparece colado a um
    **único** nome, e todo nome do *roster* (a lista vive no script) vem com o `ref` do *roster*; o
-   *fixture* e a mutação acompanham. É a **regra 6** (correção 2, decisão 1) — a fitness function
+   *fixture* e a mutação acompanham, com a **mesma cerca** da regra 5 (a tabela de resolução/colisão
+   da `mensageria-03` fica isenta). É a **regra 6** (correção 2, decisão 1) — a fitness function
    cobre **este** sintoma de endereço; as três classes de colisão de **endereço** acima continuam
    **não verificadas por script**.
 
@@ -300,6 +308,14 @@ citação `arquivo:linha` a uma ficha de plataforma (`specs/073-area-administrat
 no `confronto-decisao.md` e nas telas — **no mesmo commit**. A `claude-code.md` deste ciclo é o caso
 vivo: as linhas citadas andaram (`:47→:61`, `:49→:63`, `:65→:79`, `:68→:82`, `:71→:84`) e a citação
 velha passou a apontar para outra coisa.
+
+**A isenção da regra 5 — e da regra 6 — é declarada, não inferida.** A cerca que isenta a identidade
+é um `<table>` cujo `th`/`dt` traz `data-rotulo="colisão de nomes"`. Ela cobre a **tabela de resolução
+nome → ref** da `mensageria-03-roteamento.html`, onde a coluna "nome pretendido" mostra o **nome nu
+como foi digitado** e as refs que casam ficam na coluna ao lado (decisão 7). Ali o nome sem `ref` é
+**exigência do desenho**, não descuido — e a tela **declara a própria isenção** no texto. Fora dessa
+cerca, a identidade `nome · ref · projeto` vale; as três classes de colisão de **endereço** seguem
+fora do alcance da fitness function (ver a seção de colisões, acima).
 
 > O corpo desta página ainda guarda as citações da redação original (as da coluna "base antiga" acima):
 > na passagem do R9 elas não foram reescritas, para não colidir com a renomeação das telas da
