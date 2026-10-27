@@ -54,18 +54,18 @@ footer.rodape strong{color:var(--tinta)}
 <header class="topo">
   <p class="migalha" data-referencia="true">Maestro · área administrativa · wireframe estático · ciclo 073, rodada 3</p>
   <h1>Administração — limite de orçamento</h1>
-  <p class="contexto" data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §2 e §6.5 (contexto Administração); specs/073-area-administrativa/confronto/confronto-decisao.md (linha do ENTRA limites de orçamento e de taxa)">
+  <p class="contexto" data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §2 e §6.5 (contexto Administração); specs/073-area-administrativa/confronto/confronto-decisao.md (linha do ENTRA limite de orçamento)">
     <strong>Contexto delimitado:</strong> Administração (subdomínio genérico) ·
-    <strong>ENTRA:</strong> limites de orçamento e de taxa — o nome na linguagem ubíqua é
-    <strong>limite de orçamento</strong> ·
-    <strong>juiz da rodada 4:</strong> Controle ·
+    <strong>ENTRA:</strong> limite de orçamento — o nome na linguagem ubíqua é
+    <strong>limite de orçamento</strong> · o <strong>limite de taxa</strong> é DEPOIS, com gatilho escrito ·
+    <strong>juízes da rodada 4:</strong> Controle · Administração/Gerenciamento ·
     <strong>fonte do ENTRA:</strong> método (<code>operating-model.md</code>: tempo fixo, escopo variável, com teto
     declarado) e plataforma OpenAI Platform (o limite de gasto devolve uma recusa).
   </p>
   <nav class="telas" aria-label="Telas da Administração" data-fonte="specs/073-area-administrativa/tasks.md T3-telas-administracao (as três telas deste contexto) e specs/073-area-administrativa/confronto/confronto-decisao.md (as três linhas ENTRA); a linguagem ubíqua do contexto é specs/073-area-administrativa/confronto/mapa-de-contextos.md §6.5">
     <a href="administracao-01-catalogo.html" data-fonte="ENTRA cadastro de skills/ferramentas/modelos (specs/073-area-administrativa/confronto/confronto-decisao.md; specs/073-area-administrativa/pesquisa/litellm.md)">catálogo de skills/ferramentas/modelos</a>
     <a href="administracao-02-politicas.html" data-fonte="ENTRA políticas allow/deny/ask (specs/073-area-administrativa/confronto/confronto-decisao.md; specs/073-area-administrativa/pesquisa/agent-365.md)">política declarativa (allow/deny/ask)</a>
-    <a href="administracao-03-orcamento.html" aria-current="page" data-fonte="esta tela — ENTRA limites de orçamento e de taxa (specs/073-area-administrativa/confronto/confronto-decisao.md; specs/073-area-administrativa/pesquisa/openai-platform.md)">limite de orçamento</a>
+    <a href="administracao-03-orcamento.html" aria-current="page" data-fonte="esta tela — ENTRA limite de orçamento (specs/073-area-administrativa/confronto/confronto-decisao.md; specs/073-area-administrativa/pesquisa/openai-platform.md)">limite de orçamento</a>
   </nav>
 </header>
 
@@ -76,7 +76,8 @@ footer.rodape strong{color:var(--tinta)}
   <p>O <strong>limite de orçamento</strong> é da <strong>Administração</strong>: esta área <em>define e guarda</em> o
   teto. O Workflow de sessões só <strong>mede e exibe</strong> o consumo contra ele — a mesma porta, dois papéis.
   Hoje o teto é declarado (entra no índice de decisões) e o consumo por sessão é lido do livro de ponto;
-  <strong>faltam o teto executável e o limite de taxa</strong>, ambos desenhados abaixo.</p>
+  <strong>falta o teto executável</strong> e o teto por projeto, agente e modelo, desenhados abaixo. O
+  <strong>limite de taxa</strong> saiu desta rodada: é DEPOIS, com gatilho escrito (decisão 6).</p>
   <span class="fonte">fonte: método (decisão 1 da regente; <code>docs/governance/operating-model.md</code>; <code>docs/records/decisoes.jsonl</code>) · estado: specs/073-area-administrativa/confronto/inventario-maestro.md (parcial)</span>
 </div>
 
@@ -105,16 +106,23 @@ footer.rodape strong{color:var(--tinta)}
     gatilho escrito (quando o teto executável existir), não um valor zero.</p>
     <span class="fonte">fonte: <code>rodada-4/correcao-1.md</code> (decisão 4) · <code>confronto/confronto-decisao.md</code> · leitura da matriz: "não encontrado na documentação lida" (decisão 6)</span>
   </div>
-  <div class="caixa" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (P12: efeito ao estourar — recusar, avisar, suspender — com quem autoriza; decisão 5: quem autoriza) e specs/073-area-administrativa/pesquisa/openai-platform.md (o limite rígido devolve recusa; o alerta não capa)">
+  <div class="caixa" data-fonte="specs/073-area-administrativa/rodada-4/correcao-2.md (decisão 2: hoje o efeito ao estourar é avisar por mensagem endereçada; recusar e suspender são DEPOIS com gatilho — falta o ponto de execução) e specs/073-area-administrativa/pesquisa/openai-platform.md (o alerta de gasto informa, o limite rígido barra)">
     <span class="rotulo">Efeito ao estourar o teto</span>
     <ul class="estados">
-      <li><strong>avisar</strong> — cruza o limiar de alerta; só informa, não capa.</li>
-      <li><strong>recusar</strong> — o teto rígido barra a chamada seguinte; na plataforma de referência é uma recusa.</li>
-      <li><strong>suspender</strong> — a sessão para; quem autoriza retomar é o humano (o regente por delegação).</li>
+      <li><strong>avisar</strong> — é o efeito de <strong>hoje</strong> (ENTRA): cruza o limiar de alerta, só informa,
+      não capa. O aviso é uma <strong>mensagem endereçada</strong> à sessão dona (<code>nome · ref · projeto</code>) e
+      ao regente <code>MAESTRO [7c8d05] · 410_MAESTRO</code>, pela Mensageria (a tela
+      <code>specs/073-area-administrativa/prototipo/mensageria-02-livro-de-mensagens.html</code>) — é o que a tela de
+      políticas anuncia.</li>
+      <li><strong>recusar</strong> — <strong>DEPOIS</strong>, com gatilho: o teto rígido barra a chamada seguinte; na
+      plataforma de referência é uma recusa. Gatilho: existir o ponto de execução do gasto — hoje o Maestro não tem
+      teto de orçamento por sessão no CLI (<code>specs/073-area-administrativa/pesquisa/claude-code.md</code>).</li>
+      <li><strong>suspender</strong> — <strong>DEPOIS</strong>, mesmo gatilho: a sessão para; quem autoriza retomar é o
+      humano (o regente por delegação).</li>
     </ul>
     <p><strong>Quem autoriza:</strong> o humano no <strong>portão do chamado</strong> define o que <em>recusa</em> e
     o que só <em>avisa</em>; a sessão dona nunca reabre o próprio teto.</p>
-    <span class="fonte">fonte: método (<code>rodada-4/correcao-1.md</code>) · plataforma: <code>specs/073-area-administrativa/pesquisa/openai-platform.md</code></span>
+    <span class="fonte">fonte: método (<code>rodada-4/correcao-2.md</code>, decisão 2) · plataforma: <code>specs/073-area-administrativa/pesquisa/openai-platform.md</code>, <code>specs/073-area-administrativa/pesquisa/claude-code.md</code></span>
   </div>
 </div>
 
@@ -125,7 +133,7 @@ footer.rodape strong{color:var(--tinta)}
   Os valores marcados <span class="exemplo" data-exemplo="true">exemplo</span> ilustram o layout — não são dados do
   repositório; o que é vivo aparece como <span class="vazio">—</span> com o motivo.</caption>
   <thead>
-    <tr><th>Projeto, agente ou modelo do catálogo de skills/ferramentas/modelos</th><th data-rotulo="limite de orçamento">Teto</th><th data-rotulo="limite de orçamento">Unidade</th><th data-rotulo="consumo por agente">Consumo</th><th data-rotulo="limite de orçamento">Restante</th><th data-rotulo="limite de orçamento">Efeito ao estourar</th><th>Consultar</th></tr>
+    <tr><th>Projeto, agente ou modelo do catálogo de skills/ferramentas/modelos</th><th data-rotulo="limite de orçamento">Teto</th><th data-rotulo="limite de orçamento">Unidade</th><th data-rotulo="consumo por agente">Consumo</th><th data-rotulo="limite de orçamento">Restante</th><th data-rotulo="limite de orçamento">Limiar de alerta</th><th data-rotulo="limite de orçamento">Efeito ao estourar</th><th>Consultar</th></tr>
   </thead>
   <tbody>
     <tr>
@@ -134,6 +142,7 @@ footer.rodape strong{color:var(--tinta)}
       <td><span class="exemplo" data-exemplo="true">exemplo: tokens e dólar estimado</span></td>
       <td><span class="vazio">—</span> motivo: leitura viva, o wireframe não a digita</td>
       <td><span class="vazio">—</span> motivo: derivado do teto e do consumo</td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: 80 % do teto</span></td>
       <td>avisar · recusar · suspender</td>
       <td><button type="button" data-fonte="método — docs/governance/operating-model.md (teto por projeto) e scripts/install-maestro.sh (.maestro/install-options.json); plataforma — specs/073-area-administrativa/pesquisa/openai-platform.md (limite por projeto)">abrir teto</button></td>
     </tr>
@@ -143,6 +152,7 @@ footer.rodape strong{color:var(--tinta)}
       <td><span class="exemplo" data-exemplo="true">exemplo: tokens e dólar estimado</span></td>
       <td><span class="vazio">—</span> motivo: leitura viva, o wireframe não a digita</td>
       <td><span class="vazio">—</span> motivo: derivado do teto e do consumo</td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: 70 % do teto</span></td>
       <td>avisar · recusar</td>
       <td><button type="button" data-fonte="método — docs/governance/glossary.md (Custo por sessão) e docs/records/decisoes.jsonl; plataforma — specs/073-area-administrativa/pesquisa/litellm.md (max_budget por chave/time)">abrir teto</button></td>
     </tr>
@@ -152,11 +162,17 @@ footer.rodape strong{color:var(--tinta)}
       <td><span class="exemplo" data-exemplo="true">exemplo: dólar estimado</span></td>
       <td><span class="vazio">—</span> motivo: leitura viva, o wireframe não a digita</td>
       <td><span class="vazio">—</span> motivo: derivado do teto e do consumo</td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: 60 % do teto</span></td>
       <td>recusar</td>
       <td><button type="button" data-fonte="plataforma — specs/073-area-administrativa/pesquisa/litellm.md e specs/073-area-administrativa/pesquisa/openai-platform.md (orçamento por modelo); método — a tabela de preços do Modelo, no catálogo da Administração">abrir teto</button></td>
     </tr>
   </tbody>
 </table>
+<p class="fonte" data-fonte="specs/073-area-administrativa/rodada-4/correcao-2.md (decisão 6: coluna de limiar de alerta e precedência dos tetos — o menor teto aplicável vence, no recorte mais estreito e no menor valor)">
+  <strong>Precedência dos tetos:</strong> quando mais de um teto alcança a mesma chamada, vence <strong>o menor teto
+  aplicável</strong> — o recorte mais estreito (modelo antes de agente, agente antes de projeto) e, no empate de
+  escopo, o menor valor. É a mesma lógica da política: o mais específico decide qual regra se aplica, e a mais
+  restritiva decide dentro do mesmo escopo.</p>
 
 <div class="caixa" data-fonte="ux-design 066 §4 anti-regra 3 (não inventa número: fonte ausente vira "—" com motivo e caminho) e §3 (defasagem da fonte anunciada no cabeçalho)">
   <span class="rotulo">Controle</span>
@@ -170,7 +186,7 @@ footer.rodape strong{color:var(--tinta)}
   <p><strong>Quem autoriza mudar o teto:</strong> o humano, no <strong>portão do chamado</strong> — ou o regente por
   delegação; a sessão dona nunca reabre o próprio teto.</p>
   <p><strong>Identidade de quem ajusta:</strong> <code>nome · ref · projeto</code> — lida agora pelo harness:
-  <code>Worker04 [4d000a] · projeto exemplo</code>. <strong>O ref muda ao reiniciar</strong>.</p>
+  <code>Worker04 [4d000a] · 410_MAESTRO</code>. <strong>O ref muda ao reiniciar</strong>.</p>
   <span class="fonte">mudar o teto é decisão registrada — o protótipo exibe e sugere; não grava nem executa. fonte: <code>rodada-4/correcao-1.md</code> (decisões 2 e 5) · Princípio III</span>
 </div>
 
@@ -198,8 +214,11 @@ footer.rodape strong{color:var(--tinta)}
     <span class="rotulo">Alerta antes do teto</span>
     <p>Antes do teto há um <strong>limiar de alerta</strong>: ao cruzá-lo, o consumo <em>avisa</em> — não capa.
     Separar <em>o limite que corta</em> de <em>o alerta que só avisa</em> é a distinção que faltava na matriz.</p>
-    <p class="vazio">valor do limiar — motivo: declarado como DEPOIS nesta rodada (entra junto com o teto executável).</p>
-    <span class="fonte">fonte: <code>rodada-4/correcao-1.md</code> (decisões 4 e 6) · plataforma: <code>specs/073-area-administrativa/pesquisa/openai-platform.md</code></span>
+    <p class="vazio">valor do limiar — <span class="exemplo" data-exemplo="true">exemplo: 80 % do teto</span> (valor
+    ilustrativo, por escopo na tabela acima); o valor vivo vem de <code>docs/records/decisoes.jsonl</code> quando o teto
+    executável existir. O limiar é o gatilho do único efeito de hoje — <strong>avisar</strong> por mensagem endereçada
+    (decisão 2).</p>
+    <span class="fonte">fonte: <code>rodada-4/correcao-2.md</code> (decisões 2 e 6) · plataforma: <code>specs/073-area-administrativa/pesquisa/openai-platform.md</code></span>
   </div>
 </div>
 

@@ -55,14 +55,14 @@ footer.rodape strong{color:var(--tinta)}
     <strong>Contexto delimitado:</strong> Administração (subdomínio genérico) ·
     <strong>raiz:</strong> Agente (registro) e Projeto (configuração) ·
     <strong>ENTRA:</strong> cadastro de skills/ferramentas/modelos ·
-    <strong>juízes da rodada 4:</strong> Administração/Gerenciamento ·
+    <strong>juízes da rodada 4:</strong> Controle · Administração/Gerenciamento ·
     <strong>fonte do ENTRA:</strong> método (<code>skills/&lt;nome&gt;/SKILL.md</code> e o catálogo que o instalador gera)
     e plataforma LiteLLM (<em>Skills Registry</em>).
   </p>
   <nav class="telas" aria-label="Telas da Administração" data-fonte="specs/073-area-administrativa/tasks.md T3-telas-administracao (as três telas deste contexto) e specs/073-area-administrativa/confronto/confronto-decisao.md (as três linhas ENTRA); a linguagem ubíqua do contexto é specs/073-area-administrativa/confronto/mapa-de-contextos.md §6.5">
     <a href="administracao-01-catalogo.html" aria-current="page" data-fonte="esta tela — ENTRA cadastro de skills/ferramentas/modelos (specs/073-area-administrativa/confronto/confronto-decisao.md; specs/073-area-administrativa/pesquisa/litellm.md)">catálogo de skills/ferramentas/modelos</a>
     <a href="administracao-02-politicas.html" data-fonte="ENTRA políticas allow/deny/ask (specs/073-area-administrativa/confronto/confronto-decisao.md; specs/073-area-administrativa/pesquisa/agent-365.md)">política declarativa (allow/deny/ask)</a>
-    <a href="administracao-03-orcamento.html" data-fonte="ENTRA limites de orçamento e de taxa (specs/073-area-administrativa/confronto/confronto-decisao.md; specs/073-area-administrativa/pesquisa/openai-platform.md)">limite de orçamento</a>
+    <a href="administracao-03-orcamento.html" data-fonte="ENTRA limite de orçamento (specs/073-area-administrativa/confronto/confronto-decisao.md; specs/073-area-administrativa/pesquisa/openai-platform.md)">limite de orçamento</a>
   </nav>
 </header>
 
@@ -150,6 +150,37 @@ footer.rodape strong{color:var(--tinta)}
   </div>
 </div>
 
+<h2>Tabela do Modelo (o preço que o orçamento lê)</h2>
+<table data-fonte="specs/073-area-administrativa/rodada-4/correcao-2.md (decisão 4: a tela ganha a tabela do Modelo com provedor, preço por milhão, quem pode usar e projeto; é dela que o Workflow de sessões e o orçamento dizem ler o preço); formato do registro de modelos em specs/073-area-administrativa/pesquisa/litellm.md (Model Management / Add Models)">
+  <caption>O <strong>Modelo</strong> deixa de ser só escolha por sessão e ganha linha própria: provedor, preço por
+  milhão de tokens, quem pode usar e projeto. O preço desta tabela é a fonte que o orçamento
+  (<code>specs/073-area-administrativa/prototipo/administracao-03-orcamento.html</code>) e o consumo por agente
+  (<code>specs/073-area-administrativa/prototipo/workflow-04-consumo-por-agente.html</code>) leem. As linhas marcadas
+  <span class="exemplo" data-exemplo="true">exemplo</span> ilustram o formato; o valor vivo aparece como
+  <span class="vazio">—</span> com o motivo.</caption>
+  <thead>
+    <tr><th data-rotulo="catálogo de skills/ferramentas/modelos">Modelo</th><th data-rotulo="catálogo de skills/ferramentas/modelos">Provedor</th><th data-rotulo="catálogo de skills/ferramentas/modelos">Preço por milhão de tokens</th><th data-rotulo="catálogo de skills/ferramentas/modelos">Quem pode usar</th><th data-rotulo="catálogo de skills/ferramentas/modelos">Projeto</th><th>Consultar</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><span class="exemplo" data-exemplo="true">exemplo: nome do modelo</span></td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: provedor</span></td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: preço por milhão de tokens</span></td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: quem pode usar</span></td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: projeto</span></td>
+      <td><button type="button" data-fonte="método — specs/073-area-administrativa/rodada-4/correcao-2.md (decisão 4: a tabela do Modelo no catálogo); plataforma — specs/073-area-administrativa/pesquisa/litellm.md (registro de modelos)">abrir modelo</button></td>
+    </tr>
+    <tr>
+      <td><span class="vazio">—</span> motivo: o modelo é escolhido por sessão hoje; a linha própria é a lacuna que este catálogo fecha</td>
+      <td><span class="vazio">—</span></td>
+      <td><span class="vazio">—</span></td>
+      <td><span class="vazio">—</span></td>
+      <td><span class="vazio">—</span></td>
+      <td><span class="vazio">—</span> motivo: nada a abrir enquanto a linha própria não existir</td>
+    </tr>
+  </tbody>
+</table>
+
 <h2>Cadastrar (proposto — a tela não executa)</h2>
 <div class="caixa" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (fatia da Administração, P10: formulário 'cadastrar' com os campos do Modelo) e specs/073-area-administrativa/rodada-4/juiz-2-administracao-gerenciamento.md; hoje a área é somente leitura — specs/073-area-administrativa/confronto/inventario-maestro.md">
   <span class="rotulo">Fluxo de escrita — desenhado, não executado</span>
@@ -167,20 +198,25 @@ footer.rodape strong{color:var(--tinta)}
     <label for="cad-provedor" data-rotulo="catálogo de skills/ferramentas/modelos">provedor</label>
     <input id="cad-provedor" type="text" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (P10: campos do Modelo)">
     <label for="cad-preco" data-rotulo="catálogo de skills/ferramentas/modelos">preço por milhão de tokens</label>
-    <input id="cad-preco" type="text" placeholder="exemplo: preço por milhão de tokens" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (P10: campos do Modelo)">
+    <input id="cad-preco" type="text" disabled placeholder="exemplo: preço por milhão de tokens" data-fonte="specs/073-area-administrativa/rodada-4/correcao-2.md (decisão 4: a sessão dona não cadastra o preço)">
     <label for="cad-quem" data-rotulo="catálogo de skills/ferramentas/modelos">quem pode usar</label>
-    <input id="cad-quem" type="text" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (P10: campos do Modelo)">
+    <input id="cad-quem" type="text" disabled data-fonte="specs/073-area-administrativa/rodada-4/correcao-2.md (decisão 4: a sessão dona não cadastra quem pode usar)">
+  </p>
+  <p class="vazio">preço e "quem pode usar" ficam <strong>fora</strong> da sessão dona: só o humano (o portão do
+  chamado) ou o regente por delegação os definem — quem fixa preço e uso fixa o teto (decisão 4). Por isso os dois
+  campos aparecem desabilitados.
     <label for="cad-projeto" data-rotulo="catálogo de skills/ferramentas/modelos">projeto</label>
     <input id="cad-projeto" type="text" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (P10: campos do Modelo)">
   </p>
   <p class="vazio">estado hoje: somente leitura — motivo: a área administrativa inteira não tem rota de escrita
   (nenhum formulário existe no repositório); o que está desenhado é o fluxo, não uma promessa de que ele roda.</p>
-  <p><strong>Quem autoriza a escrita:</strong> o humano (portão) ou o regente por delegação; a <strong>sessão
-  dona</strong> cadastra o que é dela — a escrita nunca é de quem apenas consulta.
+  <p><strong>Quem autoriza a escrita:</strong> o humano (portão do chamado) ou o regente por delegação; a <strong>sessão
+  dona</strong> cadastra o que é dela — <em>exceto</em> o <strong>preço</strong> e o <strong>quem pode usar</strong>, que
+  são de quem define o teto (decisão 4). A escrita nunca é de quem apenas consulta.
   <span class="vazio">o registro da autorização —</span> motivo: ainda não há trilha de autorização desenhada
   fora deste campo.</p>
   <p><strong>Identidade de quem escreve:</strong> <code>nome · ref · projeto</code> — lida agora pelo harness:
-  <code>Worker04 [4d000a] · projeto exemplo</code>. <strong>O ref muda ao reiniciar</strong> (o harness o troca a
+  <code>Worker04 [4d000a] · 410_MAESTRO</code>. <strong>O ref muda ao reiniciar</strong> (o harness o troca a
   cada sessão nova; por isso o ref acompanha o nome, não o substitui).</p>
   <span class="fonte">fonte: decisão 5 da regente (<code>rodada-4/correcao-1.md</code>: toda ação de escrita diz quem autoriza) e decisão 2 (identidade <code>nome · ref · projeto</code>, com o aviso do ref) · harness: <code>ListAgents</code> · projeto do painel: <code>painel/projetos/exemplo.json</code></span>
 </div>
@@ -189,7 +225,7 @@ footer.rodape strong{color:var(--tinta)}
 <div class="grade">
   <div class="caixa" data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §7 (colisão de nomes) e §6.6 (roteamento por nome/ref); specs/073-area-administrativa/rodada-4/juiz-3-intercomunicabilidade.md (P10: nomes únicos); plataforma: Kiro — nome desconhecido falha em vez de cair num padrão (specs/073-area-administrativa/pesquisa/kiro-crew.md)">
     <span class="rotulo">Regra declarada — nomes únicos</span>
-    <p>Nome de skill, de ferramenta e de modelo é <strong>único</strong> no escopo em que vale. Dois itens com o
+    <p>Nome de skill, de ferramenta, de modelo e de agente (perfil) é <strong>único</strong> no escopo em que vale. Dois itens com o
     mesmo nome são <strong>colisão de nomes</strong>: o registro <em>recusa</em> o segundo — não resolve o empate.
     A plataforma ensina a mesma disciplina: nome desconhecido falha, não cai num padrão.</p>
     <span class="fonte">fonte: método (<code>confronto/mapa-de-contextos.md</code> §7 e §6.6) · plataforma (<code>pesquisa/kiro-crew.md</code>: "fail rather than fall back")</span>
@@ -197,7 +233,8 @@ footer.rodape strong{color:var(--tinta)}
   <div class="caixa" data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §4 relação 3 (Administração → Mensageria, conformista: a fonte dos nomes é a Administração) e §6.6 (roteamento por nome/ref, com tabela de resolução)">
     <span class="rotulo">Ligação — tabela de roteamento</span>
     <p>Endereçar uma mensagem exige um nome, e <strong>quem publica o nome é este registro</strong> (relação 3 do
-    mapa, conformista). A tabela de endereços que consome o registro é a do roteamento —
+    mapa, conformista) — hoje ele publica skill, ferramenta, modelo e <strong>agente (perfil)</strong>. A tabela de
+    endereços que consome o registro é a do roteamento, que resolve <code>nome · ref · projeto</code> —
     <code>specs/073-area-administrativa/prototipo/mensageria-03-roteamento.html</code>.</p>
     <span class="fonte">fonte: método (<code>confronto/mapa-de-contextos.md</code> §4 relação 3 e §6.6; <code>docs/governance/glossary.md</code>: roteamento por nome/ref)</span>
   </div>
@@ -236,19 +273,113 @@ footer.rodape strong{color:var(--tinta)}
 </table>
 <p class="fonte" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (decisão 4: auditoria administrativa como ENTRA desta rodada); specs/073-area-administrativa/confronto/confronto-decisao.md (registrava auditoria como NÃO PRECISA — reaberta nesta rodada); plataformas: LiteLLM (audit_logs com changed_by; exige licença Enterprise) e Kiro (registro de eventos de segurança); Claude Code fica parcial — os eventos existem, o console de auditoria não.</p>
 
-<h2>Coluna de contexto — cadastro de agentes (registro que já existe)</h2>
-<div class="caixa" data-fonte="método — docs/agents/README.md (perfil ↔ executável) e scripts/check-agents.sh (invariantes); specs/073-area-administrativa/confronto/confronto-decisao.md §NÃO PRECISA (cadastro de agentes: já coberto)">
-  <span class="rotulo">Coluna existente — somente leitura</span>
-  <p>O registro de <strong>Agente</strong> já existe e tem invariante que o verifica. Aqui ele aparece como
-  <strong>coluna de contexto</strong>, só de leitura — <strong>nenhuma funcionalidade nova</strong>: a raiz deste
-  contexto é justamente o Agente, e exibir o registro existente é o que a tela faz.</p>
-  <p><span class="vazio">quantos agentes —</span> motivo: é contagem viva do repositório e o wireframe não a digita;
-  quem a quer roda <code>scripts/check-agents.sh</code>.
-  <span class="fonte">fonte: método (<code>docs/agents/README.md</code>; <code>scripts/check-agents.sh</code>)</span></p>
-  <p><strong>Fronteira:</strong> o registro declara o dono de cada arquivo; a declaração vive em
-  <code>boundary.json</code> e é verificada por <code>scripts/check-boundary.sh</code>.</p>
-  <span class="fonte">fonte: ADR (<em>Architecture Decision Record</em> — registro de decisão de arquitetura) 0018, fronteira interna, <code>boundary.json</code>; <code>specs/073-area-administrativa/confronto/mapa-de-contextos.md</code> §6.5</span>
-</div>
+<h2>Agentes (perfis)</h2>
+<table data-fonte="método — ls .claude/agents (leitura dos perfis reais do repositório) e docs/agents/perfis.md (perfil ↔ executável); specs/073-area-administrativa/rodada-4/correcao-2.md (decisão 5: agente = perfil; o cadastro de agentes passa de NÃO PRECISA a ENTRA 16, como leitura do catálogo de perfis); plataforma — LiteLLM, Agent Registry (specs/073-area-administrativa/pesquisa/litellm.md)">
+  <caption>O <strong>agente</strong> é o <strong>perfil</strong> — o par perfil ↔ executável em
+  <code>.claude/agents/&lt;nome&gt;.md</code>, lido por <code>ls .claude/agents</code>; a
+  <strong>sessão de agente</strong> é a instância com <code>ref</code>, e quem a acompanha é o Workflow de sessões.
+  O cadastro deixa de ser <code>NÃO PRECISA</code> e vira <code>ENTRA</code> 16: o cadastro <em>é</em> o arquivo
+  versionado, e esta tela lista e liga ao roteamento. <code>papel</code>, <code>ferramentas</code> e
+  <code>modelo padrão</code> saem do arquivo do perfil. A lista abaixo é a fotografia do repositório em 26/10 — a
+  linha viva é <code>ls .claude/agents</code>, não um cadastro editável aqui.</caption>
+  <thead>
+    <tr><th data-rotulo="catálogo de skills/ferramentas/modelos">Agente (perfil)</th><th data-rotulo="catálogo de skills/ferramentas/modelos">Papel</th><th data-rotulo="catálogo de skills/ferramentas/modelos">Ferramentas</th><th data-rotulo="catálogo de skills/ferramentas/modelos">Modelo padrão</th><th>Consultar</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>agent-designer</code></td>
+      <td>desenhar e manter os papéis e subagentes</td>
+      <td><code>Read, Write, Edit, Grep</code></td>
+      <td><span class="vazio">—</span> motivo: o perfil declara <code>tools</code>; o modelo não é declarado por perfil hoje</td>
+      <td><button type="button" data-fonte="método — .claude/agents/agent-designer.md; docs/agents/perfis.md">abrir perfil</button></td>
+    </tr>
+    <tr>
+      <td><code>dev-implementer</code></td>
+      <td>implementar as tarefas do plano (código e testes)</td>
+      <td><code>Read, Write, Edit, Bash</code></td>
+      <td><span class="vazio">—</span> motivo: o perfil declara <code>tools</code>; o modelo não é declarado por perfil hoje</td>
+      <td><button type="button" data-fonte="método — .claude/agents/dev-implementer.md; docs/agents/perfis.md">abrir perfil</button></td>
+    </tr>
+    <tr>
+      <td><code>didactics-editor</code></td>
+      <td>editar clareza e narrativa (didática, glossário)</td>
+      <td><code>Read, Write, Edit, Grep</code></td>
+      <td><span class="vazio">—</span> motivo: idem</td>
+      <td><button type="button" data-fonte="método — .claude/agents/didactics-editor.md; docs/agents/perfis.md">abrir perfil</button></td>
+    </tr>
+    <tr>
+      <td><code>plan-architect</code></td>
+      <td>escrever o plano (o como) a partir da spec</td>
+      <td><code>Read, Write, Grep, Glob, WebFetch</code></td>
+      <td><span class="vazio">—</span> motivo: idem</td>
+      <td><button type="button" data-fonte="método — .claude/agents/plan-architect.md; docs/agents/perfis.md">abrir perfil</button></td>
+    </tr>
+    <tr>
+      <td><code>process-guardian</code></td>
+      <td>guardar o processo (verifica, não produz)</td>
+      <td><code>Read, Grep, Glob</code></td>
+      <td><span class="vazio">—</span> motivo: idem</td>
+      <td><button type="button" data-fonte="método — .claude/agents/process-guardian.md; docs/agents/perfis.md">abrir perfil</button></td>
+    </tr>
+    <tr>
+      <td><code>qa</code></td>
+      <td>qualidade e evidência viva (o qa-report)</td>
+      <td><code>Read, Write, Bash</code></td>
+      <td><span class="vazio">—</span> motivo: idem</td>
+      <td><button type="button" data-fonte="método — .claude/agents/qa.md; docs/agents/perfis.md">abrir perfil</button></td>
+    </tr>
+    <tr>
+      <td><code>research-curator</code></td>
+      <td>pesquisar com fontes citadas (não decide)</td>
+      <td><code>Read, Write, WebSearch, WebFetch</code></td>
+      <td><span class="vazio">—</span> motivo: idem</td>
+      <td><button type="button" data-fonte="método — .claude/agents/research-curator.md; docs/agents/perfis.md">abrir perfil</button></td>
+    </tr>
+    <tr>
+      <td><code>review</code></td>
+      <td>revisar em contexto fresco (só lê)</td>
+      <td><code>Read, Grep, Glob, Bash</code></td>
+      <td><span class="vazio">—</span> motivo: idem</td>
+      <td><button type="button" data-fonte="método — .claude/agents/review.md; docs/agents/perfis.md">abrir perfil</button></td>
+    </tr>
+    <tr>
+      <td><code>security</code></td>
+      <td>revisar segurança (injeção, segredos, autorização)</td>
+      <td><code>Read, Grep, Glob, Bash</code></td>
+      <td><span class="vazio">—</span> motivo: idem</td>
+      <td><button type="button" data-fonte="método — .claude/agents/security.md; docs/agents/perfis.md">abrir perfil</button></td>
+    </tr>
+    <tr>
+      <td><code>skill-author</code></td>
+      <td>escrever skills (a partir de dor recorrente)</td>
+      <td><code>Read, Write, WebFetch</code></td>
+      <td><span class="vazio">—</span> motivo: idem</td>
+      <td><button type="button" data-fonte="método — .claude/agents/skill-author.md; docs/agents/perfis.md">abrir perfil</button></td>
+    </tr>
+    <tr>
+      <td><code>spec-agent</code></td>
+      <td>escrever a spec (o quê e o porquê)</td>
+      <td><code>Read, Write, Grep, Glob</code></td>
+      <td><span class="vazio">—</span> motivo: idem</td>
+      <td><button type="button" data-fonte="método — .claude/agents/spec-agent.md; docs/agents/perfis.md">abrir perfil</button></td>
+    </tr>
+    <tr>
+      <td><code>tech-writer</code></td>
+      <td>manter a documentação viva no mesmo PR</td>
+      <td><code>Read, Write, Edit, Grep</code></td>
+      <td><span class="vazio">—</span> motivo: idem</td>
+      <td><button type="button" data-fonte="método — .claude/agents/tech-writer.md; docs/agents/perfis.md">abrir perfil</button></td>
+    </tr>
+    <tr>
+      <td><code>ux-semantics</code></td>
+      <td>decidir a semântica da interface antes do componente</td>
+      <td><code>Read, Write, Grep, Glob</code></td>
+      <td><span class="vazio">—</span> motivo: idem</td>
+      <td><button type="button" data-fonte="método — .claude/agents/ux-semantics.md; docs/agents/perfis.md">abrir perfil</button></td>
+    </tr>
+  </tbody>
+</table>
+<p class="fonte" data-fonte="método — docs/agents/README.md (perfil ↔ executável) e scripts/check-agents.sh (invariantes); specs/073-area-administrativa/rodada-4/correcao-2.md (decisão 5: a tela lista e liga ao roteamento)">A linha viva de cada perfil é o arquivo em <code>.claude/agents/</code>; a contagem é leitura do repositório (<code>ls .claude/agents</code>), não um número digitado. A ligação com o endereçamento é a tabela de roteamento (<code>specs/073-area-administrativa/prototipo/mensageria-03-roteamento.html</code>), que resolve <code>nome · ref · projeto</code>. <strong>Fronteira:</strong> o registro declara o dono de cada arquivo em <code>boundary.json</code>, verificado por <code>scripts/check-boundary.sh</code> (ADR 0018, fronteira interna; <code>specs/073-area-administrativa/confronto/mapa-de-contextos.md</code> §6.5).</p>
 
 <h2>Estados desta tela</h2>
 <ul class="estados" data-fonte="ux-design 066 §3 (vazio, carregando, erro de fonte, sem permissão) e §4 (anti-regras)">
