@@ -127,7 +127,7 @@ footer.rodape strong{color:var(--tinta)}
     <button type="button" data-fonte="método: painel/server.py (abre o transcript da sessão — somente leitura)" aria-label="abrir o transcript da sessão">abrir transcript</button>
   </p>
   <ul>
-    <li><strong>cancelar</strong> — quem autoriza: o humano (gate) ou o regente por delegação; a <strong>sessão dona não cancela a própria tarefa</strong>, porque a conferência é de outro (Princípio II).</li>
+    <li><strong>cancelar</strong> — quem autoriza: o humano (gate) ou o regente por delegação; a <strong>sessão dona não cancela a própria tarefa</strong>, porque a conferência é de outro (Princípio II). <strong>O que se perde</strong> (a confirmação mostra antes de decidir): a <em>tentativa</em> em curso (<code>attempt</code>) e o trabalho <strong>não commitado</strong> no worktree da sessão; o que <strong>fica</strong> é o que já foi commitado e o registro da tarefa no livro de ponto. A tela não fecha nada — só abre a confirmação. <span class="fonte" data-referencia="true">specs/073-area-administrativa/rodada-4/correcao-2.md (decisão 3: «cancelar tarefa» mostra o que se perde); juiz 1, P15</span></li>
     <li><strong>reatribuir</strong> — quem autoriza: o regente por delegação, com o ref do novo destinatário lido do <code>ListAgents</code>; gera despacho novo (<code>attempt+1</code>) e a tarefa velha não fica aberta em dois lugares.</li>
   </ul>
   <p class="fonte" data-referencia="true">A tela <strong>não fecha</strong> a tarefa e <strong>não decide</strong> o cancelamento: ela abre a confirmação, com quem autoriza declarado.</p>

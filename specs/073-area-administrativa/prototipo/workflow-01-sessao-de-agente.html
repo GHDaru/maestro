@@ -161,11 +161,12 @@ footer.rodape strong{color:var(--tinta)}
 
 <h2>derrubar — a confirmação</h2>
 <p>Derrubar é <strong>risco alto</strong>: a sessão pode estar no meio de uma tarefa aberta e ter trabalho não commitado no worktree. A ação só existe atrás de uma confirmação que mostra, antes de decidir:</p>
-<ul data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (decisão 5 da regente) · principles.md (Princípio III) · ux-design 066 (o painel projeta, não decide)">
+<ul data-fonte="specs/073-area-administrativa/rodada-4/correcao-2.md (decisão 3: distingue <code>claude stop</code> de <code>claude rm</code> e desenha a passagem pelo pedido de decisão da Regência) · correcao-1.md (decisão 5) · principles.md (Princípio III) · ux-design 066 (o painel projeta, não decide)">
   <li><strong>tarefa aberta</strong>: qual tarefa a sessão está executando agora — <span data-fonte="exemplo — nenhum dado real" data-exemplo="true">073-T4, attempt 1 (exemplo)</span> — e há quanto tempo;</li>
   <li><strong>worktree</strong>: onde o trabalho vive — <span data-fonte="exemplo — nenhum dado real" data-exemplo="true">.claude/worktrees/worker05 (exemplo)</span> — e o que há nele por commitar;</li>
-  <li><strong>o que fica salvo</strong>: o que sobrevive ao derrubar — arquivos commitados e o worktree em disco; o que se perde — o contexto da conversa, que não é recuperável;</li>
-  <li><strong>como religar</strong>: o caminho de volta, declarado no próprio aviso — <span class="fonte" data-referencia="true">plataforma: <code>claude --resume</code> reabre a sessão; <code>git -C &lt;worktree&gt; status</code> mostra o que ficou (scripts/multi-session.py:46)</span> — com o <strong>ref novo</strong>.</li>
+  <li><strong>o que fica salvo — e o que não volta</strong>: depende do comando, e a confirmação diz qual. <strong><code>claude stop</code></strong> <em>para</em> a sessão: ela volta por <strong><code>claude --resume</code></strong>, com o <strong>contexto preservado</strong> — é <em>religável</em>. <strong><code>claude rm</code></strong> <em>remove</em> a sessão: é <strong>irreversível</strong>, e aí o contexto da conversa <strong>não volta</strong>. Nos dois casos sobrevivem os arquivos já commitados e o worktree em disco. <span class="fonte" data-referencia="true">plataforma: <code>claude stop</code> (religável) e <code>claude rm</code> (irreversível) — specs/073-area-administrativa/pesquisa/claude-code.md:59</span></li>
+  <li><strong>como religar</strong> (quando foi <code>stop</code>): o caminho de volta, declarado no próprio aviso — <span class="fonte" data-referencia="true">plataforma: <code>claude --resume</code> reabre a sessão; <code>git -C &lt;worktree&gt; status</code> mostra o que ficou (scripts/multi-session.py:46)</span> — com o <strong>ref novo</strong>.</li>
+  <li><strong>o caminho da decisão</strong>: a confirmação <em>não executa</em> o derrubar — ela abre um <strong>pedido de decisão</strong> à <strong>Regência</strong>, e é o <strong>humano</strong> que fecha com um <strong>Ruling</strong>. <span class="fonte" data-referencia="true">specs/073-area-administrativa/confronto/mapa-de-contextos.md §4 (relação 5: Workflow de sessões → Regência — «derrubar» e o <code>ask</code> viram pedido de decisão)</span></li>
 </ul>
 <div class="caixa" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (decisão 5: a sessão regente não pode ser derrubada pela tela)">
   <p><strong>Protegida:</strong> a <strong>sessão regente</strong> não é derrubável por esta tela — derrubar a regência interrompe a condução inteira; se for o caso, é decisão do Darú fora do painel.</p>
@@ -174,7 +175,7 @@ footer.rodape strong{color:var(--tinta)}
     <button type="button" disabled data-fonte="ux-design 066 §4 (anti-regra: «não decide pelo humano» — botão nunca pré-marcado); principles.md (Princípio III)" aria-label="confirmar derrubar a sessão de agente (aguarda gate humano)">confirmar derrubar (aguarda gate humano)</button>
     <button type="button" data-fonte="ux-design 066 §4 (cancelar volta sem executar nada)">cancelar</button>
   </p>
-  <p class="fonte" data-referencia="true">O painel projeta, não decide: o derrubar exige confirmação humana (Princípio III). Declarado: o <em>ponto de execução</em> do derrubar (quem roda o comando, no harness) ainda não está desenhado — dívida registrada, não omitida.</p>
+  <p class="fonte" data-referencia="true">O painel projeta, não decide: o derrubar exige confirmação humana (Princípio III). <strong>Desenhado acima:</strong> o caminho da decisão — o pedido de decisão à Regência (relação 5 do mapa) e o Ruling do humano. <strong>Declarado adiante, não omitido:</strong> o <em>ponto de execução</em> do derrubar (quem roda o comando <code>stop</code>/<code>rm</code>, no harness) ainda não está desenhado — dívida registrada; o caminho de aprovação entra nas seções «Limites» do inventário e do confronto.</p>
 </div>
 
 </main>

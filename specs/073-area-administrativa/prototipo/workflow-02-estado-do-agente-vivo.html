@@ -99,7 +99,7 @@ footer.rodape strong{color:var(--tinta)}
       <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">glm-5.3 (exemplo)</span></td>
       <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">3,4 M tokens (piso) (exemplo)</span></td>
       <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">há 3 min (exemplo)</span></td>
-      <td><button type="button" data-fonte="plataforma Claude Code — harness: <code>SendMessage</code> e <code>ListAgents</code>; specs/073-area-administrativa/pesquisa/claude-code.md:65 (mensagem entre agentes = sim)" aria-label="ver a caixa de entrada da sessão">ver a caixa de entrada</button></td>
+      <td><button type="button" data-fonte="plataforma Claude Code — harness: <code>SendMessage</code> e <code>ListAgents</code>; specs/073-area-administrativa/pesquisa/claude-code.md:79 (mensagem entre agentes = sim)" aria-label="ver a caixa de entrada da sessão">ver a caixa de entrada</button></td>
     </tr>
     <tr>
       <td><span data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»" data-exemplo="true">Worker03 [ad66d6] · 410_MAESTRO (exemplo)</span></td>
@@ -117,7 +117,7 @@ footer.rodape strong{color:var(--tinta)}
       <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">deepseek-v4.1-flash (exemplo)</span></td>
       <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">980 k tokens (piso) (exemplo)</span></td>
       <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">há 2 h (exemplo)</span></td>
-      <td><button type="button" data-fonte="plataforma Claude Code — harness: <code>SendMessage</code> / <code>ListAgents</code> (specs/073-area-administrativa/pesquisa/claude-code.md:65,68); método: specs/066-painel-de-regencia/andamento.md:112-113 (endereçar sempre com o ref lido)" aria-label="ver as mensagens endereçadas à sessão caída">ver as mensagens endereçadas a ela</button></td>
+      <td><button type="button" data-fonte="plataforma Claude Code — harness: <code>SendMessage</code> / <code>ListAgents</code> (specs/073-area-administrativa/pesquisa/claude-code.md:79,82); método: specs/066-painel-de-regencia/andamento.md:112-113 (endereçar sempre com o ref lido)" aria-label="ver as mensagens endereçadas à sessão caída">ver as mensagens endereçadas a ela</button></td>
     </tr>
   </tbody>
 </table>
@@ -130,8 +130,9 @@ footer.rodape strong{color:var(--tinta)}
   <p class="fonte" data-referencia="true">hoje: <span class="vazio">— motivo: nenhum limiar declarado no painel atual (o estado é heartbeat, não processo)</span></p>
   <p>
     <button type="button" disabled data-fonte="ux-design 066 §4 (anti-regra: «não decide pelo humano»); specs/073-area-administrativa/rodada-4/correcao-1.md (decisão 5 — toda ação de escrita diz quem autoriza)" aria-label="ajustar o limiar do alerta de sessão parada (aguarda gate humano)">ajustar limiar…</button>
-    <button type="button" data-fonte="método: scripts/multi-session.py (o lançador religa a sessão) · plataforma: claude --resume" aria-label="reiniciar a sessão parada">reiniciar a sessão</button>
+    <button type="button" disabled data-fonte="specs/073-area-administrativa/rodada-4/correcao-2.md (decisão 3: o botão fica desabilitado e aponta para a confirmação do workflow-01); método: scripts/multi-session.py (o lançador religa a sessão) · plataforma: claude --resume; ux-design 066 §4 (não decide pelo humano)" aria-label="reiniciar a sessão parada (abre a confirmação de workflow-01-sessao-de-agente.html; aguarda gate humano)">reiniciar a sessão…</button>
   </p>
+  <p class="fonte" data-referencia="true">«reiniciar a sessão» fica <strong>desabilitado</strong> e <strong>aponta para a confirmação</strong> de <code>workflow-01-sessao-de-agente.html</code> (§ «reiniciar — o ref muda ao reiniciar»), onde a ação espera o gate humano: nenhuma linha desta tela reinicia sozinha (correção 2, decisão 3; juiz 1, P14).</p>
 </div>
 
 <h2>o que entra — a lacuna</h2>
