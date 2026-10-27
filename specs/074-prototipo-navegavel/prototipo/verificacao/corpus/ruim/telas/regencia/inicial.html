@@ -1,0 +1,17 @@
+<!-- FIXTURE SINTÉTICA do verificador de navegação (074) — TEM de falhar (corpus ruim).
+     Defeitos injetados: (d) contexto fora do mapa, (c) botão de escrita incompleto,
+     (h) `derrubar` sem data-alvo e `derrubar` com o Gerente, (i) irreversível sem
+     confirmação. -->
+<div class="conteudo-interior" data-contexto="chamados" data-tela="inicial">
+  <h1 class="titulo-pagina">Painel do regente</h1>
+  <p><a href="#/regencia/inicial" data-fonte="fixture ruim do verificador 074">voltar</a></p>
+  <p><button data-acao="registrar-ruling" data-simulado="sim"
+             data-fonte="fixture ruim do verificador 074">Registrar ruling</button></p>
+  <p><button data-acao="derrubar" data-autoriza="humano" data-simulado="sim"
+             data-efeito="a sessão cai" data-fonte="fixture ruim do verificador 074"
+             data-irreversivel="sim" data-confirma="conf-que-nao-existe">Derrubar sem alvo</button></p>
+  <p><button data-acao="derrubar" data-alvo="Gerente [31ee4d] · maestro"
+             data-autoriza="humano" data-simulado="sim" data-efeito="a sessão cai"
+             data-fonte="fixture ruim do verificador 074"
+             data-irreversivel="sim">Derrubar o Gerente</button></p>
+</div>
