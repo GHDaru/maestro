@@ -1,0 +1,16 @@
+{
+  "_fonte": "painel/projetos/exemplo.json (`custo_pastas`) e `painel/custo.py` (a medição); barra e etiquetas do design system §4",
+  "_exemplo": true,
+  "projeto": "maestro",
+  "escopo": "projeto",
+  "teto": 80000000,
+  "consumo": 61400000,
+  "periodo": "mês",
+  "histórico": [
+    {
+      "mudanca": "teto declarado em 80.000.000 tokens/mês (exemplo)",
+      "changed_by": "Ana Exemplo",
+      "data": "2026-10-23"
+    }
+  ]
+}
