@@ -37,7 +37,7 @@
       "runtimeArgs": [
         "-m", "http.server", "8768",
         "--bind", "127.0.0.1",
-        "--directory", "C:/Users/ghdaru/Documents/010_PROJETOS/410_MAESTRO/specs/074-prototipo-navegavel/prototipo"
+        "--directory", "C:/Users/ghdaru/Documents/010_PROJETOS/410_MAESTRO/prototipo"
       ],
       "port": 8768
     }
