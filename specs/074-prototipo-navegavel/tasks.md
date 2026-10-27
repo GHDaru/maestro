@@ -113,7 +113,7 @@
 
 `[[TASK id=074-T03 kind=implement attempt=1 cycle=074]]`
 
-- [ ] T03 — Worker01: fragmentos da Regência e de Chamados e Gates — `telas/regencia/inicial.html`
+- [x] T03 — Worker01: fragmentos da Regência e de Chamados e Gates — `telas/regencia/inicial.html`
   (frase-chave do regente), `telas/regencia/fila-de-decisoes.html`, `telas/regencia/ruling.html`
   (reproduzidos do `painel/index.html` e do ux-design do 072, sobre os tokens novos, com os
   mesmos dados de exemplo) e `telas/chamados-e-gates/kanban-por-gate.html` (colunas G0–G9,
@@ -129,7 +129,7 @@
 
 `[[TASK id=074-T04 kind=implement attempt=1 cycle=074]]`
 
-- [ ] T04 — Worker03: fragmentos da Mensageria — `telas/mensageria/caixa-de-entrada.html`,
+- [x] T04 — Worker03: fragmentos da Mensageria — `telas/mensageria/caixa-de-entrada.html`,
   `livro-de-mensagens.html`, `roteamento.html`, `protocolo.html` (reproduzem os wireframes do
   073 **sem movê-los nem editá-los** — arquivos novos). Com `acoes/mensageria.js`:
   "Drenar outbox" (pontos somem, contador zera), "Enviar ao endereço ambíguo" com a
@@ -170,6 +170,75 @@
     `python specs/073-area-administrativa/prototipo/verifica-prototipo.py` → **11 telas, 0
     achados** (FR8); regras 5/6 verdes nos fragmentos (esqueleto do verificador sem achado
     novo).
+
+## Estado na montagem — regra da regente (27/10, decisão 3 do briefing §3)
+
+> **DoD de integração para todo dono de tela**: cada fragmento **renderiza a partir do estado em
+> memória ao montar** — pontos, contadores e estados de sessão/tarefa vêm do `estado` da casca,
+> não do HTML estático. O efeito de uma ação **sobrevive à navegação dentro da sessão** (sair da
+> tela e voltar mostra o efeito); só o **recarregar** restaura as fixtures (FR4). O crítico que
+> anda (T14) testa exatamente isso: agir → sair → voltar → o efeito continua lá. A casca atual
+> não oferece gancho de montagem (o módulo do contexto só é chamado no clique) — a **T02d cria o
+> gancho** (Worker02, com a T02c); as fatias `b`/`c` abaixo partem da T02d integrada.
+
+`[[TASK id=074-T02d kind=implement attempt=1 cycle=074]]`
+
+- [ ] T02d — Worker02 (regra da regente + achado da T03 do W01): a casca ganha o **gancho de
+  montagem** — ao montar um fragmento, o motor chama o módulo do contexto para aplicar o estado
+  (o contrato atual só chama o módulo no clique; a forma do gancho é desenho do dono da casca) —
+  e a correção do `[hidden]`: `.aviso-simulacao { display: inline-block; }` (`tokens.css:372`)
+  anula o atributo `hidden` da UA — pill vazio na casca em toda tela e o aviso nunca some após
+  os 6 s (`app.js` faz `alvo.hidden = true` sem efeito). Fix de uma linha:
+  `[hidden] { display: none !important; }` (ou `.aviso-simulacao[hidden]`).
+  - DoD: no browser, com o primeiro módulo adotante (Mensageria, T04b), agir → navegar para outra
+    tela → voltar: o efeito persiste; `#aviso-simulacao` com `hidden` fica invisível em toda tela
+    (display `none`); `python prototipo/verifica-navegacao.py` → 15 fragmentos, 0 achados;
+    verificador do 073 → 11 telas, 0 achados.
+
+`[[TASK id=074-T03b kind=fix attempt=1 cycle=074 redoes=074-T03#1]]`
+
+- [ ] T03b — Worker01: os fragmentos da Regência e de Chamados renderizam do estado na montagem —
+  contador da frase-chave na inicial, fila de decisões, ruling; kanban por gate. Os passos 5–6 da
+  J1 dependem disso (o contador passa a 2 na volta à inicial).
+  - DoD: Registrar ruling → sair → voltar: o efeito persiste e o contador da frase-chave marca 2
+    na volta à inicial; recarregar restaura (FR4).
+
+`[[TASK id=074-T04b kind=fix attempt=1 cycle=074 redoes=074-T04#1]]`
+
+- [ ] T04b — Worker03 (ordem da regente): caixa de entrada e livro de mensagens **lêem o estado
+  na montagem** — os pontos de não lida e o contador vêm do `estado.mensagem`, não do HTML
+  estático; o efeito de "Drenar outbox" sobrevive a sair e voltar.
+  - DoD: drenar → sair da caixa → voltar: os pontos seguem sumidos e o contador zerado;
+    recarregar restaura (FR4).
+
+`[[TASK id=074-T05b kind=fix attempt=1 cycle=074 redoes=074-T05#1]]`
+
+- [ ] T05b — Worker04: as telas da Administração renderizam do estado na montagem — barra e
+  números do teto, linhas do histórico (`data-adicionada`), link "ver na fila" da proposta.
+  - DoD: Ajustar teto → sair → voltar: a barra segue recalculada contra o teto novo com a linha
+    do histórico presente; recarregar restaura (FR4).
+
+`[[TASK id=074-T06b kind=fix attempt=1 cycle=074 redoes=074-T06#1]]`
+
+- [ ] T06b — Worker05 (achados da regente na caminhada de 27/10): (1) a confirmação de derrubar
+  diz o que o wireframe do 073 distingue (`workflow-01-sessao-de-agente.html:164-178`):
+  `claude stop` reata por attach/respawn × `claude rm` tira linha e worktree (o transcrito retoma
+  por `--resume`) — e, ao confirmar, **cria um pedido de decisão** na fila da Regência (relação 5
+  do mapa), visível em `#/regencia/fila-de-decisoes` e no estado em memória; (2) a linha caída
+  **desabilita Derrubar** e mantém Reiniciar (o caminho de volta).
+  - DoD: (1) caso no corpus do verificador — a confirmação de derrubar contém `data-perde`
+    citando "stop" e "rm" e o efeito cita "pedido de decisão" (o `verifica-navegacao.py` é do
+    Worker02: o W05 entrega o caso proposto no DONE e o W02 o incorpora na T09, ou o edita se o
+    W02 liberar o arquivo); (2) verificação por estado: após confirmar o derrubar, o botão
+    Derrubar da linha fica `disabled` e o Reiniciar não.
+
+`[[TASK id=074-T06c kind=fix attempt=1 cycle=074 redoes=074-T06#1]]`
+
+- [ ] T06c — Worker05 (após a T06b — uma tarefa ativa por sessão): as telas do Workflow
+  renderizam do estado na montagem — linha caída, ref novo do reiniciar, `aria-pressed` do
+  período.
+  - DoD: derrubar → sair → voltar: a linha segue caída; reiniciar → sair → voltar: o ref segue o
+    novo; recarregar restaura (FR4).
 
 ## Integração e verificação (FR4, NFR1, NFR3)
 

@@ -10,6 +10,15 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **Os quatro contextos do protótipo pousaram** (ciclo 074, 27/10): fragmentos da Regência e de
+  Chamados e Gates (Worker01, `d5d7935`), da Mensageria (Worker03, `7556cc3`), da Administração
+  (Worker04, `ab00ab5`) e do Workflow de sessões (Worker05, `063a3f4`) — **15 telas** na casca e o
+  `verifica-navegacao.py` **15 fragmentos, 0 achados, exit 0 pela primeira vez**. Achado geral da
+  regente vira DoD de integração: todo fragmento **renderiza do estado em memória ao montar** (o
+  efeito sobrevive à navegação; só recarregar restaura) — a T02d cria o gancho na casca (com o
+  fix do `[hidden]` anulado pelo `display` da classe), T03b/T04b/T05b/T06c adotam por dono, e a
+  T06b traz a confirmação stop/rm com pedido de decisão na fila e o Derrubar desabilitado na
+  linha caída.
 - **Ciclo 073 fechado — quarta leitura dos juízes** (27/10): juiz 2 16/16, juiz 3 16/16 sem
   regressão, juiz 1 15/16 — único P1: Flowise `parcial (corta)` em `plataformas.md:69` sem fonte
   na ficha (`flowise.md:28` só lista *rate limit* entre os controles). Decisão da regente: sem
