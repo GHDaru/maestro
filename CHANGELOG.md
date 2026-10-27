@@ -10,6 +10,32 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **Correção 2 da rodada 4 — as telas, o README e a matriz** (ciclo 073, `073-C2-W01`–`W06`,
+  fechamento do Gerente): as decisões fixas da regente (`rodada-4/correcao-2.md`) aplicadas por
+  dono. **Roster único de exemplo** (decisão 1) em todas as telas — refs de 26/10 como fixture,
+  nenhum ref em dois nomes; **Mensageria** (W03, `e5b1f87`): livro em ordem coerente com o título
+  (8→12), colunas **tarefa** (da tag de TASK) e **custo** ("— (ledger parado no 064)"), leitura
+  restrita ao projeto, "ref mudou no reinício" = **recusa + oferta do ref novo**, Windmill fora da
+  tela de roteamento, A2A com **5 `sim`**, nome nu na coluna "nome pretendido" com a **isenção
+  declarada** da tabela de resolução (`data-rotulo="colisão de nomes"`); **Administração** (W04,
+  `edce704`+`42572d8`): tabela do **Modelo** (provedor, preço por milhão, quem pode usar,
+  projeto — só humano ou regente por delegação), seção **"Agentes (perfis)"** lendo
+  `.claude/agents`, coluna de **escopo** e regra de modelo de exemplo, precedência "o mais
+  específico decide; entre regras do mesmo escopo, `deny > ask > allow`" marcada como decisão de
+  projeto, coluna **"limiar de alerta"** e "o menor teto aplicável vence", aviso do teto como
+  **mensagem endereçada** à sessão dona e ao regente do roster (`[7c8d05]`); **Workflow**
+  (W05, `617fe4b`): `claude stop` (religável por `claude --resume`) × `claude rm` (irreversível)
+  com a passagem pelo pedido de decisão da Regência, botão "reiniciar a sessão" do alerta
+  **desabilitado**, "cancelar tarefa" mostra o que se perde, coluna "agente" = perfil sem ref,
+  cartão "teto vigente" reconciliado com a seção "teto", citações revalidadas e "Limites"
+  consolidadas no inventário; **matriz** (W06, `0b1a465`): Langfuse auditoria `sim → parcial`,
+  `:155` e `:227-228` como "não encontrado na documentação lida", contagens por script
+  (168/226/12/244), segurança documental 0 achados e conformance 073 verde nos dois modos;
+  **README + glossário** (W01, `9af433c`+`e147380`): regra 6 documentada (cinco→seis regras),
+  ENTRA 16 (cadastro de agentes como leitura do catálogo de perfis), regra da citação
+  revalidada, "ambiguidade não verificada" declarada com a isenção, termo **"Agente (perfil)"**.
+  Fechamento: **gate 11 telas, 0 achados, seis regras, exit 0**; conformance 073 verde nos dois
+  modos; a terceira leitura dos juízes é da regente.
 - **Correção 2 da rodada 4 — a regra 6, o confronto e o mapa** (ciclo 073, `073-C2-W02`): a decisão
   da regente vira três artefatos. (a) `prototipo/verifica-prototipo.py` — **regra 6**: dentro de uma
   tela, um ref `[xxxxxx]` cola em **um único nome** e **todo nome do roster** (o de 26/10, listado no

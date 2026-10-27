@@ -19,7 +19,11 @@
   `d83920e`, Administração `bfe1da5`, README+glossário `bd51e4d`, Workflow+inventário `5d91a1a`,
   confronto+mapa+**regra 5** `eb638b2`, matriz `cb8a11a`) + fechamento da regra 5 nas telas (W03
   `a04b6d0` + W05 `fb599bb`); **gate 11 telas, 0 achados com as cinco regras**; **segunda rodada de
-  juízes é do regente, em contexto fresco**
+  juízes é do regente, em contexto fresco** — pareceres (barra não atingida, diagnóstico mudado)
+  consolidados na **correção 2** (`rodada-4/correcao-2.md`, `cda6d91`); **correção 2 fechada
+  (27/10)**: as seis fatias integradas (ver tabela abaixo), **gate 11 telas, 0 achados com as SEIS
+  regras** (`2cd7d44`), conformance 073 verde nos dois modos, segurança documental 0 achados;
+  **terceira leitura é da regente** — peça < 9 não gera correção 3, o laço para e o Darú decide
 - **Spec**: `spec.md` (rascunho aberto pelo Gerente a partir do despacho do regente)
 
 ## Rodada 1 — pesquisa de plataformas
@@ -85,8 +89,37 @@ máx. 2), despachada por dono a partir de `6a32e24`:
 | correção 1 — matriz (`plataformas.md`) | Worker06 | **integrado** — `4257101` → `cb8a11a` (6 células corrigidas, nenhuma `—`→`sim`; contagens por script 169/225/12/244; nota "corta × avisa"; "não encontrado na documentação lida"; ficha do Claude Code com mailbox/agent teams) |
 | correção 1 — README + glossário | Worker01 | **integrado** — `0deccf4` (tabela de identidade, colisões termo × endereço, ENTRA 12 e 17, prosa obsoleta reescrita; glossário +2 termos); gate 11/0, check-language ✓ |
 
+### Correção 2 (a última, 26–27/10) — decisões fixas da regente, uma rodada
+
+Despachada pelo Gerente por dono a partir do `b8c5038` (refs novos pós-VPN; roster de fixture da
+decisão 1 mantido com os refs de 26/10, dado de exemplo):
+
+| Fatia | Dono | Estado |
+|---|---|---|
+| README (roster, regra 6, ENTRA 16, citação revalidada, "ambiguidade não verificada") + glossário (agente (perfil) × sessão) | Worker01 | **integrado** — `9af433c` + attempt 2 `e147380` (isenção declarada da tabela de resolução da mensageria-03, herdada pela regra 6) |
+| regra 6 do verificador (roster + ref único por nome, fixture, mutação) + confronto (decisões 2, 5, 8) + mapa (`:243`, `:89-90`, § 8) | Worker02 | **integrado** — `2cd7d44` (ENTRA 16 · NÃO PRECISA 5 · DEPOIS 11 = 32; recusar/suspender → DEPOIS; mutação 28→0 no corpus pré-fix; **gate 11 telas, 0 achados, seis regras**) |
+| as 4 telas da Mensageria (decisões 1 e 7) | Worker03 | **integrado** — `e5b1f87` (livro 8→12, colunas tarefa/custo, leitura restrita ao projeto, recusa + ref nova, Windmill fora, A2A 5 sim, nome nu na coluna "nome pretendido" com isenção declarada) |
+| as 3 telas da Administração (decisões 4, 5, 6; aviso do teto endereçado) | Worker04 | **integrado** — `edce704` + fix `42572d8` (tabela do Modelo, Agentes (perfis), escopo e precedência, limiar de alerta, menor teto vence; fix: ref do regente no roster `[7c8d05]`, não o vivo) |
+| as 4 telas do Workflow (decisões 1, 3, 5, 6) + inventário | Worker05 | **integrado** — `617fe4b` (stop × rm com passagem pela Regência, reiniciar desabilitado no alerta, cancelar mostra o que se perde, perfil sem ref, teto reconciliado, citações revalidadas, "Limites") |
+| matriz (`:155`, `:227-228`, Langfuse auditoria → parcial) + segurança documental + conformance | Worker06 | **integrado** — `0b1a465` (contagens por script 168/226/12/244; 0 achados de segurança; conformance 073 verde nos dois modos, colado no qa-report) |
+| fechamento | Gerente | **entregue** — gate **11 telas, 0 achados, seis regras, exit 0**; conformance verde nos dois modos; tokens por dono no DONE (piso) |
+
 ## Histórico
 
+- 2026-10-27 — **correção 2 da rodada 4 fechada (Gerente)**. As seis fatias da
+  `rodada-4/correcao-2.md` despachadas por dono (26/10, ~23:40, refs novos pós-VPN) e integradas
+  na `066-painel-de-regencia`: W01 `9af433c`+`e147380`, W02 `2cd7d44`, W03 `e5b1f87`,
+  W04 `edce704`+`42572d8`, W05 `617fe4b`, W06 `0b1a465`. Um desvio pego na integração: o W04
+  endereçou o aviso do teto ao ref vivo do regente — devolvido como fix (`kind=fix`,
+  `attempt=2`); o valor fixo é o do roster (`MAESTRO [7c8d05]`). Um julgamento de integração
+  declarado: a tabela de resolução da `mensageria-03` (nome nu da decisão 7) fica isenta das
+  regras 5 e 6 pela cerca `data-rotulo="colisão de nomes"`, declarada na tela e no README (W01
+  attempt 2) e herdada pela regra 6 (W02). **Gate: 11 telas, 0 achados, seis regras, exit 0**;
+  conformance 073 verde nos dois modos; `check-language` e `check-links` verdes (W02). Dívida
+  declarada ao regente: `check-cycle` vermelho por quatro itens pré-existentes fora desta
+  correção (066 e 070-conferidor sem raia no cabeçalho; 070-workflow-sqlite `full` sem
+  justificativa; 074 sem raia no cabeçalho). DONE ao regente com HEAD e tokens (piso);
+  **terceira leitura dos juízes é da regente**.
 - 2026-10-24 — **073-T1-W03 entregue (Worker03)**: quatro plataformas do nicho "gateways e
   consoles de LLM" com arquivo próprio e tabela fixa preenchida
   (`pesquisa/litellm.md`, `pesquisa/portkey.md`, `pesquisa/openai-platform.md`,
