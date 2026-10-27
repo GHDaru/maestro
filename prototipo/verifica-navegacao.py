@@ -43,8 +43,9 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 CORPUS = HERE / "verificacao" / "corpus"
-# the 073 verifier lives two folders up, under specs/
-VERIFICADOR_073 = (HERE.parents[1] / "073-area-administrativa" / "prototipo"
+# the 073 verifier does NOT move with this prototype: it stays under specs/, one level up
+# from the repo root (`HERE.parent` is the root while this script lives in `prototipo/`).
+VERIFICADOR_073 = (HERE.parent / "specs" / "073-area-administrativa" / "prototipo"
                    / "verifica-prototipo.py")
 
 # the five contexts of the bounded-context map (B1 / check (d)) — exactly these
