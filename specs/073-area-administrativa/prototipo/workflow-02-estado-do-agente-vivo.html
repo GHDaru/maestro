@@ -61,12 +61,14 @@ footer.rodape strong{color:var(--tinta)}
 <main>
 
 <h2>Resumo — sessões por estado</h2>
-<div class="grade" data-fonte="método: painel/server.py (os quatro estados do read-model atual); specs/073-area-administrativa/confronto/mapa-de-contextos.md §6.3">
-  <div class="caixa"><span class="selo">trabalhando</span> <span class="exemplo" data-fonte="exemplo — nenhum dado real" data-exemplo="true">2 (exemplo)</span></div>
+<div class="grade" data-fonte="método: painel/server.py (os quatro estados do read-model atual) e a detecção de processo que separa «bloqueado» de «caída» (ENTRA estado do agente vivo — a lacuna); specs/073-area-administrativa/confronto/mapa-de-contextos.md §6.3">
+  <div class="caixa"><span class="selo">trabalhando</span> <span class="exemplo" data-fonte="exemplo — nenhum dado real" data-exemplo="true">1 (exemplo)</span></div>
   <div class="caixa"><span class="selo">esperando</span> <span class="exemplo" data-fonte="exemplo — nenhum dado real" data-exemplo="true">1 (exemplo)</span></div>
-  <div class="caixa"><span class="selo">sem tarefa</span> <span class="exemplo" data-fonte="exemplo — nenhum dado real" data-exemplo="true">1 (exemplo)</span></div>
-  <div class="caixa"><span class="selo">bloqueado</span> <span class="exemplo" data-fonte="exemplo — nenhum dado real" data-exemplo="true">0 (exemplo)</span></div>
+  <div class="caixa"><span class="selo">sem tarefa</span> <span class="exemplo" data-fonte="exemplo — nenhum dado real" data-exemplo="true">0 (exemplo)</span></div>
+  <div class="caixa"><span class="selo">bloqueado</span> <span class="exemplo" data-fonte="exemplo — nenhum dado real" data-exemplo="true">1 (exemplo)</span></div>
+  <div class="caixa"><span class="selo">caída</span> <span class="exemplo" data-fonte="exemplo — nenhum dado real" data-exemplo="true">1 (exemplo)</span></div>
 </div>
+<p class="fonte" data-referencia="true">Os cartões contam as mesmas sessões da tabela abaixo: um cartão por estado, e a soma fecha nas quatro linhas (1+1+0+1+1 = 4). «caída» é o estado que a detecção de processo acrescenta ao read-model (ver «o que entra — a lacuna», adiante); «sem tarefa» aparece com 0 porque nenhuma sessão do exemplo está nele.</p>
 
 <h2>sessões</h2>
 <table data-fonte="plataforma Claude Code — agent view, <code>https://code.claude.com/docs/en/agent-view</code> (ficha <code>specs/073-area-administrativa/pesquisa/claude-code.md</code>, coluna GERENCIAMENTO «lista de agentes vivos com estado» = <code>sim</code>); método: <code>painel/server.py</code> (read-model) · <code>docs/records/tarefas.jsonl</code> (tarefa aberta e tentativas)">
@@ -113,7 +115,7 @@ footer.rodape strong{color:var(--tinta)}
     <tr>
       <td><span data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»" data-exemplo="true">Worker02 [31f7bf] · 410_MAESTRO (exemplo)</span></td>
       <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">caída (exemplo)</span></td>
-      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">073-T3 · revisão (exemplo)</span></td>
+      <td class="vazio">— motivo: sem tarefa aberta no ciclo corrente (a sessão está caída)</td>
       <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">deepseek-v4.1-flash (exemplo)</span></td>
       <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">980 k tokens (piso) (exemplo)</span></td>
       <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">há 2 h (exemplo)</span></td>
