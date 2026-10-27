@@ -44,7 +44,7 @@ SDK (*Software Development Kit*).
 | cadastro de skills/ferramentas/modelos | parcial — gestão de *prompts* (versão/labels) e playground; sem registro de ferramentas | `langfuse.com/docs` (visto 24/10): prompt management |
 | chaves e segredos | sim — "API keys are project-scoped" | `langfuse.com/security` (visto 24/10) |
 | configuração por projeto | sim — "Every record is associated with a `projectId`" (projetos como escopo) | `langfuse.com/security` (visto 24/10) |
-| auditoria | sim — *audit logs* listados entre os controles | `langfuse.com/security` (visto 24/10) |
+| auditoria | parcial — *audit logs* **listados** entre os controles, sem página que descreva o mecanismo. Rebaixada de `sim` para `parcial` **na correção 2 da rodada 4 (26/10, juiz 2, P1)** — mesmo critério do *custo* | `langfuse.com/security` (visto 24/10) |
 
 ### GERENCIAMENTO
 
@@ -70,4 +70,6 @@ SDK (*Software Development Kit*).
 | livro de mensagens | — | `langfuse.com/docs` (visto 24/10) |
 | colisão de nomes | — | `langfuse.com/docs` (visto 24/10) |
 
-**Correção da rodada 4 (26/10, fatia do Worker06).** Fontes desta ficha: 3 URLs (produto `/docs`, `/security`, GitHub). A célula **custo** caiu de `sim` para `parcial`: só se apoiava numa frase da página de visão, não numa página que documente o mecanismo — é o caso que o juiz 2 (P1) nomeou ("custo por sessão apoiado em página de marketing"). As células `sim` de **RBAC, chaves, configuração por projeto e auditoria** **permanecem**: apoiam-se em `langfuse.com/security`, página que descreve o controle.
+**Correção da rodada 4 (26/10, fatia do Worker06).** Fontes desta ficha: 3 URLs (produto `/docs`, `/security`, GitHub). A célula **custo** caiu de `sim` para `parcial`: só se apoiava numa frase da página de visão, não numa página que documente o mecanismo — é o caso que o juiz 2 (P1) nomeou ("custo por sessão apoiado em página de marketing"). As células `sim` de **RBAC, chaves e configuração por projeto** **permanecem**: apoiam-se em `langfuse.com/security`, página que descreve o controle.
+
+**Correção 2 da rodada 4 (26/10, fatia do Worker06).** A célula **auditoria** caiu de `sim` para `parcial`, na mesma rodada e pelo mesmo critério do *custo* (juiz 2, P1): o apoio era "*audit logs* **listados** entre os controles" (`langfuse.md:47`) — também uma lista de itens da página de segurança, não uma página que **descreva o mecanismo** de auditoria; é exatamente o tipo de apoio que `plataformas.md` (§ "Lacunas declaradas") diz que **não vira `sim`**. Restam `sim` em **RBAC, chaves e configuração por projeto** (mesma fonte `/security`, mas cada uma com o controle descrito na linha). A matriz acompanha (`plataformas.md`, linha de *auditoria*).

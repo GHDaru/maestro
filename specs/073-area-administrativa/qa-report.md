@@ -85,7 +85,7 @@ Medição própria das 13 fichas novas (uma linha por arquivo): `helicone.md` **
 
 | Célula na matriz | Ficha (caminho:linha) | O que a ficha diz |
 |---|---|---|
-| Langfuse × auditoria = `sim` | `pesquisa/langfuse.md:47` | "auditoria → sim — *audit logs* listados entre os controles" |
+| Langfuse × auditoria = `sim` *(rodada 1; **hoje `parcial`** — correção 2 da rodada 4, § abaixo)* | `pesquisa/langfuse.md:47` | "auditoria → sim — *audit logs* listados entre os controles" |
 | Portkey × mensagem entre agentes = `não` | `pesquisa/portkey.md:68` | "mensagem entre agentes → não — nada sobre mensagem entre agentes (nem o termo A2A aparece)" |
 | LiteLLM × colisão de nomes = `—` | `pesquisa/litellm.md:119` | célula **em branco**: "colisão de nomes → (vazio) — `a2a_agent_permissions` fixa o roteamento por `agent_id`, mas nenhuma página aberta trata colisão" |
 | LiteLLM × protocolos (A2A; MCP) = `sim` | `pesquisa/litellm.md:115` | "Protocolos (A2A; MCP) → sim — `agent-card.json`, `protocolVersion` 0.3/1.0, e MCP" |
@@ -1319,3 +1319,109 @@ desde a 1ª ocorrência do `[[TASK]]` de cada fatia):**
 **Limites cumpridos:** nenhum push, nenhum merge na dev/main, nenhum promote-main.sh, nenhum
 `rm -rf`, nenhuma leitura de `.env`/`settings.local.json`, só acréscimo em ADR/decisoes.jsonl, sem
 código de produto, sem segredo. A segunda rodada de juízes é do regente, em contexto fresco.
+
+## Rodada 4 — correção 2 (073-C2-W06, 27/10) — matriz, segurança documental e conformance 073
+
+Worker06, contexto próprio. Objeto da fatia (tabela "Tarefas por dono" de `rodada-4/correcao-2.md`):
+`pesquisa/plataformas.md` (`:155`, `:227-228`, Langfuse auditoria → `parcial`, revalidação das
+linhas citadas das fichas) + segurança documental + conformance 073 nos dois modos. **Por acréscimo**;
+nada da evidência das rodadas 1–3 nem da correção 1 foi reescrito (só a nota de datação de uma
+célula da matriz, § 1, e uma anotação de datação na tabela da rodada 1, acima).
+
+### 1. Matriz — o que mudou
+
+**Uma célula** da matriz: **Langfuse × auditoria** `sim` → `parcial` (decisão 8 da regente; achado
+P1 do juiz 2). O `sim` apoiava-se em "*audit logs* **listados** entre os controles"
+(`langfuse.md:47`) — lista de itens da página de segurança, o **mesmo tipo de apoio** que já
+rebaixou o *custo* (`langfuse.md:57`) e que `plataformas.md` § "Lacunas declaradas" diz que **não
+vira `sim`**. As demais células `sim` do Langfuse (RBAC, chaves, configuração por projeto)
+**permanecem**, apoiadas na mesma página `/security`, cada uma com o controle descrito.
+`pesquisa/langfuse.md:47` foi atualizada no mesmo commit — a linha citada é revalidada.
+
+**Duas leituras reescritas** para a forma "não encontrado na documentação lida" (decisão 8):
+
+| Onde | Antes | Depois |
+|---|---|---|
+| `plataformas.md:155` (**Por funcionalidade**) | "…: **nenhuma** das 25 entrega" | "…: **não encontrado na documentação lida**" |
+| `plataformas.md:227-228` (**Três leituras**, item 1) | "A caixa de entrada e o livro de mensagens **não têm `sim` em nenhuma das 25**." | "A caixa de entrada e o livro de mensagens: **`sim` em nenhuma das 25 — não encontrado na documentação lida**." |
+
+**Contagens reconferidas por script** contra a matriz (parser das 26 linhas × 25 células):
+
+```text
+columns: 25 · data rows: 26 · rows with wrong cell count: []
+total cells: 650
+sim=168  parcial=226  não=12  —=244         (antes da correção 2: sim=169 parcial=225 não=12 —=244)
+ADMINISTRAÇÃO 75/150 = 50%                   (antes: 76/150 = 51%)
+GERENCIAMENTO 42/200 = 21%                   (inalterado)
+per-funcionalidade: cadastro de agentes 11 · auditoria 10   (antes "11 cada")
+```
+
+Toda contagem das tabelas de leitura (Por grupo / Por funcionalidade) foi atualizada a partir
+disso, **por acréscimo** — os números da correção 1 (169/225/12/244) ficam na nota, com o novo
+bloco valendo sobre eles. FR3 intocado: **nenhuma `—` → `sim`**.
+
+**Revalidação das linhas citadas das fichas:** a única citação `arquivo:linha` da matriz é
+`kiro-crew.md:55` (bullet do Kiro Crew, `plataformas.md`). Conferida: `kiro-crew.md:55` é a célula
+*caixa de entrada* com o `não` → `—` da rodada 4 — a citação **procede**. As demais citações de
+fichas na matriz são sem número de linha (por arquivo), e cada uma resolve para a ficha existente.
+
+### 2. Segurança documental
+
+Varredura sobre `specs/073-area-administrativa/` (foco em `pesquisa/`, onde caiu esta fatia;
+`prototipo/` e `confronto/` reconferidos). **0 achados.**
+
+| Classe | Padrões procurados | Resultado |
+|---|---|---|
+| Segredo | `sk-*`/`sk_live`/`sk_test`, `api_key`, `secret`, `senha`, `password`, `bearer`, `AKIA…`, `ghp_…`, bloco de chave privada, JWT (`eyJ…`) | **0** — só **falsos positivos** (`sk-l` ⊂ "ta**sk-l**edger"; `senha` ⊂ "de**senha**dos/desenhar"), **nomes de campo** documentados (Client secret, `apiKeyHelper`, `ANTHROPIC_API_KEY`, `HELICONE_API_KEY`, secret managers, `authorUserEmail`) e o **placeholder declarado** `sk-local-demo-073-nao-e-segredo` (`litellm.md:18`) |
+| Dado pessoal | e-mail, telefone `+55`, CPF, CNPJ, caminho de usuário | **0** e-mails, 0 telefone, 0 CPF/CNPJ, 0 caminho `C:\Users\…`. O único namespace é o **público** do repositório (`GHDaru/maestro`) |
+| Nome real de sessão/agente | nomes do roster sem ref/marcador de exemplo | **0** — esta fatia não toca as telas; nenhum nome real acrescentado |
+| URL externa | `http(s)://…` | só **documentação/produto público**; nada vaza acesso privado |
+
+Pela taxonomia do Princípio III, nada a classificar. **Achados: 0.**
+
+### 3. Conformance 073 — verde nos dois modos
+
+**Modo normal** (`bash scripts/check-conformance.sh 073`) — **exit 0**:
+
+```text
+── Conformance: did the method survive into the artifacts? ──
+   (floor: cycle 42; older cycles carry declared debt — see the roadmap)
+• 070-conferidor-ordem-veredito
+    · imported evidence (00-chamado.md + G*-*.md, no tasks.md): a Hindiana chamado, not a Maestro cycle — not charged (ADR 0024)
+• 073-area-administrativa
+    ✓ Constitution Check complete (8/8)
+    ✓ acceptance criteria located and stated without checkboxes
+    ✓ all 5 conditional artifacts declared with a reason
+    ✓ domain model declared (aggregate, invariants, glossary, ports) with a reason
+    ✓ TAIL:review evidence: Worker03, contexto fresco (não consolidou; amostragem esc
+    ✓ TAIL:security evidence: Worker03, varredura sobre `pesquisa/` (28 arquivos, 14 pad
+    ✓ TAIL:gate evidence: o gate humano da rodada 1 é o **"segue" do regente para a
+    · TAIL:mutation not applicable — na época), mas a rodada 3 criou o gate executável `prototi
+──
+cycles checked: 2
+✓ every cycle checked declares its artifacts and carries the closing tail with evidence.
+```
+
+**Modo ticked-only** (`bash scripts/check-conformance.sh --ticked-only 073`) — **exit 0**: idêntico,
+exceto a linha do `TAIL:gate`:
+
+```text
+    · TAIL:gate not ticked yet — nothing claimed, nothing owed
+```
+
+> **Nota de máquina.** O segundo modo **não** vem do prefixo de ambiente `TICKED_ONLY=1` — o script
+> fixa `TICKED_ONLY=0` na linha 69 e só a **flag** `--ticked-only` liga o modo (o prefixo de
+> ambiente é ignorado). Rodado também `TICKED_ONLY=1 bash scripts/check-conformance.sh 073`, que
+> **reproduz o modo normal** (exit 0) — logo o retrato anterior ("saída idêntica nos dois") media o
+> modo normal duas vezes; aqui os dois modos **de fato** rodados são normal e `--ticked-only`, e a
+> diferença real é a linha do `TAIL:gate`. A chamada leva ~4–6 min sob msys; **não** foi preciso
+> extrair `check-links.sh`/`check-boundary.sh` (o conformance não os invoca a ponto de pendurar).
+
+### Veredito
+
+**Limpo.** Matriz coerente e reconferida por script (168/226/12/244); 0 achados de segurança;
+conformance 073 **verde nos dois modos** (exit 0). Nada mais havia a corrigir nesta fatia.
+
+**Tokens (piso — `tarefas.jsonl` parou no ciclo 064):** soma de `message.usage` do transcript desde
+a 1ª ocorrência do `[[TASK 073-C2-W06]]` — **piso 320.487** tokens (input 207.360 + output 113.127),
+com `cache_read` **7.274.560** à parte (total bruto ≈ **7,6 M**); é **piso**, não o gasto real.
