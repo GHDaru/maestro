@@ -1,0 +1,124 @@
+<link rel="icon" href="data:,">
+<!-- Fragmento da casca (ciclo 074, T04) — o roteamento por nome/ref da Mensageria.
+     Reproduz o wireframe `specs/073-area-administrativa/prototipo/mensageria-03-roteamento.html`
+     sobre os tokens novos, mantendo a cerca `data-rotulo="colisão de nomes"` das duas tabelas de
+     colisão (a isenção do verificador está declarada na própria tela) e acrescentando a ação
+     irreversível "Enviar ao endereço ambíguo" (J5 passos 4–5: a confirmação ANTECEDE a recusa).
+     Arquivo novo: o wireframe do 073 não é movido nem editado. -->
+<div class="conteudo-interior" data-contexto="mensageria" data-tela="roteamento"
+     data-acoes="acoes/mensageria.js">
+
+  <p class="migalha" data-referencia="true">Maestro · protótipo navegável · ciclo 074 · Mensageria · roteamento por nome/ref</p>
+  <h1 class="titulo-pagina" data-rotulo="roteamento por nome/ref"
+      data-fonte="ENTRA 24 · roteamento por nome/ref — docs/governance/glossary.md (Roteamento por nome/ref)">roteamento por nome/ref</h1>
+
+  <nav class="trilha" aria-label="Telas da Mensageria" data-rotulo="trilha de contexto"
+       data-fonte="ux-design 074 §2.5 (trilha de contexto — links para os fragmentos irmãos do mesmo contexto; é navegação, não botão de escrita)">
+    <a href="#/mensageria/caixa-de-entrada" data-fonte="ENTRA 23 · caixa de entrada — specs/073-area-administrativa/confronto/confronto-decisao.md">caixa de entrada</a>
+    <a href="#/mensageria/livro-de-mensagens" data-fonte="ENTRA 25 · livro de mensagens — specs/073-area-administrativa/confronto/confronto-decisao.md">livro de mensagens</a>
+    <a href="#/mensageria/roteamento" aria-current="page" data-fonte="ENTRA 24 · roteamento por nome/ref — docs/governance/glossary.md">roteamento por nome/ref</a>
+    <a href="#/mensageria/protocolo" data-fonte="ENTRA 22 · protocolo de intercomunicação — docs/governance/glossary.md">protocolo de intercomunicação</a>
+  </nav>
+
+  <p class="ajuda">Contexto <strong>Mensageria</strong> — endereçar uma mensagem a uma sessão por <strong>nome</strong> (livre, digitado) resolve o nome contra as referências (<em>refs</em>) conhecidas.
+    <span class="fonte" data-referencia="true">Fonte da ideia: método — <code>painel/ingest.py</code> (<code>norm_sessao</code>) e <code>painel/server.py</code> (<code>contatos()</code>).</span></p>
+  <p class="ajuda"><strong>Regra da tela:</strong> se um nome casa com <strong>duas refs</strong>, ou se a ref mudou de sessão depois de um reinício, o roteador <strong>recusa</strong> entregar e mostra a colisão — <strong>endereço ambíguo é recusado, nunca resolvido</strong>; sendo reinício, recusa e <strong>oferece a ref nova</strong>.</p>
+
+  <div class="cartao">
+    <h2 class="cartao-titulo" data-referencia="true">Resolução do nome pretendido → ref</h2>
+    <p class="fonte" data-referencia="true">A coluna <strong>nome pretendido</strong> mostra o <strong>nome nu como foi digitado</strong> — é o que a sessão escreveu ao endereçar; as refs que casam ficam na coluna ao lado. Esta é a <strong>tabela de colisão de nomes</strong> do contexto: a ambiguidade de endereço <strong>não é verificada por script</strong> — o verificador a isenta aqui e abaixo (a isenção está declarada no README do protótipo).</p>
+    <table class="tabela">
+      <caption>Resolução nome → ref: o que o roteador decide (exemplo)</caption>
+      <thead>
+        <tr>
+          <th data-rotulo="colisão de nomes" data-fonte="painel/ingest.py (norm_sessao) — o nome nu digitado">nome pretendido (nu, digitado)</th>
+          <th data-rotulo="sessão de agente" data-fonte="painel/server.py (contatos()) — nome · ref · projeto">refs que casam (projeto · vivo/morto)</th>
+          <th data-rotulo="roteamento por nome/ref" data-fonte="painel/fila_outbox.py (drenagem)">decisão do roteador</th>
+          <th data-rotulo="roteamento por nome/ref" data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §7.1">motivo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Worker03 (exemplo)</td>
+          <td>1 ref: Worker03 [ad66d6] · maestro · vivo (exemplo)</td>
+          <td><span class="chip chip-ativo">entrega (exemplo)</span></td>
+          <td>endereço único (exemplo)</td>
+        </tr>
+        <tr>
+          <td>Office (exemplo)</td>
+          <td>2 refs: Office [b7e3a2] · Hindiana · vivo; Office [c9f1d4] · Hindiana · morto (exemplo)</td>
+          <td><span class="chip chip-erro">RECUSA (exemplo)</span></td>
+          <td data-exemplo="true">colisão de endereço: nome em 2 refs — <span class="chip chip-erro">endereçar por ref</span> (exemplo)</td>
+        </tr>
+        <tr>
+          <td>Gerente (exemplo)</td>
+          <td>2 refs: Gerente [31ee4d] · maestro · vivo; Gerente [d2a7b8] · outro projeto · vivo (exemplo)</td>
+          <td><span class="chip chip-erro">RECUSA (exemplo)</span></td>
+          <td>colisão de endereço: o mesmo nome em dois projetos (exemplo)</td>
+        </tr>
+        <tr>
+          <td>Worker01 (exemplo)</td>
+          <td>ref antiga (morta): Worker01 [9a1b27] · maestro; ref nova (viva): Worker01 [9f8e7d] · maestro (exemplo)</td>
+          <td><span class="chip chip-erro">RECUSA e oferece a ref nova (exemplo)</span></td>
+          <td>ref mudou no reinício — recusa a ref antiga e oferece a ref nova (exemplo)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="cartao">
+    <p class="nota">Entregar à sessão errada <strong>não se desfaz</strong>: quando a resolução falha, a tela abre uma <strong>confirmação</strong> com nome, refs, projeto e vivo/morto <strong>antes</strong> de qualquer entrega — a confirmação <strong>antecede</strong> a recusa com o pedido de desambiguação. Quem autoriza: o humano (gate) ou o regente por delegação; uma sessão não entrega a destino não resolvido por conta própria.</p>
+    <p>
+      <button class="botao-primario" data-acao="enviar-endereco-ambiguo" data-autoriza="humano" data-simulado="sim"
+              data-irreversivel="sim" data-confirma="conf-envio-ambiguo"
+              data-efeito="abre a confirmação irreversível; o confirmar recusa o endereço ambíguo com pedido de desambiguação"
+              data-fonte="ENTRA 26 · colisão de nomes (J5 passos 4–5) — ux-design 074 §3 e §5 (contrato dos botões de escrita e das confirmações)">Enviar ao endereço ambíguo</button>
+    </p>
+    <div class="confirmacao" id="conf-envio-ambiguo" hidden>
+      <dl>
+        <dt data-rotulo="colisão de endereço">o que se perde</dt>
+        <dd data-perde="a mensagem chega à sessão errada e não volta">a entrega ao endereço errado não se desfaz: a mensagem chega à sessão errada e não volta.</dd>
+        <dt data-rotulo="roteamento por nome/ref">como reverter</dt>
+        <dd data-reverte="o depósito append-only permanece; a entrega em si não se desfaz">o depósito é append-only: a linha permanece registrada; a entrega em si não se desfaz.</dd>
+      </dl>
+      <p><button data-acao="enviar-endereco-ambiguo" data-autoriza="humano" data-simulado="sim"
+                 data-irreversivel="sim" data-confirma="conf-envio-ambiguo"
+                 data-efeito="a entrega ao endereço ambíguo é recusada e o pedido de desambiguação aparece"
+                 data-fonte="ux-design 074 §5 (contrato exato das confirmações irreversíveis, B-UX1)">Confirmar</button></p>
+    </div>
+    <p class="nota" data-recusa-ambiguo="sim" hidden>O endereço ambíguo é <strong>recusado</strong> com pedido de desambiguação — a resolução é só pelo ref (<code>nome · ref · projeto</code>), nunca "o mais provável". O pedido vai à <strong>fila de decisões</strong> do regente como <strong>pedido de decisão</strong>.</p>
+  </div>
+
+  <div class="cartao">
+    <p class="nota"><strong>De onde vêm os nomes.</strong> O nome digitado aqui não nasce na Mensageria: ele vem do <strong>catálogo</strong> da Administração, seção <strong>Agentes (perfis)</strong> — o perfil versionado (<code>.claude/agents/*.md</code>) é o cadastro, e a <strong>sessão</strong> é a instância com ref.
+      <span class="fonte" data-referencia="true">É a relação 3 do mapa: a Mensageria <strong>conforma-se</strong> ao registro da Administração (endereçar exige um nome, e a fonte dos nomes é ela); a guarda local é a canonização do nome (<code>norm_sessao</code>). O caminho de volta — o catálogo que lista os perfis — fica em <code>telas/administracao/catalogo.html</code>, seção "Agentes (perfis)".</span></p>
+  </div>
+
+  <div class="cartao">
+    <h2 class="cartao-titulo" data-referencia="true">As cinco colisões de nome herdadas do mapa de contextos</h2>
+    <p class="fonte" data-referencia="true">Nenhuma é inventada: as cinco vêm do mapa de contextos (§7), com o termo que vence na linguagem ubíqua e o que fica marcado. São colisões de <strong>termo</strong> — a tabela de endereços acima trata das colisões de <strong>endereço</strong>.</p>
+    <table class="tabela">
+      <caption>Os cinco nomes colidentes do mapa — a cerca de colisão de nomes (exemplo)</caption>
+      <thead>
+        <tr>
+          <th data-rotulo="colisão de nomes" data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §7">nome colidente (exemplo)</th>
+          <th data-rotulo="roteamento por nome/ref" data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §7">dois significados</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Fila (exemplo)</td><td>fila de decisões (Regência) × fila (outbox)</td></tr>
+        <tr><td>Caixa de entrada (exemplo)</td><td>a Fila do Painel (Regência) × as mensagens (Mensageria)</td></tr>
+        <tr><td>Livro de ponto (exemplo)</td><td>Task ledger × livro de mensagens</td></tr>
+        <tr><td>Sessão / agente (exemplo)</td><td>sessão de agente (execução) × agente (definição em <code>docs/agents/</code>)</td></tr>
+        <tr><td>Portão (exemplo)</td><td>portão do chamado × Portão do regente</td></tr>
+      </tbody>
+    </table>
+    <p class="fonte" data-referencia="true">O termo do glossário tem prioridade; o rótulo antigo fica como sinônimo marcado. Ver <code>specs/073-area-administrativa/confronto/confronto-decisao.md</code> § Glossário proposto.</p>
+  </div>
+
+  <footer>
+    <p class="fonte" data-referencia="true">Fontes — método: <code>docs/governance/glossary.md</code> (Roteamento por nome/ref, Colisão de nomes, Colisão de endereço, Sessão de agente) · <code>painel/ingest.py</code> (<code>norm_sessao</code>) · <code>painel/server.py</code> (<code>contatos()</code>) · <code>painel/fila_outbox.py</code> · <code>specs/073-area-administrativa/confronto/mapa-de-contextos.md</code> §7 e §7.1 · <code>specs/073-area-administrativa/rodada-4/correcao-1.md</code> e <code>correcao-2.md</code> (decisões 2, 3, 5 e 7) · <code>specs/074-prototipo-navegavel/ux-design.md</code> §2.2, §3 (J5) e §5.</p>
+    <p class="fonte" data-referencia="true">Todo elemento interativo tem <code>data-fonte</code>; todo número/estado é <code>(exemplo)</code> — protótipo, não dado real.</p>
+  </footer>
+
+</div>

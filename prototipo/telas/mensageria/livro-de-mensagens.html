@@ -1,0 +1,121 @@
+<link rel="icon" href="data:,">
+<!-- Fragmento da casca (ciclo 074, T04) — o livro de mensagens da Mensageria.
+     Reproduz o wireframe `specs/073-area-administrativa/prototipo/mensageria-02-livro-de-mensagens.html`
+     sobre os tokens novos, com as cinco linhas de `prototipo/fixtures/mensagem.json` (projeto
+     maestro, refs do roster de exemplo do 073) na ordem do próprio título: da mais antiga à mais
+     nova. Arquivo novo: o wireframe do 073 não é movido nem editado. -->
+<div class="conteudo-interior" data-contexto="mensageria" data-tela="livro-de-mensagens"
+     data-acoes="acoes/mensageria.js">
+
+  <p class="migalha" data-referencia="true">Maestro · protótipo navegável · ciclo 074 · Mensageria · livro de mensagens</p>
+  <h1 class="titulo-pagina" data-rotulo="livro de mensagens"
+      data-fonte="ENTRA 25 · livro de mensagens — specs/073-area-administrativa/confronto/confronto-decisao.md; termo em docs/governance/glossary.md (Livro de mensagens)">livro de mensagens</h1>
+
+  <nav class="trilha" aria-label="Telas da Mensageria" data-rotulo="trilha de contexto"
+       data-fonte="ux-design 074 §2.5 (trilha de contexto — links para os fragmentos irmãos do mesmo contexto; é navegação, não botão de escrita)">
+    <a href="#/mensageria/caixa-de-entrada" data-fonte="ENTRA 23 · caixa de entrada — specs/073-area-administrativa/confronto/confronto-decisao.md">caixa de entrada</a>
+    <a href="#/mensageria/livro-de-mensagens" aria-current="page" data-fonte="ENTRA 25 · livro de mensagens — specs/073-area-administrativa/confronto/confronto-decisao.md">livro de mensagens</a>
+    <a href="#/mensageria/roteamento" data-fonte="ENTRA 24 · roteamento por nome/ref — specs/073-area-administrativa/confronto/confronto-decisao.md">roteamento por nome/ref</a>
+    <a href="#/mensageria/protocolo" data-fonte="ENTRA 22 · protocolo de intercomunicação — specs/073-area-administrativa/confronto/confronto-decisao.md">protocolo de intercomunicação</a>
+  </nav>
+
+  <p class="ajuda" data-referencia="true">Contexto <strong>Mensageria</strong> — o registro <em>append-only</em> unificado das mensagens entre sessões. A leitura é marcada, não removida.
+    <span class="fonte" data-referencia="true">Fonte real do registro hoje: a <strong>fila (outbox)</strong> (SQLite, <code>painel/fila_outbox.py</code>) — o livro é a leitura unificada dela. Não é o <strong>livro de ponto</strong> (Task ledger, <code>docs/records/tarefas.jsonl</code>): mesmo nome, outro objeto.</span></p>
+  <p class="ajuda">Regra do livro: <strong>nunca se apaga uma linha</strong> — corrigir é acrescentar.</p>
+  <p class="ajuda">Ordem do livro: <strong>da mais antiga à mais nova</strong> — a ordem de registro acompanha a hora.</p>
+
+  <div class="cartao">
+    <div class="cartao-lista-rodape">
+      <span class="rotulo-categoria" data-rotulo="livro de mensagens" data-fonte="painel/fila_outbox.py (append-only)">linhas registradas</span>
+      <span class="metrica" data-exemplo="true" data-fonte="fixtures/mensagem.json — nenhum dado real">linhas: 5 (exemplo)</span>
+    </div>
+    <p class="fonte" data-referencia="true">As mesmas linhas da <strong>caixa de entrada</strong>: ids e remetentes idênticos nas duas telas — a caixa mostra o estado da leitura, o livro o registro.</p>
+    <table class="tabela">
+      <caption>As linhas registradas, da mais antiga à mais nova (dado de fixture, projeto maestro)</caption>
+      <thead>
+        <tr>
+          <th data-rotulo="mensagem entre agentes" data-fonte="specs/066-painel-de-regencia/ux-design.md (F7 — carimbo do relógio, nunca digitado)">hora</th>
+          <th data-rotulo="livro de mensagens" data-fonte="painel/fila_outbox.py (identificador da mensagem)">id</th>
+          <th data-rotulo="livro de mensagens" data-fonte="painel/fila_outbox.py (ordem de registro, append-only)">ordem</th>
+          <th data-rotulo="tarefa aberta" data-fonte="docs/governance/task-ledger.md (tag [[TASK]])">tarefa (da tag [[TASK]])</th>
+          <th data-rotulo="mensagem entre agentes" data-fonte="docs/governance/glossary.md (Mensagem entre agentes) — além das task tags [[TASK]]/[[DONE]]">mensagem entre agentes</th>
+          <th data-rotulo="sessão de agente" data-fonte="docs/governance/glossary.md (Sessão de agente) — nome · ref · projeto">remetente (nome · ref · projeto)</th>
+          <th data-rotulo="roteamento por nome/ref" data-fonte="painel/server.py (contatos()) — o endereço resolvido">destinatário (nome · ref · projeto)</th>
+          <th data-rotulo="task ledger" data-fonte="docs/records/tarefas.jsonl (Task ledger, parado no ciclo 064)">custo</th>
+          <th data-rotulo="outbox" data-fonte="docs/governance/glossary.md (Outbox) · painel/fila_outbox.py (entrega)">estado da entrega</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>08:40 (exemplo)</td>
+          <td>41 (exemplo)</td>
+          <td>1 (exemplo)</td>
+          <td>— (mensagem livre, sem tag [[TASK]]) (exemplo)</td>
+          <td>“A correção 3 do 073 foi integrada — obrigado. (exemplo)”</td>
+          <td>MAESTRO [7c8d05] · maestro</td>
+          <td>Worker01 [9a1b27] · maestro</td>
+          <td>— (ledger parado no 064) (exemplo)</td>
+          <td>entregue (exemplo)</td>
+        </tr>
+        <tr>
+          <td>09:20 (exemplo)</td>
+          <td>40 (exemplo)</td>
+          <td>2 (exemplo)</td>
+          <td>— (mensagem livre, sem tag [[TASK]]) (exemplo)</td>
+          <td>“A T02 entra junto com a T07; a T03 só depois das duas. (exemplo)”</td>
+          <td>Gerente [31ee4d] · maestro</td>
+          <td>Worker02 [31f7bf] · maestro</td>
+          <td>— (ledger parado no 064) (exemplo)</td>
+          <td>entregue (exemplo)</td>
+        </tr>
+        <tr>
+          <td>12:10 (exemplo)</td>
+          <td>43 (exemplo)</td>
+          <td>3 (exemplo)</td>
+          <td>— (mensagem livre, sem tag [[TASK]]) (exemplo)</td>
+          <td>“D-014 está aberto: não comece o 074 antes do julgamento do 073. (exemplo)”</td>
+          <td>Gerente [31ee4d] · maestro</td>
+          <td>Worker03 [ad66d6] · maestro</td>
+          <td>— (ledger parado no 064) (exemplo)</td>
+          <td>entregue (exemplo)</td>
+        </tr>
+        <tr>
+          <td>15:20 (exemplo)</td>
+          <td>42 (exemplo)</td>
+          <td>4 (exemplo)</td>
+          <td>— (mensagem livre, sem tag [[TASK]]) (exemplo)</td>
+          <td>“A casca do protótipo já carrega as oito fixtures; use o mesmo roteador. (exemplo)”</td>
+          <td>Worker02 [31f7bf] · maestro</td>
+          <td>Worker05 [78d88f] · maestro</td>
+          <td>— (ledger parado no 064) (exemplo)</td>
+          <td>entregue (exemplo)</td>
+        </tr>
+        <tr>
+          <td>15:40 (exemplo)</td>
+          <td>44 (exemplo)</td>
+          <td>5 (exemplo)</td>
+          <td>— (mensagem livre, sem tag [[TASK]]) (exemplo)</td>
+          <td>“O fragmento de protocolo está na sua fatia? (exemplo)”</td>
+          <td>Worker01 [9a1b27] · maestro</td>
+          <td>Worker03 [ad66d6] · maestro</td>
+          <td>— (ledger parado no 064) (exemplo)</td>
+          <td>entregue (exemplo)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="cartao">
+    <p class="nota"><strong>Estado da entrega ≠ estado da leitura.</strong> A última coluna é o <strong>transporte</strong> (entregue, falhou); o <strong>estado da leitura</strong> (lida, não lida) fica na caixa de entrada — as duas telas mostram as mesmas linhas, cada uma com o seu estado.</p>
+    <p class="nota"><strong>Quem pode escrever:</strong> só a <strong>sessão dona</strong> da mensagem acrescenta a própria linha. Nem o regente reescreve uma linha — corrigir é acrescentar.</p>
+    <p class="nota"><strong>Quem pode ver o livro:</strong> a leitura é <strong>restrita ao projeto</strong> — só as sessões do mesmo projeto (<code>maestro</code> nesta fixture) leem as linhas, coerente com o <em>default-deny</em>. Ler o livro de outra sessão do mesmo projeto exige a ref dela e não altera nada — o livro é <em>append-only</em>.</p>
+    <p><a class="botao" href="#/mensageria/caixa-de-entrada"
+           data-fonte="ENTRA 23 · caixa de entrada — as mesmas linhas, com o estado da leitura">ver a caixa de entrada</a></p>
+  </div>
+
+  <footer>
+    <p class="fonte" data-referencia="true">Fontes — método: <code>painel/fila_outbox.py</code> · <code>docs/records/tarefas.jsonl</code> (Task ledger) · <code>docs/governance/glossary.md</code> (Livro de mensagens, Task ledger, Outbox, Mensagem entre agentes) · <code>specs/073-area-administrativa/confronto/mapa-de-contextos.md</code> §6.6 e §7 · <code>specs/074-prototipo-navegavel/ux-design.md</code> §2.2 e §3 (J5) · dado: <code>specs/074-prototipo-navegavel/prototipo/fixtures/mensagem.json</code>.</p>
+    <p class="fonte" data-referencia="true">Todo elemento interativo tem <code>data-fonte</code>; todo número/estado é <code>(exemplo)</code> — protótipo, não dado real.</p>
+  </footer>
+
+</div>
