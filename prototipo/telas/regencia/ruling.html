@@ -1,0 +1,68 @@
+<!--
+  Fragmento — ruling da Regência (ciclo 074, T03 · FR3, FR4; ux-design 074 §2.1).
+
+  Papel semântico: "a resposta registrada com volta" — a opção escolhida, o autor humano e o
+  destino; sem autor ou sem destino, o ruling é RECUSADO (ux-design 074 §2.1).
+
+  Alcançado PELA FILA (CTA "Responder" do pedido), nunca solto — por isso esta tela não entra
+  na trilha de contexto (ux-design 074 §1: "a resposta nasce de um pedido — o papel manda a
+  ordem").
+
+  Reprodução: a vista do ruling do painel de regência (072), sobre os tokens novos, com os
+  dados de exemplo de `prototipo/fixtures/pedido-de-decisao.json` (pedido D-014).
+  Marcação: os chips de opção são botões de escrita (ux-design 074 §5) e carregam os quatro
+  atributos; todo número é (exemplo).
+-->
+<div class="conteudo-interior" data-contexto="regencia" data-tela="ruling"
+     data-acoes="acoes/regencia.js">
+
+  <p class="migalha" data-referencia="true">Maestro · protótipo navegável · ciclo 074 · Regência · ruling (exemplo)</p>
+  <h1 class="titulo-pagina" data-rotulo="ruling">Ruling — a resposta registrada com volta</h1>
+
+  <nav class="trilha" aria-label="Trilha de contexto da Regência" data-rotulo="trilha de contexto"
+       data-fonte="ux-design 074 §2.5 (trilha de contexto) e §1 (o ruling é alcançado pela fila de decisões, nunca solto — por isso ele não é item da trilha)">
+    <a href="#/regencia/inicial"
+       data-fonte="fragmento irmão — telas/regencia/inicial.html">Frase-chave</a>
+    <a href="#/regencia/fila-de-decisoes"
+       data-fonte="fragmento irmão — telas/regencia/fila-de-decisoes.html">Fila de decisões</a>
+  </nav>
+
+  <p class="ajuda">Esta tela é alcançada pela fila de decisões: o pedido entra, o regente responde aqui e o pedido sai da fila de decisões.</p>
+
+  <section class="cartao cartao-grande" data-pedido="D-014"
+           data-fonte="fixtures/pedido-de-decisao.json — pedido D-014 (o mais velho: criado às 11:00, prazo estourado em 27/10 às 16:00 — exemplo)">
+    <span class="rotulo-categoria">pedido de decisão · vindo da fila de decisões</span>
+    <p class="cartao-titulo" data-exemplo="true">D-014 · aguardando ruling</p>
+    <p class="cartao-subtitulo">Sigo para os fragmentos do 074 antes de o julgamento do 073 fechar? (exemplo)</p>
+    <p class="ajuda">pedido por Worker03 [ad66d6] · maestro · criado às 11:00 · prazo 27/10 às 16:00 (exemplo)
+      <span class="chip chip-erro">prazo estourado</span></p>
+    <p class="ajuda" data-exemplo="true">destrava: ciclo 073 · recomendação: seguir só depois do julgamento — a emenda do 073 é condicional</p>
+
+    <h2 class="cartao-titulo">Opções — o chip escolhido fica em <code>--primaria</code></h2>
+    <p data-opcoes="D-014">
+      <button class="chip" data-opcao="a" data-pedido="D-014" data-acao="escolher-opcao"
+              data-autoriza="humano" data-simulado="sim"
+              data-efeito="o chip da opção escolhida fica em --primaria e a resposta passa a ser a escolhida"
+              data-fonte="ux-design 074 §5 (a seleção de opção é botão de escrita e carrega os quatro atributos) e J1 passo 4">seguir só depois do julgamento</button>
+      <button class="chip" data-opcao="b" data-pedido="D-014" data-acao="escolher-opcao"
+              data-autoriza="humano" data-simulado="sim"
+              data-efeito="o chip da opção escolhida fica em --primaria e a resposta passa a ser a escolhida"
+              data-fonte="ux-design 074 §5 (a seleção de opção é botão de escrita) e J1 passo 4">seguir agora, com retrabalho se o 073 mudar</button>
+    </p>
+
+    <h2 class="cartao-titulo">A resposta registrada</h2>
+    <p class="ajuda" data-fonte="ux-design 074 §2.1 e §5 (decisão 4 do briefing: autor humano e identidade)">autor humano: Ana Exemplo (exemplo) — a identidade do humano não é um ref de sessão</p>
+    <p class="ajuda">destino: Worker03 [ad66d6] · maestro</p>
+    <p class="vazio">— sem autor humano e sem destino o ruling é recusado: a resposta não sai sem os dois.</p>
+    <p>
+      <button class="botao-primario" data-acao="registrar-ruling" data-pedido="D-014"
+              data-autoriza="humano" data-simulado="sim"
+              data-efeito="o pedido sai da fila de decisões e o contador da frase-chave atualiza"
+              data-fonte="ux-design 074 §5 (tabela do contrato: regencia · Registrar ruling · humano) e J1 passo 5">Registrar ruling</button>
+    </p>
+    <p class="aviso-simulacao" id="saida-ruling" hidden data-referencia="true"></p>
+  </section>
+
+  <p class="fonte" data-fonte="ux-design 074 §0 (simular não é autorizar) e FR4 (estado só em memória)">O botão documenta quem autorizaria no produto (o humano); no protótipo o efeito é declaradamente simulado e recarregar restaura as fixtures (exemplo).</p>
+
+</div>
