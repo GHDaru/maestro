@@ -1,0 +1,162 @@
+<!--
+  Fragmento — kanban por gate de Chamados e Gates (ciclo 074, T03 · FR3, FR4; ux-design 074 §2.1).
+
+  Papel semântico: "onde está cada chamado" — projeção do contexto core domain
+  `chamados-e-gates`. O estado do portão é DERIVADO, nunca digitado: a tela não promove e não
+  decide (anti-regra 1 do 066). SÓ LEITURA, com duas ações simuladas declaradas: o filtro por
+  frente (efeito visível) e o "Detalhar" (expansão na própria tela — B-UX2).
+
+  Sem trilha de contexto: `chamados-e-gates` tem um fragmento só (ux-design 074 §2.5 —
+  contexto com um fragmento não tem trilha). Declarado, não omitido.
+
+  Reprodução: `vKanban` do painel de regência (072, `painel/index.html`), sobre os tokens novos,
+  com os dados de exemplo de `prototipo/fixtures/chamado.json`. Marcação: o marcador portão do
+  regente (G7) LEVA à fila de decisões — ele é item somente leitura da fila, nunca botão de
+  aceite no cartão (J2 passo 4). Todo número é (exemplo); toda identidade é `nome · ref · projeto`.
+-->
+<div class="conteudo-interior" data-contexto="chamados-e-gates" data-tela="kanban-por-gate"
+     data-acoes="acoes/chamados-e-gates.js">
+
+  <p class="migalha" data-referencia="true">Maestro · protótipo navegável · ciclo 074 · Chamados e Gates · (exemplo)</p>
+  <h1 class="titulo-pagina" data-rotulo="chamado">Kanban por gate — onde cada chamado parou</h1>
+
+  <p class="ajuda" data-fonte="ux-design 074 §2.1 (kanban por gate: cartão no último gate aprovado; a tela nunca promove) e §2.5 (chamados-e-gates não tem trilha de contexto: um fragmento só)">
+    Um cartão fica no último gate aprovado; a coluna é derivada, nunca digitada. Sem trilha de contexto aqui: este contexto tem um fragmento só.
+  </p>
+
+  <div class="grade" role="group" aria-label="Filtro por frente do kanban (exemplo)"
+       data-fonte="ux-design 074 §5 (tabela do contrato: chamados-e-gates · chip de filtro por frente · humano · só os cartões da frente escolhida ficam visíveis) e J2 passo 2">
+    <button class="chip chip-ativo" data-acao="filtrar-frente" data-frente="" aria-pressed="true"
+            data-autoriza="humano" data-simulado="sim"
+            data-efeito="todos os cartões do kanban voltam a ficar visíveis"
+            data-fonte="ux-design 074 §5 (o filtro por frente é botão de escrita) e J2 passo 2">Todas as frentes</button>
+    <button class="chip" data-acao="filtrar-frente" data-frente="painel" aria-pressed="false"
+            data-autoriza="humano" data-simulado="sim"
+            data-efeito="só os cartões da frente escolhida ficam visíveis"
+            data-fonte="ux-design 074 §5 (o filtro por frente é botão de escrita) e J2 passo 2">painel</button>
+    <button class="chip" data-acao="filtrar-frente" data-frente="administrativa" aria-pressed="false"
+            data-autoriza="humano" data-simulado="sim"
+            data-efeito="só os cartões da frente escolhida ficam visíveis"
+            data-fonte="ux-design 074 §5 (o filtro por frente é botão de escrita) e J2 passo 2">administrativa</button>
+  </div>
+
+  <p class="ajuda" data-exemplo="true">3 chamados no quadro · 2 frentes · contagem por coluna abaixo do nome do gate</p>
+
+  <div class="grade">
+
+    <section class="cartao" data-coluna="G0"
+             data-fonte="painel/chamados.py (GATES: o nome de cada gate) e fixtures/chamado.json — coluna G0">
+      <h3 class="cartao-titulo">G0 · Reprodução
+        <span class="chip chip-estado" data-fonte="fixtures/chamado.json — coluna G0 (1 chamado)">1</span></h3>
+      <article class="cartao cartao-lista" data-chamado="074" data-frente="painel" data-gate="G0"
+               data-fonte="fixtures/chamado.json — chamado 074 (frente painel, G0 aberto; idade há 1 h — exemplo)">
+        <span class="tile tile-neutro">074</span>
+        <div class="cartao-lista-corpo">
+          <p class="cartao-titulo" data-exemplo="true">074 · painel</p>
+          <p class="cartao-subtitulo" data-exemplo="true">idade no gate: há 1 h</p>
+          <p class="ajuda">dono: <span class="vazio">—</span> motivo: G0 aberto, nenhum dono atribuído na fixture</p>
+          <p><span class="veredito veredito-invalido">—</span> motivo: G0 aberto — sem veredito vigente</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="cartao" data-coluna="G1"
+             data-fonte="painel/chamados.py (GATES) e fixtures/chamado.json — coluna G1">
+      <h3 class="cartao-titulo">G1 · Spec
+        <span class="chip chip-estado" data-fonte="fixtures/chamado.json — coluna G1 (nenhum chamado)">0</span></h3>
+      <p class="vazio">— nenhum chamado parado neste gate (exemplo)</p>
+    </section>
+
+    <section class="cartao" data-coluna="G2"
+             data-fonte="painel/chamados.py (GATES) e fixtures/chamado.json — coluna G2">
+      <h3 class="cartao-titulo">G2 · Vermelho
+        <span class="chip chip-estado" data-fonte="fixtures/chamado.json — coluna G2 (nenhum chamado)">0</span></h3>
+      <p class="vazio">— nenhum chamado parado neste gate (exemplo)</p>
+    </section>
+
+    <section class="cartao" data-coluna="G3"
+             data-fonte="painel/chamados.py (GATES) e fixtures/chamado.json — coluna G3">
+      <h3 class="cartao-titulo">G3 · Crítica e runner2
+        <span class="chip chip-estado" data-fonte="fixtures/chamado.json — coluna G3 (1 chamado)">1</span></h3>
+      <article class="cartao cartao-lista" data-chamado="072" data-frente="painel" data-gate="G3"
+               data-fonte="fixtures/chamado.json — chamado 072 (frente painel, G3; idade há 7 h, veredito e selo de exemplo)">
+        <span class="tile">072</span>
+        <div class="cartao-lista-corpo">
+          <p class="cartao-titulo" data-exemplo="true">072 · painel</p>
+          <p><span class="veredito veredito-devolvido">devolvido</span> <span class="ajuda">original no arquivo: <code>DEVOLVIDO</code></span></p>
+          <p class="ajuda">dono: Worker01 [9a1b27] · maestro</p>
+          <p class="cartao-subtitulo" data-exemplo="true">idade no gate: há 7 h · selo de evidência: G3-vermelho-9a1b27-4f2c11.md (exemplo)</p>
+          <div class="cartao-lista-rodape">
+            <span class="ajuda">marcador: builder ≠ crítico (sem vermelho)</span>
+            <button class="botao" data-acao="detalhar" data-detalhe="072"
+                    data-autoriza="humano" data-simulado="sim"
+                    data-efeito="mostra o veredito normalizado e o original ao lado"
+                    data-fonte="ux-design 074 J2 passo 3 (B-UX2: o Detalhar é expansão na própria tela) e §5">Detalhar</button>
+          </div>
+          <div id="detalhe-072" hidden>
+            <p class="ajuda">veredito normalizado: <span class="veredito veredito-devolvido">devolvido</span> — original ao lado: <code>DEVOLVIDO</code></p>
+            <p class="ajuda" data-fonte="fixtures/chamado.json — chamado 072 (autor_da_peca ≠ por: marcador builder ≠ crítico, FR4 do 072)">marcador builder ≠ crítico: peça de Ana Exemplo, crítica de Beto Exemplo — autores diferentes, sem vermelho</p>
+            <p class="ajuda" data-exemplo="true">idade no gate: há 7 h · carimbo absoluto 2026-10-27 às 11:00</p>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="cartao" data-coluna="G4"
+             data-fonte="painel/chamados.py (GATES) e fixtures/chamado.json — coluna G4">
+      <h3 class="cartao-titulo">G4 · VM
+        <span class="chip chip-estado" data-fonte="fixtures/chamado.json — coluna G4 (nenhum chamado)">0</span></h3>
+      <p class="vazio">— nenhum chamado parado neste gate (exemplo)</p>
+    </section>
+
+    <section class="cartao" data-coluna="G5"
+             data-fonte="painel/chamados.py (GATES) e fixtures/chamado.json — coluna G5">
+      <h3 class="cartao-titulo">G5 · Barra no Dev
+        <span class="chip chip-estado" data-fonte="fixtures/chamado.json — coluna G5 (nenhum chamado)">0</span></h3>
+      <p class="vazio">— nenhum chamado parado neste gate (exemplo)</p>
+    </section>
+
+    <section class="cartao" data-coluna="G6"
+             data-fonte="painel/chamados.py (GATES) e fixtures/chamado.json — coluna G6">
+      <h3 class="cartao-titulo">G6 · Teste por tela
+        <span class="chip chip-estado" data-fonte="fixtures/chamado.json — coluna G6 (nenhum chamado)">0</span></h3>
+      <p class="vazio">— nenhum chamado parado neste gate (exemplo)</p>
+    </section>
+
+    <section class="cartao" data-coluna="G7"
+             data-fonte="painel/chamados.py (GATES) e fixtures/chamado.json — coluna G7">
+      <h3 class="cartao-titulo">G7 · Aceite do cliente
+        <span class="chip chip-estado" data-fonte="fixtures/chamado.json — coluna G7 (1 chamado)">1</span></h3>
+      <article class="cartao cartao-lista" data-chamado="073" data-frente="administrativa" data-gate="G7"
+               data-fonte="fixtures/chamado.json — chamado 073 (frente administrativa, G7 com portao_do_regente: true; idade há 2 h — exemplo)">
+        <span class="tile">G7</span>
+        <div class="cartao-lista-corpo">
+          <p class="cartao-titulo" data-exemplo="true">073 · administrativa</p>
+          <p class="ajuda">dono: MAESTRO [7c8d05] · maestro</p>
+          <p class="cartao-subtitulo" data-exemplo="true">idade no gate: há 2 h</p>
+          <p><span class="veredito veredito-em-curso">—</span> motivo: G7 é o portão do regente — sem veredito registrado na fixture</p>
+          <p><a class="chip chip-erro" href="#/regencia/fila-de-decisoes"
+                data-fonte="ux-design 074 J2 passo 4 e §5 (B2-h): o marcador portão do regente leva à fila de decisões — o portão é item somente leitura da fila, nunca botão de aceite no cartão">portão do regente → responder na fila de decisões</a></p>
+        </div>
+      </article>
+    </section>
+
+    <section class="cartao" data-coluna="G8"
+             data-fonte="painel/chamados.py (GATES) e fixtures/chamado.json — coluna G8">
+      <h3 class="cartao-titulo">G8 · Ordem de produção
+        <span class="chip chip-estado" data-fonte="fixtures/chamado.json — coluna G8 (nenhum chamado)">0</span></h3>
+      <p class="vazio">— nenhum chamado parado neste gate (exemplo)</p>
+    </section>
+
+    <section class="cartao" data-coluna="G9"
+             data-fonte="painel/chamados.py (GATES) e fixtures/chamado.json — coluna G9">
+      <h3 class="cartao-titulo">G9 · Pospush
+        <span class="chip chip-estado" data-fonte="fixtures/chamado.json — coluna G9 (nenhum chamado)">0</span></h3>
+      <p class="vazio">— nenhum chamado parado neste gate (exemplo)</p>
+    </section>
+
+  </div>
+
+  <p class="fonte" data-fonte="ux-design 074 §7 (vazio é informação, não erro) e §8 (estado nunca é só cor: o veredito leva texto além da cor)">Vazio é informação: "— nenhum chamado parado neste gate (exemplo)". O veredito nunca é só cor — ele leva o texto normalizado ao lado do original.</p>
+
+</div>
