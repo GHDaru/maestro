@@ -77,8 +77,9 @@ viva do 072 (capturas por script versionado + heurística datada).
   (verbo da linguagem ubíqua), `data-autoriza` (humano · regente por delegação · sessão
   dona), `data-simulado="sim"` e `data-efeito` (o que muda na tela); WHEN a ação é
   confirmada THEN o efeito ocorre **só em memória** (recarregar volta às fixtures) e é
-  visível na tela; WHEN a ação é irreversível (derrubar, entregar a destino não resolvido,
-  estourar teto) THEN a confirmação mostra **o que se perde e como reverter**, como
+  visível na tela; WHEN a ação é irreversível (reiniciar, derrubar, entregar a destino não
+  resolvido, estourar teto — gate do plano, S7) THEN a confirmação mostra **o que se perde e
+  como reverter**, como
   desenhado no 073, e o botão aponta para uma confirmação que carrega os atributos
   `data-perde` e `data-reverte` (B2-i; nome final no `ux-design.md`); nenhum botão com
   `data-acao="derrubar"` tem o Gerente como alvo (B2-h) — o **Gerente nunca é derrubável**
@@ -125,7 +126,8 @@ viva do 072 (capturas por script versionado + heurística datada).
   - (g) os fragmentos de `prototipo/telas/` passam nas regras do
     `verifica-prototipo.py` do 073 — as cinco da correção 1, **seis depois da correção 2**
     do 073 —, invocado sobre essa pasta ou importando suas regras, com **0 achados** (B2);
-  - (h) nenhum botão com `data-acao="derrubar"` tem o Gerente como alvo (B2);
+  - (h) nenhum botão com `data-acao="derrubar"` tem o Gerente como alvo, e todo
+    `data-acao="derrubar"` declara `data-alvo` (B2; S9 do gate do plano);
   - (i) todo botão irreversível aponta para uma confirmação com os atributos `data-perde`
     e `data-reverte` (B2; nome final no `ux-design.md`).
 - **NFR2 — Fitness functions do repositório**: `scripts/check-conformance.sh 074` verde

@@ -97,8 +97,10 @@ com confirmação `data-perde`/`data-reverte`.
 **Fixture (exemplo)**: `Worker01 [9a1b27] · maestro` em `074-T03` (implement); `Worker02
 [31f7bf] · maestro` em `074-T02`; `Worker05 [78d88f] · maestro` em `074-T06`; `Worker03
 [ad66d6] · maestro` — `—` (motivo: bloqueado, aguarda ruling do pedido `D-014`); `Worker04
-[4d000a] · maestro` — `—` (motivo: nenhuma tarefa aberta); `Gerente [31ee4d] · maestro` —
-`—` (motivo: integra e despacha, não executa fatia).
+[4d000a] · maestro` — `—` (motivo: nenhuma tarefa aberta); `Worker06 [c85948] · maestro` —
+`—` (motivo: sem fatia de implementação neste retrato); `MAESTRO [7c8d05] · maestro` — `—`
+(motivo: o regente decide e julga, não executa fatia); `Gerente [31ee4d] · maestro` — `—`
+(motivo: integra e despacha, não executa fatia).
 
 **Invariantes**: um `start` sem `stop` por agente; um passo sem saída bloqueia a entrada do
 próximo (`schema_workflow.sql`); `—` sempre com motivo.
@@ -244,7 +246,7 @@ declarado; estourar teto é irreversível com confirmação.
 ## 8. `catalogo.json` — agregado Catálogo (Administração)
 
 `DOM:aggregate=catalogo` — o registro **consultável** de skills, ferramentas e modelos por
-projeto, **mais** os perfis de agentes (o 16º ENTRA, correção 2 do 073: o cadastro **é o
+projeto, **mais** os perfis de agentes (o ENTRA da correção 2 do 073: o cadastro **é o
 arquivo versionado** — `.claude/agents/*.md` — e a tela **lê**). **Fonte estrutural**:
 `skills/` (pastas), `.claude/agents/` (perfis), `docs/agents/README.md` (perfil ↔ executável).
 

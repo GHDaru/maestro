@@ -1,0 +1,162 @@
+{
+  "_fonte": "skills/ (pastas de skill) · .claude/agents/ (perfis, `ls .claude/agents`) · docs/agents/README.md (perfil ↔ executável)",
+  "_exemplo": true,
+  "projeto": "maestro",
+  "skills": [
+    {
+      "nome": "anti-patterns",
+      "arquivo": "skills/anti-patterns/SKILL.md"
+    },
+    {
+      "nome": "constitution-check",
+      "arquivo": "skills/constitution-check/SKILL.md"
+    },
+    {
+      "nome": "diagnose-before-fix",
+      "arquivo": "skills/diagnose-before-fix/SKILL.md"
+    },
+    {
+      "nome": "fight-the-pile-up",
+      "arquivo": "skills/fight-the-pile-up/SKILL.md"
+    },
+    {
+      "nome": "living-journey",
+      "arquivo": "skills/living-journey/SKILL.md"
+    },
+    {
+      "nome": "verifiable-dod",
+      "arquivo": "skills/verifiable-dod/SKILL.md"
+    }
+  ],
+  "ferramentas": [
+    {
+      "nome": "Read",
+      "origem": "harness do Claude Code — `tools:` de `.claude/agents/*.md`"
+    },
+    {
+      "nome": "Write",
+      "origem": "harness do Claude Code — `tools:` de `.claude/agents/*.md`"
+    },
+    {
+      "nome": "Edit",
+      "origem": "harness do Claude Code — `tools:` de `.claude/agents/*.md`"
+    },
+    {
+      "nome": "Grep",
+      "origem": "harness do Claude Code — `tools:` de `.claude/agents/*.md`"
+    },
+    {
+      "nome": "Glob",
+      "origem": "harness do Claude Code — `tools:` de `.claude/agents/*.md`"
+    },
+    {
+      "nome": "Bash",
+      "origem": "harness do Claude Code — `tools:` de `.claude/agents/*.md`"
+    },
+    {
+      "nome": "WebFetch",
+      "origem": "harness do Claude Code — `tools:` de `.claude/agents/*.md`"
+    },
+    {
+      "nome": "WebSearch",
+      "origem": "harness do Claude Code — `tools:` de `.claude/agents/*.md`"
+    }
+  ],
+  "modelos": [
+    {
+      "nome": "deepseek-v4.1-flash",
+      "preco_por_milhao": 0.28,
+      "estimado": true
+    }
+  ],
+  "agentes_perfis": [
+    {
+      "perfil": "process-guardian",
+      "papel": "Guardião de Processo (read-only)",
+      "ferramentas": "Read, Grep, Glob",
+      "modelo_padrao": "—"
+    },
+    {
+      "perfil": "spec-agent",
+      "papel": "Spec-agent",
+      "ferramentas": "Read, Write, Grep, Glob",
+      "modelo_padrao": "—"
+    },
+    {
+      "perfil": "plan-architect",
+      "papel": "Plan / Arquiteto",
+      "ferramentas": "Read, Write, Grep, Glob, WebFetch",
+      "modelo_padrao": "—"
+    },
+    {
+      "perfil": "dev-implementer",
+      "papel": "Dev / Implementador",
+      "ferramentas": "Read, Write, Edit, Bash",
+      "modelo_padrao": "—"
+    },
+    {
+      "perfil": "review",
+      "papel": "Review (independente) — read-only",
+      "ferramentas": "Read, Grep, Glob, Bash",
+      "modelo_padrao": "—"
+    },
+    {
+      "perfil": "security",
+      "papel": "Security — read-only",
+      "ferramentas": "Read, Grep, Glob, Bash",
+      "modelo_padrao": "—"
+    },
+    {
+      "perfil": "qa",
+      "papel": "QA / Living-docs",
+      "ferramentas": "Read, Write, Bash",
+      "modelo_padrao": "—"
+    },
+    {
+      "perfil": "tech-writer",
+      "papel": "Tech-Writer",
+      "ferramentas": "Read, Write, Edit, Grep",
+      "modelo_padrao": "—"
+    },
+    {
+      "perfil": "ux-semantics",
+      "papel": "UX / Semântica",
+      "ferramentas": "Read, Write, Grep, Glob",
+      "modelo_padrao": "—"
+    },
+    {
+      "perfil": "agent-designer",
+      "papel": "Agent-Designer (meta)",
+      "ferramentas": "Read, Write, Edit, Grep",
+      "modelo_padrao": "—"
+    },
+    {
+      "perfil": "skill-author",
+      "papel": "Skill-Author",
+      "ferramentas": "Read, Write, WebFetch",
+      "modelo_padrao": "—"
+    },
+    {
+      "perfil": "research-curator",
+      "papel": "Curador / Pesquisa",
+      "ferramentas": "Read, Write, WebSearch, WebFetch",
+      "modelo_padrao": "—"
+    },
+    {
+      "perfil": "didactics-editor",
+      "papel": "Didática / Editor",
+      "ferramentas": "Read, Write, Edit, Grep",
+      "modelo_padrao": "—"
+    }
+  ],
+  "histórico": [
+    {
+      "mudanca": "perfil `qa` recebeu `Bash` (exemplo)",
+      "changed_by": "Ana Exemplo",
+      "data": "2026-10-20"
+    }
+  ],
+  "motivos": {
+    "modelo_padrao": "nenhum perfil de `.claude/agents/*.md` declara `model:` — a coluna exibe — e o marcador estimado cobre a lacuna"
+  }
+}

@@ -82,6 +82,11 @@
 </div>
 
 <div class="cx">
+  <p class="nota"><strong>De onde vêm os nomes.</strong> O nome digitado aqui não nasce na Mensageria: ele vem do <strong>catálogo</strong> da Administração, seção <strong>Agentes (perfis)</strong> — o perfil versionado (<code data-fonte="método: docs/agents/README.md (o perfil é o arquivo em .claude/agents/)">.claude/agents/*.md</code>) é o cadastro, e a <strong>sessão</strong> é a instância com ref.
+    <span class="fonte" data-referencia="true">É a relação 3 do mapa: a Mensageria <strong>conforma-se</strong> ao registro da Administração (endereçar exige um nome, e a fonte dos nomes é ela); a guarda local é a canonização do nome (<code>norm_sessao</code>). O caminho de volta — o catálogo que lista os perfis — fica em <code>specs/073-area-administrativa/prototipo/administracao-01-catalogo.html</code>, seção “Agentes (perfis)”.</span></p>
+</div>
+
+<div class="cx">
   <p class="nota"><strong>Uma ref pode receber; um nome ambíguo, não.</strong> A recusa é o comportamento nomeado: em vez de uma entrega errada silenciosa, a tela mostra as refs e exige o endereço explícito. Quando o motivo é <strong>reinício</strong>, a recusa vem com a <strong>ref nova</strong> à mão — uma oferta, não um beco sem saída.
     <span class="fonte" data-referencia="true">Prova de origem: o incidente real de nomes cruzados (<code>specs/066-painel-de-regencia/qa-report.md</code>) — a colisão aconteceu; aqui ela fica visível.</span></p>
   <p class="nota"><strong>Confirmação humana antes de entregar a destino não resolvido.</strong> Entregar à sessão errada não se desfaz:
@@ -120,7 +125,8 @@
   <p class="fonte" data-referencia="true">Fontes — método: <code>docs/governance/glossary.md</code> (Roteamento por nome/ref, Colisão de nomes, Sessão de agente, Task ledger, Portão do regente) ·
   <code>painel/ingest.py</code> (<code>norm_sessao</code>) · <code>painel/server.py</code> (<code>contatos()</code>) ·
   <code>painel/fila_outbox.py</code> · <code>specs/073-area-administrativa/confronto/mapa-de-contextos.md</code> §7 e §7.1 ·
-  <code>specs/073-area-administrativa/rodada-4/correcao-1.md</code> (decisões 2, 3 e 5) · <code>specs/073-area-administrativa/rodada-4/correcao-2.md</code> (decisões 1 e 7) · <code>specs/066-painel-de-regencia/qa-report.md</code> ·
+  <code>specs/073-area-administrativa/rodada-4/correcao-1.md</code> (decisões 2, 3 e 5) · <code>specs/073-area-administrativa/rodada-4/correcao-2.md</code> (decisões 1 e 7) ·
+  <code>specs/073-area-administrativa/rodada-4/correcao-3.md</code> (relação 3 — os nomes vêm do catálogo, seção “Agentes (perfis)”) · <code>specs/066-painel-de-regencia/qa-report.md</code> ·
   <code>specs/066-painel-de-regencia/ux-design.md</code> (F1, F8, F9). Plataforma: Claude Code, <code>https://code.claude.com/docs/en/sub-agents</code>
   (ficha <code>specs/073-area-administrativa/pesquisa/claude-code.md</code>, <code>sim</code> — roteamento por nome/ref via <code>SendMessage</code>/<code>ListAgents</code>);
   colisão de nomes: Kiro Crew, <code>https://kiro.dev/</code> (ficha <code>specs/073-area-administrativa/pesquisa/kiro-crew.md</code>, <code>sim</code>) e o
