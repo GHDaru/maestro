@@ -10,6 +10,16 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **Ajustes do gate de plano do 074** (`gate-plan.md`, 27/10): B1 `## Complexity Tracking` com
+  veredito no `plan.md`; B2 linha `DoD:` com comando e esperado em toda tarefa do `tasks.md`;
+  B3 T12 antes da T03 (uma tarefa ativa por sessão); B4 T07 junto com a T01 (e vai ao Worker01,
+  com o Worker06 na correção 3 do 073), T03–T06 só após T02 **e** T07 integrados, T02 com DoD
+  "carrega as oito fixtures"; secundários — esqueleto do `verifica-navegacao.py` com corpus
+  logo depois da T02, DONE à sessão regente viva sem ref fixado em documento, (g) importa o
+  módulo do 073 com `importlib`, (h) exige `data-alvo` em derrubar, FR4 da spec inclui
+  reiniciar, `tarefa.json` com Worker06 e MAESTRO, T11 pendente não bloqueia o DONE, script
+  em inglês; `.claude/launch.json` passa a ser rastreado (entrada `prototipo-074`, porta
+  8768).
 - **Plano do protótipo navegável** (ciclo 074): `plan.md` com Constitution Check I–VIII (um
   desvio justificado: "abre offline" e "recarregar restaura" são critérios declarados do
   crítico que anda, S4/S7), declaração dos cinco artefatos (`data-model=yes`, `ux-design=yes`,

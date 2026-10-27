@@ -1,16 +1,17 @@
 # Plan 074 — Protótipo navegável do painel de regência
 
+- **Siglas** (Princípio VIII, expandidas na 1ª ocorrência — antes de qualquer cabeçalho,
+  gate do plano S6): DoD (*Definition of Done*), ADR (*Architecture Decision Record*), FR
+  (*functional requirement*, requisito funcional), NFR (*non-functional requirement*,
+  requisito não funcional), ENTRA (as funcionalidades que **entram** — veredicto do confronto
+  do 073), JSON (*JavaScript Object Notation*), UX (*user experience*), CI (*Continuous
+  Integration*, integração contínua), YAGNI (*You Aren't Gonna Need It*), CDN (*Content
+  Delivery Network*), DOM (*Document Object Model*), API (*Application Programming
+  Interface*), PR (*pull request*), PNG (*Portable Network Graphics*).
 - **Spec**: `spec.md` (aprovada com ajustes no gate de spec, `gate-spec.md`, 26/10) · **UX**:
-  `ux-design.md` (aprovado com ajustes no gate de UX, `gate-ux.md`, 27/10) · **Lane**: plena,
-  com o ramo de interface · **Data**: 2026-10-27
-- **Siglas** (Princípio VIII, expandidas na 1ª ocorrência): DoD (*Definition of Done*), ADR
-  (*Architecture Decision Record*), FR (*functional requirement*, requisito funcional), NFR
-  (*non-functional requirement*, requisito não funcional), ENTRA (as funcionalidades que
-  **entram** — veredicto do confronto do 073), JSON (*JavaScript Object Notation*), UX
-  (*user experience*), CI (*Continuous Integration*, integração contínua), YAGNI (*You Aren't
-  Gonna Need It*), CDN (*Content Delivery Network*), DOM (*Document Object Model*), API
-  (*Application Programming Interface*), PR (*pull request*), PNG (*Portable Network
-  Graphics*).
+  `ux-design.md` (aprovado com ajustes no gate de UX, `gate-ux.md`, 27/10) · **Plano**:
+  aprovado com ajustes no gate de plano por delegação (`gate-plan.md`, 27/10) · **Lane**:
+  plena, com o ramo de interface · **Data**: 2026-10-27
 
 > A linguagem ubíqua do projeto **existe** — `docs/governance/glossary.md` e o §6 do mapa de
 > contextos (`specs/073-area-administrativa/confronto/mapa-de-contextos.md`) — e é a fonte
@@ -25,13 +26,21 @@
 | Principle | Compliance |
 |---|---|
 | I. Spec-driven | Sim — o plano deriva da spec aprovada (B1, B2, S1–S6 aplicados) e do `ux-design.md` aprovado (B-UX1, B-UX2 aplicados); nenhuma tela nasce antes da base da FR7, e nenhuma decisão do briefing §3 é reaberta. Uma mudança de escopo volta à spec antes de virar fragmento. |
-| II. Human-governed orchestration | Sim, com a delegação declarada — os gates de spec e de UX foram decididos **por delegação** (ADR 0026), com crítico em contexto fresco; o **gate deste plano é humano** (a regente o aprova antes de qualquer fatia de implementação começar); a barra do ciclo é um crítico em contexto fresco que **anda** pelo protótipo (quem executa não verifica); o gate de merge é humano e não delegável. A emenda ao design system do 073 (T11) só executa quando o julgamento do 073 fechar — decisão que é da regente. |
+| II. Human-governed orchestration | Sim, com a delegação declarada — os gates de spec, de UX **e deste plano** foram decididos pela regente **por delegação** (ADR 0026), com crítico em contexto fresco; o gate de merge segue humano e não delegável (gate do plano, S11). A barra do ciclo é um crítico em contexto fresco que **anda** pelo protótipo (quem executa não verifica). A emenda ao design system do 073 (T11) só executa quando o julgamento do 073 fechar — decisão que é da regente. |
 | III. Reversibility / risk gates | Sim — nada irreversível: o protótipo é artefato novo e isolado (sem servidor novo, sem banco, sem chamada ao harness); o painel v0 (`painel/`) é apenas lido; os wireframes do 073 não são movidos nem editados (FR8). O único toque em artefato de outro ciclo (T11, emenda ao `design-system.md` do 073) é condicionado ao fechamento do julgamento do 073 — nunca durante ele. As ações irreversíveis **da tela** são simuladas e exibem `data-perde`/`data-reverte`: a engenharia de reversibilidade vira conteúdo visível da tela (o Princípio III como requisito de UX). |
 | IV. Test-first / verifiable DoD | Sim, com **desvio declarado e justificado**: o verificador `prototipo/verifica-navegacao.py` nasce com as telas, com as nove verificações (a)–(i) e o corpus de mutação (f) que o prova discriminante; o verificador do 073 continua verde sobre a pasta dele (FR8). Dois critérios de aceite — "abre offline" e "recarregar restaura as fixtures" — **não têm verificação por máquina** (S4/S7 do gate de spec): um protótipo estático servido por `python -m http.server` não é verificável offline por leitura de fonte; são **critérios declarados do crítico que anda**, no roteiro da barra (`tasks.md`). A nota ≥ 9 por jornada é julgamento (o portão determinístico mede a saúde; a avaliação é da barra) — a parte determinística é executável e verde antes de qualquer crítico abrir o browser. |
 | V. Context economy / boundary | Sim — o corte é por contexto delimitado: um dono por contexto de fragmentos (T03–T06), um arquivo de ações por contexto (`prototipo/acoes/<contexto>.js`, sem edição concorrente do `app.js`), um JSON por agregado com o contrato (`data-model.md`) fixado **antes** das telas — é isso que permite as fatias paralelas sem divergirem. O `app.js` (roteador + motor de ações) é a fronteira do Worker02. A ordem da FR7 (tokens + amostra antes das telas) preserva o contexto: quem desenha fragmento consome tokens medidos, não decide design. |
 | VI. Living artifacts | Sim — jornada viva com capturas do build real por script versionado e heurística datada, no mesmo PR (NFR3); CHANGELOG (gate de CI); glossário (T12) alimentando a allowlist do verificador (a regra 2 do 073 lê o glossary.md — o T12 pousa antes do primeiro verde do T09); emenda ao design system (T11) quando o 073 fechar. Nenhuma função duplicada: `contracts/` e `checklist.md` recusados com motivo (abaixo). A cadeia spec 074 ↔ PR ↔ verificadores ↔ jornada fica registrada no qa-report. |
 | VII. Light governance / YAGNI | Sim — zero dependência: sem framework, sem build, sem CDN; `python -m http.server` na pasta do protótipo. A constante de quebra 768 px é **comentada e provisória** (a captura a 360 px na jornada viva confirma ou move — não se constrói tooling para isso). Os seis itens de menu são **vistas** sobre os cinco contextos do mapa (B1) — nenhum sexto contexto inventado. A regra das duas rodadas limita o retrabalho da barra ao essencial. |
 | VIII. Intelligible communication | Sim — siglas expandidas na primeira ocorrência em cada um dos três documentos deste plano; os termos novos entram no glossário (T12) antes de o verificador cobrá-los; os rótulos curtos ("Políticas", "Orçamento") declaram os termos por extenso nos títulos e no `data-rotulo` (S-f). |
+
+## Complexity Tracking (gate do plano, B1)
+
+| Complexidade | Onde | Tratamento |
+|---|---|---|
+| Julgamento sem verificação de fonte | "abre offline" (S4), "recarregar restaura as fixtures" (S7) e "18 elementos com efeito" (S2) — critérios da barra | **Inevitável**: um protótipo estático servido por `python -m http.server` não é verificável offline por leitura de fonte. **Limitado** pelo roteiro do `tasks.md` (critérios declarados ao crítico que anda, um por linha) e **reversível**: achado da barra vira correção normal, nada é irreversível. |
+
+Veredito: sem violação; um desvio declarado no IV.
 
 ## Artifacts of this cycle (declare all five — silence is not a decision)
 
@@ -44,6 +53,9 @@
 | `ux-design.md` | `ART:ux-design=yes` | existe, aprovado com ajustes (`gate-ux.md`, 27/10) — papel semântico de cada tela antes do componente, jornadas J1–J5, contrato dos botões, quebra 768 px |
 
 ## Domain model (declared — o detalhe vive no `data-model.md`)
+
+> O marcador `DOM:` abaixo é o rótulo do modelo de domínio (padrão do repositório) — nada tem
+> a ver com DOM, *Document Object Model*, o objeto do browser (gate do plano, S6).
 
 - `DOM:aggregate=` um JSON por agregado do mapa — **sessão**, **tarefa**, **chamado**,
   **pedido de decisão** (com o Ruling **dentro** do agregado, como no 072), **mensagem**,
@@ -72,11 +84,17 @@
    os seis itens como vistas sobre os cinco contextos (FR2, B1), estado em memória inicializado
    das fixtures (recarregar restaura), **motor de ações**: confirmação irreversível com
    `data-perde`/`data-reverte` (B-UX1), toast e aviso de simulação (`data-aviso="simulado"`,
-   `role="status"`). Entrada `prototipo-074` em `.claude/launch.json` (`python -m http.server`
-   em `prototipo/`, offline — FR6).
-3. **T07 — fixtures** (Worker06, em paralelo às telas): os oito JSON de
-   `prototipo/fixtures/`, **um por agregado**, com os valores **já fixados** pelo
-   `data-model.md` (o contrato existe antes das telas — as fatias não divergem).
+   `role="status"`). A entrada `prototipo-074` do `.claude/launch.json` (`python -m
+   http.server` em `prototipo/`, offline — FR6) **já existe rastreada** — o arquivo passa a
+   ser versionado neste PR (decisão da regente no gate do plano); a fatia não o edita.
+   **DoD (B4): a casca carrega as oito fixtures sem erro** — conferido na integração, com a
+   T07 já integrada. Logo depois da T02, **antes de qualquer tela**: o **esqueleto** do
+   `verifica-navegacao.py` com o corpus de mutação (f) — o portão nasce antes das telas
+   (Princípio IV, S1 do gate); o "primeiro verde" fica para a integração.
+3. **T07 — fixtures** (Worker01 — o Worker06 está na correção 3 do 073; começa **junto com a
+   T01**, B4): os oito JSON de `prototipo/fixtures/`, **um por agregado**, com os valores
+   **já fixados** pelo `data-model.md` (o contrato existe antes das telas — as fatias não
+   divergem). **T03–T06 só começam após T02 e T07 integrados (B4).**
 4. **T03–T06 — fragmentos por contexto** (FR3; cada dono com seu `prototipo/acoes/<contexto>.js`):
    - T03 Worker01 — Regência e Chamados: `telas/regencia/inicial.html` (frase-chave),
      `telas/regencia/fila-de-decisoes.html`, `telas/regencia/ruling.html`,
@@ -88,8 +106,9 @@
      tarefa aberta, consumo por agente).
    Todo fragmento preserva o contrato de marcação do 073 (`data-fonte`, `data-rotulo`,
    `data-exemplo`, `data-referencia`) e a regra 5; os nomes de arquivo são os propostos no
-   `ux-design.md` §2. **T12 (glossário, Worker01) corre em paralelo desde já** e pousa antes
-   do primeiro verde do T09 — a regra 2 do verificador lê o glossário.
+   `ux-design.md` §2. **T12 (glossário, Worker01) executa ANTES da T03** (mesmo dono, uma
+   tarefa ativa por sessão — B3 do gate) e pousa antes do primeiro verde do T09 — a regra 2 do
+   verificador lê o glossário.
 5. **T08 — ações simuladas ponta a ponta** (Worker02, FR4/B-UX1): os 18 elementos da tabela
    §4 do ux-design com o efeito declarado funcionando; as quatro ações irreversíveis
    (reiniciar, derrubar, entregar a destino não resolvido, estourar teto) abrindo a confirmação
@@ -97,10 +116,15 @@
    e com o aviso "portão do regente".
 6. **T09 — verificador e corpus** (Worker02, NFR1): `prototipo/verifica-navegacao.py` com as
    nove verificações (a)–(i) e o corpus de mutação (f) — fixture boa passa, fixture ruim
-   **faz falhar**. A verificação (g) **importa ou invoca as regras do
-   `specs/073-area-administrativa/prototipo/verifica-prototipo.py`** sobre `prototipo/telas/`,
-   com 0 achados — **planejado para as seis regras** (as cinco da correção 1 mais a regra 6 do
-   roster, que pousa com o fechamento do 073; ver Clarify 1).
+   **faz falhar**. Mensagens e docstring em **inglês** (ADR 0014, S12 do gate). A verificação
+   (g) **IMPORTA o módulo** `specs/073-area-administrativa/prototipo/verifica-prototipo.py`
+   com `importlib` (nome de arquivo com hífen), **reutiliza o parser e os termos do glossário**
+   dele e percorre `prototipo/telas/**/*.html` com 0 achados — o arquivo do 073 **não é
+   editado** (S8); a regra 1 dele (`data-fonte` em todo `<a>`/`<button>`) vale nos links da
+   trilha de contexto. A verificação (e) aceita `<script src>` **local** (os
+   `prototipo/acoes/*.js` — acréscimo declarado, S4). A verificação (h) falha também se um
+   `data-acao="derrubar"` não declarar `data-alvo` (S9). **Planejado para as seis regras** do
+   073 (as cinco da correção 1 mais a regra 6 do roster — já em disco; ver Clarify 1).
 7. **T10 — jornada viva** (Worker06, NFR3): `docs/jornada/scripts/captura-074.sh` (o padrão do
    `captura-072.sh`: sobe o servidor de verdade em `prototipo/`, fotografa o DOM renderizado
    com Playwright + Edge do sistema, derruba o servidor ao fim) e
@@ -110,7 +134,8 @@
 8. **T11 — emenda ao design system do 073** (Worker02, condicional): quebra 768 px, trilha
    de contexto, aviso de simulação, "3 a **6** itens" em
    `specs/073-area-administrativa/design-system.md` — **só quando o julgamento do 073 fechar**
-   (mandato do gate de UX, decisão 2); nunca durante o julgamento.
+   (mandato do gate de UX, decisão 2); nunca durante o julgamento. **T11 pendente não bloqueia
+   o DONE** — o estado fica declarado no qa-report (S10 do gate).
 9. **T13 — segurança documental e fitness** (Worker06, NFR2): varredura de segredos e dados
    pessoais sobre `prototipo/` e `specs/074-*/`; `scripts/check-conformance.sh 074` nos dois
    modos, `check-language.sh`, `check-links.sh` (com o aviso de lentidão abaixo); evidência por
@@ -119,9 +144,8 @@
     fresco que **anda** pelas jornadas J1–J5 no browser (os 15 ENTRA + as 3 telas da regência
     alcançados com o efeito simulado; nota ≥ 9 por jornada; regra das duas rodadas; "abre
     offline" e "recarregar restaura" julgados por ele — S4/S7), `[[DONE 074]]` com cópia à
-    sessão regente **viva** (MAESTRO — ref corrente conferido no `ListAgents` da hora; hoje
-    `[5d2fba]`; o `[7c8d05]` é ref de fixture do roster, nunca destino de DONE) e fallback
-    `done-*.md`.
+    sessão regente **viva, conferida no `ListAgents` na hora** — nenhum ref de sessão é
+    fixado em documento versionado (S3 do gate; ver Clarify 3) — e fallback `done-*.md`.
 
 ## FR8 — restrição dura: o verificador do 073 nunca fica vermelho
 
@@ -190,3 +214,8 @@ scripts/check-links.sh                             # verde (timeout longo — ve
    072, mapa §7.1). É a leitura que a própria FR5 faz ("todo número é fixture marcada `(exemplo)`
    **ou** vem de exemplo.json com `data-fonte") — registrada no `data-model.md`, não decidida
    aqui.
+3. **DONE sem ref fixado em documento** (S3 do gate do plano): o `[[DONE 074]]` vai à sessão
+   regente **viva, conferida no `ListAgents` na hora** — nenhum ref de sessão viva é fixado em
+   documento versionado (o briefing §6, que tratava o ref como endereço estável, fica
+   superado neste ponto; o fallback commitado `done-*.md` permanece). Refs de **fixture** do
+   roster do 073 continuam nas telas — são dado, não endereço.

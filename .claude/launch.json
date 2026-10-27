@@ -1,0 +1,45 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "painel-070",
+      "runtimeExecutable": "C:/Users/ghdaru/AppData/Local/Programs/Python/Python312/python.exe",
+      "runtimeArgs": [
+        "C:/Users/ghdaru/Documents/010_PROJETOS/410_MAESTRO/painel/server.py",
+        "C:/Users/ghdaru/Documents/010_PROJETOS/410_MAESTRO/painel/projetos/exemplo.json",
+        "--porta", "8765"
+      ],
+      "port": 8765
+    },
+    {
+      "name": "diagramas",
+      "runtimeExecutable": "C:/Users/ghdaru/AppData/Local/Programs/Python/Python312/python.exe",
+      "runtimeArgs": [
+        "-m", "http.server", "8766",
+        "--bind", "127.0.0.1",
+        "--directory", "C:/Users/ghdaru/Documents/010_PROJETOS/410_MAESTRO/docs/diagramas"
+      ],
+      "port": 8766
+    },
+    {
+      "name": "prototipo-073",
+      "runtimeExecutable": "C:/Users/ghdaru/AppData/Local/Programs/Python/Python312/python.exe",
+      "runtimeArgs": [
+        "-m", "http.server", "8767",
+        "--bind", "127.0.0.1",
+        "--directory", "C:/Users/ghdaru/Documents/010_PROJETOS/410_MAESTRO/specs/073-area-administrativa/prototipo"
+      ],
+      "port": 8767
+    },
+    {
+      "name": "prototipo-074",
+      "runtimeExecutable": "C:/Users/ghdaru/AppData/Local/Programs/Python/Python312/python.exe",
+      "runtimeArgs": [
+        "-m", "http.server", "8768",
+        "--bind", "127.0.0.1",
+        "--directory", "C:/Users/ghdaru/Documents/010_PROJETOS/410_MAESTRO/specs/074-prototipo-navegavel/prototipo"
+      ],
+      "port": 8768
+    }
+  ]
+}
