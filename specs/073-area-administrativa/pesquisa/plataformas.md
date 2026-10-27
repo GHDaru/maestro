@@ -66,7 +66,7 @@ Siglas expandidas na primeira ocorrência: **RBAC** (*Role-Based Access Control*
 | CONTROLE | subir/derrubar sessão ou agente | sim | sim | parcial | parcial | parcial | parcial | parcial | sim | parcial | parcial | sim | parcial | parcial | parcial | parcial | não | parcial | — | parcial | parcial | parcial | não | não | não | não |
 | CONTROLE | pausar | sim | — | parcial | parcial | — | — | parcial | parcial | — | não | parcial | sim | — | — | — | — | — | — | — | — | sim | — | — | — | — |
 | CONTROLE | retomar | sim | — | parcial | parcial | — | — | parcial | sim | — | sim | sim | parcial | — | — | — | — | — | — | parcial | parcial | parcial | — | — | — | — |
-| CONTROLE | limites de orçamento e de taxa | parcial (corta) | — | parcial (corta) | parcial (corta) | sim (corta) | — | sim (corta) | parcial (avisa?) | — | parcial (corta) | sim (corta) | parcial (corta) | sim (corta) | sim (corta) | sim (corta) | parcial (corta) | parcial (avisa) | — | parcial (avisa?) | — | — | — | parcial (corta) | — | — |
+| CONTROLE | limites de orçamento e de taxa | parcial (corta) | — | parcial (corta) | parcial (corta) | sim (corta) | — | sim (corta) | parcial (avisa?) | — | parcial (corta) | sim (corta) | parcial (corta) | sim (corta) | sim (corta) | sim (corta) | parcial (corta) | parcial (avisa) | — | parcial (avisa?) | — | — | — | parcial (avisa?) | — | — |
 | CONTROLE | políticas allow/deny/ask | — | parcial | parcial | parcial | sim | sim | parcial | sim | — | sim | sim | parcial | parcial | parcial | parcial | parcial | — | — | — | — | — | — | parcial | — | — |
 | CONTROLE | aprovação humana | — | — | parcial | — | parcial | sim | sim | sim | — | sim | parcial | sim | — | parcial | parcial | — | — | parcial | sim | sim | parcial | — | sim | — | — |
 | ADMINISTRAÇÃO | cadastro de agentes | — | sim | parcial | parcial | sim | sim | — | sim | sim | sim | sim | parcial | sim | sim | parcial | — | parcial | — | parcial | parcial | sim | parcial | sim | não | não |
@@ -117,6 +117,7 @@ Siglas expandidas na primeira ocorrência: **RBAC** (*Role-Based Access Control*
 > | Helicone | `corta` | `helicone.md:38` — *rate limit* → **429** |
 > | AgentOps | `avisa` | `agentops.md:30` — "Token limit overflow flags" (**detecta**, não capa) |
 > | LangSmith/LG | `avisa?` | `langsmith-langgraph.md:30` — limites são assunto de *billing* |
+> | Flowise | `avisa?` | `flowise.md:28` — só lista *rate limit* entre os controles; **sem** fonte de corte |
 
 ## Como acrescentar uma plataforma
 
@@ -162,8 +163,8 @@ Siglas expandidas na primeira ocorrência: **RBAC** (*Role-Based Access Control*
 > seguem valendo (`sim` 168 · `parcial` 226 · `não` 12 · `—` 244; 650 células). O que mudou foi a
 > **forma**: a nota de coluna "corta × avisa" virou **marca por célula** na linha *limites de
 > orçamento e de taxa* (cada `sim`/`parcial` ganhou `corta`, `avisa` ou `avisa?` **com a ficha como
-> fonte**; ver a tabela de marcas logo abaixo da matriz). 13 células `corta`, 1 `avisa` (AgentOps) e
-> 2 `avisa?` (Claude Code, LangSmith/LG) — as `—` ficam sem marca. As contagens de `sim` por
+> fonte**; ver a tabela de marcas logo abaixo da matriz). 12 células `corta`, 1 `avisa` (AgentOps) e
+> 3 `avisa?` (Claude Code, LangSmith/LG, Flowise) — as `—` ficam sem marca. As contagens de `sim` por
 > funcionalidade **não** mudam (a marca acompanha o símbolo, não o substitui): a linha continua
 > **6 `sim`**.
 

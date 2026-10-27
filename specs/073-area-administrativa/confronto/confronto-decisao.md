@@ -27,8 +27,8 @@
 > **uma só** na matriz fixa (a tabela de 26 é mantida); o que a distingue é a leitura **por célula** —
 > cada `sim`/`parcial` ganha a marca **`corta`** (estourou, a chamada é recusada ou limitada) ou
 > **`avisa`** (só notifica), com a ficha da plataforma como fonte, e `avisa?` onde a ficha não
-> distingue; é o que `pesquisa/plataformas.md` agora mostra: **13 `corta` · 1 `avisa`** (AgentOps) e
-> **2 `avisa?`** (Claude Code, LangSmith/LG). **(D2)** a **ferramenta MCP** (*Model Context
+> distingue; é o que `pesquisa/plataformas.md` agora mostra: **12 `corta` · 1 `avisa`** (AgentOps) e
+> **3 `avisa?`** (Claude Code, LangSmith/LG, Flowise). **(D2)** a **ferramenta MCP** (*Model Context
 > Protocol*) entra como **escopo da política `allow/deny/ask` por agente** — não como tela própria: a
 > regra de exemplo mora na tela de políticas (`prototipo/administracao-02-politicas.html`,
 > `#regra-ferramenta-mcp`) e cada ferramenta do protocolo aponta de volta para ela. **(D3)** o
