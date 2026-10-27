@@ -1,0 +1,171 @@
+<link rel="icon" href="data:,">
+<div class="conteudo-interior" data-contexto="workflow-de-sessoes" data-tela="consumo-por-agente"
+     data-acoes="acoes/workflow-de-sessoes.js"
+     data-fonte="specs/074-prototipo-navegavel/ux-design.md §2.4 (papel semântico: consumo por agente) · specs/073-area-administrativa/prototipo/workflow-04-consumo-por-agente.html (wireframe de origem — reproduzido como arquivo novo, sem movê-lo nem editá-lo: FR8)">
+
+  <p class="migalha" data-referencia="true">Maestro · #/workflow-de-sessoes/consumo-por-agente · ciclo 074</p>
+
+  <h1 class="titulo-pagina" data-rotulo="consumo por agente"
+      data-fonte="método: docs/governance/glossary.md (Consumo por agente, ciclo 073 · Custo por sessão, ciclo 068)">consumo por agente</h1>
+
+  <nav class="trilha" aria-label="trilha de contexto — telas irmãs do Workflow de sessões"
+       data-rotulo="trilha de contexto"
+       data-fonte="specs/074-prototipo-navegavel/ux-design.md §2.5 (trilha de contexto)">
+    <a href="#/workflow-de-sessoes/sessao-de-agente"
+       data-fonte="ux-design 074 §2.5 (trilha de contexto)">sessão de agente</a>
+    <a href="#/workflow-de-sessoes/estado-do-agente-vivo"
+       data-fonte="ux-design 074 §2.5 (trilha de contexto)">estado do agente vivo</a>
+    <a href="#/workflow-de-sessoes/tarefa-aberta"
+       data-fonte="ux-design 074 §2.5 (trilha de contexto)">tarefa aberta</a>
+    <a href="#/workflow-de-sessoes/consumo-por-agente" aria-current="page"
+       data-fonte="ux-design 074 §1 (item ativo com aria-current)">consumo por agente</a>
+  </nav>
+
+  <p class="ajuda"
+     data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §6.3 (contexto Workflow de sessões) · painel/custo.py (o read-model do custo)">
+    <strong>Contexto delimitado:</strong> Workflow de sessões ·
+    <strong>ENTRA:</strong> consumo por agente — o que cada <strong>sessão de agente</strong> gastou na janela ·
+    <strong>identidade de sessão:</strong> sempre <strong>nome · ref · projeto</strong> ·
+    todo valor em dinheiro é <strong>estimado</strong>, e todo token é <strong>piso</strong>.
+  </p>
+
+  <h2>janela</h2>
+  <div class="segmento" role="group" aria-label="janela de tempo do consumo"
+       data-rotulo="consumo por agente"
+       data-fonte="ux-design 074 §2.4 (o segmento de período é botão de escrita: escolher a janela reconsulta o read-model) e §5 (contrato dos botões)">
+    <button data-acao="periodo" data-periodo="sessao" aria-pressed="true"
+            data-autoriza="humano" data-simulado="sim"
+            data-efeito="a janela muda para «esta sessão» e o consumo é reconsultado"
+            data-fonte="ux-design 074 §5 (o segmento de período é ação de escrita)">esta sessão</button>
+    <button data-acao="periodo" data-periodo="dia" aria-pressed="false"
+            data-autoriza="humano" data-simulado="sim"
+            data-efeito="a janela muda para «hoje» e o consumo é reconsultado"
+            data-fonte="ux-design 074 §5 (o segmento de período é ação de escrita)">hoje</button>
+    <button data-acao="periodo" data-periodo="ciclo" aria-pressed="false"
+            data-autoriza="humano" data-simulado="sim"
+            data-efeito="a janela muda para «este ciclo» e o consumo é reconsultado"
+            data-fonte="ux-design 074 §5 (o segmento de período é ação de escrita)">este ciclo</button>
+  </div>
+
+  <h2>Resumo</h2>
+  <div class="grade"
+       data-fonte="método: prototipo/fixtures/catalogo.json (o preço do modelo) · painel/custo.py (tokens e piso) · prototipo/fixtures/sessao.json">
+    <div class="cartao">
+      <span class="rotulo-categoria" data-rotulo="consumo por agente">consumo na janela</span>
+      <p class="numero-grande" data-exemplo="true" data-fonte="exemplo — nenhum dado real">15,6 M (piso) (exemplo)</p>
+    </div>
+    <div class="cartao">
+      <span class="rotulo-categoria" data-rotulo="custo por sessão">custo estimado</span>
+      <p class="numero-grande" data-exemplo="true" data-fonte="exemplo — nenhum dado real; o preço vem do catálogo (prototipo/fixtures/catalogo.json)">US$ 4,37 (estimado) (exemplo)</p>
+    </div>
+    <div class="cartao">
+      <span class="rotulo-categoria" data-rotulo="catálogo de skills/ferramentas/modelos">modelo da janela</span>
+      <p class="ajuda">deepseek-v4.1-flash — <span data-exemplo="true" data-fonte="exemplo — nenhum dado real; preço do modelo no catálogo: US$ 0,28 por milhão de tokens">US$ 0,28 / milhão (exemplo)</span></p>
+    </div>
+    <div class="cartao">
+      <span class="rotulo-categoria" data-rotulo="limite de orçamento">teto vigente</span>
+      <p class="ajuda">o teto é da <strong>Administração</strong> — esta tela o <em>mostra</em>, não o edita. <span class="fonte" data-referencia="true">método: prototipo/fixtures/catalogo.json e a tela da Administração (escopo de política)</span></p>
+    </div>
+  </div>
+
+  <h2>por sessão</h2>
+  <table class="tabela"
+         data-fonte="método: prototipo/fixtures/catalogo.json (preço por milhão do modelo) · painel/custo.py · docs/governance/glossary.md (Custo por sessão, ciclo 068)">
+    <thead>
+      <tr>
+        <th data-rotulo="sessão de agente" data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §7 (identidade: nome · ref · projeto)">sessão</th>
+        <th data-rotulo="consumo por agente" data-fonte="painel/custo.py (a janela conta as sessões que gastaram)">sessões na janela</th>
+        <th data-rotulo="consumo por agente" data-fonte="painel/custo.py (o token é piso: a soma só enxerga o que está no transcript)">tokens (piso)</th>
+        <th data-rotulo="custo por sessão" data-fonte="prototipo/fixtures/catalogo.json (o preço por milhão do modelo) × painel/custo.py — a coluna é sempre «estimado»: o preço é de tabela, e o token é piso">custo estimado</th>
+        <th data-rotulo="catálogo de skills/ferramentas/modelos" data-fonte="prototipo/fixtures/catalogo.json (quebra por modelo)">quebra por modelo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">
+        <td>Worker01 [9a1b27] · maestro (exemplo)</td>
+        <td>1 (exemplo)</td>
+        <td>1,2 M (piso) (exemplo)</td>
+        <td>US$ 0,34 (estimado) (exemplo)</td>
+        <td>deepseek-v4.1-flash — 100% (exemplo)</td>
+      </tr>
+      <tr data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">
+        <td>Worker02 [31f7bf] · maestro (exemplo)</td>
+        <td>1 (exemplo)</td>
+        <td>2,4 M (piso) (exemplo)</td>
+        <td>US$ 0,67 (estimado) (exemplo)</td>
+        <td>deepseek-v4.1-flash — 100% (exemplo)</td>
+      </tr>
+      <tr data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">
+        <td>Worker03 [ad66d6] · maestro (exemplo)</td>
+        <td>1 (exemplo)</td>
+        <td>0,9 M (piso) (exemplo)</td>
+        <td>US$ 0,25 (estimado) (exemplo)</td>
+        <td>deepseek-v4.1-flash — 100% (exemplo)</td>
+      </tr>
+      <tr data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">
+        <td>Worker04 [4d000a] · maestro (exemplo)</td>
+        <td>1 (exemplo)</td>
+        <td>0,2 M (piso) (exemplo)</td>
+        <td>US$ 0,06 (estimado) (exemplo)</td>
+        <td>deepseek-v4.1-flash — 100% (exemplo)</td>
+      </tr>
+      <tr data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">
+        <td>Worker05 [78d88f] · maestro (exemplo)</td>
+        <td>1 (exemplo)</td>
+        <td>1,8 M (piso) (exemplo)</td>
+        <td>US$ 0,50 (estimado) (exemplo)</td>
+        <td>deepseek-v4.1-flash — 100% (exemplo)</td>
+      </tr>
+      <tr data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">
+        <td>Worker06 [c85948] · maestro (exemplo)</td>
+        <td>1 (exemplo)</td>
+        <td>0,4 M (piso) (exemplo)</td>
+        <td>US$ 0,11 (estimado) (exemplo)</td>
+        <td>deepseek-v4.1-flash — 100% (exemplo)</td>
+      </tr>
+      <tr data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">
+        <td>Gerente [31ee4d] · maestro (exemplo)</td>
+        <td>1 (exemplo)</td>
+        <td>3,1 M (piso) (exemplo)</td>
+        <td>US$ 0,87 (estimado) (exemplo)</td>
+        <td>deepseek-v4.1-flash — 100% (exemplo)</td>
+      </tr>
+      <tr data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">
+        <td>MAESTRO [7c8d05] · maestro (exemplo)</td>
+        <td>1 (exemplo)</td>
+        <td>5,6 M (piso) (exemplo)</td>
+        <td>US$ 1,57 (estimado) (exemplo)</td>
+        <td>deepseek-v4.1-flash — 100% (exemplo)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>ranking da janela</h2>
+  <ol data-fonte="método: painel/custo.py (o ranking ordena o mesmo read-model da tabela) · prototipo/fixtures/catalogo.json">
+    <li>MAESTRO [7c8d05] · maestro — <span data-exemplo="true" data-fonte="exemplo — nenhum dado real">5,6 M (piso) · US$ 1,57 (estimado) (exemplo)</span></li>
+    <li>Gerente [31ee4d] · maestro — <span data-exemplo="true" data-fonte="exemplo — nenhum dado real">3,1 M (piso) · US$ 0,87 (estimado) (exemplo)</span></li>
+    <li>Worker02 [31f7bf] · maestro — <span data-exemplo="true" data-fonte="exemplo — nenhum dado real">2,4 M (piso) · US$ 0,67 (estimado) (exemplo)</span></li>
+    <li>Worker05 [78d88f] · maestro — <span data-exemplo="true" data-fonte="exemplo — nenhum dado real">1,8 M (piso) · US$ 0,50 (estimado) (exemplo)</span></li>
+    <li>Worker01 [9a1b27] · maestro — <span data-exemplo="true" data-fonte="exemplo — nenhum dado real">1,2 M (piso) · US$ 0,34 (estimado) (exemplo)</span></li>
+    <li>Worker03 [ad66d6] · maestro — <span data-exemplo="true" data-fonte="exemplo — nenhum dado real">0,9 M (piso) · US$ 0,25 (estimado) (exemplo)</span></li>
+    <li>Worker06 [c85948] · maestro — <span data-exemplo="true" data-fonte="exemplo — nenhum dado real">0,4 M (piso) · US$ 0,11 (estimado) (exemplo)</span></li>
+    <li>Worker04 [4d000a] · maestro — <span data-exemplo="true" data-fonte="exemplo — nenhum dado real">0,2 M (piso) · US$ 0,06 (estimado) (exemplo)</span></li>
+  </ol>
+
+  <div class="cartao"
+       data-fonte="specs/073-area-administrativa/rodada-4/correcao-3.md (o custo é sempre «estimado» e o token é sempre piso) · painel/custo.py">
+    <p><span class="rotulo-categoria" data-rotulo="custo por sessão">estimado</span> <strong>Nada aqui é o total gasto.</strong> O token é <strong>piso</strong> (a soma só vê o que está no transcript) e o dinheiro é <strong>estimado</strong> (preço de tabela do modelo × token). A coluna <em>custo estimado</em> vem do <strong>preço do modelo no catálogo</strong> — <span data-exemplo="true" data-fonte="exemplo — nenhum dado real; prototipo/fixtures/catalogo.json: deepseek-v4.1-flash a US$ 0,28 por milhão">US$ 0,28 / milhão (exemplo)</span> — e por isso carrega «estimado» no nome.</p>
+    <p class="ajuda">Se o preço do modelo mudar no catálogo, o estimado muda junto: o número <em>não</em> é congelado na tela. <span class="fonte" data-referencia="true">método: prototipo/fixtures/catalogo.json (modelos) · painel/custo.py</span></p>
+  </div>
+
+  <h2>teto — o da Administração</h2>
+  <div class="cartao"
+       data-fonte="specs/073-area-administrativa/rodada-4/correcao-3.md (o aviso de teto tem emissor declarado) · specs/073-area-administrativa/confronto/mapa-de-contextos.md §4 (relação 3: Workflow de sessões → Administração) · docs/governance/glossary.md (Emissor do aviso)">
+    <p>O <strong>teto</strong> (limite de orçamento) é <strong>política da Administração</strong>: esta tela só o exibe e mede a distância. Quando o consumo cruza o teto, quem <strong>detecta</strong> é o <strong>emissor do aviso</strong> (<code>painel/custo.py</code>), que enfileira uma <strong>mensagem</strong> na <strong>fila (outbox)</strong> endereçada à <strong>sessão dona</strong> e ao <strong>regente</strong>; o <strong>drenar outbox</strong> a entrega, e ela chega à <strong>caixa de entrada</strong> dos dois.</p>
+    <p><span class="rotulo-categoria" data-rotulo="mensagem entre agentes">exemplo de aviso (linha)</span> <span data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato do aviso de teto">«o consumo de Worker05 [78d88f] · maestro estourou o teto da janela — piso de 1,8 M tokens, estimado de US$ 0,50 (exemplo)» — de painel/custo.py para Worker05 [78d88f] · maestro e para o regente MAESTRO [7c8d05] · maestro.</span></p>
+    <p class="ajuda">A linha do aviso <strong>declara o emissor</strong> (quem detectou) e o <strong>endereço</strong> (por <strong>ref</strong>): não há aviso órfão. O estouro <em>não</em> derruba a sessão nem bloqueia a tarefa por si — quem decide é o humano (o <strong>portão do regente</strong>). <span class="fonte" data-referencia="true">método: docs/governance/glossary.md (Emissor do aviso, Portão do regente) · specs/073-area-administrativa/rodada-4/correcao-1.md</span></p>
+  </div>
+
+  <p class="fonte" data-referencia="true">Fitness function de UX (ciclo 066): vale F8 (todo «—» com motivo) e F9 (controle só-ícone com aria-label — o segmento de período usa rótulo de texto, não ícone). Siglas (Princípio VIII): FR (functional requirement, requisito funcional) · UX (user experience) · ENTRA (o que o contexto consome, do mapa de contextos).</p>
+
+</div>

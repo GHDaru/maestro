@@ -1,0 +1,47 @@
+{
+  "_fonte": "painel/schema_workflow.sql (tabela `fila`) e `painel/fila_outbox.py`",
+  "_exemplo": true,
+  "projeto": "maestro",
+  "mensagens": [
+    {
+      "id": 44,
+      "sessao_origem": "Worker01 [9a1b27] · maestro",
+      "sessao_destino": "Worker03 [ad66d6] · maestro",
+      "payload": "O fragmento de protocolo está na sua fatia? (exemplo)",
+      "criada_em": "2026-10-27T15:40:00-03:00",
+      "lida_em": null
+    },
+    {
+      "id": 43,
+      "sessao_origem": "Gerente [31ee4d] · maestro",
+      "sessao_destino": "Worker03 [ad66d6] · maestro",
+      "payload": "D-014 está aberto: não comece o 074 antes do julgamento do 073. (exemplo)",
+      "criada_em": "2026-10-27T12:10:00-03:00",
+      "lida_em": null
+    },
+    {
+      "id": 42,
+      "sessao_origem": "Worker02 [31f7bf] · maestro",
+      "sessao_destino": "Worker05 [78d88f] · maestro",
+      "payload": "A casca do protótipo já carrega as oito fixtures; use o mesmo roteador. (exemplo)",
+      "criada_em": "2026-10-27T15:20:00-03:00",
+      "lida_em": null
+    },
+    {
+      "id": 41,
+      "sessao_origem": "MAESTRO [7c8d05] · maestro",
+      "sessao_destino": "Worker01 [9a1b27] · maestro",
+      "payload": "A correção 3 do 073 foi integrada — obrigado. (exemplo)",
+      "criada_em": "2026-10-27T08:40:00-03:00",
+      "lida_em": "2026-10-27T09:05:00-03:00"
+    },
+    {
+      "id": 40,
+      "sessao_origem": "Gerente [31ee4d] · maestro",
+      "sessao_destino": "Worker02 [31f7bf] · maestro",
+      "payload": "A T02 entra junto com a T07; a T03 só depois das duas. (exemplo)",
+      "criada_em": "2026-10-27T09:20:00-03:00",
+      "lida_em": "2026-10-27T09:35:00-03:00"
+    }
+  ]
+}

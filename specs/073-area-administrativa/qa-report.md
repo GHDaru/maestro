@@ -85,7 +85,7 @@ Medição própria das 13 fichas novas (uma linha por arquivo): `helicone.md` **
 
 | Célula na matriz | Ficha (caminho:linha) | O que a ficha diz |
 |---|---|---|
-| Langfuse × auditoria = `sim` | `pesquisa/langfuse.md:47` | "auditoria → sim — *audit logs* listados entre os controles" |
+| Langfuse × auditoria = `sim` *(rodada 1; **hoje `parcial`** — correção 2 da rodada 4, § abaixo)* | `pesquisa/langfuse.md:47` | "auditoria → sim — *audit logs* listados entre os controles" |
 | Portkey × mensagem entre agentes = `não` | `pesquisa/portkey.md:68` | "mensagem entre agentes → não — nada sobre mensagem entre agentes (nem o termo A2A aparece)" |
 | LiteLLM × colisão de nomes = `—` | `pesquisa/litellm.md:119` | célula **em branco**: "colisão de nomes → (vazio) — `a2a_agent_permissions` fixa o roteamento por `agent_id`, mas nenhuma página aberta trata colisão" |
 | LiteLLM × protocolos (A2A; MCP) = `sim` | `pesquisa/litellm.md:115` | "Protocolos (A2A; MCP) → sim — `agent-card.json`, `protocolVersion` 0.3/1.0, e MCP" |
@@ -253,6 +253,74 @@ contagem de células ≠ 27, 650 células; toda contagem das tabelas de leitura 
 Script de medição fora do repositório (`%TEMP%\wf073_check.py`). Nada da evidência da rodada 1 foi
 reescrito — normalização e correções entraram **por acréscimo**.
 
+## Rodada 3 (073-T3-seguranca, 26/10) — segurança documental e conformance 073
+
+Worker06, contexto próprio. Objeto: `specs/073-area-administrativa/` — foco em `prototipo/`
+(11 telas + 2 fixtures + o verificador) e `confronto/` (3 arquivos). **Por acréscimo**: nada da
+evidência das rodadas 1/2 foi reescrito.
+
+### 1. Varredura — nenhum achado
+
+| Classe | Padrões procurados | Resultado |
+|---|---|---|
+| Segredo | chave `sk-*`/`sk_live`/`sk_test`, `api_key`, `secret`, `senha`, `password`, `bearer`, *connection string*, `AKIA…`, `ghp_…`, bloco de chave privada, JWT (*JSON Web Token*, `eyJ…`) | **0** — os únicos casamentos são **falsos positivos**: `sk-l` dentro de "ta**sk-l**edger" (o `task-ledger.md` citado nas telas) e `senha` dentro de "de**senha**dos" (`prototipo/README.md:4`). Confirmado por `grep -o`: o texto casado é literalmente `sk-l`/`senha`, não um segredo. |
+| Dado pessoal | e-mail, telefone `+55`, CPF, CNPJ, caminho de usuário | **0** e-mails, 0 telefone, 0 CPF/CNPJ. O único caminho de usuário é o **namespace público do repositório** `GHDaru/maestro` (`confronto/inventario-maestro.md:9`) — não é dado de terceiro. |
+| Nome real de sessão/agente | `Worker0*`, `Gerente`, `Regente`, `Office`, nomes próprios | **0 sem marcador** — todo valor que parece real carrega `(exemplo)` **e** `data-exemplo="true"` (verificado tela a tela). Nomes de **papel** do método (Worker01–05, Gerente) não são pessoas. |
+| URL externa | `http(s)://…`, com e sem *query string* | **só documentação/produto público** — `docs.litellm.ai`, `code.claude.com/docs`, `docs.temporal.io`, `windmill.dev`, `kiro.dev`, `themaestri.app`, `learn.microsoft.com`, `arize.com`… A única com *query string* é o endpoint público de consulta da doc do n8n (`pesquisa/n8n.md:5`), sem token nem credencial. Nada vaza acesso privado. |
+
+**Declarado, não achado:** `Darú` aparece em `spec.md:44` e `plan.md:18` (prosa: "a página de
+progresso viva do Darú") — é o **dono do repositório**, nome já presente em todo o repo; não é dado
+de terceiro nem dado de tela.
+
+**Achados: 0.** Pela taxonomia do Princípio III (*read → … → irreversível → bloqueada*), nada a
+classificar.
+
+### 2. O protótipo passa na própria fitness function
+
+```
+$ python specs/073-area-administrativa/prototipo/verifica-prototipo.py
+-- verifica-prototipo: 11 screen(s), 0 finding(s)
+```
+
+11 telas, 0 achados, exit 0 — verde **além** do retrato de 25/10, que registrava 45 achados
+pendentes de `attempt=2`.
+
+### 3. Conformance 073 — verde nos dois modos
+
+**Modo normal** (`bash scripts/check-conformance.sh 073`) — exit 0:
+
+```text
+── Conformance: did the method survive into the artifacts? ──
+   (floor: cycle 42; older cycles carry declared debt — see the roadmap)
+• 070-conferidor-ordem-veredito
+    · imported evidence (00-chamado.md + G*-*.md, no tasks.md): a Hindiana chamado, not a Maestro cycle — not charged (ADR 0024)
+• 073-area-administrativa
+    ✓ Constitution Check complete (8/8)
+    ✓ acceptance criteria located and stated without checkboxes
+    ✓ all 5 conditional artifacts declared with a reason
+    ✓ domain model declared (aggregate, invariants, glossary, ports) with a reason
+    ✓ TAIL:review evidence: Worker03, contexto fresco (não consolidou; amostragem esc
+    ✓ TAIL:security evidence: Worker03, varredura sobre `pesquisa/` (28 arquivos, 14 pad
+    ✓ TAIL:gate evidence: o gate humano da rodada 1 é o **"segue" do regente para a
+    · TAIL:mutation not applicable — rodada documental — nenhum gate executável criado ou alte
+──
+cycles checked: 2
+✓ every cycle checked declares its artifacts and carries the closing tail with evidence.
+```
+
+**Modo `TICKED_ONLY=1`** — saída **idêntica**, exit 0.
+
+> Nota da máquina: nesta worktree a chamada do conformance 073 leva ~4–6 min (msys, *fork* por
+> arquivo). **Não** foi preciso extrair `check-links.sh`/`check-boundary.sh` — o conformance 073
+> não os invoca a ponto de pendurar; a lentidão é do próprio `check-conformance.sh` sob msys.
+> Saídas coladas acima, como pedido.
+
+### Veredito
+
+**Limpo.** 0 achados de segurança (segredo, dado pessoal, nome não marcado, URL vazada); protótipo
+verde na própria fitness function; conformance 073 verde nos dois modos. **Nada corrigido — nada
+havia a corrigir.**
+
 ## Revisão em contexto fresco do confronto (073-T2-revisao-confronto, 25/10)
 
 Worker05, contexto próprio — **não escrevi o confronto** (foi o Worker03). Declaro, por
@@ -359,11 +427,1213 @@ quatro regras do mandato:
 4. **colisão sem qualificador** (condição da ratificação) — "fila" exige `decisões`/`outbox` e
    "portão" exige `chamado`/`regente` no mesmo rótulo.
 
-**Smoke test** (telas sintéticas `_teste-bom.html`/`_teste-ruim.html`, fora do commit, prefixo `_` =
-rascunho e ignorado pelo script): a tela ruim acusou **5 achados** (rótulo fora do glossário, "fila"
+**Smoke test** (telas sintéticas, commitadas como fixtures do script em
+`prototipo/fixtures/tela-bom.html` e `prototipo/fixtures/tela-ruim.html` — subdiretório não é
+varrido como tela; a ruim mantém os 5 achados de propósito e é o corpus da mutação do W02): a tela
+ruim acusou **5 achados** (rótulo fora do glossário, "fila"
 sem qualificador, `button` sem `data-fonte`, número sem "exemplo", e o `<th>` "Fluxo de caixa
 operacional"); a tela boa, **0 achados**. O smoke test **achou um falso-negativo real**: o termo
 "RACI" casava como substring de "ope**raci**onal" — corrigido para word boundary antes do commit.
 Sem telas reais o script **falha por design** ("no screens found", exit 1) — a rodada verde sobre as
 13 telas e a saída colada aqui acontecem no **T3-fechamento**; a mutação do Worker02 quebra este
 script de propósito (TAIL:mutation da rodada).
+
+### Primeira rodada sobre telas reais (v2 `b30fd8f` → v3 `da85def`, Gerente, 25/10)
+
+O contrato de marcação foi fechado DEPOIS da primeira rodada real (4 telas do W03): v2 validou
+`data-rotulo` contra o glossário e isentou contexto de citação (`data-fonte`/`data-referencia`) e
+acrônimo com dígito (A2A, F1); v3 declarou o vocabulário de **moldura** do W04 (tipo, consultar,
+regra, efeito…) como stopwords — palavra de domínio NÃO entra nessa lista, leva `data-rotulo`.
+Rodada v3 sobre as **7 telas integradas** (4 Mensageria `566bca5` + 3 Administração `00c1ae9`):
+
+```text
+-- verifica-prototipo: 7 screen(s), 45 finding(s)   [exit 1]
+```
+
+**45 achados, todos em duas classes** — nenhum de `data-fonte` ausente, nenhum de `data-rotulo`
+fora do glossário, nenhum de colisão (fila/portão sempre qualificados nas telas):
+1. **citação sem atributo** (40: W03 22 · W04 18) — dígito de referência (§, ADR, file:linha,
+   "25 plataformas", "ciclo 073") em texto visível fora de `data-fonte`/`data-referencia`;
+2. **rótulo de domínio sem `data-rotulo`** (5, W04) — `Teto`/`Consumo`/`Restante`/`Efeito ao
+   estourar` (→ limite de orçamento / consumo por agente) e o h1 de políticas (→ **OPA**, o termo
+   reusado do glossário para allow/deny/ask, `confronto-decisao.md:159-161`).
+
+**Correções attempt=2 despachadas** ao W03 (22) e ao W04 (23) com o contrato e a lista exata;
+verde esperado antes do fechamento. Com o glossário do W01 integrado (`853a1d5`): allowlist
+74→86 e a rodada re-executada dá **45 = 45** (os achados são todos da classe citação/rótulo,
+independentes do glossário — medido também pelo W01: 22=22 nas telas dele).
+
+## Rodada 3 — telas da Administração (Worker04, 25/10)
+
+**Escopo:** `T3-telas-administracao` — três wireframes estáticos em
+`specs/073-area-administrativa/prototipo/`, as três `ENTRA` que o mapa §6.5 põe na Administração:
+
+| Arquivo | ENTRA (`confronto-decisao.md`) | Nome na linguagem ubíqua | Juiz(es) da rodada 4 |
+|---|---|---|---|
+| `administracao-catalogo.html` | cadastro de skills/ferramentas/modelos | catálogo de skills/ferramentas/modelos | Administração/Gerenciamento |
+| `administracao-politicas.html` | políticas allow/deny/ask | política declarativa (allow/deny/ask) | Controle · Administração/Gerenciamento |
+| `administracao-orcamento.html` | limites de orçamento e de taxa | limite de orçamento | Controle |
+
+Cadastro de agentes e papéis **não** é tela nova: aparece como **coluna de contexto somente-leitura**
+no catálogo, com `data-fonte` em `docs/agents/README.md` + `scripts/check-agents.sh` — sem
+funcionalidade nova, conforme o mandato do regente.
+
+### Formato entregue
+
+- um arquivo HTML **estático** por tela; zero `<script>`, zero recurso externo (`http`), sem servidor;
+- CSS mínimo em cinza, "caixas e rótulos" (tokens em `:root`, ~30 linhas, repetido por arquivo);
+- **todo** elemento de bloco e **todo** controle com `data-fonte`, que nomeia a plataforma (ficha em
+  `pesquisa/`) ou o requisito do método (princípio, ADR, ux-design);
+- **nenhum número inventado**: ilustrativo → `exemplo`; vivo → `—` com `motivo`; real → selo
+  `declarado` (método) ou `referência` (plataforma) com a fonte.
+
+### Auto-checagem (mesmas regras do `T3-fitness` do Gerente)
+
+Script `%TEMP%\w04check\fit073.py` (fora do repositório), nove regras — R1 interativo com
+`data-fonte` · R2 `.metrica` com `data-fonte` (`F1`) · R3 travessão-valor com `motivo` (`F8`) · R4
+número sem marca `exemplo` · R5 rótulo fora do glossário/ratificados/moldura · R6 termo da lista
+"Evitar" (`ux-design 066` §5) · R7 sigla expandida na 1ª ocorrência (Princípio VIII) · R8
+script/externo · R9 link relativo quebrado.
+
+Saída: **`RESULTADO: PASS — 3 arquivos, todas as regras verdes`** (R1–R9 `medido=0 esperado=0` nos
+três arquivos). Vocabulário carregado do próprio repositório: 74 termos do glossário + 12 propostos
+ratificados.
+
+### Mutação da auto-checagem (prova de que não é vazia)
+
+`%TEMP%\w04check\mut073.py` — quebra **uma** regra de cada vez numa cópia temporária e roda o MESMO
+`fit073.py` sobre a cópia, exigindo a acusação da regra correspondente. Saída:
+**`RESULTADO: PASS — 9 mutações, cada uma acusada pela sua regra`** (9/9).
+
+Um **ponto cego** apareceu e foi corrigido antes da entrega: a primeira versão do R5 aceitava o
+rótulo "Motor de custódia de credenciais" porque o termo `Mod` casava como **substring** de
+"motor". O R5 passou a exigir **fronteira de palavra** (`mod` não casa dentro de `motor`), mantendo
+a segunda via (rótulo curto contido num termo) só para casos legítimos como "Skill" ⊂ "catálogo de
+skills/ferramentas/modelos". Re-executado: PASS nos dois scripts.
+
+### Interpretações declaradas
+
+1. **"plataforma e URL da ficha em `pesquisa/`"** → o `data-fonte` nomeia a plataforma e o
+   **caminho da ficha** em `pesquisa/`, que traz a URL externa dentro dela; o HTML não duplica a
+   ficha nem o link externo.
+2. **A regra de rótulo incide sobre nomes de objeto** (`<span class="rotulo">`, `<h3>`):
+   glossário + 12 ratificados + linguagem ubíqua do mapa §6.5 (Agente, Skill, ferramenta, Projeto,
+   Fronteira). Palavras de moldura de interface (Controle, Escopo, Estado, Consultar, Nome, Tipo…)
+   são declaradas **como moldura** no rodapé de cada tela, não como vocabulário de domínio.
+3. **`F1`, `F8`, `F9`** do `ux-design` 066 valem; **`F2`–`F7` e `F10`–`F12` são n/a** neste
+   protótipo (supõem servidor e API) — declarado no rodapé de cada tela, não omitido.
+
+### Limites
+
+Nada fora de `specs/073-area-administrativa/prototipo/` foi escrito; sem push, sem merge, sem
+código de produto, sem segredo; siglas expandidas na 1ª ocorrência (verificado pelo R7).
+
+### Correção do gate `verifica-prototipo` (attempt=2, 25/10)
+
+A fitness function do protótipo (`prototipo/verifica-prototipo.py`, v3) acusou **23 achados nas 3
+telas** — nenhum era valor inventado; todos eram de **marcação**. As duas classes e a correção:
+
+| Classe | Achados | Correção (só atributo) |
+|---|---|---|
+| dígito de citação fora de contexto de citação | 18 (6 por tela: a `p.migalha` "ciclo 073, rodada 3" e os 5 blocos de rodapé com `fonte: … §4 / §7`) | `data-referencia="true"` na `p.migalha` e no `<footer class="rodape">` — ancestral isenta os descendentes |
+| rótulo de domínio sem `data-rotulo` | 5 | `data-rotulo` nos `<th>` do orçamento (Teto → `limite de orçamento`; Consumo → `consumo por agente`; Restante → `limite de orçamento`; Efeito ao estourar → `limite de orçamento`) e no `<h1>` da política (→ `OPA`) |
+
+**Nenhum texto visível foi alterado** — só atributos. Os `class="exemplo"` com "exemplo:" no texto
+já passavam pela regra do número (contrato §2) e ficaram como estavam.
+
+Verificação re-executada:
+
+- `python specs/073-area-administrativa/prototipo/verifica-prototipo.py` → total do protótipo
+  **45 → 22 achados**: as 23 minhas zeradas (**0 achado em `administracao-*.html`**); os 22
+  restantes são das 4 telas da Mensageria (W03), não destas telas.
+- auto-checagem própria re-rodada **só nas 3 telas** (cópia em diretório temporário): `fit073.py`
+  **PASS** (R1–R9 verdes) e `mut073.py` **PASS** (9/9 mutações acusadas) — os atributos novos não
+  afrouxaram nenhuma regra própria.
+
+Sincronização: a worktree foi para `853a1d5` (`git merge --ff-only`) apenas para trazer o script do
+gate, que não existia na minha linha.
+
+### Verde intermediário do Gerente — 7 telas, 0 achados (25/10)
+
+Com as DUAS correções integradas (W03 `ccf574c` → `1354240`; W04 `7147f50` → `01b55f6`), o gate
+re-executado na árvore integrada:
+
+```text
+-- verifica-prototipo: 7 screen(s), 0 finding(s)   [exit 0]
+```
+
+As 7 telas (4 Mensageria + 3 Administração) passam nas quatro regras. Faltam as telas do Workflow
+(W05) e o README/navegação (W01); a rodada final sobre as 13, com a saída colada aqui, acontece no
+T3-fechamento — e a mutação do W02 quebra este script de propósito antes disso.
+
+## Rodada 3 — telas do Workflow de sessões (Worker05, 26/10)
+
+**Escopo:** `T3-telas-workflow` (attempt=2, redespacho) — os quatro wireframes **estáticos** das
+`ENTRA` que o mapa §6.3 põe no contexto **Workflow de sessões**, em
+`specs/073-area-administrativa/prototipo/` (commit `365f59d`, citando "ciclo 073"; worktree
+sincronizada em `c3137e2` com `git merge --ff-only`):
+
+| Arquivo | ENTRA (`confronto-decisao.md`) | Nome na linguagem ubíqua | Juiz(es) da rodada 4 |
+|---|---|---|---|
+| `workflow-01-sessao-de-agente.html` | sessão de agente, subir/derrubar | **sessão de agente** | Controle · Administração/Gerenciamento |
+| `workflow-02-estado-do-agente-vivo.html` | estado do agente vivo | **estado do agente vivo** | Administração/Gerenciamento · Controle |
+| `workflow-03-tarefa-aberta.html` | tarefa aberta | **tarefa aberta** | Administração/Gerenciamento |
+| `workflow-04-consumo-por-agente.html` | consumo por agente | **consumo por agente** | Controle · Administração/Gerenciamento |
+
+**Coluna existente, não funcionalidade nova.** "Última atividade" é a coluna que o painel já exibe
+(`painel/server.py`); nas duas telas em que aparece (sessão de agente e estado do agente vivo) está
+declarada **NÃO PRECISA** na própria tela — nenhuma capacidade nova é pedida, só a reexibição, como
+o mandato exige.
+
+### Formato entregue (contrato de marcação — `verifica-prototipo.py` § Markup contract)
+
+- um arquivo HTML **estático** por tela; zero `<script>`, zero recurso externo (`http`), sem servidor;
+- CSS mínimo em cinza (tokens em `:root`, ~25 linhas, repetido por arquivo), sem `<body>` com
+  `data-fonte` — a isenção vale **por bloco**, não para a tela inteira;
+- **todo** controle e todo bloco com `data-fonte` (plataforma + ficha em `pesquisa/`, ou requisito do
+  método); **todo** rótulo de domínio com `data-rotulo`, cujo **valor** é termo ratificado na rodada 2
+  (`sessão de agente`, `estado do agente vivo`, `tarefa aberta`, `consumo por agente`,
+  `roteamento por nome/ref`, `limite de orçamento`, `catálogo de skills/ferramentas/modelos`);
+- **nenhum número inventado**: ilustrativo → dentro do marcador `data-exemplo` **com** "(exemplo)";
+  vivo → `—` **com** `motivo:`; citação (ciclo, §, `F1`, `file:line`) sempre dentro de
+  `data-fonte`/`data-referencia`, sem dígito solto em texto visível;
+- `F1`, `F7` (idade nunca digitada), `F8` (todo "—" com motivo) e `F9` (controle só-ícone com
+  `aria-label`) do `ux-design` 066 valem; **`F2`–`F6` e `F10`–`F12` são *n/a*** neste protótipo
+  (supõem servidor e API) — declarado no rodapé de cada tela, não omitido;
+- Princípio VIII: siglas expandidas na 1ª ocorrência (`PID`, `ux-design`).
+
+### Auto-checagem — o gate do protótipo
+
+```text
+python specs/073-area-administrativa/prototipo/verifica-prototipo.py
+-- verifica-prototipo: 11 screen(s), 0 finding(s)   [exit 0]
+```
+
+**11 telas · 0 achados** (as 7 integradas + as 4 desta entrega): as quatro regras do verificador
+passam em todas. A conferência foi feita **antes** de commitar, e é re-executável por qualquer um.
+
+### Dúvida declarada (herdada, não resolvida aqui)
+
+A convenção de nome destas telas é **`slug.html` sem prefixo de contexto e sem ordem**
+(`workflow-01-sessao-de-agente.html`, `workflow-02-estado-do-agente-vivo.html`, `workflow-03-tarefa-aberta.html`,
+`workflow-04-consumo-por-agente.html`) — diverge das duas já em uso
+(`mensageria-NN-slug.html`, `administracao-slug.html`), como o README desta pasta já declara (o
+autor da tela escolhe o nome; renomear arquivo de outro worker não é decisão de worker). Se a
+rodada 4 quiser uniformidade, é decisão do regente.
+
+### Limites
+
+Nada fora de `specs/073-area-administrativa/prototipo/` foi escrito (só o acréscimo desta seção ao
+`qa-report.md`); **sem push, sem merge, sem código de produto, sem segredo**; a rodada não julga —
+entrega a peça para o bar da rodada 4. Tokens (piso, soma do `message.usage` do transcript desde a
+1ª ocorrência do `[[TASK]]`): **≈2,56 M** (entrada 2.380.079 + saída 179.650, em 96 mensagens;
+`cache_read` 7.840.512 à parte).
+
+## Correções da revisão fresca (073-T3-correcao-workflow, Worker05, 26/10)
+
+**Escopo:** as correções da revisão em contexto fresco (`revisao-073-rodada-3.md` §1) **nas quatro
+telas do Workflow**. Worktree sincronizada em `dbfe3f2` (`git merge --ff-only`). A revisão é relato,
+não correção: quem corrige é o autor da tela — e é o que se fez aqui.
+
+### R4 — `tasks.jsonl` não existe (o achado mais sério) — **corrigido**
+
+As **cinco** ocorrências em `workflow-03-tarefa-aberta.html` (`:52`, `:66`, `:71`, `:72`, `:73`)
+apontavam para `tasks.jsonl`. **Conferido com `ls` antes de escrever:** não existe `tasks.jsonl` em
+lugar nenhum; o livro de ponto real é **`docs/records/tarefas.jsonl`** (mapa §7, l. 294), e o
+arquivo existe. Todas as cinco passaram ao caminho completo. A `:73` citava **os dois nomes no
+mesmo atributo** (`tasks.jsonl (attempt=) e o histórico de despachos do tarefas.jsonl`) — ficou um
+caminho só: `docs/records/tarefas.jsonl (campo attempt= e o histórico de despachos)`. A `:102`, que
+já acertava o nome mas omitia o diretório, também passou ao caminho completo — citação se resolve
+de fora da pasta do ciclo.
+
+### R7 — estados ilustrativos sem marca — **corrigido** (as 6 células)
+
+As células de **estado** das tabelas ficavam nuas enquanto as vizinhas da mesma linha traziam
+`data-exemplo="true"` + "(exemplo)" — ambíguo para o leitor (dado vivo ou exemplo?). Agora as seis
+carregam a mesma marca das vizinhas: `workflow-01:89`, `:99`, `:109` e `workflow-02:79`, `:85`,
+`:91` → `<span data-fonte="exemplo — nenhum dado real" data-exemplo="true">trabalhando (exemplo)</span>`
+(e equivalentes para "esperando" e "sem tarefa"). Só marcação: nenhum texto de estado mudou.
+
+### R9 — duas bases de citação no mesmo rodapé — **corrigido nas minhas 4 telas**
+
+Escolhida **uma** base: **relativa à raiz do repositório**. As citações relativas ao ciclo viraram
+caminhos completos (`confronto/…` → `specs/073-area-administrativa/confronto/…`; `pesquisa/…` →
+`specs/073-area-administrativa/pesquisa/…`) e o mapa deixou de aparecer como
+`mapa-de-contextos.md` sem diretório (agora `specs/073-area-administrativa/confronto/mapa-de-contextos.md`).
+Resultado: `docs/…`, `painel/…`, `scripts/…`, `specs/…` — uma base só, resolvível de qualquer
+diretório.
+
+**Toda citação foi conferida contra o disco** (a citação tem de apontar para arquivo que existe).
+Os 11 caminhos citados nas 4 telas existem: `specs/073-area-administrativa/confronto/confronto-decisao.md`
+· `…/confronto/mapa-de-contextos.md` · `docs/records/tarefas.jsonl` · `painel/server.py` ·
+`scripts/multi-session.py` · `…/pesquisa/claude-code.md` · `…/pesquisa/litellm.md` ·
+`specs/066-painel-de-regencia/ux-design.md` · `specs/072-painel-de-regencia/spec.md` ·
+`docs/governance/principles.md` · `docs/governance/task-ledger.md`.
+
+### Auto-checagem
+
+```text
+python specs/073-area-administrativa/prototipo/verifica-prototipo.py
+-- verifica-prototipo: 11 screen(s), 0 finding(s)   [exit 0]
+```
+
+**11 telas · 0 achados** depois das correções — nenhuma regra do gate regrediu (as correções mexem
+em atributo e em texto de citação, e o gate as aceita: citação já estava sob `data-fonte`).
+
+### O que NÃO é meu — dívida declarada da rodada 4
+
+O mandato é aplicar **o que for correção de uma linha minha** e declarar o resto. Fica declarado,
+para o regente decidir:
+
+| Achado | Onde | Dono |
+|---|---|---|
+| **R1 / R1b** — "fila" nua em prosa e em atributo | `mensageria-01-caixa-de-entrada.html:75`, `:78` | telas da Mensageria (W03) |
+| **R2** — "portão" nu em `<td>` | `mensageria-04-protocolo.html:61` | telas da Mensageria (W03) |
+| **R2b** — "portão do humano" (terceiro qualificador) | `administracao-politicas.html:105` | telas da Administração (W04) + decisão de grafia |
+| **R3** — "fila outbox" × "fila (outbox)" | `mensageria-03-roteamento.html:73`, `:74`, `:100` | telas da Mensageria (W03) + decisão de grafia |
+| **R5** — `hooks/…` em vez de `scripts/hooks/…` | `administracao-politicas.html:62`, `:92`, `:98`, `:110`, `:122`, `:123` | telas da Administração (W04) |
+| **R6** — `data-exemplo` zero vezes (segundo dialeto) | as 3 telas `administracao-*` | telas da Administração (W04) |
+| **R8** — sem prefixo numérico | as 3 telas `administracao-*` | decisão do regente (uniformidade) |
+| **R9 (metade da Mensageria)** — duas bases no mesmo rodapé | as 4 telas `mensageria-*` | telas da Mensageria (W03) |
+
+**Decisões de grafia que a correção não pode tomar sozinha** (recomendações 2, 3 e 4 da revisão):
+qual grafia única de "fila (outbox)" (o mapa prescreve com parênteses; a tela escreve sem) · se
+"portão do humano" sobrevive ou entra no par permitido do §7 · estender a **regra 4** do gate a
+`<p>`/`<td>`/atributos (hoje ela só lê rótulos — o ponto cego que a Parte 2 da revisão mediu) · e
+**pôr `fixtures/tela-ruim.html` no alcance do gate**, senão a fitness function não tem oráculo.
+
+### Limites
+
+Só as 4 telas do Workflow e o acréscimo desta seção ao `qa-report.md`; **sem push, sem merge, sem
+código de produto, sem segredo**; nenhuma outra tela foi tocada. Tokens (piso, soma do
+`message.usage` do transcript desde a 1ª ocorrência deste `[[TASK]]`): **≈0,45 M** (entrada 430.176
++ saída 22.660, em 30 mensagens; `cache_read` 2.804.992 à parte).
+
+### Correções da revisão fresca — telas da Administração (26/10)
+
+Achados da `revisao-073-rodada-3.md` §1 que caem nestas três telas:
+
+| # | Onde | Correção | Estado |
+|---|---|---|---|
+| **R5** | `administracao-politicas.html:62, :92, :98, :110, :122, :123` | `hooks/guard-immutables.py` → **`scripts/hooks/guard-immutables.py`** (6×). Caminho conferido antes de corrigir: não existe `hooks/` na raiz; o arquivo está em `scripts/hooks/` | **corrigido** |
+| **R2b** | `administracao-politicas.html:105` | "portão do humano" → **"portão do regente"** — a grafia prescrita pelo mapa §7 (`confronto/mapa-de-contextos.md:296`: o segundo portão é *sempre* qualificado, "portão do regente") | **corrigido** |
+| **R6** | as 3 telas | `data-exemplo="true"` nos 18 valores ilustrativos, além do `class="exemplo"` e da palavra no texto — encerra o segundo dialeto de marcação | **corrigido** |
+| **R8** | as 3 telas | prefixo numérico uniforme | **dívida da rodada 4** — renomear arquivo é decisão da regente (uniformizou o Workflow em `af81499` e deixou a Administração como está); não renomeei por conta própria |
+| **R9** | as 3 telas | uma base única de citação | **dívida da rodada 4** — a revisão não listou estas telas, mas o padrão ocorre: o mesmo rodapé mistura citação relativa ao ciclo (`ux-design 066 §4`) com relativa à raiz (`specs/066-painel-de-regencia/ux-design.md §4 e §7`), e cita `tasks.md` sem diretório. Escolher a base é decisão (recomendação 5 da revisão) — não alterei em silêncio |
+
+R1, R1b, R2, R3 e R4 **não** tocam estas telas (são de `mensageria-*` e `workflow-03`).
+
+**Verificação**
+
+- `python specs/073-area-administrativa/prototipo/verifica-prototipo.py` → **11 telas, 0 achados, exit 0**.
+- Auto-checagem própria re-rodada **só nas 3 telas** (cópia em diretório temporário): `fit073.py`
+  **PASS** (R1–R9 verdes) e `mut073.py` **PASS** (9/9) — a mutação do R4 foi reapontada para a
+  marcação nova, senão mediria um texto que não existe mais.
+- **Nota para a rodada 4**: a regra 4 do gate ainda não foi ampliada a `<p>`/`<td>`/atributos
+  (§2.3 da revisão). Quando for, nenhuma destas 3 telas acusa termo de colisão nu — "portão" aqui
+  só aparece qualificado ("portão do regente") e "fila" não aparece.
+
+## Rodada 3 — correções da revisão fresca nas telas da Mensageria (Worker03, 26/10)
+
+**Escopo:** `T3-correcao-mensageria` (attempt=2, mandato do Gerente) — os achados **R1, R1b, R2 e
+R3** da revisão em contexto fresco (`revisao-073-rodada-3.md` §1.2) que tocam as quatro telas da
+Mensageria (commit desta correção, citando "ciclo 073"; worktree sincronizada em `dbfe3f2` com
+`git merge --ff-only`):
+
+| Achado | Onde | Antes | Depois |
+|---|---|---|---|
+| **R1** | `mensageria-01-caixa-de-entrada.html:78` | "A **fila** é *append-only*: …" | "A **fila outbox** é *append-only*: …" |
+| **R1b** | `mensageria-01-caixa-de-entrada.html:75` | `data-fonte="… ADR 0027 — a **fila** recusa DELETE …"` | `… — a **fila outbox** recusa DELETE …` |
+| **R2** | `mensageria-04-protocolo.html:61` | "(o **portão** vira contrato)" | "(o **portão do chamado** vira contrato)" |
+| **R3** | `mensageria-03-roteamento.html:74` | `… — “fila de decisões” × “fila outbox”` | `… — fila de decisões × fila outbox` (grafia única; `:73` e `:100` já a tinham) |
+
+**R6–R9:** nenhum é correção de uma linha das telas da Mensageria. **R9** (parte das telas da
+Mensageria — bases de citação mistas: `confronto/…` relativo ao ciclo convivendo com `docs/…`,
+`painel/…`, `specs/066-…` relativos à raiz, e `mapa-de-contextos.md` sem diretório) fica **dívida
+declarada da rodada 4**: unificar a base de citação é decisão de convenção **global** (vale para as
+11 telas), não correção pontual desta rodada.
+
+Verificação re-executada (antes de commitar):
+
+```text
+python specs/073-area-administrativa/prototipo/verifica-prototipo.py
+-- verifica-prototipo: 11 screen(s), 0 finding(s)   [exit 0]
+```
+
+**Nota sobre R3 (registrada para o fechamento):** a §7 do mapa escreve "**fila (outbox)**" *com*
+parênteses (`mapa-de-contextos.md:292`); o despacho fixou a grafia "**fila outbox**" *sem*
+parênteses — foi a seguida aqui. Se o fechamento quiser uma grafia só, a §7 é o outro lado a alinhar.
+
+### Limites
+
+Sem push, sem merge, sem código de produto, sem segredo; só as quatro telas da Mensageria e o
+acréscimo desta seção ao `qa-report.md`. Tokens (piso): declarados no `[[DONE]]`.
+
+## Rodada 3 — a regra 4 passa a cobrir o texto visível (Worker02, 26/10)
+
+**Escopo:** `T3-regra4` (correção final da rodada 3, despacho do Gerente em 26/10). A revisão
+fresca desta mesma rodada provou que **nenhuma das 11 telas reais exercitava a regra 4** do
+`prototipo/verifica-prototipo.py`: ela só era chamada de `check_label`, então via rótulos, e as
+violações viviam em `<p>`, `<td>` e valores de atributo. Commit **`9cf0118`**, com a mensagem
+exata pedida — `ciclo 073: verificador cobre fila/portão nus no texto visível` (base `dbfe3f2`,
+via `git merge --ff-only`).
+
+### O que mudou
+
+| Antes | Depois |
+|---|---|
+| regra 4 só em `check_label` (rótulos) | regra 4 em **todo nó de texto visível** e em **todo valor de atributo**, além dos rótulos |
+| qualificador por **substring** (`"outbox" not in low`) | qualificador por **fronteira de palavra** (`\boutbox\b`, `\bdecis\w*`, `\bchamado\b`, `\bregente\b`) |
+| — | **isenção declarada**: tabela cujo cabeçalho declara `data-rotulo="colisão de nomes"` é uma *collision-naming table* — a regra 4 não roda dentro dela |
+
+Duas isenções, ambas **declaradas, nunca inferidas**: (a) a tabela que nomeia as colisões (map §7
+reproduzido na `mensageria-03`); (b) valor marcado como exemplo (`data-exemplo`, ou "exemplo" no
+texto), igual à regra 3. **A regra 4 não isenta contexto de citação**
+(`data-fonte`/`data-referencia`) — de propósito: foi exatamente na prosa de citação que a revisão
+achou os termos nus, e isentar ali deixaria a regra sem nada para acusar nas telas reais. O
+contrato foi atualizado na *docstring* (regra 4 + o marcador da tabela de colisões).
+
+### Critério de aceite (a): a tabela da §7 **não** vira achado
+
+Probe dedicado (`%TEMP%\probe-exemption.py`, só lê) rodando a regra 4 estendida na
+`mensageria-03-roteamento.html`, **com** e **sem** a isenção declarada:
+
+```text
+--- COM a isencao declarada (como entregue): 0 achado(s) em mensageria-03
+--- SEM a isencao (probe): 1 achado(s) em mensageria-03
+    mensageria-03-roteamento.html: "fila" unqualified (decisões or outbox?): "a Fila do Painel (Regência) × as mensagens (Mensageria)"
+```
+
+A isenção é o que sustenta o critério — e ela está **escrita na própria tela** (o `<th>` declara
+`colisão de nomes`), não inferida pelo script.
+
+### Critério de aceite (b): os achados da revisão viram achado (topo atual, telas ainda não corrigidas)
+
+```text
+python specs/073-area-administrativa/prototipo/verifica-prototipo.py
+FINDING: administracao-politicas.html: "portão" unqualified (chamado or regente?): "fonte: Princípio III · ux-design 066 §3 (portão do humano aparece somente leitura ao agente)"
+FINDING: mensageria-01-caixa-de-entrada.html: "fila" unqualified (decisões or outbox?): "método: painel/fila_outbox.py (drenagem; ADR 0027 — a fila recusa DELETE, só registra a leitura)"
+FINDING: mensageria-01-caixa-de-entrada.html: "fila" unqualified (decisões or outbox?): "A fila é"
+FINDING: mensageria-04-protocolo.html: "portão" unqualified (chamado or regente?): "(o portão vira contrato)."
+-- verifica-prototipo: 11 screen(s), 4 finding(s)
+[exit 1]
+```
+
+Cobre **R1, R1b, R2 e R2b** da revisão. R1b — a "fila" nua **dentro do `data-fonte`** — exigiu o
+qualificador com fronteira de palavra: `painel/fila_outbox.py` é **nome de arquivo**, não
+qualifica a frase em volta; mesmo tipo de falso-negativo do `RACI ⊂ operacional`, corrigido do
+mesmo jeito.
+
+**R3 declarado como não coberto, e por quê.** R3 ("fila outbox" × a grafia fixada "fila
+(outbox)") **não é termo nu** — é desvio de grafia, e o teste de qualificação o aceita por
+construção. Apertá-lo para exigir "fila (outbox)" literal acusaria a própria tabela da §7 (que
+escreve, de propósito, "fila outbox" como **o objeto da colisão**) — isto é, falsificaria o
+critério (a). Escolher a grafia é decisão do regente; a regra 4 mede nudez, não ortografia.
+
+### Critério de aceite (c) e a mutação (prova de que a regra estendida não é vazia)
+
+`fixtures/tela-ruim.html` trazido ao alcance do glob (cópia `prototipo/zz-tela-ruim.html`, sem
+`_`), regra 4 **cegada de propósito** (um `return` no topo de `check_collisions`):
+
+```text
+--- ANTES (regra 4 viva) ---
+FINDING: administracao-politicas.html: "portão" unqualified (chamado or regente?): "fonte: Princípio III · ux-design 066 §3 (portão do humano aparece somente leitura ao agente)"
+FINDING: mensageria-01-caixa-de-entrada.html: "fila" unqualified (decisões or outbox?): "método: painel/fila_outbox.py (drenagem; ADR 0027 — a fila recusa DELETE, só registra a leitura)"
+FINDING: mensageria-01-caixa-de-entrada.html: "fila" unqualified (decisões or outbox?): "A fila é"
+FINDING: mensageria-04-protocolo.html: "portão" unqualified (chamado or regente?): "(o portão vira contrato)."
+FINDING: zz-tela-ruim.html: label outside the glossary: "Fila"
+FINDING: zz-tela-ruim.html: "fila" unqualified (decisões or outbox?): "Fila"
+FINDING: zz-tela-ruim.html: interactive <button> without data-fonte
+FINDING: zz-tela-ruim.html: label outside the glossary: "Fluxo de caixa operacional"
+FINDING: zz-tela-ruim.html: number without the "exemplo" mark: "42"
+FINDING: zz-tela-ruim.html: "fila" unqualified (decisões or outbox?): "Fila de tarefas"
+-- verifica-prototipo: 12 screen(s), 10 finding(s)
+[exit 1]
+
+--- DEPOIS (regra 4 cega, mesmo corpus) ---
+FINDING: zz-tela-ruim.html: label outside the glossary: "Fila"
+FINDING: zz-tela-ruim.html: interactive <button> without data-fonte
+FINDING: zz-tela-ruim.html: label outside the glossary: "Fluxo de caixa operacional"
+FINDING: zz-tela-ruim.html: number without the "exemplo" mark: "42"
+-- verifica-prototipo: 12 screen(s), 4 finding(s)
+[exit 1]
+```
+
+Achados que **sumiram** (nomes copiados da saída), 10 → 4:
+
+- `administracao-politicas.html: "portão" unqualified (chamado or regente?): "fonte: Princípio III · ux-design 066 §3 (portão do humano aparece somente leitura ao agente)"`
+- `mensageria-01-caixa-de-entrada.html: "fila" unqualified (decisões or outbox?): "método: painel/fila_outbox.py (drenagem; ADR 0027 — a fila recusa DELETE, só registra a leitura)"`
+- `mensageria-01-caixa-de-entrada.html: "fila" unqualified (decisões or outbox?): "A fila é"`
+- `mensageria-04-protocolo.html: "portão" unqualified (chamado or regente?): "(o portão vira contrato)."`
+- `zz-tela-ruim.html: "fila" unqualified (decisões or outbox?): "Fila"`
+- `zz-tela-ruim.html: "fila" unqualified (decisões or outbox?): "Fila de tarefas"` (esta é **nova**: o nó
+  de texto do `<td>`, que a regra antiga — só rótulos — não via; o critério (c) está atendido, e o
+  fixture ficou mais exigente do que era)
+
+Restauração **byte a byte**: hash SHA-256
+`EF7BF07510840A2277D52F2E4C907E0E33B1DABE300CE7772FBFF771423E1EA1` (idêntico ao da versão
+entregue), `git diff` vazio e `git status --porcelain` vazio depois do commit `9cf0118`. Desvio
+declarado: `Remove-Item` é negado por política nesta sessão — a cópia temporária saiu do
+repositório por `Move-Item` (`%TEMP%\zz-tela-ruim.worker02b.html`).
+
+### Limites
+
+As telas **não foram corrigidas aqui** (é dos donos, em paralelo): no estado deste topo o gate
+acusa os 4 achados de R1/R1b/R2/R2b — fica verde quando as correções chegarem. O script **não** é
+chamado por `.github/workflows/` (verificado por busca), então o CI não fica vermelho por isso.
+Nada fora de `specs/073-area-administrativa/` foi escrito; sem push, sem merge, sem código de
+produto, sem segredo. Tokens (piso, soma do `message.usage` desde a 1ª ocorrência do
+`[[TASK 073-T3-regra4]]`, 61 mensagens): **≈0,63 M** (entrada 545.865 + saída 80.833);
+`cache_read` 7.603.584 à parte.
+
+## Rodada 3 — fechamento do Gerente (26/10)
+
+**Integrações da rodada** (todas citando "ciclo 073"): W05 `365f59d`+`fc183ce` (telas do Workflow,
+integradas pela regente em `552c16c`/`af81499` com o renome `workflow-01..04`) · W01 `e756232`
+(README com nomes reais) · W06 `bc36487` (segurança + conformance) · W02 `d1e9cc7` (revisão +
+mutação) · correções: W05 `09c02f0`, W04 `9fbbad3`+fallback `0ecb7d2`, W03 `938d38b`, W02
+`9cf0118`+`1264194` (regra 4 ampliada).
+
+### Gate final — verificador com a regra 4 ampliada, sobre as 11 telas corrigidas
+
+```text
+python specs/073-area-administrativa/prototipo/verifica-prototipo.py
+-- verifica-prototipo: 11 screen(s), 0 finding(s)   [exit 0]
+```
+
+As 11 telas: `mensageria-01-caixa-de-entrada` · `mensageria-02-livro-de-mensagens` ·
+`mensageria-03-roteamento` · `mensageria-04-protocolo` · `administracao-catalogo` ·
+`administracao-politicas` · `administracao-orcamento` · `workflow-01-sessao-de-agente` ·
+`workflow-02-estado-do-agente-vivo` · `workflow-03-tarefa-aberta` ·
+`workflow-04-consumo-por-agente` (todas `.html`, em `prototipo/`). A regra 4 ampliada (texto
+visível + atributos, isenção declarada para tabela de colisão de nomes) acusa 0 — os R1/R1b/R2/R2b
+corrigidos pelos donos não voltam.
+
+### Conformance 073 — modo normal
+
+```text
+── Conformance: did the method survive into the artifacts? ──
+   (floor: cycle 42; older cycles carry declared debt — see the roadmap)
+• 070-conferidor-ordem-veredito
+    · imported evidence (00-chamado.md + G*-*.md, no tasks.md): a Hindiana chamado, not a Maestro cycle — not charged (ADR 0024)
+• 073-area-administrativa
+    ✓ Constitution Check complete (8/8)
+    ✓ acceptance criteria located and stated without checkboxes
+    ✓ all 5 conditional artifacts declared with a reason
+    ✓ domain model declared (aggregate, invariants, glossary, ports) with a reason
+    ✓ TAIL:review evidence: Worker03, contexto fresco (não consolidou; amostragem esc
+    ✓ TAIL:security evidence: Worker03, varredura sobre `pesquisa/` (28 arquivos, 14 pad
+    ✓ TAIL:gate evidence: o gate humano da rodada 1 é o **"segue" do regente para a
+    · TAIL:mutation not applicable — rodada documental — nenhum gate executável criado ou alte
+──
+cycles checked: 2
+✓ every cycle checked declares its artifacts and carries the closing tail with evidence.
+exit-normal=0
+```
+
+### Conformance 073 — modo TICKED_ONLY=1
+
+```text
+── Conformance: did the method survive into the artifacts? ──
+   (floor: cycle 42; older cycles carry declared debt — see the roadmap)
+• 070-conferidor-ordem-veredito
+    · imported evidence (00-chamado.md + G*-*.md, no tasks.md): a Hindiana chamado, not a Maestro cycle — not charged (ADR 0024)
+• 073-area-administrativa
+    ✓ Constitution Check complete (8/8)
+    ✓ acceptance criteria located and stated without checkboxes
+    ✓ all 5 conditional artifacts declared with a reason
+    ✓ domain model declared (aggregate, invariants, glossary, ports) with a reason
+    ✓ TAIL:review evidence: Worker03, contexto fresco (não consolidou; amostragem esc
+    ✓ TAIL:security evidence: Worker03, varredura sobre `pesquisa/` (28 arquivos, 14 pad
+    ✓ TAIL:gate evidence: o gate humano da rodada 1 é o **"segue" do regente para a
+    · TAIL:mutation not applicable — rodada documental — nenhum gate executável criado ou alte
+──
+cycles checked: 2
+✓ every cycle checked declares its artifacts and carries the closing tail with evidence.
+exit-ticked=0
+```
+
+> Nota: as duas saídas acima foram medidas com o `tasks.md` ainda trazendo o TAIL:mutation como
+> n/a (linha de rodada 1). O TAIL:mutation foi re-marcado `[x]` com a evidência da mutação da
+> rodada 3 (qa-report § "Rodada 3 — a regra 4 passa a cobrir o texto visível" e § fechamento) —
+> mudança que só adiciona evidência; o conformance foi re-rodado no estado commitado e segue
+> verde nos dois modos.
+
+### Correção final — o placar dos 9 achados da revisão
+
+| Achado | Dono | Estado |
+|---|---|---|
+| R1/R1b — "fila" nua (prosa e `data-fonte`) | W03 `938d38b` | **corrigido** — "fila outbox" |
+| R2 — "portão" nu em `<td>` | W03 `938d38b` | **corrigido** — "portão do chamado" |
+| R2b — "portão do humano" (terceiro qualificador) | W04 `9fbbad3` | **corrigido** — "portão do regente" |
+| R3 — grafia "fila outbox" × "fila (outbox)" | W03 `938d38b` | **corrigido nas telas** — grafia da regente "fila outbox"; resalva: o mapa §7 (`:292`) mantém "fila (outbox)" com parênteses — alinhar a §7 é edição de doc da rodada 4 |
+| R4 — `tasks.jsonl` inexistente (5×) | W05 `09c02f0` | **corrigido** — `docs/records/tarefas.jsonl`, conferido com `ls` |
+| R5 — `hooks/` sem `scripts/` (6×) | W04 `9fbbad3` | **corrigido** — `scripts/hooks/guard-immutables.py` |
+| R6 — segundo dialeto de marcação | W04 `9fbbad3` | **corrigido** — `data-exemplo` nos 18 valores |
+| R7 — estados ilustrativos sem marca (6 células) | W05 `09c02f0` | **corrigido** |
+| R8 — prefixo numérico da Administração | — | **dívida da rodada 4** — renomear arquivo é decisão da regente |
+| R9 — base única de citação | W05 (suas 4) `09c02f0` | **corrigido nas telas do Workflow** (base relativa à raiz, 11 caminhos conferidos); Mensageria e Administração: **dívida da rodada 4** (convenção global) |
+
+**Regra 4 ampliada** (W02 `9cf0118`): passa a cobrir todo nó de texto visível e todo valor de
+atributo, com qualificadores por fronteira de palavra e isenção **declarada** para tabela de
+colisão de nomes (`data-rotulo="colisão de nomes"` no cabeçalho). R3 fica **fora do gate** por
+decisão declarada do W02 e aceita pelo Gerente: grafia não é termo nu — policiá-la exigiria uma
+regra 5 e falsificaria a tabela da §7. Mutação re-rodada: 12 telas · 10 achados → regra 4 cega →
+4; sumiram os 4 das telas reais + `zz-tela-ruim: "fila" unqualified: "Fila"` + `"Fila de tarefas"`
+(novo, visível só com a regra ampliada). Script restaurado byte a byte (SHA-256 conferido).
+
+### Incidente declarado — marcador de conflito órfão no qa-report
+
+Um `<<<<<<< HEAD` órfão entrou neste arquivo na resolução do merge `00c1ae9` (Gerente, 25/10 —
+conflito das seções fitness × telas da Administração) e propagou por todos os commits seguintes,
+inclusive o `af81499` da regente, sem que nenhum gate o visse (nenhum fitness function lê o
+qa-report). Achado ao resolver o merge do W04 (26/10) e removido no `6f71db7`; um segundo
+marcador, da resolução do merge do W03, foi removido no `858baa4`. Lição registrada para a
+retrospectiva: resolução de conflito de acréscimo no fim de arquivo precisa de conferência de
+marcadores antes do commit — o check pós-resolução agora é passo declarado do fechamento.
+
+### Tokens da rodada 3 (pisos, soma de `message.usage` desde a 1ª ocorrência do `[[TASK]]`)
+
+W01 glossário 14,7M · W01 README 2,24M (fatia) / 785.878 (fatia do complemento) · W03 telas 57,2M ·
+W03 correção 61,36M (sessão) · W03 correção final 8,97M · W04 telas 18,26M · W04 correção 4,1M ·
+W04 correção final 5,70M (total_in) · W05 telas 2,56M · W05 correção 0,45M · W06 reverificação 072
+~5,32M · W06 segurança 12,67M · W02 revisão 9,78M · W02 regra 4 0,63M.
+
+## Rodada 4 — preâmbulo: renome (R8) das três telas da Administração (Worker04, 26/10)
+
+**Decisão da regente**, fechando R8 (`revisao-073-rodada-3.md`: estas 3 eram as **únicas de 11**
+sem prefixo numérico, depois que `af81499` uniformizou o grupo do Workflow em `NN-`):
+
+| nome antigo | nome novo |
+|---|---|
+| `administracao-catalogo.html` | `administracao-01-catalogo.html` |
+| `administracao-politicas.html` | `administracao-02-politicas.html` |
+| `administracao-orcamento.html` | `administracao-03-orcamento.html` |
+
+**As seções datadas de 25–26/10 acima citam os nomes antigos de propósito** — são o retrato do que
+foi medido naquele momento (inclusive os `FINDING:` do gate e o placar R1–R9) e **não foram
+reescritas**: histórico não se reescreve. Esta seção é a declaração do renome; do commit abaixo em
+diante, os nomes em vigor são os da coluna "nome novo".
+
+**Referências aos nomes antigos atualizadas no mesmo commit** (tudo dentro de
+`specs/073-area-administrativa/`):
+
+- **as 3 telas** — os 9 `href` da navegação interna (`nav.telas`, 3 por tela). Sem isso os links
+  relativos quebrariam — a minha R9 acusa link relativo quebrado;
+- **`prototipo/README.md`** — **só as células de nome de arquivo** das linhas 29–31 da tabela
+  tela × `ENTRA` (o W02 mexe no mesmo arquivo em paralelo, no § Convenções e na base de citação;
+  por isso não toquei em nenhuma outra linha);
+- **`prototipo/verifica-prototipo.py`** — **nenhuma** referência a nome de arquivo: o gate seleciona
+  por glob (`*.html`, linha 279). Conferido por busca; **nada a mudar**;
+- **`revisao-073-rodada-3.md`, `done-073-rodada-3.md`, `done-073-t3-correcao-administracao.md`** —
+  **não** editados (documentos datados).
+
+**Verificação** (o renome não muda a contagem: o glob `*.html` vê os mesmos arquivos)
+
+```text
+python specs/073-area-administrativa/prototipo/verifica-prototipo.py
+-- verifica-prototipo: 11 screen(s), 0 finding(s)   [exit 0]
+```
+
+Auto-checagem própria re-rodada **só nas 3 telas** (cópia em diretório temporário): `fit073.py`
+**PASS** (R1–R9 verdes — a R9 passou a medir os `href` novos) e a mutação **PASS** (9/9, com os
+alvos reapontados para os nomes novos; a mutação da R9 agora quebra
+`href="administracao-03-orcamento.html"`).
+
+**Pendência declarada para o fechamento**: a prosa de `prototipo/README.md` **linhas 83–86** ("A
+convenção de nome **não é uniforme** hoje — `mensageria-NN-slug.html` (com ordem) contra
+`administracao-slug.html` (sem ordem) …") **ficou obsoleta** com este renome, que era justamente o
+que ela declarava. Não a editei: a ordem foi mexer **só nas linhas de nome de arquivo**, e essa
+prosa é do W02, que estava fixando o § Convenções no mesmo arquivo nesta janela. Fica registrada
+aqui para o merge não passar em silêncio.
+
+## Rodada 4 — correção 1 nas telas da Mensageria (Worker03, 26/10)
+
+Fatia do `rodada-4/correcao-1.md` (P6 a P9 dos juízes 1 e 3), quatro telas, hash `edbb32f`.
+Só conteúdo de tela: nenhum código de produto, nenhum script novo.
+
+| Tela | O que entrou |
+|---|---|
+| `mensageria-01-caixa-de-entrada` | coluna **carimbo** (relógio do sistema, F7 — nunca digitado); remetente `nome · ref · projeto`; destinatário **pretendido × resolvido**; estado **não lida/lida**; linha de exemplo "chegou aqui, era para outro projeto"; **contagem de não lidas**; quem pode drenar (a sessão dona ou o regente por delegação) |
+| `mensageria-02-livro-de-mensagens` | colunas **hora · id · ordem**; estados **enviada/entregue/lida/falhou**; fonte real nomeada (a fila outbox, `painel/fila_outbox.py` — não o `tarefas.jsonl`, que é o **livro de ponto**, outro objeto, mapa §7); mensagem além de `[[TASK]]`/`[[DONE]]`; quem pode ver o livro de outra sessão (leitura do time, filtro pela ref) e quem escreve (só a sessão dona) |
+| `mensageria-03-roteamento` | tabela de **endereços** passa a listar os **refs colidentes com projeto e vivo/morto**; caso "Gerente em dois projetos" com RECUSA; caso "ref mudou no reinício" (antigo → novo); a linha "Fila" (colisão de **termo**) sai da tabela de endereços; **confirmação humana antes de entregar a destino não resolvido** ("endereço ambíguo é recusado, nunca resolvido") |
+| `mensageria-04-protocolo` | seção **por onde a mensagem trafega hoje** (`SendMessage`/`ListAgents` do harness, fallback por arquivo commitado, fila outbox) e que o **MCP não carrega mensagem**; o que o **A2A** exibiria (agent card, pares) mesmo desabilitado; **quem autoriza** "Chamar estado_atual" (leitura) e "Registrar status" (escrita, pela sessão dona) |
+
+Decisão 2 da regente (identidade `nome · ref · projeto`, com o aviso "o ref muda ao reiniciar"
+onde há ação) aplicada nas quatro telas; toda menção a sessão do catálogo vem seguida da ref
+`[xxxxxx]` — pronta para a regra 5 do verificador (Worker02), que **ainda não está** no script
+nesta worktree.
+
+**Portão (mesmo script da regente, sem edição):**
+
+```text
+python specs/073-area-administrativa/prototipo/verifica-prototipo.py
+-- verifica-prototipo: 11 screen(s), 0 finding(s)
+[exit 0]
+```
+
+**Limites:** nenhum `push`, `merge` (além do `ff-only 6a32e24` do despacho), código de produto ou
+segredo. As duas tabelas de colisão do mapa seguem separadas (termo no §7 × endereço na tela de
+roteamento); a tabela de colisões de **endereço** do mapa é do Worker02.
+
+## Rodada 4 — correção 1: Administração (Worker04, 26/10)
+
+Fatia de `rodada-4/correcao-1.md` (P10 a P12 dos juízes 1 e 2; preâmbulo R8 já integrado em `6a32e24`).
+Três telas da Administração; nenhum arquivo fora delas.
+
+| Tela | O que a correção acrescentou | Fontes citadas |
+|---|---|---|
+| `administracao-01-catalogo.html` | seção "Cadastrar (proposto — a tela não executa)" com os campos do Modelo (provedor, preço por milhão de tokens, quem pode usar, projeto) e a identidade `nome · ref · projeto`; seção "Unicidade de nomes e o que o catálogo alimenta" (unicidade/colisão de nomes, ligação com a tabela de roteamento e com a política); seção "Histórico de mudanças (auditoria administrativa)" com `changed_by`; correção do `data-fonte` do `nav` (§ 6.5 vs. tasks/confronto-decisao) | `rodada-4/correcao-1.md`; `rodada-4/juiz-1..3`; `confronto/mapa-de-contextos.md` §4, §6.6, §7; `pesquisa/kiro-crew.md`; `pesquisa/claude-code.md`; `pesquisa/litellm.md`; `docs/governance/glossary.md` |
+| `administracao-02-politicas.html` | correção do estado de `allow`/`ask` (o harness do Claude Code executa `permissions.allow/ask/deny`; falta ao Maestro declarar o bloco `permissions` no `.claude/settings.json` versionado); precedência `deny > ask > allow` e padrão default-deny; escopo agente/papel/projeto; caminho do `ask` até a fila de decisões e o ruling humano; o que os efeitos fazem com o envio de mensagem; referências Claude Code e Kiro (ask = sim) acrescentadas; formulário "Propor regra"; histórico de mudanças | `rodada-4/correcao-1.md`; `rodada-4/juiz-1..2`; `pesquisa/claude-code.md`; `pesquisa/kiro-crew.md`; `pesquisa/litellm.md`; `docs/governance/principles.md`; `.claude/settings.json` |
+| `administracao-03-orcamento.html` | cota de 40 % relabelada (cota semanal da sessão do regente, não teto por agente/projeto); idade do relógio no consumo (F7); limite de taxa rebaixado formalmente a DEPOIS; efeito ao estourar (avisar/recusar/suspender) com quem autoriza; tabela de tetos por projeto/agente/modelo com unidade (tokens e dólar estimado); limiar de alerta; histórico de mudanças; identidade `nome · ref · projeto` junto da ação | `rodada-4/correcao-1.md`; `rodada-4/juiz-1..2`; `pesquisa/openai-platform.md`; `pesquisa/litellm.md`; `spec.md` §Clarify; `docs/records/decisoes.jsonl` |
+
+**Gate (fitness function `verifica-prototipo.py`), após a correção:**
+
+```
+-- verifica-prototipo: 11 screen(s), 0 finding(s)
+```
+
+exit 0. Convenções de markup respeitadas (todo controle com `data-fonte`; rótulo de domínio com `data-rotulo` ou só moldura; todo número vivo com fonte/`exemplo`; "fila" e "portão" sempre qualificados).
+
+**Limites declarados desta fatia:** (1) as citações § 2/§ 6.3/§ 6.5 do mapa ainda apontam o limite de orçamento ao Workflow — a correção da decisão 1 é do Worker02; (2) a **regra 5** do verificador (identidade de sessão) é do Worker02, então a identidade `nome · ref · projeto` foi escrita por disciplina, ainda não exigida pelo gate; (3) os refs `[4d000a]` e o projeto "exemplo" foram lidos do harness e de `painel/projetos/exemplo.json` — envelhecem.
+
+## Rodada 4 — correção 1: a **regra 5** do verificador (Worker02, 26/10)
+
+Fatia `073-T4-correcao-1-confronto` (decisão 2 da regente, `rodada-4/correcao-1.md`): **toda menção
+a uma sessão tem de vir como `nome · ref · projeto`** — o nome do catálogo (Gerente, WorkerNN,
+MAESTRO, Office, Assistente) seguido da ref `[xxxxxx]`. A regra 5 entra no
+`prototipo/verifica-prototipo.py` (v3 → v4) e roda em **todo nó de texto visível e todo valor de
+atributo**, como a regra 4.
+
+**Uma isenção, a única que a decisão autoriza** (declarada, nunca inferida): a **tabela de colisão
+de nomes** (um `<table>` cujo cabeçalho declara `data-rotulo="colisão de nomes"`) — ali as sessões
+são nomeadas de propósito para expor a colisão ("Office" em duas refs, "Gerente" em dois projetos).
+A marca de exemplo (`data-exemplo`) **não** isenta a regra 5: a identidade é convenção de
+apresentação e vale nas linhas de exemplo também — fosse o contrário, a regra nasceria vazia, já
+que **todo** valor destes wireframes é exemplo (a lição da rodada 3).
+
+**Correção acoplada**: a regra 3 (número sem a marca `exemplo`) passa a **remover a ref** antes de
+contar dígitos (`SESSION_REF_TOKEN.sub`), como já fazia com siglas (`A2A`, `T16`): `[31ee4d]` é
+referência, não valor métrico. Sem isso, escrever a identidade fora de contexto de citação acusaria
+a regra 3 — defeito silencioso que a mutação não pegaria.
+
+### O gate no corpus real (11 telas)
+
+```text
+python specs/073-area-administrativa/prototipo/verifica-prototipo.py
+-- verifica-prototipo: 11 screen(s), 29 finding(s)   [exit 1]
+```
+
+Os **29 são todos da regra 5**, nas telas que ainda não escrevem a identidade: `mensageria-01` (5),
+`mensageria-02` (12), `workflow-01`, `-02`, `-03`, `-04` (3 cada). **Zero** nas 3 telas da
+Administração (não citam sessão) e **zero** em `mensageria-03` (a isenção da tabela de colisão
+funciona no corpus, não só na fixture). A lista nominal, achado a achado, segue no `[[DONE]]` para
+os donos fecharem. **O gate fica vermelho de propósito até as telas escreverem `nome · ref ·
+projeto`** — a regra não existe para passar, existe para acusar.
+
+### A mutação (prova de que a regra 5 não é vazia)
+
+Arnês fora do repositório (`%TEMP%`), rodando o **mesmo** `ScreenParser` sobre as 11 telas **mais** a
+dupla de fixtures (`fixtures/tela-bom.html`, `fixtures/tela-ruim.html`), com a saída literal colada:
+
+```text
+ANTES (regra 5 viva)      -- 13 screen(s), 36 finding(s)
+MUTADO (regra 5 cega)     -- 13 screen(s),  6 finding(s)
+```
+
+Os **30** que desaparecem são exatamente os da regra 5 (29 do corpus + 1 da fixture). Os **6** que
+sobrevivem são os achados das **outras** regras, e **todos** em `tela-ruim.html` — a regra cega não
+leva nenhum junto:
+
+```text
+FINDING: tela-ruim.html: label outside the glossary: "Fila"
+FINDING: tela-ruim.html: "fila" unqualified (decisões or outbox?): "Fila"
+FINDING: tela-ruim.html: interactive <button> without data-fonte
+FINDING: tela-ruim.html: label outside the glossary: "Fluxo de caixa operacional"
+FINDING: tela-ruim.html: number without the "exemplo" mark: "42"
+FINDING: tela-ruim.html: "fila" unqualified (decisões or outbox?): "Fila de tarefas"
+```
+
+O achado da regra 5 que **desapareceu** com a cegueira (o discriminador da mutação), literal:
+
+```text
+FINDING: tela-ruim.html: session "Gerente" without a ref [xxxxxx] (nome · ref · projeto): "Gerente"
+```
+
+E a fixture boa prova o outro lado: `fixtures/tela-bom.html` fica com **0 achados** com a regra 5
+viva — a linha `Gerente [31ee4d] · Maestro` **passa** (a convenção é aceita, não só exigida), e o
+`data-rotulo="colisão de nomes"` da `mensageria-03` **isenta** a tabela.
+
+### Restauração provada (sem resíduo)
+
+```text
+H0  (antes)       E338FD47139BB2A673AFEAEBBBF17632DA29C1102A9EF2DC599827FEEE64DD54
+H   (mutado)      1EB968EB0734950D2074176FC0106E7714731A58C3669F89AF7EE9D23DA7CB64
+H   (restaurado)  E338FD47139BB2A673AFEAEBBBF17632DA29C1102A9EF2DC599827FEEE64DD54
+igual ao original? True
+linhas 'MUTACAO-W02' no arquivo: 0
+```
+
+Script de mutação e arnês são **fora do repositório** (nenhum artefato temporário na árvore): o
+`.bak-w02` e o `__pycache__` que a execução criou foram **movidos** para `%TEMP%` (não apagados), e a
+árvore mostra só as cinco modificações declaradas.
+
+### Pendências declaradas (não silenciadas)
+
+- **`prototipo/README.md`** diz, na linha **94**, que o script "falha em **quatro** regras" — agora
+  são **cinco**. Não editei: o README está sendo tocado por outros três workers nesta janela (a
+  minha fatia nele é só o § Convenções, do R9) — a atualização é do dono do arquivo.
+- **`prototipo/README.md` linhas 83–86** — a prosa do renome, que o Worker04 declarou obsoleta (ver a
+  seção anterior). Continua **pendente**; não é desta fatia.
+- **Contrato de markup**: o docstring do verificador agora declara a identidade `nome · ref · projeto`
+  e a ref `[xxxxxx]`; a regra 5 é a **única** das cinco que **não** isenta contexto de citação — a
+  citação é justamente onde os nomes nus apareceram.
+
+### Regra 5 fechada nas telas da Mensageria (Worker03, 26/10)
+
+A regra 5 entrou no verificador em `dd15761` e acusava **34 achados** nas três telas da
+Mensageria. Causa única: o ref estava **dentro de um `<span class="mono">`**, então o nome da
+sessão e o ref caíam em **nós de texto diferentes** — e a regra exige o ref **no mesmo nó**,
+adjacente ao nome (`SESSION_REF = \s*·?\s*\[[0-9a-fA-F]{6}\]`). Correção: ref embutido no
+próprio texto (`Worker05 [4d000a]`), sem o `span` interno; nenhum conteúdo mudou, só a marcação.
+
+```text
+python specs/073-area-administrativa/prototipo/verifica-prototipo.py
+FINDING: workflow-01-sessao-de-agente.html: session "Worker05" without a ref [xxxxxx] ...
+FINDING: workflow-04-consumo-por-agente.html: session "Worker05" without a ref [xxxxxx] ...
+FINDING: workflow-04-consumo-por-agente.html: session "Gerente" without a ref [xxxxxx] ...
+FINDING: workflow-04-consumo-por-agente.html: session "Worker02" without a ref [xxxxxx] ...
+-- verifica-prototipo: 11 screen(s), 4 finding(s)
+```
+
+As três telas da Mensageria ficam com **0 achados**; os 4 restantes são de `workflow-01` e
+`workflow-04` (fatia do Worker05), não desta slice. A tabela de **endereços** da `mensageria-03`
+continua **não** isenta (só a tabela com `data-rotulo="colisão de nomes"` é), como a decisão manda.
+
+## Rodada 4 — correção 1, fatia do Worker06: matriz e fichas (26/10)
+
+**Escopo** (`rodada-4/correcao-1.md:95-98`): `pesquisa/plataformas.md` (leitura "não encontrado na
+documentação lida"; nota de coluna "corta × avisa"), `kiro-crew.md:55` (`não` → `—`), ficha do
+Claude Code com busca explícita por mailbox/*agent teams* (com URL) e fichas de observabilidade com
+o `sim` apoiado só em marketing rebaixado a `parcial`.
+
+**Células da matriz alteradas** (6 no total):
+
+| Grupo · funcionalidade | Plataforma | de → para | Motivo (fonte na ficha) |
+|---|---|---|---|
+| INTERCOMUNICAÇÃO · caixa de entrada | Kiro Crew | `não` → `—` | a página **não cobre** o inbox; não afirma a ausência (`kiro-crew.md:55`) |
+| GERENCIAMENTO · custo | AgentOps | `sim` → `parcial` | apoio só no README, não na UI (`agentops.md`) |
+| GERENCIAMENTO · rastro/replay de sessão | AgentOps | `sim` → `parcial` | idem |
+| GERENCIAMENTO · custo | Langfuse | `sim` → `parcial` | apoio só em marketing/README (`langfuse.md`) |
+| INTERCOMUNICAÇÃO · caixa de entrada | Claude Code | `—` → `parcial` | *inbox socket* + `crossSessionInbound` documentados (`claude-code.md:81`) |
+| INTERCOMUNICAÇÃO · colisão de nomes | Claude Code | `—` → `parcial` | recusa de envio a nome colidente, documentada (`claude-code.md:84`) |
+
+**FR3 intocado**: nenhuma célula `—` virou `sim` (as duas do Claude Code subiram só a `parcial`).
+
+**Contagens reconferidas por script** contra a matriz (parser das 26 linhas × 27 células):
+
+```text
+rows: 26 cells/row: {27}
+by symbol: sim 169 · parcial 225 · não 12 · — 244   (total 650 = 26 × 25)
+CONTROLE 30/150 = 20,0% · ADMINISTRAÇÃO 76/150 = 50,7% ·
+GERENCIAMENTO 42/200 = 21,0% · INTERCOMUNICAÇÃO 21/150 = 14,0%
+por funcionalidade: maior 15 (configuração por projeto); custo 7 · rastro/replay 7 ·
+caixa de entrada 0 · livro de mensagens 0
+```
+
+Todas as tabelas de leitura de `plataformas.md` foram atualizadas para esses números (GERENCIAMENTO
+45 → **42**; custo 9 → **7**; `sim` 172 → **169**; `parcial` → **225**; `não` → **12**; `—` → **244**),
+com nota datada de 26/10 declarando o efeito sobre as contagens anteriores.
+
+**Fichas com nota de correção** (11): `agentops` · `arize-phoenix` · `autogen-studio` ·
+`claude-code` · `comet-opik` · `crewai-amp` · `dify` · `flowise` · `kiro-crew` · `langfuse` ·
+`langsmith-langgraph`. Regra aplicada: `sim` exige fonte que **descreva o mecanismo** (doc/README
+técnico); só marketing → `parcial`. Onde o apoio é o README técnico, a célula foi **mantida e
+declarada** para o juiz reavaliar (Arize *Span Replay*, Comet README, Dify visão, CrewAI visão).
+
+**Não tocado** (fora da fatia): o mapa do W02, o inventário do W05, as telas, o verificador. A prosa
+"não encontrado na documentação lida" substituiu "lacuna de mercado" **só nesta fatia** (leitura da
+matriz); `juiz-3` e `correcao-1.md` mantêm a citação como registro do que foi corrigido.
+
+## Rodada 4 — fechamento da correção 1 (Gerente, 26/10)
+
+As seis fatias da `rodada-4/correcao-1.md` + o fechamento da regra 5 nas telas, integradas na
+`066-painel-de-regencia`:
+
+| Fatia | Dono | Commit do dono | Integração |
+|---|---|---|---|
+| preâmbulo R8 (rename das 3 telas da Administração) | Worker04 | `9bb5917` | `741b130` |
+| preâmbulo R9 (base de citação única + § Convenções + mapa §7) | Worker02 | `46d254c` | `6a32e24` (conflitos do `nav`: hrefs do R8 + base nova) |
+| correção 1 — Mensageria (4 telas) | Worker03 | `edbb32f`+`80a4c6d` | `d83920e` |
+| correção 1 — Administração (3 telas) | Worker04 | `5be4a31` | `bfe1da5` |
+| correção 1 — README + glossário | Worker01 | `0deccf4` | `bd51e4d` |
+| correção 1 — Workflow (4 telas) + inventário | Worker05 | `952ce53` | `5d91a1a` |
+| correção 1 — confronto + mapa + regra 5 (v4) | Worker02 | `11efa79` | `eb638b2` |
+| fechamento da regra 5 — Workflow (4 achados) | Worker05 | `fb599bb` | fast-forward |
+| fechamento da regra 5 — Mensageria (34 achados) | Worker03 | `a04b6d0` | merge pós-`fb599bb` |
+| correção 1 — matriz (`plataformas.md`) | Worker06 | `4257101` | `cb8a11a` |
+
+**Discrepância declarada (39 × 29):** o W02 mediu 29 achados da regra 5 no corpus dele, que não
+tinha as telas da correção 1 do W03/W05; no topo integrado a regra 5 viva acusou **39** (a tabela de
+endereços da `mensageria-03`, criada pela correção 1 do W03, trouxe 11). Os 39 fecharam por dono de
+tela: 34 W03 (causa: o ref dentro de `<span class="mono">` caía em nó de texto diferente do nome) e
+4 W05 (causa: ref separado do nome por `:` ou `(agente)`). Nenhuma isenção nova: a tabela de
+endereços **não** é isenta; só `data-rotulo="colisão de nomes"` é.
+
+**Portão final (cinco regras vivas, incluindo a regra 5):**
+
+```text
+python specs/073-area-administrativa/prototipo/verifica-prototipo.py
+-- verifica-prototipo: 11 screen(s), 0 finding(s)   [exit 0]
+```
+
+**Conformance 073, dois modos** (saída idêntica nos dois, exit 0):
+
+```text
+bash scripts/check-conformance.sh 073            → exit-normal=0
+TICKED_ONLY=1 bash scripts/check-conformance.sh 073 → exit-ticked=0
+✓ every cycle checked declares its artifacts and carries the closing tail with evidence.
+```
+
+**Coerência do README na integração (Gerente, declarado):** "falha em quatro regras" → **cinco**
+(v4, `11efa79`); "regra 5 ainda não está no script" → está; isenção da regra 5 explicitada (só a
+tabela de colisão de **nomes**; a de endereços lista os refs nas próprias células). Commit `dd15761`.
+
+**Tokens (pisos — `tarefas.jsonl` parou no ciclo 064; soma de `message.usage` dos transcripts,
+desde a 1ª ocorrência do `[[TASK]]` de cada fatia):**
+
+| Fatia | Dono | Piso |
+|---|---|---|
+| preâmbulo R8 | Worker04 | 4.219.636 |
+| preâmbulo R9 | Worker02 | 821.054 (+ cache_read 3.739.264 à parte) |
+| correção 1 — Mensageria | Worker03 | 5.542.221 |
+| correção 1 — Administração | Worker04 | 11.671.366 |
+| correção 1 — README + glossário | Worker01 | 3.248.622 (fatia; sessão acumulada 36.784.845) |
+| correção 1 — Workflow + inventário | Worker05 | 16.918.086 |
+| correção 1 — confronto + mapa + regra 5 | Worker02 | 20.453.582 |
+| regra 5 — Workflow | Worker05 | 4.156.209 |
+| regra 5 — Mensageria | Worker03 | 4.119.310 |
+| correção 1 — matriz | Worker06 | 5.274.507 |
+| **Total (piso)** | | **≈ 76,4 M** |
+
+**Limites cumpridos:** nenhum push, nenhum merge na dev/main, nenhum promote-main.sh, nenhum
+`rm -rf`, nenhuma leitura de `.env`/`settings.local.json`, só acréscimo em ADR/decisoes.jsonl, sem
+código de produto, sem segredo. A segunda rodada de juízes é do regente, em contexto fresco.
+
+## Rodada 4 — correção 2 (073-C2-W06, 27/10) — matriz, segurança documental e conformance 073
+
+Worker06, contexto próprio. Objeto da fatia (tabela "Tarefas por dono" de `rodada-4/correcao-2.md`):
+`pesquisa/plataformas.md` (`:155`, `:227-228`, Langfuse auditoria → `parcial`, revalidação das
+linhas citadas das fichas) + segurança documental + conformance 073 nos dois modos. **Por acréscimo**;
+nada da evidência das rodadas 1–3 nem da correção 1 foi reescrito (só a nota de datação de uma
+célula da matriz, § 1, e uma anotação de datação na tabela da rodada 1, acima).
+
+### 1. Matriz — o que mudou
+
+**Uma célula** da matriz: **Langfuse × auditoria** `sim` → `parcial` (decisão 8 da regente; achado
+P1 do juiz 2). O `sim` apoiava-se em "*audit logs* **listados** entre os controles"
+(`langfuse.md:47`) — lista de itens da página de segurança, o **mesmo tipo de apoio** que já
+rebaixou o *custo* (`langfuse.md:57`) e que `plataformas.md` § "Lacunas declaradas" diz que **não
+vira `sim`**. As demais células `sim` do Langfuse (RBAC, chaves, configuração por projeto)
+**permanecem**, apoiadas na mesma página `/security`, cada uma com o controle descrito.
+`pesquisa/langfuse.md:47` foi atualizada no mesmo commit — a linha citada é revalidada.
+
+**Duas leituras reescritas** para a forma "não encontrado na documentação lida" (decisão 8):
+
+| Onde | Antes | Depois |
+|---|---|---|
+| `plataformas.md:155` (**Por funcionalidade**) | "…: **nenhuma** das 25 entrega" | "…: **não encontrado na documentação lida**" |
+| `plataformas.md:227-228` (**Três leituras**, item 1) | "A caixa de entrada e o livro de mensagens **não têm `sim` em nenhuma das 25**." | "A caixa de entrada e o livro de mensagens: **`sim` em nenhuma das 25 — não encontrado na documentação lida**." |
+
+**Contagens reconferidas por script** contra a matriz (parser das 26 linhas × 25 células):
+
+```text
+columns: 25 · data rows: 26 · rows with wrong cell count: []
+total cells: 650
+sim=168  parcial=226  não=12  —=244         (antes da correção 2: sim=169 parcial=225 não=12 —=244)
+ADMINISTRAÇÃO 75/150 = 50%                   (antes: 76/150 = 51%)
+GERENCIAMENTO 42/200 = 21%                   (inalterado)
+per-funcionalidade: cadastro de agentes 11 · auditoria 10   (antes "11 cada")
+```
+
+Toda contagem das tabelas de leitura (Por grupo / Por funcionalidade) foi atualizada a partir
+disso, **por acréscimo** — os números da correção 1 (169/225/12/244) ficam na nota, com o novo
+bloco valendo sobre eles. FR3 intocado: **nenhuma `—` → `sim`**.
+
+**Revalidação das linhas citadas das fichas:** a única citação `arquivo:linha` da matriz é
+`kiro-crew.md:55` (bullet do Kiro Crew, `plataformas.md`). Conferida: `kiro-crew.md:55` é a célula
+*caixa de entrada* com o `não` → `—` da rodada 4 — a citação **procede**. As demais citações de
+fichas na matriz são sem número de linha (por arquivo), e cada uma resolve para a ficha existente.
+
+### 2. Segurança documental
+
+Varredura sobre `specs/073-area-administrativa/` (foco em `pesquisa/`, onde caiu esta fatia;
+`prototipo/` e `confronto/` reconferidos). **0 achados.**
+
+| Classe | Padrões procurados | Resultado |
+|---|---|---|
+| Segredo | `sk-*`/`sk_live`/`sk_test`, `api_key`, `secret`, `senha`, `password`, `bearer`, `AKIA…`, `ghp_…`, bloco de chave privada, JWT (`eyJ…`) | **0** — só **falsos positivos** (`sk-l` ⊂ "ta**sk-l**edger"; `senha` ⊂ "de**senha**dos/desenhar"), **nomes de campo** documentados (Client secret, `apiKeyHelper`, `ANTHROPIC_API_KEY`, `HELICONE_API_KEY`, secret managers, `authorUserEmail`) e o **placeholder declarado** `sk-local-demo-073-nao-e-segredo` (`litellm.md:18`) |
+| Dado pessoal | e-mail, telefone `+55`, CPF, CNPJ, caminho de usuário | **0** e-mails, 0 telefone, 0 CPF/CNPJ, 0 caminho `C:\Users\…`. O único namespace é o **público** do repositório (`GHDaru/maestro`) |
+| Nome real de sessão/agente | nomes do roster sem ref/marcador de exemplo | **0** — esta fatia não toca as telas; nenhum nome real acrescentado |
+| URL externa | `http(s)://…` | só **documentação/produto público**; nada vaza acesso privado |
+
+Pela taxonomia do Princípio III, nada a classificar. **Achados: 0.**
+
+### 3. Conformance 073 — verde nos dois modos
+
+**Modo normal** (`bash scripts/check-conformance.sh 073`) — **exit 0**:
+
+```text
+── Conformance: did the method survive into the artifacts? ──
+   (floor: cycle 42; older cycles carry declared debt — see the roadmap)
+• 070-conferidor-ordem-veredito
+    · imported evidence (00-chamado.md + G*-*.md, no tasks.md): a Hindiana chamado, not a Maestro cycle — not charged (ADR 0024)
+• 073-area-administrativa
+    ✓ Constitution Check complete (8/8)
+    ✓ acceptance criteria located and stated without checkboxes
+    ✓ all 5 conditional artifacts declared with a reason
+    ✓ domain model declared (aggregate, invariants, glossary, ports) with a reason
+    ✓ TAIL:review evidence: Worker03, contexto fresco (não consolidou; amostragem esc
+    ✓ TAIL:security evidence: Worker03, varredura sobre `pesquisa/` (28 arquivos, 14 pad
+    ✓ TAIL:gate evidence: o gate humano da rodada 1 é o **"segue" do regente para a
+    · TAIL:mutation not applicable — na época), mas a rodada 3 criou o gate executável `prototi
+──
+cycles checked: 2
+✓ every cycle checked declares its artifacts and carries the closing tail with evidence.
+```
+
+**Modo ticked-only** (`bash scripts/check-conformance.sh --ticked-only 073`) — **exit 0**: idêntico,
+exceto a linha do `TAIL:gate`:
+
+```text
+    · TAIL:gate not ticked yet — nothing claimed, nothing owed
+```
+
+> **Nota de máquina.** O segundo modo **não** vem do prefixo de ambiente `TICKED_ONLY=1` — o script
+> fixa `TICKED_ONLY=0` na linha 69 e só a **flag** `--ticked-only` liga o modo (o prefixo de
+> ambiente é ignorado). Rodado também `TICKED_ONLY=1 bash scripts/check-conformance.sh 073`, que
+> **reproduz o modo normal** (exit 0) — logo o retrato anterior ("saída idêntica nos dois") media o
+> modo normal duas vezes; aqui os dois modos **de fato** rodados são normal e `--ticked-only`, e a
+> diferença real é a linha do `TAIL:gate`. A chamada leva ~4–6 min sob msys; **não** foi preciso
+> extrair `check-links.sh`/`check-boundary.sh` (o conformance não os invoca a ponto de pendurar).
+
+### Veredito
+
+**Limpo.** Matriz coerente e reconferida por script (168/226/12/244); 0 achados de segurança;
+conformance 073 **verde nos dois modos** (exit 0). Nada mais havia a corrigir nesta fatia.
+
+**Tokens (piso — `tarefas.jsonl` parou no ciclo 064):** soma de `message.usage` do transcript desde
+a 1ª ocorrência do `[[TASK 073-C2-W06]]` — **piso 320.487** tokens (input 207.360 + output 113.127),
+com `cache_read` **7.274.560** à parte (total bruto ≈ **7,6 M**); é **piso**, não o gasto real.
+
+## Rodada 4 — correção 2: a **regra 6** do verificador (Worker02, 27/10)
+
+Fatia `073-C2-W02` (decisão 1 da regente, `rodada-4/correcao-2.md`): **um ref, um nome, por tela** —
+dentro de uma tela, um ref `[xxxxxx]` aparece colado a **um único nome**, e **todo nome do roster**
+vem com o **ref do roster** (o roster real de 26/10, listado no script). A regra 6 entra no
+`prototipo/verifica-prototipo.py` (o **sexto** corpo de regra; o script foi de 5 para 6) e roda onde a
+regra 5 roda — **todo nó de texto visível e todo valor de atributo** —, mais um passo `finish()` ao
+fim do arquivo, porque o par *(ref × nome)* só fecha por tela.
+
+**A MESMA isenção da regra 5, declarada:** a **tabela de colisão de nomes** (um `<table>` cujo
+cabeçalho declara `data-rotulo="colisão de nomes"`). É a cerca que a `mensageria-03` usa na tabela de
+resolução (nome nu na coluna "nome pretendido", refs na coluna ao lado): ali o nome nu é colisão
+**nomeada de propósito**, não violação. A marca de exemplo (`data-exemplo`) **não** isenta a regra 6 —
+como não isentava a 5.
+
+**O que a regra 6 fecha (o que a 5 deixava passar):** a regra 5 só pede que **algum** ref siga o nome,
+então uma ref **trocada entre duas sessões** passava por ela. A regra 6 acusa o par: *(i)* um ref
+colado a **dois** nomes; *(ii)* um nome do roster com ref que **não** é a do roster.
+
+### O gate no corpus real (11 telas, seis regras)
+
+```text
+python specs/073-area-administrativa/prototipo/verifica-prototipo.py
+-- verifica-prototipo: 11 screen(s), 0 finding(s)   [exit 0]
+```
+
+**0 achados** com as **seis** regras sobre as telas já corrigidas (W03/W04/W05). Não é um gate que
+nasceu verde: contra as telas do estado **anterior** (`b8c5038`, antes das correções das telas) a
+regra 6 acusava **28** achados — foi a correção das telas que a fechou.
+
+### A mutação (prova de que a regra 6 não é vazia)
+
+Arnês fora do repositório (`%TEMP%`), o **mesmo** `ScreenParser`, cegando a regra 6 nas **duas
+metades** (`record_identity` e `finish` viram no-op), sobre as 11 telas **mais** a dupla de fixtures:
+
+```text
+FIXTURES + CORPUS (HEAD)
+ANTES (regra 6 viva)    -- 9 finding(s)
+MUTADO (regra 6 cega)   -- 7 finding(s)
+desaparecem (regra 6)   -- 2
+```
+
+Os **2** que somem são da regra 6 na fixture ruim (o **discriminador**), literais:
+
+```text
+GONE: tela-ruim.html: session "Worker05" carries ref [4d000a], not the roster ref [78d88f] (nome · ref · projeto): "Worker05 [4d000a]"
+GONE: tela-ruim.html: ref [b7e3a2] is glued to more than one name (Assistente, Office) — one ref, one name
+```
+
+Os **7** que sobrevivem são das **outras** regras, e **todos** em `tela-ruim.html` (rótulo fora do
+glossário ×2, `fila` nua ×2, `<button>` sem `data-fonte`, número sem marca, e o `Gerente` sem ref da
+**regra 5**) — a regra cega não leva nenhum junto. A fixture **boa** prova o outro lado:
+`tela-bom.html` fica com **0 achados** com a regra 6 viva (o roster com os refs certos **passa**, e a
+tabela de colisão **isenta**), 0 também cega.
+
+**A prova na tela real, não só na fixture** — o **mesmo** parser sobre o corpus no estado
+pré-correção (objetos do git, sem tocar na árvore):
+
+```text
+PRE-FIX (b8c5038): 11 screen(s) | regra 6 viva 28 | regra 6 cega 0 | desaparecem 28
+HEAD             : 11 screen(s) | regra 6 viva  0 | regra 6 cega 0 | desaparecem  0
+```
+
+Os **28** do estado anterior eram **todos** da regra 6 — nomes do roster com ref trocada
+(`Worker05 [4d000a]`, `Worker03 [9a1b27]`, `Gerente [6f0c21]`, `Worker01 [1a2b3c]`) e dois refs
+colados a mais de um nome. É exatamente a ref trocada que a **regra 5 não via** — a razão de a 6
+existir.
+
+### Fixtures (o par)
+
+- `prototipo/fixtures/tela-bom.html` — oráculo **positivo**: três nomes do roster com os refs certos
+  (`Gerente [31ee4d]`, `Worker01 [9a1b27]`, `MAESTRO [7c8d05]`), uma **tabela de colisão marcada**
+  (o mesmo nome em duas refs — **isenta**) e o resto limpo ⇒ **0 achados**.
+- `prototipo/fixtures/tela-ruim.html` — oráculo **negativo**: além dos achados das regras 1–5, um nome
+  do roster com a ref errada (`Worker05 [4d000a]`, quando o roster diz `[78d88f]`) e um ref colado a
+  **dois** nomes (`Office [b7e3a2]` × `Assistente [b7e3a2]`) ⇒ acusa a regra 6.
+
+### Restauração provada (sem resíduo)
+
+```text
+H0  (antes)      92D95462BBA6B33BC3BA78AFA6034D761FC5F18B36870143D234B070C9FF588D
+H   (viva)       92D95462BBA6B33BC3BA78AFA6034D761FC5F18B36870143D234B070C9FF588D
+H   (cega)       92D95462BBA6B33BC3BA78AFA6034D761FC5F18B36870143D234B070C9FF588D
+inalterado? True
+```
+
+A mutação é **em memória** (sobre a classe já carregada) e o arnês **lê** o verificador sem escrever
+nada — por isso o SHA-256 do script é idêntico nas três leituras. Nenhum artefato temporário na
+árvore.
+
+### Limites declarados (não silenciados)
+
+- **A ambiguidade de endereço NÃO é verificada por script** (decisão 1): a regra 6 exige *um ref por
+  nome* e *o ref do roster para cada nome do roster*, mas **não resolve** qual ref é o destino certo
+  quando o nome casa com vários. Isso fica **declarado** no `prototipo/README.md` (fatia do W01) e no
+  mapa de contextos (§ 8, fatia do W02) — coberto pela **leitura fresca**, não por *fitness function*.
+- **A cerca é a tabela inteira**: a prosa dentro de uma tabela de colisão fica isenta da regra 6, como
+  fica da 4 e da 5; quem cobre é a leitura fresca.
+- **O roster é dado de fixture** (os refs reais de 26/10) e **não** segue os refs vivos das sessões,
+  que mudam ao reiniciar — é o ciclo de vida do ref, achado P4 do juiz 3, tratado como `DEPOIS`.
+
+## Rodada 4 — correção 3: fechamento do Gerente (27/10)
+
+O Darú reabriu a rodada com três decisões de escopo (`rodada-4/correcao-3.md`, `04c0505`):
+**D1** a linha "limites de orçamento e de taxa" fica **uma só** na matriz fixa, distinguida pela
+leitura **por célula** (`corta`/`avisa`/`avisa?`, com a ficha como fonte); **D2** a ferramenta MCP
+(*Model Context Protocol*) é **escopo da política `allow/deny/ask` por agente**, não tela própria;
+**D3** o **emissor do aviso de teto** é a **ingestão de consumo** (`painel/custo.py`), que enfileira
+mensagem endereçada ao cruzar o limiar. Despachada por dono; a fatia do W02 só após a T02 do 074
+integrar (ordem da regente).
+
+### Fatias integradas (um merge por fatia, gate após cada uma)
+
+| Fatia | Commit do dono | Merge na 066 |
+|---|---|---|
+| W01 — README (D1/D2/D3, ENTRA 4) + glossário (2 termos) | `aa29969` | ff |
+| W04 — 3 telas da Administração (teto com precedência, "Quem emite o aviso", regra MCP `#regra-ferramenta-mcp`, "Agente (perfil)") | `fef2910` | `6de4995` |
+| W03 — 4 telas da Mensageria (caixa "De onde vêm os nomes", ponteiro para a regra, linha de aviso `msg-0418` com `data-fonte: painel/custo.py`) | `7a57301` | `143f76d` |
+| W05 — 4 telas do Workflow + reconciliação stop/rm (attempt 2) | `d6be33f` + `c5557a7` | `c6bf822` + `9412203` |
+| W06 — matriz D1 (leitura por célula; **12 `corta` · 1 `avisa` · 3 `avisa?`** no fechamento — 13/1/2 na entrega desta fatia, a célula do Flowise virou `avisa?` no fechamento) + ficha `claude-code.md:59/:61` corrigida + conformance + segurança | `c6a72e9` | `2e99d22` |
+| W02 — confronto (D1/D2/D3, ENTRA 4 reescrito, ENTRA 5 com escopo MCP) + verbete + mapa § 6.5 (5º ENTRA) | `cc10191` | `2db2a11` |
+
+### Gate após cada merge
+
+`python specs/073-area-administrativa/prototipo/verifica-prototipo.py` → **11 screen(s),
+0 finding(s)**, seis regras, exit 0 — verificado após **cada** um dos merges acima e no HEAD de
+fechamento. Nenhuma regra nova nesta correção (decisão da regente: só rodar).
+
+### Coerência cruzada conferida na integração
+
+- **D2 ponteiro ↔ âncora**: a terceira coluna da mensageria-04 (W03) aponta a regra de política e
+  a âncora `id="regra-ferramenta-mcp"` existe na `administracao-02-politicas.html:169` (W04).
+- **D3 tela ↔ ficha ↔ workflow**: a seção "Quem emite o aviso" (W04), a linha `msg-0418` com
+  `data-fonte: painel/custo.py` (W03, W05) e a ficha corrigida (W06) dizem o mesmo; a citação
+  stop/rm do workflow-01 (W05, attempt 2) cita `:59`/`:61` **sem** "a confirmar" — a ressalva do
+  juiz 1 ao P13 fechou: a assimetria "stop religável × rm irreversível" era inferência; o `rm` tira
+  a **linha e o worktree**, o transcrito permanece e retoma por `claude --resume`.
+- **Totais do confronto intactos**: 16/5/11 = 32 (nenhuma linha mudou de casa — decisões de escopo).
+
+### Conformance 073 — verde nos dois modos (27/10, HEAD de fechamento)
+
+- Modo normal: `scripts/check-conformance.sh 073` → exit 0 (evidência colada acima, na saída do
+  script: Constitution Check 8/8, artefatos condicionais declarados com motivo, caudas com
+  evidência).
+- Modo ticked-only: `scripts/check-conformance.sh 073 --ticked-only` → exit 0 (o modo é a flag;
+  a variável de ambiente é ignorada — ADR da correção 2).
+
+### Tokens da correção 3 (pisos — o ledger `tarefas.jsonl` parou no ciclo 064; soma de
+`message.usage` do transcript de cada sessão desde a 1ª ocorrência do `[[TASK]]`)
+
+| Dono | Tokens (piso) |
+|---|---|
+| Worker01 | ≈3,35M (606k in+out) |
+| Worker03 | ≈8,11M |
+| Worker04 | ≈8,76M |
+| Worker05 | ≈10,0M (correção 3) + ≈20,6M (attempt 2, com cache) |
+| Worker06 | ≈2,36M (cache_read 4,40M à parte) |
+| Worker02 | ≈6,81M sem cache (65,07M com cache_read) |
+
+### Veredito
+
+Correção 3 fechada: as três decisões de escopo aplicadas por dono, gate 11/0 nas seis regras após
+cada merge, conformance verde nos dois modos, coerência cruzada conferida. **A leitura dos juízes é
+da regente** — o Gerente não despacha juízes (a nota < 9 duas vezes é laço para o Darú).
+
+## Rodada 4 — fechamento do ciclo: quarta leitura e a célula do Flowise (27/10, mandato `073-fechamento`)
+
+### A quarta leitura (regente, `735966b`)
+
+Juiz 2 **16/16**, juiz 3 **16/16** sem regressão, juiz 1 **15/16** — único P1: a célula do Flowise
+em `pesquisa/plataformas.md:69` marcava `parcial (corta)` **sem fonte na ficha**
+(`pesquisa/flowise.md:28` só lista *rate limit* entre os controles). Decisão da regente: **sem nova
+rodada de juízes** — só a célula, despachada ao Worker06 (`073-fechamento-W06`).
+
+### Fatia integrada
+
+| Fatia | Commit do dono | Merge na 066 |
+|---|---|---|
+| W06 — célula do Flowise `parcial (corta)` → `parcial (avisa?)` com motivo ("ficha só lista *rate limit* entre os controles"), linha do Flowise na tabela de fontes, recontagem **12 `corta` · 1 `avisa` · 3 `avisa?`** em `plataformas.md:165` e `confronto-decisao.md:30` | `750d718` | `b9a5afd` |
+
+Nenhum símbolo da matriz mudou (reconferido por script no dono): `sim` 168 · `parcial` 226 · `não`
+12 · `—` 244 (650 células); a linha do orçamento segue com 6 `sim`; CONTROLE/GERENCIAMENTO intactos.
+
+### Gate no HEAD de fechamento
+
+`python specs/073-area-administrativa/prototipo/verifica-prototipo.py` → **11 screen(s),
+0 finding(s)**, seis regras, exit 0.
+
+### Conformance 073 — verde nos dois modos (27/10, HEAD de fechamento do ciclo)
+
+- Modo normal: `scripts/check-conformance.sh 073` → exit 0.
+- Modo ticked-only: `scripts/check-conformance.sh 073 --ticked-only` → exit 0 (o modo é a flag).
+
+### TAIL:gate — a evidência das quatro leituras
+
+As quatro leituras da rodada 4 somam **47 das 48 células (3 juízes × 16) em nota ≥ 9**; a célula
+restante — o P1 do Flowise — foi **corrigida** (`750d718`: marca `avisa?` com motivo, recontagem
+12/1/3), não re julgada. O gate humano final (merge na `dev` e promoção) é da regente, não
+delegável; o Gerente não despacha juízes.
+
+### Tokens do fechamento (piso — mesmo método: soma de `message.usage` desde a 1ª ocorrência do `[[TASK]]`)
+
+| Dono | Tokens (piso) |
+|---|---|
+| Worker06 (`073-fechamento-W06`) | ≈444k (input 414k + output 30k; cache_read 5,95M à parte) |
+
+### Veredito
+
+Ciclo 073 fechado na 066: quarta leitura registrada, célula corrigida, gate 11/0 nas seis regras,
+conformance verde nos dois modos, `TAIL:gate` com a evidência das quatro leituras. Merge na `dev`,
+promoção e registro do gate final: regente.

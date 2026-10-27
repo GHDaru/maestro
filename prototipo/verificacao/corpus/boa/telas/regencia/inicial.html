@@ -1,0 +1,31 @@
+<!-- FIXTURE SINTÉTICA do verificador de navegação (074) — não é tela do produto.
+     Fragmento que passa nas nove verificações (a)–(i) e nas regras do 073 (g). -->
+<div class="conteudo-interior" data-contexto="regencia" data-tela="inicial"
+     data-acoes="acoes/regencia.js">
+  <p class="migalha" data-referencia="true">fixture boa · ciclo 074</p>
+  <h1 class="titulo-pagina" data-rotulo="sessão de agente">Painel do regente</h1>
+  <p data-exemplo="true">3 decisões esperando, a mais velha há 7 h</p>
+  <p><a href="#/regencia/fila-de-decisoes"
+        data-fonte="fixture boa do verificador 074 (trilha de contexto)">ir para a fila de decisões</a></p>
+  <p><button data-acao="registrar-ruling" data-autoriza="regente" data-simulado="sim"
+             data-efeito="o ruling entra no livro de mensagens"
+             data-fonte="fixture boa do verificador 074">Registrar ruling</button></p>
+  <p><button data-acao="derrubar" data-alvo="Worker02 [31f7bf] · maestro"
+             data-autoriza="humano" data-simulado="sim"
+             data-efeito="a sessão cai e o contexto vivo se perde"
+             data-fonte="fixture boa do verificador 074"
+             data-irreversivel="sim" data-confirma="conf-derrubar">Derrubar</button></p>
+  <div class="confirmacao" id="conf-derrubar" hidden>
+    <dl>
+      <dt data-rotulo="tarefa aberta">o que se perde</dt>
+      <dd data-perde="o contexto vivo da sessão">o contexto vivo da sessão.</dd>
+      <dt data-rotulo="tarefa aberta">como reverter</dt>
+      <dd data-reverte="o contexto vivo só volta por reassunção">só volta por reassunção.</dd>
+    </dl>
+    <p><button data-acao="derrubar" data-alvo="Worker02 [31f7bf] · maestro"
+               data-autoriza="humano" data-simulado="sim"
+               data-efeito="a sessão cai e o contexto vivo se perde"
+               data-fonte="fixture boa do verificador 074"
+               data-irreversivel="sim" data-confirma="conf-derrubar">Confirmar</button></p>
+  </div>
+</div>

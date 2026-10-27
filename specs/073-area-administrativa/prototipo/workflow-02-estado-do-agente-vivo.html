@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workflow de sessões · estado do agente vivo</title>
+<!--
+  Wireframe estático (ciclo 073, rodada 4 — correção 1). Sem servidor, sem JavaScript de dados.
+  Contrato de marcação (verifica-prototipo.py): elemento interativo com `data-fonte`;
+  rótulo de domínio com `data-rotulo` (valor = termo do glossário); número de exemplo
+  com `data-exemplo` e "(exemplo)"; citação com `data-fonte`/`data-referencia`.
+  Identidade de sessão: sempre `nome · ref · projeto` (decisão 2 da regente, 26/10).
+-->
+<style>
+:root{--tinta:#171b24;--cinza:#5b6472;--linha:#c9cfd8;--papel:#fff;--caixa:#f4f6f8;--realce:#e7ebf0}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--tinta);font:14px/1.55 system-ui,"Segoe UI",Roboto,Arial,sans-serif}
+.wrap{max-width:980px;margin:0 auto;padding:16px}
+header.topo{border-bottom:2px solid var(--linha);padding-bottom:12px}
+h1{font-size:20px;margin:.3em 0}
+h2{font-size:15px;margin:1.6em 0 .5em;padding-bottom:.2em;border-bottom:1px solid var(--linha)}
+p{margin:.5em 0}
+code{background:var(--realce);padding:0 3px;border-radius:3px;font-size:12px}
+.migalha{color:var(--cinza);font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin:0}
+.contexto{background:var(--caixa);border:1px solid var(--linha);border-radius:6px;padding:8px 10px;font-size:13px}
+.grade{display:flex;flex-wrap:wrap;gap:10px;margin:.6em 0}
+.caixa{border:1px solid var(--linha);background:var(--caixa);border-radius:6px;padding:10px;flex:1 1 210px;min-width:210px}
+.caixa.traco{border-style:dashed}
+.rotulo{display:block;font-size:11px;color:var(--cinza);text-transform:uppercase;letter-spacing:.05em}
+.selo{border:1px solid var(--linha);background:var(--papel);border-radius:9px;padding:1px 6px;font-size:12px}
+table{border-collapse:collapse;width:100%;margin:.6em 0;font-size:12px}
+caption{text-align:left;color:var(--cinza);font-size:12px;padding:.2em 0}
+th,td{border:1px solid var(--linha);padding:6px 8px;text-align:left;vertical-align:top}
+thead th{background:var(--realce)}
+.fonte{display:block;color:var(--cinza);font-size:11px}
+.exemplo{font-style:italic}
+.vazio{color:var(--cinza)}
+button{font:inherit;border:1px solid var(--linha);background:var(--papel);border-radius:4px;padding:2px 7px;font-size:12px}
+button[disabled]{color:var(--cinza);border-style:dashed}
+footer.rodape{border-top:1px solid var(--linha);color:var(--cinza);font-size:12px;margin-top:28px;padding-top:10px}
+footer.rodape strong{color:var(--tinta)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="topo">
+  <p class="migalha" data-referencia="true">Maestro · área administrativa · wireframe estático · ciclo 073, rodada 4</p>
+  <h1 class="rotulo" data-rotulo="estado do agente vivo" data-fonte="método: specs/073-area-administrativa/confronto/confronto-decisao.md § Glossário proposto (‘estado do agente vivo’, ENTRA nº 13) · docs/governance/glossary.md (Estado do agente vivo, ciclo 073)">estado do agente vivo</h1>
+  <p class="contexto" data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §6.3 (contexto Workflow de sessões) e §7 (colisão «sessão» × «agente»); specs/073-area-administrativa/rodada-4/correcao-1.md (decisões 2 e 5 da regente)">
+    <strong>Contexto delimitado:</strong> Workflow de sessões ·
+    <strong>ENTRA:</strong> estado do agente vivo ·
+    <strong>identidade de sessão:</strong> sempre <strong>nome · ref · projeto</strong>
+    (<strong>o ref muda ao reiniciar</strong>) ·
+    <strong>fonte do ENTRA:</strong> método (<code>painel/server.py</code> — estados
+    trabalhando/esperando/sem tarefa/bloqueado) e plataforma Claude Code (<em>agent view</em>, lista por estado).
+    Uma linha por sessão: o que a sessão está fazendo, com qual modelo e a que consumo não se lê em três telas.
+  </p>
+</header>
+
+<main>
+
+<h2>Resumo — sessões por estado</h2>
+<div class="grade" data-fonte="método: painel/server.py (os quatro estados do read-model atual) e a detecção de processo que separa «bloqueado» de «caída» (ENTRA estado do agente vivo — a lacuna); specs/073-area-administrativa/confronto/mapa-de-contextos.md §6.3">
+  <div class="caixa"><span class="selo">trabalhando</span> <span class="exemplo" data-fonte="exemplo — nenhum dado real" data-exemplo="true">1 (exemplo)</span></div>
+  <div class="caixa"><span class="selo">esperando</span> <span class="exemplo" data-fonte="exemplo — nenhum dado real" data-exemplo="true">1 (exemplo)</span></div>
+  <div class="caixa"><span class="selo">sem tarefa</span> <span class="exemplo" data-fonte="exemplo — nenhum dado real" data-exemplo="true">0 (exemplo)</span></div>
+  <div class="caixa"><span class="selo">bloqueado</span> <span class="exemplo" data-fonte="exemplo — nenhum dado real" data-exemplo="true">1 (exemplo)</span></div>
+  <div class="caixa"><span class="selo">caída</span> <span class="exemplo" data-fonte="exemplo — nenhum dado real" data-exemplo="true">1 (exemplo)</span></div>
+</div>
+<p class="fonte" data-referencia="true">Os cartões contam as mesmas sessões da tabela abaixo: um cartão por estado, e a soma fecha nas quatro linhas (1+1+0+1+1 = 4). «caída» é o estado que a detecção de processo acrescenta ao read-model (ver «o que entra — a lacuna», adiante); «sem tarefa» aparece com 0 porque nenhuma sessão do exemplo está nele.</p>
+
+<h2>sessões</h2>
+<table data-fonte="plataforma Claude Code — agent view, <code>https://code.claude.com/docs/en/agent-view</code> (ficha <code>specs/073-area-administrativa/pesquisa/claude-code.md</code>, coluna GERENCIAMENTO «lista de agentes vivos com estado» = <code>sim</code>); método: <code>painel/server.py</code> (read-model) · <code>docs/records/tarefas.jsonl</code> (tarefa aberta e tentativas)">
+  <caption>Uma linha por sessão: identidade completa, estado, tarefa aberta, modelo, consumo e a ação que o estado permite. Os valores marcados <span class="exemplo">exemplo</span> ilustram o layout — não são dados do repositório.</caption>
+  <thead>
+    <tr>
+      <th class="rotulo" data-rotulo="sessão de agente" data-fonte="método: ListAgents (nome e ref) · specs/073-area-administrativa/pesquisa/claude-code.md (roteamento por nome/ref = sim)">identidade (nome · ref · projeto)</th>
+      <th class="rotulo" data-rotulo="estado do agente vivo" data-fonte="método: specs/073-area-administrativa/confronto/mapa-de-contextos.md §6.3; docs/governance/glossary.md (Estado do agente vivo, ciclo 073)">estado do agente vivo</th>
+      <th class="rotulo" data-rotulo="tarefa aberta" data-fonte="método: docs/records/tarefas.jsonl (tarefa com start e sem stop) · docs/governance/glossary.md (Tarefa aberta, ciclo 073)">tarefa aberta</th>
+      <th class="rotulo" data-rotulo="catálogo de skills/ferramentas/modelos" data-fonte="método: scripts/multi-session.py:91-92 (modelo por sessão) · docs/governance/glossary.md (Catálogo de skills/ferramentas/modelos, ciclo 073)">modelo</th>
+      <th class="rotulo" data-rotulo="consumo por agente" data-fonte="método: specs/073-area-administrativa/confronto/confronto-decisao.md (consumo = piso, soma de message.usage); docs/governance/glossary.md (Consumo por agente, ciclo 073)">consumo</th>
+      <th class="rotulo" data-rotulo="sessão de agente" data-fonte="método: painel/server.py (coluna existente do painel — idade_min)">última atividade</th>
+      <th class="rotulo" data-rotulo="sessão de agente" data-fonte="método: specs/073-area-administrativa/rodada-4/correcao-1.md (P14: bloqueado e esperando passam a levar a uma ação)">ação</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><span data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»" data-exemplo="true">Worker05 [78d88f] · 410_MAESTRO (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">trabalhando (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">073-T4 · attempt 1 (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">deepseek-v4.1-flash (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">1,2 M tokens (piso) (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">há 12 min (exemplo)</span></td>
+      <td><span class="vazio">— motivo: trabalhando — nenhuma ação pede o humano</span></td>
+    </tr>
+    <tr>
+      <td><span data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»" data-exemplo="true">Gerente [31ee4d] · 410_MAESTRO (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">esperando (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">073-T4 · revisão (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">glm-5.3 (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">3,4 M tokens (piso) (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">há 3 min (exemplo)</span></td>
+      <td><button type="button" data-fonte="plataforma Claude Code — harness: <code>SendMessage</code> e <code>ListAgents</code>; specs/073-area-administrativa/pesquisa/claude-code.md:79 (mensagem entre agentes = sim)" aria-label="ver a caixa de entrada da sessão">ver a caixa de entrada</button></td>
+    </tr>
+    <tr>
+      <td><span data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»" data-exemplo="true">Worker03 [ad66d6] · 410_MAESTRO (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">bloqueado (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">073-T1 · attempt 2 (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">glm-5.3 (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">620 k tokens (piso) (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">há 40 min (exemplo)</span></td>
+      <td><button type="button" data-fonte="método: docs/governance/glossary.md (Pedido de decisão, ciclo 072 — id, quem perguntou, opções, recomendação, prazo, o que desbloqueia, destino)" aria-label="abrir o pedido de decisão da sessão bloqueada">abrir o pedido de decisão</button></td>
+    </tr>
+    <tr>
+      <td><span data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»" data-exemplo="true">Worker02 [31f7bf] · 410_MAESTRO (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">caída (exemplo)</span></td>
+      <td class="vazio">— motivo: sem tarefa aberta no ciclo corrente (a sessão está caída)</td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">deepseek-v4.1-flash (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">980 k tokens (piso) (exemplo)</span></td>
+      <td><span data-fonte="exemplo — nenhum dado real" data-exemplo="true">há 2 h (exemplo)</span></td>
+      <td><button type="button" data-fonte="plataforma Claude Code — harness: <code>SendMessage</code> / <code>ListAgents</code> (specs/073-area-administrativa/pesquisa/claude-code.md:79,82); método: specs/066-painel-de-regencia/andamento.md:112-113 (endereçar sempre com o ref lido)" aria-label="ver as mensagens endereçadas à sessão caída">ver as mensagens endereçadas a ela</button></td>
+    </tr>
+  </tbody>
+</table>
+<p class="fonte" data-referencia="true">«—» sempre com «motivo:» (ux-design 066 §7, F8); nenhuma idade é digitada (ux-design 066 §7, F7). <strong>caída</strong> é a sessão cujo processo morreu: a linha diz a que ela respondia e leva às mensagens que ficaram <em>endereçadas a ela</em> — sem isso, uma sessão caída só desaparece da lista e a resposta que esperávamos nunca chega (juiz 3, P14). Quem autoriza cada ação: a sessão dona lê a própria caixa de entrada e o próprio pedido; o regente, por delegação, lê os das sessões que conduz.</p>
+
+<h2>alerta — sessão parada</h2>
+<div class="caixa" data-fonte="specs/073-area-administrativa/rodada-4/juiz-2-administracao-gerenciamento.md (P10: «sem alerta de sessão parada») · specs/066-painel-de-regencia/ux-design.md:79 (o alerta «mensagem desviada» já era pedido) · docs/governance/glossary.md (Estado do agente vivo, ciclo 073 — detectado do processo)">
+  <p><strong>Limiar declarado:</strong> a sessão no estado «trabalhando» sem carimbo novo por <span data-fonte="exemplo — proposta de limiar; nenhum dado real medido" data-exemplo="true">30 min (exemplo)</span> gera alerta — limite que <em>avisa</em>, não que <em>corta</em> (a distinção «limite que corta» × «alerta que só avisa» entra na matriz; decisão 6 da regente).</p>
+  <p><strong>Para quem vai o alerta:</strong> para quem conduz a sessão — o regente, por delegação — e para a sessão dona; o alerta é uma <strong>mensagem entre agentes</strong> endereçada, com o ref da sessão parada (o ref muda ao reiniciar: relê-se do <code>ListAgents</code>).</p>
+  <p class="fonte" data-referencia="true">hoje: <span class="vazio">— motivo: nenhum limiar declarado no painel atual (o estado é heartbeat, não processo)</span></p>
+  <p>
+    <button type="button" disabled data-fonte="ux-design 066 §4 (anti-regra: «não decide pelo humano»); specs/073-area-administrativa/rodada-4/correcao-1.md (decisão 5 — toda ação de escrita diz quem autoriza)" aria-label="ajustar o limiar do alerta de sessão parada (aguarda gate humano)">ajustar limiar…</button>
+    <button type="button" disabled data-fonte="specs/073-area-administrativa/rodada-4/correcao-2.md (decisão 3: o botão fica desabilitado e aponta para a confirmação do workflow-01); método: scripts/multi-session.py (o lançador religa a sessão) · plataforma: claude --resume; ux-design 066 §4 (não decide pelo humano)" aria-label="reiniciar a sessão parada (abre a confirmação de workflow-01-sessao-de-agente.html; aguarda gate humano)">reiniciar a sessão…</button>
+  </p>
+  <p class="fonte" data-referencia="true">«reiniciar a sessão» fica <strong>desabilitado</strong> e <strong>aponta para a confirmação</strong> de <code>workflow-01-sessao-de-agente.html</code> (§ «reiniciar — o ref muda ao reiniciar»), onde a ação espera o gate humano: nenhuma linha desta tela reinicia sozinha (correção 2, decisão 3; juiz 1, P14).</p>
+</div>
+
+<h2>o que entra — a lacuna</h2>
+<div class="caixa traco" data-fonte="specs/073-area-administrativa/confronto/confronto-decisao.md (ENTRA estado do agente vivo: a lacuna é a detecção de processo)">
+  <p><strong>detecção de processo vivo</strong> — hoje o estado é derivado do transcrito (heartbeat); o termo pede sabê-lo do <strong>processo</strong>, não só do sinal. É o que separa «bloqueado» de «caída».</p>
+  <p class="fonte" data-referencia="true">Estados do Claude Code citados na ficha (<em>agent view</em>: <em>Working</em>, <em>Needs input</em>, <em>Idle</em>, <em>Completed</em>, <em>Failed</em>, <em>Stopped</em>) — <code>specs/073-area-administrativa/pesquisa/claude-code.md</code>, em <em>research preview</em>.</p>
+</div>
+
+<h2>última atividade — coluna existente (NÃO PRECISA)</h2>
+<div class="caixa" data-fonte="método: painel/server.py (o painel já mostra idade_min e o histórico de status); specs/073-area-administrativa/confronto/confronto-decisao.md (decisão: NÃO PRECISA — já coberto)">
+  <p>Coluna herdada do painel atual: <code>idade_min</code> e o histórico de status já são exibidos. <strong>Nenhuma funcionalidade nova</strong> — a coluna só é reexibida.</p>
+  <p class="fonte" data-referencia="true">ux-design 066 §2.4 (o objeto «última atividade» do Mapa de sessões) e §6 (idade como «há X h Y min» + carimbo absoluto).</p>
+</div>
+
+</main>
+
+<footer class="rodape" data-referencia="true">
+  <p><strong>Como ler este wireframe.</strong> Arquivo HTML estático: sem servidor, sem JavaScript de dados; CSS mínimo, em cinza. Nenhum número é inventado — o valor ilustrativo vem marcado <span class="exemplo">exemplo</span> e o valor vivo aparece como <span class="vazio">—</span> com o motivo ao lado.</p>
+  <p><strong>Fitness functions de UX (ciclo 066).</strong> Valem <code>F1</code> (todo número/selo com <code>data-fonte</code>), <code>F7</code> (idade nunca digitada), <code>F8</code> (todo "—" com motivo) e <code>F9</code> (nenhum controle só-ícone sem <code>aria-label</code>); <code>F2</code>–<code>F6</code> e <code>F10</code>–<code>F12</code> são <em>n/a</em> — supõem servidor e API, que este protótipo não tem. Declarado, não omitido.</p>
+  <p><strong>Siglas (Princípio VIII).</strong> ux-design (<em>User Experience</em> — experiência de uso) · MCP (<em>Model Context Protocol</em>). Fonte: <code>docs/governance/principles.md</code>.</p>
+</footer>
+
+</div>
+</body>
+</html>

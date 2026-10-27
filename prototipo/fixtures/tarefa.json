@@ -1,0 +1,101 @@
+{
+  "_fonte": "painel/schema_workflow.sql (tabela passos) + docs/governance/task-ledger.md ([[TASK]]/[[DONE]]) + specs/074-prototipo-navegavel/tasks.md (fatias T02, T03, T06)",
+  "_exemplo": true,
+  "projeto": "maestro",
+  "tarefas": [
+    {
+      "sessao": "Worker01 [9a1b27] · maestro",
+      "tarefa_id": "074-T03",
+      "kind": "implement",
+      "cycle": "074",
+      "inicio_em": "2026-10-27T14:30:00-03:00",
+      "resumo": "fragmentos da Regência e de Chamados e Gates"
+    },
+    {
+      "sessao": "Worker02 [31f7bf] · maestro",
+      "tarefa_id": "074-T02",
+      "kind": "implement",
+      "cycle": "074",
+      "inicio_em": "2026-10-27T09:10:00-03:00",
+      "resumo": "casca do protótipo e app.js (roteador e estado em memória)"
+    },
+    {
+      "sessao": "Worker05 [78d88f] · maestro",
+      "tarefa_id": "074-T06",
+      "kind": "implement",
+      "cycle": "074",
+      "inicio_em": "2026-10-27T15:10:00-03:00",
+      "resumo": "fragmentos do Workflow de sessões"
+    },
+    {
+      "sessao": "Worker03 [ad66d6] · maestro",
+      "tarefa_id": "—",
+      "kind": "—",
+      "cycle": "074",
+      "inicio_em": "—",
+      "resumo": "—",
+      "motivos": {
+        "tarefa_id": "bloqueado: aguarda ruling do pedido D-014",
+        "kind": "bloqueado: aguarda ruling do pedido D-014",
+        "inicio_em": "bloqueado: aguarda ruling do pedido D-014",
+        "resumo": "bloqueado: aguarda ruling do pedido D-014"
+      }
+    },
+    {
+      "sessao": "Worker04 [4d000a] · maestro",
+      "tarefa_id": "—",
+      "kind": "—",
+      "cycle": "074",
+      "inicio_em": "—",
+      "resumo": "—",
+      "motivos": {
+        "tarefa_id": "nenhuma tarefa aberta",
+        "kind": "nenhuma tarefa aberta",
+        "inicio_em": "nenhuma tarefa aberta",
+        "resumo": "nenhuma tarefa aberta"
+      }
+    },
+    {
+      "sessao": "Worker06 [c85948] · maestro",
+      "tarefa_id": "—",
+      "kind": "—",
+      "cycle": "074",
+      "inicio_em": "—",
+      "resumo": "—",
+      "motivos": {
+        "tarefa_id": "sem fatia de implementação neste retrato",
+        "kind": "sem fatia de implementação neste retrato",
+        "inicio_em": "sem fatia de implementação neste retrato",
+        "resumo": "sem fatia de implementação neste retrato"
+      }
+    },
+    {
+      "sessao": "MAESTRO [7c8d05] · maestro",
+      "tarefa_id": "—",
+      "kind": "—",
+      "cycle": "074",
+      "inicio_em": "—",
+      "resumo": "—",
+      "motivos": {
+        "tarefa_id": "o regente decide e julga, não executa fatia",
+        "kind": "o regente decide e julga, não executa fatia",
+        "inicio_em": "o regente decide e julga, não executa fatia",
+        "resumo": "o regente decide e julga, não executa fatia"
+      }
+    },
+    {
+      "sessao": "Gerente [31ee4d] · maestro",
+      "tarefa_id": "—",
+      "kind": "—",
+      "cycle": "074",
+      "inicio_em": "—",
+      "resumo": "—",
+      "motivos": {
+        "tarefa_id": "integra e despacha, não executa fatia",
+        "kind": "integra e despacha, não executa fatia",
+        "inicio_em": "integra e despacha, não executa fatia",
+        "resumo": "integra e despacha, não executa fatia"
+      }
+    }
+  ]
+}

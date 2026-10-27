@@ -1,0 +1,107 @@
+<link rel="icon" href="data:,">
+<!-- Fragmento da casca (ciclo 074, T04) — a caixa de entrada da Mensageria.
+     Reproduz o wireframe `specs/073-area-administrativa/prototipo/mensageria-01-caixa-de-entrada.html`
+     sobre os tokens novos, com os dados de `prototipo/fixtures/mensagem.json` (projeto maestro,
+     refs do roster de exemplo do 073). Arquivo novo: o wireframe do 073 não é movido nem editado. -->
+<div class="conteudo-interior" data-contexto="mensageria" data-tela="caixa-de-entrada"
+     data-acoes="acoes/mensageria.js">
+
+  <p class="migalha" data-referencia="true">Maestro · protótipo navegável · ciclo 074 · Mensageria · caixa de entrada</p>
+  <h1 class="titulo-pagina" data-rotulo="caixa de entrada"
+      data-fonte="ENTRA 23 · caixa de entrada — specs/073-area-administrativa/confronto/confronto-decisao.md; termo ratificado em specs/073-area-administrativa/confronto/mapa-de-contextos.md §6.6">caixa de entrada</h1>
+
+  <nav class="trilha" aria-label="Telas da Mensageria" data-rotulo="trilha de contexto"
+       data-fonte="ux-design 074 §2.5 (trilha de contexto — links para os fragmentos irmãos do mesmo contexto; é navegação, não botão de escrita)">
+    <a href="#/mensageria/caixa-de-entrada" aria-current="page" data-fonte="ENTRA 23 · caixa de entrada — specs/073-area-administrativa/confronto/confronto-decisao.md">caixa de entrada</a>
+    <a href="#/mensageria/livro-de-mensagens" data-fonte="ENTRA 25 · livro de mensagens — specs/073-area-administrativa/confronto/confronto-decisao.md">livro de mensagens</a>
+    <a href="#/mensageria/roteamento" data-fonte="ENTRA 24 · roteamento por nome/ref — specs/073-area-administrativa/confronto/confronto-decisao.md">roteamento por nome/ref</a>
+    <a href="#/mensageria/protocolo" data-fonte="ENTRA 22 · protocolo de intercomunicação — specs/073-area-administrativa/confronto/confronto-decisao.md">protocolo de intercomunicação</a>
+  </nav>
+
+  <p class="ajuda">Contexto <strong>Mensageria</strong> — o que chegou para as sessões e ainda não foi lido nem drenado. Não é a <strong>Fila de decisões</strong> (colisão de termo: a entrada de mensagens é a Mensageria).
+    <span class="fonte" data-referencia="true">Fonte da ideia: método — drenagem do outbox, <code>painel/fila_outbox.py</code>; a fila outbox é append-only: a leitura é registrada, a mensagem nunca é apagada.</span></p>
+  <p class="ajuda">Identidade de sessão: sempre <strong>nome · ref · projeto</strong>.
+    <span class="fonte" data-referencia="true">O ref muda ao reiniciar — por isso drenar endereça por ref, nunca só pelo nome.</span></p>
+
+  <div class="cartao">
+    <div class="cartao-lista-rodape">
+      <span class="rotulo-categoria" data-rotulo="caixa de entrada" data-fonte="fixtures/mensagem.json (lida_em) — o nulo é a não lida">estado da leitura da caixa</span>
+      <span class="chip chip-estado" data-contador-nao-lidas data-exemplo="true"
+            data-fonte="fixtures/mensagem.json — lida_em nulo">3 não lidas (exemplo)</span>
+    </div>
+    <table class="tabela">
+      <caption>As linhas que chegaram para as sessões, da mais nova à mais antiga (dado de fixture, projeto maestro)</caption>
+      <thead>
+        <tr>
+          <th data-rotulo="mensagem entre agentes" data-fonte="fixtures/mensagem.json (id) · painel/fila_outbox.py">id</th>
+          <th data-rotulo="mensagem entre agentes" data-fonte="specs/066-painel-de-regencia/ux-design.md (F7 — carimbo do relógio, nunca digitado)">carimbo</th>
+          <th data-rotulo="mensagem entre agentes" data-fonte="fixtures/mensagem.json (payload) · docs/governance/glossary.md (Mensagem entre agentes)">mensagem entre agentes</th>
+          <th data-rotulo="sessão de agente" data-fonte="fixtures/mensagem.json (sessao_origem) — nome · ref · projeto">remetente</th>
+          <th data-rotulo="roteamento por nome/ref" data-fonte="fixtures/mensagem.json (sessao_destino) · specs/073-area-administrativa/confronto/mapa-de-contextos.md §7.1">destinatário</th>
+          <th data-rotulo="caixa de entrada" data-fonte="fixtures/mensagem.json (lida_em) — nulo = não lida">estado da leitura</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="mensagem-nao-lida" data-mensagem="44">
+          <td>44 (exemplo)</td>
+          <td>15:40 (exemplo)</td>
+          <td>“O fragmento de protocolo está na sua fatia?” (exemplo)</td>
+          <td>Worker01 [9a1b27] · maestro</td>
+          <td>Worker03 [ad66d6] · maestro</td>
+          <td data-estado-leitura="sim"><span class="ponto" style="background:var(--primaria)"></span> não lida (exemplo)</td>
+        </tr>
+        <tr class="mensagem-nao-lida" data-mensagem="42">
+          <td>42 (exemplo)</td>
+          <td>15:20 (exemplo)</td>
+          <td>“A casca do protótipo já carrega as oito fixtures; use o mesmo roteador.” (exemplo)</td>
+          <td>Worker02 [31f7bf] · maestro</td>
+          <td>Worker05 [78d88f] · maestro</td>
+          <td data-estado-leitura="sim"><span class="ponto" style="background:var(--primaria)"></span> não lida (exemplo)</td>
+        </tr>
+        <tr class="mensagem-nao-lida" data-mensagem="43">
+          <td>43 (exemplo)</td>
+          <td>12:10 (exemplo)</td>
+          <td>“D-014 está aberto: não comece o 074 antes do julgamento do 073.” (exemplo)</td>
+          <td>Gerente [31ee4d] · maestro</td>
+          <td>Worker03 [ad66d6] · maestro</td>
+          <td data-estado-leitura="sim"><span class="ponto" style="background:var(--primaria)"></span> não lida (exemplo)</td>
+        </tr>
+        <tr class="mensagem-lida" data-mensagem="40">
+          <td>40 (exemplo)</td>
+          <td>09:20 (exemplo)</td>
+          <td>“A T02 entra junto com a T07; a T03 só depois das duas.” (exemplo)</td>
+          <td>Gerente [31ee4d] · maestro</td>
+          <td>Worker02 [31f7bf] · maestro</td>
+          <td data-estado-leitura="sim">lida (exemplo)</td>
+        </tr>
+        <tr class="mensagem-lida" data-mensagem="41">
+          <td>41 (exemplo)</td>
+          <td>08:40 (exemplo)</td>
+          <td>“A correção 3 do 073 foi integrada — obrigado.” (exemplo)</td>
+          <td>MAESTRO [7c8d05] · maestro</td>
+          <td>Worker01 [9a1b27] · maestro</td>
+          <td data-estado-leitura="sim">lida (exemplo)</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="fonte" data-referencia="true">As mesmas linhas do <strong>livro de mensagens</strong>: ids e remetentes idênticos nas duas telas — a caixa mostra o estado da leitura, o livro o registro.</p>
+  </div>
+
+  <div class="cartao">
+    <p class="nota">Quem pode drenar: a <strong>sessão dona</strong> drena a própria caixa; o <strong>regente</strong> pode drenar por delegação. A tela nunca drena a caixa de outra sessão sem aquele pedido explícito — o <strong>ref</strong> de quem pede é o que autoriza.</p>
+    <p>
+      <button class="botao-primario" data-acao="drenar-outbox" data-autoriza="sessão dona" data-simulado="sim"
+              data-efeito="as mensagens não lidas da sessão ficam lidas e o contador zera"
+              data-fonte="ENTRA 23 · caixa de entrada (J5 passo 2) — ux-design 074 §5 (contrato dos botões de escrita)">Drenar outbox</button>
+      <a class="botao" href="#/mensageria/livro-de-mensagens"
+         data-fonte="ENTRA 25 · livro de mensagens (J5 passo 6: a linha drenada permanece registrada)">ver o livro de mensagens</a>
+    </p>
+    <p class="ajuda" data-nota-drenagem hidden>as linhas drenadas <strong>permanecem</strong> no livro de mensagens — a fila (outbox) é drenada, nunca esvaziada (append-only).</p>
+  </div>
+
+  <footer>
+    <p class="fonte" data-referencia="true">Fontes — método: <code>painel/fila_outbox.py</code> · <code>docs/governance/glossary.md</code> (Caixa de entrada, Outbox, Mensagem entre agentes, Sessão de agente) · <code>specs/073-area-administrativa/confronto/mapa-de-contextos.md</code> §6.6 e §7.1 · <code>specs/074-prototipo-navegavel/ux-design.md</code> §2.2, §3 (J5) e §5 · dado: <code>specs/074-prototipo-navegavel/prototipo/fixtures/mensagem.json</code>.</p>
+    <p class="fonte" data-referencia="true">Todo elemento interativo tem <code>data-fonte</code>; todo número é <code>(exemplo)</code> — protótipo, não dado real.</p>
+  </footer>
+
+</div>

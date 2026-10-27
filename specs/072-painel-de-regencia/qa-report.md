@@ -1112,10 +1112,71 @@ construção: `valida_pedido` recusa id repetido e id de portão derivado, com t
 e a rota respondendo 422 (acima). A garantia não depende de confiança: o id de um pedido não colide
 com um id já registrado nem com o espaço reservado dos itens derivados.
 
+## 072-T17-captura — captura nova pós-T16 (25/10)
+
+> Tarefa do dono da jornada, **desbloqueada** pelo Gerente depois do T16. Base: `git merge --ff-only
+> d71cee6` (fast-forward, **sem push**) — HEAD `d71cee6`; `bbfab80` (T16) confirmado **ancestral de
+> HEAD** (`git merge-base --is-ancestor bbfab80 HEAD` → OK). Ambiente: `PYTHONUTF8=1`; `python3` é o
+> alias da MS Store (mesma ressalva de sempre).
+
+### O que foi feito
+
+1. **Captura regerada do build real**: `bash docs/jornada/scripts/captura-072.sh` — sobe o painel
+   (`painel/server.py painel/projetos/exemplo.json`, porta alta, derrubado ao fim), **aquece**
+   `/api/chamados` até a derivação estabilizar e fotografa o **DOM renderizado**. Regravou
+   `docs/jornada/img/072-01-kanban.png` e `docs/jornada/img/072-02-fila.png` (nomes **fixos** — as
+   imagens em disco agora são **deste** build).
+2. **Cabeçalho da jornada** passa a datar as duas gerações: `**Capturas geradas em**: 2026-10-24 ·
+   **regeradas em 2026-10-25** (pós-T16, `bbfab80`)`.
+3. **Nota nova na jornada, por acréscimo** — a tabela de 2026-10-24 e a heurística de 2026-10-25
+   ficam **intactas** (a datação é histórico; a pendência declarada é fechada por nota nova, não por
+   reescrita).
+
+### Medição ao vivo (janela de 1440×900)
+
+```text
+ingerido_em        : 2026-10-24T21:13:49-03:00
+ingerido_age_min   : 935.1 (float)
+banner_texto       : "LEITURA VELHA: 15H35M DESDE O ÚLTIMO INGEST"
+banner_display     : block
+main_w             : 232
+wrap_w             : 176
+wrap_grid          : "210px"
+n_colunas          : 10
+largura_colunas    : x=28 em todas; y de 1529 a 2416
+gates              : G0..G9
+ascendentes        : MAIN w=232 display block | DIV.app w=1440 display grid "232px 1208px"
+```
+
+### R8 — arredondamento discordante do banner → **FECHADO neste build**
+
+- 935,1 min rende `floor(15,58 h) = 15` e `round(35,1 min) = 35` → **`15h35m`**, coerente. O
+  **`1h60m` impossível não aparece mais**: o número passou a vir **pronto do servidor**
+  (`painel/regencia/normalizacao.py`, `aviso_leitura_velha`/`idade_curta`) e o painel só o exibe
+  (`painel/index.html:959–966` consome `m.leitura_velha`) — o `Math.floor`/`Math.round` sobre valor
+  fracionário saiu do JS.
+- **Honestidade sobre a evidência**: a imagem de 2026-10-24 que registrava o `1H60M` foi
+  **sobrescrita** pela regeração (o script grava em nome fixo). O achado continua registrado **no
+  texto** (linha R8 da jornada e seção `072-T17` acima), mas a foto do defeito **não existe mais em
+  disco** — declarado, não escondido.
+
+### R7 — quadro em coluna estreita → **reproduz** (destino: rodada 2)
+
+- `#main` = **232 px** dentro do grid `.app` (`232px 1208px`); grid do quadro resolve para **uma**
+  trilha de `210px`; as 10 seções G0…G9 todas em **`x = 28`** — coluna única à esquerda, resto da
+  tela vazio. Idêntico à captura de 2026-10-24. **Não é desta rodada consertar** (determinação do
+  Gerente).
+
+### Limites e resíduos
+
+- **Limites respeitados**: só a worktree; **sem push, sem merge**; sem `rm -rf`; sem
+  `.env`/`settings.local.json`.
+- **Resíduo**: os arquivos `_diag_*` (untracked) não são meus e **não foram tocados** nem
+  commitados; a sonda usada nesta medição vive em `%TEMP%`, **fora** do repositório.
+
 ## TAIL:gate — gate humano por delegação (sessão regente, 2026-10-25)
 
 - Delegação: `decisao-072-gates-delegados` (Darú, 24/10), base escrita ADR 0026.
 - Crítico em contexto fresco (`process-guardian`, Sonnet, só leitura): APPROVE_WITH_CONDITIONS — (1) configuração de exemplo sem `regencia.pessoas`, fluxo de ruling nunca exercitado; (2) captura do kanban contradizia a heurística (coluna estreita, banner 1H60M); (3) campo `chamado` sem validação de caminho; (4) registro do ciclo desatualizado (status e caixas). Fechadas em T15 (`11d295b`), T16 (`bbfab80`), T17 (`1998e3e`), T18 (`85b1b7f`), T19 (`ab32ffc`); reverificação do Worker06 em `d71cee6`: 28 testes de regência verdes, conformance 072 verde nos dois modos.
 - Verificações pedidas ao regente: `git log --oneline 42e24f4..c10c2d5` → 49 commits; `git show --stat ccbceef` → `painel/server.py`, `painel/tests/test_regencia.py`, `qa-report.md`; `def _pasta_do_chamado` → 1 ocorrência; varredura de chaves, tokens e e-mails nas linhas adicionadas do intervalo: nenhum valor de segredo (os casamentos eram texto de despacho), um único e-mail, a fixture `***@teste.invalid`; "Hindiana" em linhas adicionadas de `painel/` e `docs/jornada/`: 0.
 - Veredito do regente: TAIL:gate marcado; spec declarada parcial onde o é (D-072-1..8 e dívida do método); merge na `dev` e promoção à `main` sob a mesma delegação.
-

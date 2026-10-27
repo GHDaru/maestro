@@ -18,6 +18,7 @@
         ".maestro/",
         "painel/",
         "specs/",
+        "prototipo/",
         "docs/governance/",
         "docs/adr/",
         "docs/records/",

@@ -1,0 +1,96 @@
+<!--
+  Fragmento — fila de decisões da Regência (ciclo 074, T03 · FR3, FR4; ux-design 074 §2.1).
+
+  Papel semântico: "o que está esperando por mim" — pedidos de decisão e portões do regente
+  ordenados por prazo × bloqueio. SÓ LEITURA: a tela não decide; o CTA "Responder" navega ao
+  fragmento do ruling (o ruling é alcançado pela fila, nunca solto — ux-design 074 §1).
+
+  Reprodução: `vFila` do painel de regência (072, `painel/index.html`), sobre os tokens novos,
+  com os dados de exemplo de `prototipo/fixtures/pedido-de-decisao.json` e `chamado.json`.
+
+  Marcação: o portão do regente é item SOMENTE LEITURA da fila, nunca botão de aceite
+  (J2 passo 4). Todo número é (exemplo); toda identidade é `nome · ref · projeto`.
+-->
+<div class="conteudo-interior" data-contexto="regencia" data-tela="fila-de-decisoes"
+     data-acoes="acoes/regencia.js">
+
+  <p class="migalha" data-referencia="true">Maestro · protótipo navegável · ciclo 074 · Regência · fila de decisões (exemplo)</p>
+  <h1 class="titulo-pagina" data-rotulo="pedido de decisão">Fila de decisões — o que espera o regente</h1>
+
+  <nav class="trilha" aria-label="Trilha de contexto da Regência" data-rotulo="trilha de contexto"
+       data-fonte="ux-design 074 §2.5 (trilha de contexto: fragmentos irmãos do mesmo contexto) e §1">
+    <a href="#/regencia/inicial"
+       data-fonte="fragmento irmão — telas/regencia/inicial.html">Frase-chave</a>
+    <a href="#/regencia/fila-de-decisoes" aria-current="page"
+       data-fonte="esta tela — telas/regencia/fila-de-decisoes.html">Fila de decisões</a>
+  </nav>
+
+  <p class="ajuda" data-exemplo="true">na fila de decisões: 3 pedidos aguardando · o mais velho há 7 h · 1 com prazo estourado (borda à esquerda em <code>--erro</code>)</p>
+
+  <section class="cartao cartao-lista" data-pedido="D-014" data-prazo="2026-10-27T16:00:00-03:00"
+           data-fonte="fixtures/pedido-de-decisao.json — pedido D-014 (o mais velho; prazo estourado em 27/10 16:00 — exemplo)">
+    <span class="tile">D</span>
+    <div class="cartao-lista-corpo">
+      <p class="cartao-titulo" data-exemplo="true">D-014 · pedido de decisão
+        <span class="chip chip-erro">prazo estourado</span></p>
+      <p class="cartao-subtitulo">Sigo para os fragmentos do 074 antes de o julgamento do 073 fechar? (exemplo)</p>
+      <p class="ajuda">pedido por Worker03 [ad66d6] · maestro · criado às 11:00 · prazo 27/10 às 16:00 (exemplo)</p>
+      <p class="ajuda" data-exemplo="true">destrava: ciclo 073 · recomendação: seguir só depois do julgamento — a emenda do 073 é condicional</p>
+      <div class="cartao-lista-rodape">
+        <span class="ajuda">sem autor humano e sem destino, o ruling é recusado — a resposta nasce do pedido</span>
+        <a class="botao" href="#/regencia/ruling"
+           aria-label="responder pedido D-014 (exemplo)"
+           data-fonte="CTA Responder → fragmento do ruling (ux-design 074 §1 e J1 passo 3)">Responder</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="cartao cartao-lista" data-pedido="D-013" data-prazo="2026-10-28T18:00:00-03:00"
+           data-fonte="fixtures/pedido-de-decisao.json — pedido D-013 (criado às 14:00 — exemplo)">
+    <span class="tile tile-neutro">D</span>
+    <div class="cartao-lista-corpo">
+      <p class="cartao-titulo" data-exemplo="true">D-013 · pedido de decisão</p>
+      <p class="cartao-subtitulo">O fragmento de protocolo entra no protótipo navegável do 074? (exemplo)</p>
+      <p class="ajuda">pedido por Worker05 [78d88f] · maestro · criado às 14:00 · prazo 28/10 às 18:00 (exemplo)</p>
+      <p class="ajuda" data-exemplo="true">recomendação: entra — a tela já existe no 073 e o fragmento é arquivo novo</p>
+      <div class="cartao-lista-rodape">
+        <span class="ajuda">destino: Gerente [31ee4d] · maestro</span>
+        <a class="botao" href="#/regencia/ruling"
+           aria-label="responder pedido D-013 (exemplo)"
+           data-fonte="CTA Responder → fragmento do ruling (ux-design 074 §2.1)">Responder</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="cartao cartao-lista" data-pedido="D-012" data-prazo="2026-10-28T18:00:00-03:00"
+           data-fonte="fixtures/pedido-de-decisao.json — pedido D-012 (criado às 16:00 — exemplo)">
+    <span class="tile tile-neutro">D</span>
+    <div class="cartao-lista-corpo">
+      <p class="cartao-titulo" data-exemplo="true">D-012 · pedido de decisão</p>
+      <p class="cartao-subtitulo">Declarar o <code>deny</code> de <code>Bash(rm -rf*)</code> no projeto maestro? (exemplo)</p>
+      <p class="ajuda">pedido por Worker04 [4d000a] · maestro · criado às 16:00 · prazo 28/10 às 18:00 (exemplo)</p>
+      <p class="ajuda" data-exemplo="true">recomendação: aprovar como está — a autorização vive fora do modelo e o <code>deny</code> já está declarado</p>
+      <div class="cartao-lista-rodape">
+        <span class="ajuda">destino: Gerente [31ee4d] · maestro</span>
+        <a class="botao" href="#/regencia/ruling"
+           aria-label="responder pedido D-012 (exemplo)"
+           data-fonte="CTA Responder → fragmento do ruling (ux-design 074 §2.1)">Responder</a>
+      </div>
+    </div>
+  </section>
+
+  <h2 class="cartao-titulo">Portões do regente na fila de decisões</h2>
+  <section class="cartao cartao-lista" data-chamado="073" data-gate="G7"
+           data-fonte="fixtures/chamado.json — chamado 073 (portao_do_regente: true, idade há 2 h — exemplo)">
+    <span class="tile">G7</span>
+    <div class="cartao-lista-corpo">
+      <p class="cartao-titulo" data-exemplo="true">073 · G7 · portão do regente</p>
+      <p class="cartao-subtitulo">Aceite do cliente — o aceite do portão do regente é do dono do gate, não desta tela.</p>
+      <p class="ajuda">dono: MAESTRO [7c8d05] · maestro · idade há 2 h (exemplo)</p>
+      <p class="vazio">— não é botão de aceite: o portão do regente é item somente leitura da fila de decisões.</p>
+    </div>
+  </section>
+
+  <p class="fonte" data-fonte="ux-design 074 §7 (a fila de decisões vazia é informação) e FR4 (estado só em memória)">Vazio declarado: com a fila de decisões sem pedido, a tela diz "fila vazia — última decisão às HH:MM (exemplo)", nunca um zero seco.</p>
+
+</div>

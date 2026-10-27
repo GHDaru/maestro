@@ -10,6 +10,206 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **Os quatro contextos do protótipo pousaram** (ciclo 074, 27/10): fragmentos da Regência e de
+  Chamados e Gates (Worker01, `d5d7935`), da Mensageria (Worker03, `7556cc3`), da Administração
+  (Worker04, `ab00ab5`) e do Workflow de sessões (Worker05, `063a3f4`) — **15 telas** na casca e o
+  `verifica-navegacao.py` **15 fragmentos, 0 achados, exit 0 pela primeira vez**. Achado geral da
+  regente vira DoD de integração: todo fragmento **renderiza do estado em memória ao montar** (o
+  efeito sobrevive à navegação; só recarregar restaura) — a T02d cria o gancho na casca (com o
+  fix do `[hidden]` anulado pelo `display` da classe), T03b/T04b/T05b/T06c adotam por dono, e a
+  T06b traz a confirmação stop/rm com pedido de decisão na fila e o Derrubar desabilitado na
+  linha caída.
+- **Ciclo 073 fechado — quarta leitura dos juízes** (27/10): juiz 2 16/16, juiz 3 16/16 sem
+  regressão, juiz 1 15/16 — único P1: Flowise `parcial (corta)` em `plataformas.md:69` sem fonte
+  na ficha (`flowise.md:28` só lista *rate limit* entre os controles). Decisão da regente: sem
+  nova rodada de juízes; a célula vira `parcial (avisa?)` com motivo e a matriz é recontada
+  **12 `corta` · 1 `avisa` · 3 `avisa?`** (Worker06, `750d718`). Gate **11 telas, 0 achados,
+  seis regras**; conformance 073 verde nos dois modos; `TAIL:gate` fechado com a evidência da
+  quarta leitura — 47 das 48 células (3 juízes × 16) em nota 9 e a célula restante corrigida.
+  O merge na `dev` e a promoção são da regente.
+- **Correção 3 da rodada 4 fechada** (ciclo 073, 27/10): as três decisões de escopo do Darú
+  (`rodada-4/correcao-3.md`) aplicadas por dono e integradas — **D1** a linha de orçamento/taxa
+  fica uma só na matriz, com a leitura por célula `corta`/`avisa`/`avisa?` (**12/1/3** no
+  fechamento — 13/1/2 na entrega da fatia; W06 `c6a72e9` + `750d718`); **D2** a ferramenta MCP como escopo da política `allow/deny/ask` — regra de exemplo
+  com âncora nas políticas (W04), ponteiro na mensageria-04 (W03), política listada como 5º ENTRA
+  no mapa § 6.5, fechando o P5 do juiz 1 (W02 `cc10191`); **D3** o emissor do aviso de teto é a
+  ingestão de consumo (`painel/custo.py`), desenhado na tela do orçamento e ecoado nas linhas de
+  aviso da Mensageria e do Workflow. Ficha `claude-code.md:59/:61` corrigida da doc oficial (o
+  transcrito sobrevive ao `claude rm` e retoma por `claude --resume`) e citação do workflow-01
+  reconciliada sem "a confirmar" (W05 `c5557a7`). Gate **11 telas, 0 achados, seis regras** após
+  cada merge; conformance 073 verde nos dois modos; totais do confronto intactos (16/5/11 = 32).
+- **Base do protótipo navegável integrada** (ciclo 074, 27/10): T01 tokens/amostra do design
+  system (16 objetos da §4 + primitivas de interação, zero dependência externa) e T02 casca —
+  roteador `#/contexto/tela` com queda declarada na tela inicial, estado em memória das oito
+  fixtures, motor de ações com confirmação irreversível (`data-perde`/`data-reverte`) e aviso
+  de simulação (Worker02, `3809fb9`+`55e16d8`); esqueleto do `verifica-navegacao.py` com as
+  nove checagens (a)–(i) e corpus de mutação embutido, nascido antes das telas (Princípio IV,
+  vermelho de propósito até T03–T06); T07 fixtures dos oito agregados (Worker01, `9c47050`) e
+  T12 glossário — sete termos "Cycle 074" em inglês (Worker01, `e0c1b43`). Contrato novo da
+  casca para os donos de fragmentos: raiz declara `data-acoes="acoes/<contexto>.js"` e toda
+  página leva `<link rel="icon" href="data:,">`. No 073, a reconciliação stop/rm do
+  workflow-01 (Worker05, `c5557a7`): `stop` para e reata por `attach`/`respawn`; `rm` tira a
+  linha e o worktree, mas o transcrito permanece e retoma por `--resume` — sem "a confirmar".
+- **Ajustes do gate de plano do 074** (`gate-plan.md`, 27/10): B1 `## Complexity Tracking` com
+  veredito no `plan.md`; B2 linha `DoD:` com comando e esperado em toda tarefa do `tasks.md`;
+  B3 T12 antes da T03 (uma tarefa ativa por sessão); B4 T07 junto com a T01 (e vai ao Worker01,
+  com o Worker06 na correção 3 do 073), T03–T06 só após T02 **e** T07 integrados, T02 com DoD
+  "carrega as oito fixtures"; secundários — esqueleto do `verifica-navegacao.py` com corpus
+  logo depois da T02, DONE à sessão regente viva sem ref fixado em documento, (g) importa o
+  módulo do 073 com `importlib`, (h) exige `data-alvo` em derrubar, FR4 da spec inclui
+  reiniciar, `tarefa.json` com Worker06 e MAESTRO, T11 pendente não bloqueia o DONE, script
+  em inglês; `.claude/launch.json` passa a ser rastreado (entrada `prototipo-074`, porta
+  8768).
+- **Plano do protótipo navegável** (ciclo 074): `plan.md` com Constitution Check I–VIII (um
+  desvio justificado: "abre offline" e "recarregar restaura" são critérios declarados do
+  crítico que anda, S4/S7), declaração dos cinco artefatos (`data-model=yes`, `ux-design=yes`,
+  research/contracts/checklist `no` com motivo), ordem FR7-first (tokens+amostra antes das
+  telas) e a FR8 como restrição dura (o verificador do 073 nunca fica vermelho);
+  `tasks.md` com 14 fatias por dono (T01/T02 base, T03–T07 fragmentos+fixtures em paralelo,
+  T08–T10 ações/verificador/jornada, T11 condicional ao fechamento do julgamento do 073,
+  T13/T14 fechamento) e as caudas `TAIL:*`; `data-model.md` fixando o contrato das oito
+  fixtures (um JSON por agregado do mapa, roster de exemplo do 073 como fixture, projeto
+  `maestro`, Ana Exemplo, efeitos só em memória). No mesmo commit, os ajustes do gate de UX
+  (`gate-ux.md`, 27/10): B-UX1 (contrato `data-irreversivel`/`data-confirma`/`data-alvo` no
+  §5), B-UX2 (J2 passo 3 como expansão na própria tela) e secundários no `ux-design.md`, e os
+  dois toques na `spec.md` (contagem única de 15 fragmentos na FR3; ENTRA expandida).
+- **Correção 2 da rodada 4 — as telas, o README e a matriz** (ciclo 073, `073-C2-W01`–`W06`,
+  fechamento do Gerente): as decisões fixas da regente (`rodada-4/correcao-2.md`) aplicadas por
+  dono. **Roster único de exemplo** (decisão 1) em todas as telas — refs de 26/10 como fixture,
+  nenhum ref em dois nomes; **Mensageria** (W03, `e5b1f87`): livro em ordem coerente com o título
+  (8→12), colunas **tarefa** (da tag de TASK) e **custo** ("— (ledger parado no 064)"), leitura
+  restrita ao projeto, "ref mudou no reinício" = **recusa + oferta do ref novo**, Windmill fora da
+  tela de roteamento, A2A com **5 `sim`**, nome nu na coluna "nome pretendido" com a **isenção
+  declarada** da tabela de resolução (`data-rotulo="colisão de nomes"`); **Administração** (W04,
+  `edce704`+`42572d8`): tabela do **Modelo** (provedor, preço por milhão, quem pode usar,
+  projeto — só humano ou regente por delegação), seção **"Agentes (perfis)"** lendo
+  `.claude/agents`, coluna de **escopo** e regra de modelo de exemplo, precedência "o mais
+  específico decide; entre regras do mesmo escopo, `deny > ask > allow`" marcada como decisão de
+  projeto, coluna **"limiar de alerta"** e "o menor teto aplicável vence", aviso do teto como
+  **mensagem endereçada** à sessão dona e ao regente do roster (`[7c8d05]`); **Workflow**
+  (W05, `617fe4b`): `claude stop` (religável por `claude --resume`) × `claude rm` (irreversível)
+  com a passagem pelo pedido de decisão da Regência, botão "reiniciar a sessão" do alerta
+  **desabilitado**, "cancelar tarefa" mostra o que se perde, coluna "agente" = perfil sem ref,
+  cartão "teto vigente" reconciliado com a seção "teto", citações revalidadas e "Limites"
+  consolidadas no inventário; **matriz** (W06, `0b1a465`): Langfuse auditoria `sim → parcial`,
+  `:155` e `:227-228` como "não encontrado na documentação lida", contagens por script
+  (168/226/12/244), segurança documental 0 achados e conformance 073 verde nos dois modos;
+  **README + glossário** (W01, `9af433c`+`e147380`): regra 6 documentada (cinco→seis regras),
+  ENTRA 16 (cadastro de agentes como leitura do catálogo de perfis), regra da citação
+  revalidada, "ambiguidade não verificada" declarada com a isenção, termo **"Agente (perfil)"**.
+  Fechamento: **gate 11 telas, 0 achados, seis regras, exit 0**; conformance 073 verde nos dois
+  modos; a terceira leitura dos juízes é da regente.
+- **Correção 2 da rodada 4 — a regra 6, o confronto e o mapa** (ciclo 073, `073-C2-W02`): a decisão
+  da regente vira três artefatos. (a) `prototipo/verifica-prototipo.py` — **regra 6**: dentro de uma
+  tela, um ref `[xxxxxx]` cola em **um único nome** e **todo nome do roster** (o de 26/10, listado no
+  script) vem com o **ref do roster**; roda onde a regra 5 roda, mais um passo ao fim do arquivo, com
+  a **mesma** isenção declarada (tabela de colisão de nomes). Fecha o que a regra 5 deixava passar —
+  a **ref trocada entre duas sessões**. Fixture dupla (`fixtures/tela-bom.html` positivo,
+  `tela-ruim.html` negativo) e mutação no `qa-report.md`: **9 → 7** com a regra cegada em
+  fixtures+corpus, **28 → 0** no corpus anterior (`b8c5038`), restauração provada por SHA-256.
+  (b) `confronto/confronto-decisao.md` — o **mecanismo de execução** do controle sai de `ENTRA` e
+  vira `DEPOIS` com gatilho ("recusar a chamada seguinte" e "suspender a sessão" são o mesmo ponto de
+  execução), então o `ENTRA` 4 fica com **declarar o teto + avisar**; `cadastro de agentes` sobe de
+  `NÃO PRECISA` a **`ENTRA` 16** como **leitura do catálogo de perfis** (`agente (perfil)`) — totais
+  **16 `ENTRA` · 5 `NÃO PRECISA` · 11 `DEPOIS` = 32**; a lacuna de `políticas` vira "bloco
+  `permissions` não declarado no repositório"; "mensagem desviada" sai de `alertas` (vira
+  **notificação ativa**); citações a `claude-code.md` revalidadas contra o HEAD (`:47→:61`, `:68→:82`,
+  `:71→:84`); títulos de grupo conferidos com as linhas (CONTROLE 7, acrescentadas 5); e as **lacunas
+  declaradas** (ponto de execução do controle, caminho de aprovação do derrubar, `tarefas.jsonl`
+  parado no ciclo 064, área somente leitura nesta rodada) entram na seção "Limites". (c)
+  `confronto/mapa-de-contextos.md` — o § 6.1 passa a citar a **relação 6** (núcleo compartilhado
+  Workflow ↔ Mensageria; a 5 é Workflow → Regência), o § 2 troca "o único ponto" por **"o ponto
+  executável no repositório, além do `permissions` do harness"**, e o § 8 declara que **a ambiguidade
+  de endereço não é verificada por script**. Gate: **11 telas, 0 achados, seis regras, exit 0**.
+- **Ajustes do gate de spec (B1, B2, S1–S6) e o `ux-design.md`** (ciclo 074,
+  `074-prototipo-navegavel`): a spec aprovada com ajustes recebe as correções do gate —
+  **B1** (os cinco contextos são os do mapa; os seis itens do menu são **vistas**; o kanban
+  por gate declara `data-contexto="chamados-e-gates"`, core domain não esvaziado), **B2**
+  (o NFR1 ganha as verificações **(g)** fragmentos de `prototipo/telas/` passam nas regras
+  do `verifica-prototipo.py` do 073 — cinco da correção 1, seis depois da correção 2 —,
+  **(h)** nenhum `data-acao="derrubar"` tem o Gerente como alvo e **(i)** todo botão
+  irreversível aponta para confirmação com `data-perde`/`data-reverte`; nove no total),
+  **S1** (definição mecânica de botão de escrita), **S2** (grafo de cliques com raiz na
+  tela inicial e arestas dos seis itens), **S3** (fixtures derivadas na autoria de
+  `painel/projetos/exemplo.json`; servidor rodando em `prototipo/`), **S5** (tabela ENTRA →
+  tela → elemento no `ux-design.md`) e **S6** (projeto `maestro` em toda fixture); as
+  siglas não usadas (DoR, HTTP, CI, CSS) são podadas. O **`ux-design.md`** nasce no mesmo
+  commit: papel semântico dos 15 objetos (tela inicial + 14 fragmentos), cinco jornadas
+  andáveis (J1 Regência · J2 Chamados e Gates · J3 Workflow · J4 Administração · J5
+  Mensageria), a tabela S5 com **18 linhas** (15 ENTRA + 3 telas da regência) mais o
+  **acréscimo declarado** do ENTRA 16 (cadastro de agentes, correção 2 do 073), os nomes
+  finais `data-perde`/`data-reverte` e a proposta **`--quebra-nav: 768px`** a absorver pelo
+  design system.
+- **Correção 1 da rodada 4 — confronto, mapa e a regra 5 do verificador** (ciclo 073,
+  `073-T4-correcao-1-confronto`): a decisão da regente vira três artefatos. (a) `confronto/
+  confronto-decisao.md` — a linha 4 é **desdobrada** (orçamento `ENTRA`, taxa `DEPOIS`), `auditoria`
+  e `custo` sobem de `NÃO PRECISA` a **`ENTRA`** viram **auditoria administrativa** (com
+  `changed_by`) e **custo estimado por agente**, cinco funcionalidades de intercomunicação entram
+  como `DEPOIS` com **gatilho escrito** (recibo de entrega, reentrega, *dead-letter*,
+  *broadcast*/cópia, estabilidade de ref), e os totais são refeitos: **15 `ENTRA` · 6 `NÃO PRECISA`
+  · 11 `DEPOIS` = 32**; duas bases são corrigidas (Windmill **não** endereça sessão por nome;
+  Kiro Crew × Claude Code julgados com o **mesmo critério**) e "lacuna de mercado" vira **"não
+  encontrado na documentação lida"**. (b) `confronto/mapa-de-contextos.md` — o **limite de
+  orçamento** passa para a **Administração** (§ 2, § 6.3, § 6.5), entra o invariante **"endereço
+  ambíguo é recusado, nunca resolvido"** com a tabela de **colisões de endereço** (§ 7.1, separada
+  das cinco colisões de termo), o **ponto de execução do controle** fica declarado (hooks +
+  `.claude/settings.json`, fora do corte) e a **relação 5** (Workflow → Regência: derrubar e `ask`
+  viram pedido de decisão) entra no mapa e no diagrama. (c) `prototipo/verifica-prototipo.py` —
+  **regra 5**: toda menção a sessão (Gerente, WorkerNN, MAESTRO, Office, Assistente) exige a ref
+  `[xxxxxx]` logo depois (`nome · ref · projeto`), em todo texto visível e valor de atributo, com
+  **uma** isenção declarada (tabela de colisão de nomes); a regra 3 passa a descontar a ref antes de
+  contar dígitos. Mutação no `qa-report.md`: **36 → 6** achados com a regra cegada, restauração
+  provada por SHA-256. Gate real: **11 telas, 29 achados (todos da regra 5), exit 1** — vermelho de
+  propósito até as telas escreverem a identidade.
+- **Base única de citação nas 11 telas (R9) e o mapa §7 alinhado** (ciclo 073,
+  `073-T4-preambulo-r9`, preâmbulo da rodada 4): a convenção fica **fixada por escrito** no
+  `§ Convenções` novo de `specs/073-area-administrativa/prototipo/README.md` — **todo caminho é
+  relativo à raiz do repositório** — e é **aplicada por substituição mecânica** às 11 telas, com
+  **zero mudança de conteúdo** (prova: os textos canonizados do antes e do depois batem byte a
+  byte): **136 caminhos em 7 telas** — `confronto/…` e `pesquisa/…` ganham o prefixo
+  `specs/073-area-administrativa/`, e `mapa-de-contextos.md`, `confronto-decisao.md`, `tasks.md` e
+  `spec.md` nus ganham o caminho completo; cada caminho resultante foi **conferido contra o disco**.
+  No `confronto/mapa-de-contextos.md` **§7**, a grafia da colisão virou **"fila outbox"** (era
+  "fila (outbox)") — a resalva registrada na revisão do R3 fica resolvida. Gate: **11 telas,
+  0 achados, exit 0**.
+- **A regra 4 do verificador do protótipo passa a cobrir o texto visível** (ciclo 073,
+  `073-T3-regra4`, commit `9cf0118`): a revisão da rodada 3 provou que **nenhuma das 11 telas
+  reais exercitava a regra 4** — ela só rodava em rótulos (`check_label`), e as violações viviam
+  em `<p>`, `<td>` e valores de atributo. Agora "fila"/"portão" nus são acusados em **todo nó de
+  texto visível** e em **todo valor de atributo**, com duas isenções **declaradas** (tabela que
+  nomeia as colisões, pelo `data-rotulo="colisão de nomes"` no cabeçalho; valor marcado como
+  exemplo) e o qualificador medido por **fronteira de palavra** (`painel/fila_outbox.py` é nome de
+  arquivo, não qualifica a frase). Efeito medido: R1/R1b/R2/R2b da revisão passam a ser acusados
+  (11 telas, 4 achados) e o fixture `tela-ruim.html` acusa **6** em vez de 5; mutação com a regra
+  cegada devolve 10 → 4, com os nomes que sumiram colados no `qa-report.md`.
+- **Revisão fresca da rodada 3 e mutação do gate** (ciclo 073, `073-T3-revisao`): a revisão em
+  contexto fresco das **11 telas** contra o mapa de contextos (§6, contexto dono; §7, as cinco
+  colisões de nome) e o contrato de marcação, com **9 achados** em `arquivo:linha`
+  (`specs/073-area-administrativa/revisao-073-rodada-3.md`) — nenhuma tela viola o contrato
+  estrutural nem invade contexto alheio; os achados são de disciplina de nome e de citação (entre
+  eles um arquivo citado que não existe, `tasks.jsonl` × `docs/records/tarefas.jsonl`, em 5
+  lugares), e **nenhum deles o gate vê**. A parte 2 **quebrou de propósito** duas regras do
+  verificador (número sem "exemplo"; termo de colisão nu) e mostrou, na saída literal, o achado
+  do corpus ruim **deixando de ser acusado** (5 → 4 nas duas) — com o script **restaurado byte a
+  byte** (hash SHA-256 igual ao de `af81499`, `git diff` vazio) e o achado de que **nenhuma das
+  11 telas reais exercita a regra 4**: o fixture é o único oráculo dela.
+- **O protótipo ganha o seu índice** (ciclo 073, `073-T3-readme-navegacao`):
+  `specs/073-area-administrativa/prototipo/README.md` põe as **7 telas da árvore** (4 da Mensageria, 3
+  da Administração — mais as 4 do Workflow em entrega) contra os **13 `ENTRA`** (as funcionalidades que
+  entram), o **contexto dono**, os **juízes da rodada 4** e o **lugar de cada tela na navegação do
+  painel** — Regência e Chamados intactos, e a **colisão "caixa de entrada" × "Fila de decisões"**
+  declarada onde a navegação a encontraria. Traz o estado medido do verificador: **7 telas · 45
+  achados**, só duas classes (40 de citação sem atributo, 5 de `th` de domínio sem `data-rotulo`),
+  zero de `data-fonte` e zero de colisão.
+- **Os 12 termos ratificados entram no glossário** (ciclo 073, `073-T3-glossario`): doze entradas novas
+  com a coluna **Cycle 073** (`sessão de agente`, `estado do agente vivo`, `tarefa aberta`, `consumo
+  por agente`, `limite de orçamento`, `catálogo de skills/ferramentas/modelos`, `mensagem entre
+  agentes`, `protocolo de intercomunicação`, `caixa de entrada`, `livro de mensagens`, `roteamento por
+  nome/ref`, `colisão de nomes`), resolvendo as **cinco colisões de nome** do mapa de contextos §7
+  ("fila", "caixa de entrada", "livro de ponto", "sessão" × "agente", "portão"). Acréscimo puro —
+  nenhuma entrada existente reescrita; a allowlist que a fitness function do protótipo extrai do
+  glossário vai de **74 a 86** termos.
+
 - **Área administrativa, rodadas 1–2 — pesquisa de plataformas e confronto** (ciclo 073). A
   rodada 1 pesquisou **25 plataformas** (ficha por plataforma com fonte, `specs/073-area-administrativa/pesquisa/`)
   e consolidou a matriz **25 × 26 = 650 células** com fonte por célula (`—` = nenhuma fonte
@@ -107,6 +307,15 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
   — emenda de texto pendente no ADR 0027.
 
 ### Corrigido
+- **O aviso de leitura velha não mostra mais horas impossíveis** (ciclo 072, T16 + captura de jornada).
+  O banner somava as **horas** com `Math.floor` e os **minutos** com `Math.round` sobre um valor
+  fracionário e rendia `1h60m` — horário que não existe. O número passa a vir **pronto do servidor**
+  (`painel/regencia/normalizacao.py`: `idade_defasada`/`idade_curta`/`aviso_leitura_velha`) e o painel
+  só o exibe (`m.leitura_velha`). Medido no build real pós-T16: `LEITURA VELHA: 15H35M DESDE O ÚLTIMO
+  INGEST`. A jornada 072 foi **regerada** do build real (`docs/jornada/img/072-0*.png`, 2026-10-25) e o
+  cabeçalho passa a datar as duas gerações; o quadro em **coluna estreita** (achado **R7**) fica para a
+  rodada 2.
+
 - **O id de um pedido de decisão não pode repetir nem usurpar o id do portão derivado** (ciclo
   072, condição do gate, `process-guardian` em contexto fresco). `sai_da_fila` fecha o pedido por
   **igualdade de id**: um id repetido — ou um id no formato do item derivado (`chamado+gate`, ex.

@@ -1,0 +1,204 @@
+<!-- ============================================================================
+     Fragmento da Administração — limite de orçamento (ciclo 074, T05; rota #/administracao/orcamento).
+
+     Reproduz o wireframe do 073 (specs/073-area-administrativa/prototipo/administracao-03-orcamento.html)
+     como ARQUIVO NOVO (FR8: o wireframe do 073 não é movido nem editado): mesmo conteúdo, agora
+     sobre os tokens do design system e injetado na casca. Marcação apenas — o estilo vive em
+     tokens.css, e os efeitos de clique em acoes/administracao.js (declarado no elemento raiz).
+
+     Valores de fixture (prototipo/fixtures/orcamento.json): teto 80.000.000, consumo 61.400.000,
+     período mês — tudo (exemplo), nada inventado. "Ajustar teto" recalcula a barra contra o teto
+     novo e acrescenta linha ao histórico; "estourar o teto" é a ação irreversível (FR4 §5).
+     ============================================================================ -->
+<div class="conteudo-interior" data-contexto="administracao" data-tela="orcamento"
+     data-acoes="acoes/administracao.js"
+     data-fonte="reproduz specs/073-area-administrativa/prototipo/administracao-03-orcamento.html como fragmento novo (FR8 — o wireframe do 073 não é movido nem editado), na rota #/administracao/orcamento (FR2); os efeitos de clique vivem em acoes/administracao.js (fatia T05 do ciclo 074)">
+
+  <p class="migalha" data-referencia="true">Maestro · Administração · protótipo navegável · ciclo 074</p>
+  <h1 class="titulo-pagina">Administração — limite de orçamento</h1>
+
+  <div class="cartao" data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §2 (contexto Administração) e §6.5; specs/073-area-administrativa/confronto/confronto-decisao.md (linha do ENTRA limite de orçamento); fixtures/orcamento.json (`custo_pastas` de painel/projetos/exemplo.json + painel/custo.py)">
+    <span class="rotulo-categoria">Contexto delimitado</span>
+    <p><strong>Administração</strong> (subdomínio genérico) · <strong>ENTRA:</strong> limite de orçamento ·
+    <strong>juízes da rodada 4:</strong> Administração/Gerenciamento · Controle · <strong>fonte do ENTRA:</strong>
+    método (<code>painel/custo.py</code> mede o consumo; o teto é declarado por projeto) e plataforma (LiteLLM —
+    <em>Budgets and Rate Limits</em>, teto por chave/time).</p>
+    <span class="fonte">fonte: specs/073-area-administrativa/confronto/mapa-de-contextos.md §2 e §6.5 · specs/073-area-administrativa/pesquisa/litellm.md</span>
+  </div>
+
+  <nav class="trilha" aria-label="Telas da Administração" data-fonte="trilha de contexto do §1 do ux-design 074 (navegação secundária entre fragmentos irmãos do mesmo contexto; garante o ≤ 3 cliques da FR2)">
+    <a href="#/administracao/catalogo"
+       data-fonte="ENTRA cadastro de skills/ferramentas/modelos (specs/073-area-administrativa/confronto/confronto-decisao.md)">catálogo de skills/ferramentas/modelos</a>
+    <a href="#/administracao/politicas"
+       data-fonte="ENTRA política declarativa (allow/deny/ask) (specs/073-area-administrativa/confronto/confronto-decisao.md)">política declarativa (allow/deny/ask)</a>
+    <a href="#/administracao/orcamento" aria-current="page"
+       data-fonte="esta tela — ENTRA limite de orçamento (specs/073-area-administrativa/confronto/confronto-decisao.md)">limite de orçamento</a>
+  </nav>
+
+  <div class="cartao" data-fonte="specs/073-area-administrativa/rodada-4/juiz-2-administracao-gerenciamento.md (leitura do teto: a tela mostra o medido e o declarado, e quem define o teto) e specs/074-prototipo-navegavel/data-model.md §7 (consumo/teto → a barra; faixas de cor)">
+    <span class="rotulo-categoria">Leitura desta tela</span>
+    <p>A tela cruza o <strong>medido</strong> (o consumo que <code>painel/custo.py</code> apura) com o
+    <strong>declarado</strong> (o teto do projeto). A <em>barra de consumo</em> é o medido sobre o declarado —
+    e é o <strong>humano</strong> quem define o teto: a sessão dona não move o próprio limite.</p>
+    <span class="fonte">fonte: ux-design 074 §2.3 · data-model 074 §7 · docs/governance/operating-model.md (a autorização vive fora do modelo)</span>
+  </div>
+
+  <h2>Consumo contra o teto</h2>
+  <div class="cartao" data-fonte="design-system §4 (barra de consumo: número grande, trilho e preenchimento; cores --grafico-2 normal, --primaria atenção, --erro estourado) e fixtures/orcamento.json (teto 80.000.000, consumo 61.400.000, período mês — exemplo)">
+    <span class="rotulo-categoria">Período</span>
+    <p><span class="numero-grande" id="consumo-valor"><span data-exemplo="true">exemplo: 61.400.000</span></span>
+      <span id="consumo-legenda"><span data-exemplo="true">exemplo: de 80.000.000 tokens/mês (projeto maestro, escopo projeto)</span></span></p>
+    <div class="barra" id="barra-consumo" role="img" aria-label="consumo sobre o teto (exemplo: 77 %)"
+         data-fonte="design-system §4 (barra de consumo) e data-model 074 §7 (faixas: normal até 80 %, atenção de 80 % a 100 %, estourada acima de 100 %)">
+      <span id="barra-preenchimento" style="width:77%" data-exemplo="true"></span>
+    </div>
+    <p class="fonte" id="barra-legenda" data-exemplo="true">exemplo: 77 % do teto · faixa normal (até 80 %) · teto de 80.000.000 tokens/mês (limite de orçamento)</p>
+    <p class="ajuda">o medido é <code>painel/custo.py</code>; o declarado é o teto do projeto. A barra é um só número:
+    consumo ÷ teto.</p>
+    <span class="fonte">fonte: fixtures/orcamento.json · specs/073-area-administrativa/pesquisa/litellm.md (Budgets and Rate Limits)</span>
+  </div>
+
+  <h2>Ajustar teto</h2>
+  <div class="cartao" data-fonte="specs/073-area-administrativa/rodada-4/juiz-2-administracao-gerenciamento.md (o teto é do humano) e specs/074-prototipo-navegavel/data-model.md §7 (teto novo 60.000.000 → 102 % → barra estourada + nova linha no histórico com changed_by)">
+    <span class="rotulo-categoria">Controle — o teto é do humano</span>
+    <p>
+      <label for="novo-teto" data-rotulo="limite de orçamento">novo teto</label>
+      <input id="novo-teto" type="text" placeholder="exemplo: 60.000.000" data-fonte="data-model 074 §7 (teto novo recalculado contra o consumo) e specs/073-area-administrativa/rodada-4/juiz-2-administracao-gerenciamento.md">
+      <button type="button" data-acao="ajustar-teto" data-autoriza="humano" data-simulado="sim"
+              data-efeito="a barra recalcula contra o teto novo, muda de cor e o histórico ganha a linha (changed_by)"
+              data-fonte="data-model 074 §7 (ajuste de teto recalculando a barra) e ux-design 074 §5 (contrato do botão de escrita)">Ajustar teto</button>
+    </p>
+    <p class="vazio">o teto é <strong>do humano</strong> — é ele quem define o limite de orçamento; a sessão dona não
+    move o próprio limite. A tela lê o teto declarado e o recalcula contra o consumo; a escrita só entra pelo portão
+    do chamado.</p>
+    <span class="fonte">fonte: decisão 5 da regente (toda ação de escrita diz quem autoriza) · docs/governance/operating-model.md</span>
+  </div>
+
+  <h2>Precedência dos tetos e o que não se sobrescreve</h2>
+  <table class="tabela" id="tetos" data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §7 (precedência entre escopos) e specs/073-area-administrativa/pesquisa/litellm.md (Budgets and Rate Limits: teto por chave/time). Fixture: prototipo/fixtures/orcamento.json">
+    <caption>Entre escopos, <strong>vence o menor teto aplicável</strong> — do projeto para o mais específico: quem
+    consome mais perto do limite é quem manda. As linhas marcadas <span class="exemplo" data-exemplo="true">exemplo</span>
+    ilustram o formato; o valor vivo aparece como <span class="vazio">—</span> com o motivo.</caption>
+    <thead>
+      <tr><th data-rotulo="limite de orçamento">Escopo</th><th data-rotulo="limite de orçamento">Teto</th><th>Estado hoje</th><th>Quem decide</th><th>Consultar</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>projeto <code>maestro</code></td>
+        <td><span class="exemplo" data-exemplo="true">exemplo: 80.000.000</span></td>
+        <td><span class="vazio">—</span> motivo: o teto é declarado em fixture, não em registro auditável</td>
+        <td>humano (o portão do chamado)</td>
+        <td><button type="button" data-acao="abrir-teto" data-autoriza="humano" data-simulado="sim" data-efeito="abre o teto do escopo (leitura)" data-fonte="specs/073-area-administrativa/pesquisa/litellm.md (Budgets and Rate Limits) e prototipo/fixtures/orcamento.json">abrir teto</button></td>
+      </tr>
+      <tr>
+        <td>agente (perfil) ou <span data-rotulo="consumo por agente">consumo por agente</span></td>
+        <td><span class="vazio">—</span> motivo: não há teto por agente declarado hoje</td>
+        <td><span class="vazio">—</span> motivo: idem</td>
+        <td>humano (o portão do chamado)</td>
+        <td><button type="button" data-acao="abrir-teto" data-autoriza="humano" data-simulado="sim" data-efeito="abre o teto do escopo (leitura)" data-fonte="specs/073-area-administrativa/pesquisa/litellm.md (teto por chave/time) e data-model 074 §7 (consumo por agente)">abrir teto</button></td>
+      </tr>
+      <tr>
+        <td>modelo do catálogo de skills/ferramentas/modelos</td>
+        <td><span class="vazio">—</span> motivo: o preço do modelo entra pelo catálogo; o teto por modelo ainda não existe</td>
+        <td><span class="vazio">—</span> motivo: idem</td>
+        <td>humano (o portão do chamado)</td>
+        <td><button type="button" data-acao="abrir-teto" data-autoriza="humano" data-simulado="sim" data-efeito="abre o teto do escopo (leitura)" data-fonte="specs/073-area-administrativa/pesquisa/litellm.md e prototipo/fixtures/catalogo.json (tabela do Modelo)">abrir teto</button></td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="fonte" data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §7 (precedência) e docs/governance/operating-model.md (o deny do método não é sobrescritível)">
+    <strong>Precedência:</strong> vence o <strong>menor teto aplicável</strong> — um teto de projeto mais baixo vence um
+    teto de agente mais alto. E, como na política: o limite declarado pelo método <strong>não é sobrescritível</strong>
+    por nada abaixo dele — a sessão dona não amplia o próprio teto.
+  </p>
+
+  <h2>Quem emite o aviso</h2>
+  <div class="cartao" data-fonte="specs/073-area-administrativa/rodada-4/correcao-3.md (decisão D3: quem emite o aviso de orçamento é o medidor, painel/custo.py; a tela não emite) e specs/073-area-administrativa/rodada-4/juiz-2-administracao-gerenciamento.md">
+    <span class="rotulo-categoria">D3 — o emissor do aviso</span>
+    <p>O aviso de orçamento <strong>não nasce nesta tela</strong>: quem o emite é o <strong>medidor</strong>
+    (<code>painel/custo.py</code>), que apura o consumo e o compara ao teto. A tela <em>mostra</em> o aviso emitido —
+    e o endereça à <strong>fila outbox</strong> do contexto de Mensageria. As faixas: <strong>avisar</strong> (hoje) ·
+    <strong>recusar</strong> (DEPOIS) · <strong>suspender</strong> (DEPOIS) — o comportamento de hoje é avisar; recusar
+    e suspender estão declarados como posteriores, não como presentes.</p>
+    <span class="fonte">fonte: specs/073-area-administrativa/rodada-4/correcao-3.md (D3) · specs/073-area-administrativa/pesquisa/litellm.md (Budgets and Rate Limits)</span>
+  </div>
+
+  <h2>Estourar o teto (irreversível)</h2>
+  <div class="cartao" data-fonte="specs/074-prototipo-navegavel/ux-design.md §5 (as quatro ações irreversíveis: reiniciar, derrubar, entregar a destino não resolvido e estourar teto; confirmação com data-perde e data-reverte — B-UX1) e data-model 074 §7 (faixa estourada → --erro)">
+    <span class="rotulo-categoria">Ação irreversível</span>
+    <p>Deixar o consumo passar do teto é <strong>irreversível</strong>: o período estourado não volta atrás — o que se
+    perde é a folga do período, e reverter exige um novo teto (ou um novo período). Por isso a ação abre a confirmação
+    e declara o que se perde e como reverter.</p>
+    <p>
+      <button type="button" data-acao="estourar-teto" data-autoriza="humano" data-simulado="sim"
+              data-efeito="o consumo passa a apontar acima do teto, a barra vai a --erro e o aviso vai para a fila outbox"
+              data-fonte="ux-design 074 §5 (ação irreversível: estourar teto) e data-model 074 §7"
+              data-irreversivel="sim" data-confirma="conf-estourar-teto">Estourar o teto</button>
+    </p>
+    <div class="confirmacao" id="conf-estourar-teto" hidden
+         data-fonte="ux-design 074 §5 (anatomia da confirmação irreversível — B-UX1); a verificação (i) do verifica-navegacao.py cobra o par data-perde/data-reverte">
+      <dl>
+        <dt data-rotulo="limite de orçamento">o que se perde</dt>
+        <dd data-perde="a folga do período: o consumo fica acima do teto declarado">a folga do período — o consumo fica acima do teto declarado.</dd>
+        <dt data-rotulo="limite de orçamento">como reverter</dt>
+        <dd data-reverte="só um novo teto (ou um novo período) devolve a folga">só um novo teto (ou um novo período) devolve a folga.</dd>
+      </dl>
+      <p><button type="button" data-acao="estourar-teto" data-autoriza="humano" data-simulado="sim"
+                 data-efeito="o consumo passa a apontar acima do teto, a barra vai a --erro e o aviso vai para a fila outbox"
+                 data-fonte="ux-design 074 §5 (confirmação irreversível — B-UX1)"
+                 data-irreversivel="sim" data-confirma="conf-estourar-teto">Confirmar estouro</button></p>
+    </div>
+  </div>
+
+  <h2>Histórico de mudanças (auditoria administrativa)</h2>
+  <table class="tabela" id="historico-orcamento" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (decisão 4: auditoria administrativa — histórico com changed_by) e specs/074-prototipo-navegavel/data-model.md §7 (a nova linha do histórico no ajuste de teto). Fixture: prototipo/fixtures/orcamento.json (histórico)">
+    <caption>Quem mudou o quê, quando — o autor é <code>changed_by</code>. ENTRA 12 (auditoria administrativa): uma
+    linha de fixture visível ao crítico em cada uma das três telas da Administração. A linha ilustrativa vem marcada
+    <span class="exemplo" data-exemplo="true">exemplo</span>; o valor vivo aparece como <span class="vazio">—</span> com
+    o motivo. O ajuste de teto acrescenta uma linha no topo (<code>data-adicionada="sim"</code>).</caption>
+    <thead>
+      <tr><th>Data</th><th>Objeto</th><th>Descrição</th><th>Quem</th><th>Consultar</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="exemplo" data-exemplo="true">exemplo: 2026-10-23</span></td>
+        <td><span class="exemplo" data-exemplo="true">exemplo: teto do projeto maestro</span></td>
+        <td><span class="exemplo" data-exemplo="true">exemplo: teto declarado em 80.000.000 tokens/mês</span></td>
+        <td>Ana Exemplo</td>
+        <td><button type="button" data-acao="abrir-mudanca" data-autoriza="humano" data-simulado="sim" data-efeito="abre a mudança (leitura)" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (decisão 4) e specs/073-area-administrativa/pesquisa/litellm.md (auditoria com changed_by)">abrir mudança</button></td>
+      </tr>
+      <tr>
+        <td><span class="vazio">—</span> motivo: o Maestro ainda não registra mudança administrativa com autor além da fixture</td>
+        <td><span class="vazio">—</span></td>
+        <td><span class="vazio">—</span></td>
+        <td><span class="vazio">—</span></td>
+        <td><span class="vazio">—</span> motivo: nada a abrir enquanto a trilha não existir</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Estados desta tela</h2>
+  <ul class="estados" data-fonte="ux-design 066 §3 (vazio, carregando, erro de fonte, sem permissão) e §4 (anti-regras)">
+    <li><strong>vazio</strong> — "— sem teto declarado · motivo: …" (nunca um zero seco)</li>
+    <li><strong>carregando</strong> — a hora da última medição do consumo, quando houver leitura</li>
+    <li><strong>erro de fonte</strong> — "—" com o motivo e o caminho; nunca um valor padrão</li>
+    <li><strong>sem permissão</strong> — "Ajustar teto" e "Estourar o teto" aparecem somente leitura para quem não é o
+      humano, com o aviso</li>
+  </ul>
+
+  <footer class="rodape" data-referencia="true">
+    <p><strong>Como ler este fragmento.</strong> Ele é injetado na casca (<code>#/administracao/orcamento</code>) e
+    reproduz o wireframe do 073 como arquivo novo (FR8). Nenhum número é inventado — o valor ilustrativo vem marcado
+    <span class="exemplo" data-exemplo="true">exemplo</span> e o valor vivo aparece como <span class="vazio">—</span> com
+    o motivo ao lado. Das fitness functions de UX do ciclo 066 valem aqui <code>F1</code>, <code>F8</code> e
+    <code>F9</code>; <code>F2</code>–<code>F7</code> e <code>F10</code>–<code>F12</code> são <em>n/a</em> neste
+    protótipo — supõem servidor e API, que ele não tem. Declarado, não omitido.
+    <span class="fonte">fonte: specs/066-painel-de-regencia/ux-design.md §4 e §7 · specs/074-prototipo-navegavel/spec.md (FR8)</span></p>
+    <p><strong>Rótulos.</strong> Os nomes de objeto vêm do vocabulário do contexto — o termo ratificado
+    <em>limite de orçamento</em>, o rótulo <em>consumo por agente</em> e o verbo <em>estourar o teto</em> vêm do
+    glossário (<code>docs/governance/glossary.md</code>). Palavras de moldura (Escopo, Teto, Estado hoje, Quem decide,
+    Consultar, Precedência) são interface, não vocabulário de domínio.
+    <span class="fonte">fonte: Princípio VIII (<code>docs/governance/principles.md</code>) e <code>docs/governance/glossary.md</code></span></p>
+  </footer>
+
+</div>

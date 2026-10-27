@@ -138,3 +138,14 @@ o Worker01 escreve a spec do 072.
 - Rota entre sessões: o Gerente recebeu os DONE de 02 e 03, não os do 01; três envios do GATE
   dele falharam por queda do classificador. Regra: se o envio falhar duas vezes, o GATE vai
   commitado em `specs/072-painel-de-regencia/gate-<nome>.md`.
+
+## 25/10 13:40 — 072 promovido à main; 073 nas rodadas 2 e 3
+
+- Gate do 072 aberto por delegação (`gate-072-rodada-1-delegado`): crítico APPROVE_WITH_CONDITIONS,
+  quatro condições fechadas (T15 a T19) e reverificadas pelo Worker06 em `d71cee6`; verificações de
+  git e varredura de segredos pela regente, limpas. Merge na dev (`12bffe4`), push, promoção com
+  conformance completa verde: **main = `d094763`** (`gate-main-12bffe4`).
+- 073: rodadas 1 e 2 aceitas por delegação (`gate-073-rodada-1-delegado`, `gate-073-rodada-2-delegado`);
+  ENTRA 13 / NÃO PRECISA 8 / DEPOIS 5; 12 termos ratificados; rodada 3 (wireframes) em curso —
+  Administração entregue pelo Worker04 (`5ce4a5f`).
+- Consumo da sessão regente: 23 % do semanal (teto 40 %).

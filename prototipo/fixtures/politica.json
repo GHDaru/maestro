@@ -1,0 +1,31 @@
+{
+  "_fonte": ".claude/settings.json (blocos `permissions.allow`/`ask`/`deny`)",
+  "_exemplo": true,
+  "projeto": "maestro",
+  "regras": [
+    {
+      "projeto": "maestro",
+      "bloco": "allow",
+      "regra": "leitura de docs do repositório (exemplo)",
+      "histórico": []
+    },
+    {
+      "projeto": "maestro",
+      "bloco": "ask",
+      "regra": "Bash(git push*)",
+      "histórico": []
+    },
+    {
+      "projeto": "maestro",
+      "bloco": "deny",
+      "regra": "Bash(rm -rf*)",
+      "histórico": [
+        {
+          "mudanca": "deny `Bash(rm -rf*)` ajustado (exemplo)",
+          "changed_by": "Ana Exemplo",
+          "data": "2026-10-20"
+        }
+      ]
+    }
+  ]
+}

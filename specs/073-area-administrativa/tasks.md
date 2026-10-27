@@ -7,23 +7,68 @@
 > Rodada 2 ACEITA; os 12 termos RATIFICADOS com a condição de que a entrada do glossário resolva as
 > cinco colisões de nome do mapa. Entrega em `specs/073-area-administrativa/prototipo/`.
 
-- [ ] T3-glossario — Worker01: os 12 termos em `docs/governance/glossary.md` (inglês, coluna
+- [x] T3-glossario — Worker01: os 12 termos em `docs/governance/glossary.md` (inglês, coluna
       "Cycle 073"), resolvendo as cinco colisões (sessão de agente × agente; fila de decisões ×
       fila outbox; livro de mensagens × livro de ponto; caixa de entrada como objeto da
       Mensageria; portão do chamado reaproveitado pela Regência via camada anticorrupção).
-- [ ] T3-telas-administracao — Worker04: contexto Administração — catálogo de
+      **Entregue: `ebe7eb9`, integrado em `853a1d5` — acréscimo puro (+12/−0), grafia batendo com
+      o `data-rotulo` das telas, colisões com `arquivo:linha` do mapa §7 (:292–296) + regra
+      operativa "fila e portão nunca nus"; MCP/A2A expandidos (Princípio VIII). Prova medida:
+      allowlist 74→86; com a lista embutida vazia, as 4 telas da Mensageria com ZERO achado de
+      rótulo — a 1ª coluna cobre todos os data-rotulo reais.**
+- [x] T3-telas-administracao — Worker04: contexto Administração — catálogo de
       skills/ferramentas/modelos (ENTRA), políticas allow/deny/ask (ENTRA), limites de orçamento
       (ENTRA); cadastro de agentes e papéis aparece como registro existente (NÃO PRECISA), sem
       funcionalidade nova.
-- [ ] T3-telas-workflow — Worker05: contexto Workflow de sessões — sessão de agente
+      **Entregue: `5ce4a5f`, integrado em `00c1ae9` — 3 wireframes estáticos; agentes/papéis como
+      coluna de contexto somente-leitura (NÃO PRECISA honrado); auto-checagem própria com 9 regras
+      E mutação 9/9 (mesmo falso-positivo de substring que o smoke test do Gerente achou — "Mod" ⊂
+      "motor" — corrigido antes de entregar); interpretações declaradas (moldura × domínio; F2–F7
+      e F10–F12 n/a). Fitness do Gerente (v3): 23 achados (18 citação-sem-atributo + 5 rótulo de
+      domínio sem data-rotulo) — correção attempt=2 entregue (`7147f50`, integrada em `01b55f6`):
+      `data-referencia` na migalha/rodapé + `data-rotulo` nos th e no h1 (→OPA); fit073 e mut073
+      re-rodados PASS; **verde nas 3 telas**.**
+- [x] T3-telas-workflow — Worker05: contexto Workflow de sessões — sessão de agente
       (subir/derrubar), estado do agente vivo, tarefa aberta, consumo por agente; última atividade
       como coluna existente (NÃO PRECISA).
-- [ ] T3-telas-mensageria — Worker03 (prioridade): contexto Mensageria — caixa de entrada, livro
+      **Entregue: `365f59d` + `fc183ce` (evidência no qa-report), attempt=2 por redespacho — o
+      attempt=1 ficou 24h sem avanço (branch parada em `e51b3f5`, sessão idle) e o regente mandou
+      redespachar com o contrato completo; W05 respondeu dentro da rodada, partindo de `c3137e2`
+      (ff ok). 4 wireframes estáticos no contrato de marcação (data-fonte por bloco — retirou o
+      data-fonte do `<body>` que isentaria a tela inteira; data-rotulo com termo ratificado;
+      data-exemplo com "(exemplo)"; `—` sempre com motivo; F1/F7/F8/F9 valem, F2–F6 e F10–F12 n/a
+      declaradas; Princípio VIII). "Última atividade" declarada NÃO PRECISA nas próprias telas.
+      Self-check: 11 telas, 0 achados, exit 0. Divergência de nome de arquivo (slug sem prefixo ×
+      mensageria-NN/administracao-) declarada — decisão de uniformidade é do regente, rodada 4.
+      Tokens (piso): ≈2,56M.**
+- [x] T3-telas-mensageria — Worker03 (prioridade): contexto Mensageria — caixa de entrada, livro
       de mensagens, roteamento por nome/ref com a colisão de nomes VISÍVEL, protocolo de
       intercomunicação (A2A/MCP).
-- [ ] T3-readme-navegacao — Worker01: `prototipo/README.md` (telas × ENTRA × contexto dono ×
+      **Entregue: `5f6dcf8`, integrado em `566bca5` — 4 wireframes estáticos (caixa de entrada,
+      livro de mensagens append-only com desvio marcado, roteamento que RECUSA nome ambíguo e
+      mostra a colisão + tabela das cinco colisões do §7, protocolo com o que a sessão expõe/consome
+      e A2A como "—" com motivo). Self-check do W03: 4 arquivos, 0 falas. Fitness do Gerente (v3):
+      22 achados, TODOS da classe citação-sem-atributo — correção attempt=2 entregue (`ccf574c`,
+      integrada em `1354240`): `data-referencia` nas citações, só atributos (35/35); **verde nas
+      4 telas**.**
+- [x] T3-readme-navegacao — Worker01: `prototipo/README.md` (telas × ENTRA × contexto dono ×
       juízes) e o lugar de cada tela na navegação do painel existente (Regência e Chamados ficam
       como estão).
+      **Entregue: `e40f4bf` + `ff83e38` ("em entrega" unificado), integrado em `99fd85d` — tabela
+      única tela × ENTRA nº × nome ubíquo × contexto × grupo × juízes × estado; os 13 ENTRA cabem
+      em 11 telas (21 é objeto das 4 da Mensageria; 26 visível dentro do roteamento); Workflow
+      declarado "em entrega" sem nome de arquivo inventado; Regência e Chamados intactos
+      (`data-v` verificado em `painel/index.html:955`); grupo novo "Área administrativa" marcado
+      como rodada 4, NÃO decidido, NÃO implementado; colisão na navegação explícita (caixa de
+      entrada ≠ fila de decisões); divergência 4/5 (Administração no despacho × CONTROLE na
+      matriz) declarada com as duas colunas; sem link markdown (nada novo para o check-links).
+      Gate re-executado após o merge: 7 telas, 0 achados.**
+      **Complemento pós-integração do W05 (`e756232`): as 4 linhas do Workflow pelos nomes reais
+      (`workflow-01..04`, renomeados pela regente em `af81499`), estado "neste ramo" (`365f59d`);
+      retrato atualizado para 11 telas (4+3+4), datado 26/10; bloco de medição com o topo `af81499`
+      medido por ele (11 telas, 0 achados — não aceito de palavra); 4 correções de coerência
+      declaradas (frases que ficariam falsas); CHANGELOG intocado de propósito. Tokens (piso):
+      fatia 785.878 / sessão 33.118.017.**
 - [x] T3-fitness — Gerente: script que percorre os HTML e falha se houver elemento interativo sem
       `data-fonte`, rótulo fora do glossário (glossary.md + os 12) ou número sem a marca "exemplo";
       saída colada no qa-report.
@@ -32,11 +77,33 @@
       smoke-testado em telas sintéticas (5 achados na ruim, 0 na boa; o smoke test achou e corrigiu
       o falso-negativo RACI⊂"operacional"). A rodada verde sobre as telas reais e a saída colada no
       qa-report acontecem no T3-fechamento; a mutação do W02 quebra este script de propósito.**
-- [ ] T3-revisao — Worker02: revisão em contexto fresco das telas contra o mapa e as colisões;
+- [x] T3-revisao — Worker02: revisão em contexto fresco das telas contra o mapa e as colisões;
       mutação — quebrar o script da fitness function e vê-lo acusar.
-- [ ] T3-seguranca — Worker06: segurança documental e conformance 073 nos dois modos.
-- [ ] T3-fechamento — Gerente: andamento, `[[DONE 073-rodada-3]]` ao regente (e commitado) com a
+      **Entregue: `d1e9cc7`, integrado em `dbfe3f2` — `revisao-073-rodada-3.md` (284 linhas) +
+      CHANGELOG. Parte 1: nenhuma violação estrutural nem invasão de contexto nas 11 telas; 9
+      achados de disciplina de nome/citação que o gate não alcança (R1/R1b "fila" nua, R2/R2b
+      "portão" nu/terceiro qualificador, R3 grafia "fila outbox", R4 citação de `tasks.jsonl`
+      inexistente 5×, R5 caminho sem `scripts/`, R6–R9 robustez), cada um com arquivo:linha e a
+      regra ferida; examinados e aceitos declarados (§1.4). Parte 2 — mutação: regra 3 cega →
+      sumiu 'number without the "exemplo" mark: "42"'; regra 4 cega → sumiu '"fila" unqualified';
+      descoberta mecânica: nenhuma tela real exercita a regra 4 (só o fixture) — base da
+      extensão da regra 4 mandatada pela regente. Script restaurado byte a byte (SHA-256 igual
+      ao de `af81499`, git diff vazio). Tokens (piso): 9.778.712. Correções R1–R9 despachadas
+      por dono de tela (W03/W04/W05) + extensão da regra 4 (W02) na rodada de correção final.**
+- [x] T3-seguranca — Worker06: segurança documental e conformance 073 nos dois modos.
+      **Entregue: varredura de `specs/073-area-administrativa/` (foco `prototipo/` e `confronto/`):
+      0 achados — os únicos casamentos de segredo são falsos positivos (`sk-l` ⊂ "task-ledger";
+      `senha` ⊂ "desenhados", confirmado por `grep -o`), 0 dado pessoal, todo nome que parece real
+      com `(exemplo)`+`data-exemplo="true"`, só URL de doc/produto público. Protótipo verde na
+      própria fitness function (11 telas, 0 achados, exit 0). Conformance 073 verde nos dois modos
+      (normal e `TICKED_ONLY=1`), exit 0, saídas idênticas. Evidência por acréscimo no `qa-report.md`
+      (§ Rodada 3).**
+- [x] T3-fechamento — Gerente: andamento, `[[DONE 073-rodada-3]]` ao regente (e commitado) com a
       lista de telas, o resultado do script e os tokens. **Rodada 4 só com o "segue".**
+      **Entregue: gate final com a regra 4 ampliada — 11 telas, 0 achados, exit 0; conformance 073
+      verde nos dois modos; andamento e qa-report com o fechamento (placar R1–R9, incidente do
+      marcador órfão declarado, tokens); DONE emitido ao regente e commitado como fallback
+      (`done-073-rodada-3.md`).**
 
 ## Rodada 2 — confronto com o Maestro e decisão do que entra (25/10, mandato do regente)
 
@@ -99,5 +166,10 @@
      check-conformance.sh requires the evidence of every non-n/a step in qa-report.md. -->
 - [x] TAIL:review — independent review in fresh context, by whoever did not execute
 - [x] TAIL:security — security pass proportional to the risk class
-- [ ] TAIL:mutation — n/a: rodada documental — nenhum gate executável criado ou alterado (não há código neste ciclo); o verificável é a contagem e a amostragem, cobertas no TAIL:review
-- [ ] TAIL:gate — DoD green -> guardian verdict -> human merge gate (not delegable)
+- [x] TAIL:mutation — a rodada 1 era documental (n/a na época), mas a rodada 3 criou o gate executável `prototipo/verifica-prototipo.py` e ele foi mutado: regra 3 e regra 4 cegas separadamente pelo Worker02 em contexto fresco (`d1e9cc7` §2, depois re-rodada com a regra ampliada em `9cf0118`/`1264194`), achados que sumiram copiados da saída, script restaurado byte a byte (SHA-256 conferido) — evidência no qa-report § "Rodada 3 — a regra 4 passa a cobrir o texto visível"
+- [x] TAIL:gate — DoD green -> guardian verdict -> human merge gate (not delegable) — as quatro
+      leituras da rodada 4: **47 das 48 células (3 juízes × 16) em nota ≥ 9** e a célula restante
+      (P1 do Flowise, `plataformas.md:69` sem fonte na ficha) **corrigida** — `avisa?` com motivo,
+      recontagem 12/1/3 (W06 `750d718` → `b9a5afd`); gate 11 telas/0 achados/seis regras e
+      conformance verde nos dois modos no HEAD de fechamento (qa-report § "fechamento do ciclo");
+      o merge na `dev` e a promoção são da regente (não delegável)

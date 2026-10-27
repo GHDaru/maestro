@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Amostra do design system — os objetos do Maestro sobre os tokens v1</title>
+<!--
+  Amostra do design system (ciclo 074, T01 — base da FR7 do spec 074).
+
+  O que é: a página que mostra, um a um, os objetos da §4 do design system do 073
+  (`specs/073-area-administrativa/design-system.md`) renderizados sobre os tokens de
+  `tokens.css` — os componentes que os fragmentos do protótipo vão consumir. É a base
+  que a FR7 manda existir ANTES de qualquer tela: quem desenha fragmento consome o que
+  está medido aqui, não decide design.
+
+  O que não é: não é tela do produto e não tem rota — os números são exemplos marcados
+  "(exemplo)", as sessões usam o roster de exemplo do 073 como dado de fixture, e o
+  projeto é `maestro` (o valor de `repos[0].nome` de `painel/projetos/exemplo.json`).
+
+  Zero dependência externa (FR6): sem rede, sem CDN, sem script. O único estilo é o
+  `tokens.css` ao lado; os botões são inertes (esta página é uma amostra de feição, não
+  um motor) — mas já nascem com o contrato de escrita dos quatro atributos da decisão 3,
+  para servirem de molde aos fragmentos.
+-->
+<link rel="stylesheet" href="tokens.css">
+<!-- ícone vazio em data URI: evita o pedido de /favicon.ico, que responderia 404 e sujaria
+     o console (FR6: nada externo — o valor é inline) -->
+<link rel="icon" href="data:,">
+</head>
+<body>
+
+<div class="casca">
+
+  <!-- Objeto 16 da §4 — Navegação: lateral em desktop, barra inferior abaixo da quebra -->
+  <nav class="menu" aria-label="Navegação do protótipo" data-rotulo="navegação"
+       data-fonte="design system §4 (objeto navegação) — specs/073-area-administrativa/design-system.md; os seis itens como vistas sobre os cinco contextos são do spec 074, FR2/B1">
+    <span class="menu-marca">maestro <span class="ajuda">(exemplo)</span></span>
+    <ul>
+      <li><a href="#/regencia/inicial" aria-current="page" data-fonte="FR2 do spec 074 (Regência → tela inicial, a frase-chave)">Regência</a></li>
+      <li><a href="#/chamados-e-gates/kanban-por-gate" data-fonte="FR2 do spec 074 (Chamados → kanban por gate, core domain)">Chamados</a></li>
+      <li><a href="#/regencia/fila-de-decisoes" data-fonte="FR2 do spec 074 (Fila → fila de decisões)">Fila</a></li>
+      <li><a href="#/workflow-de-sessoes/sessao-de-agente" data-fonte="FR2 do spec 074 (Sessões → workflow de sessões)">Sessões</a></li>
+      <li><a href="#/administracao/catalogo" data-fonte="FR2 do spec 074 (Administração → catálogo)">Administração</a></li>
+      <li><a href="#/mensageria/caixa-de-entrada" data-fonte="FR2 do spec 074 (Mensageria → caixa de entrada)">Mensageria</a></li>
+    </ul>
+  </nav>
+
+  <div class="conteudo">
+  <div class="conteudo-interior">
+
+    <header class="amostra-cabecalho">
+      <p class="migalha" data-referencia="true">Maestro · protótipo navegável · ciclo 074 · T01 · amostra do design system</p>
+      <h1 class="titulo-pagina">Os objetos do Maestro sobre os tokens v1</h1>
+      <p class="ajuda" data-fonte="specs/073-area-administrativa/design-system.md §1 (tokens medidos) e §4 (objetos: linguagem ubíqua → componente); origem da amostra: §5 do mesmo documento">
+        Cada seção abaixo é um objeto da §4 do design system, na ordem da tabela, com os dados de
+        exemplo do protótipo. Os tokens medidos estão em <code>tokens.css</code>; a amostra não
+        inventa valor — sem medida, o objeto não entra.
+      </p>
+    </header>
+
+    <!-- §4 · Frase-chave do regente -->
+    <section class="amostra-secao" data-fonte="design system §4 (objeto frase-chave do regente: saudação com destaque laranja + seta); papel semântico na ux-design 074 §2.1">
+      <div class="amostra-cabecalho">
+        <h2>1 · Frase-chave do regente</h2>
+        <p>Número e ação em <code>--primaria</code>, em uma linha; a idade do relógio em <code>--texto-2</code>.</p>
+      </div>
+      <p class="frase-chave">
+        você tem <span class="destaque">3 decisões esperando</span>,
+        a mais velha <span class="idade">há 7 h (exemplo)</span> <span class="seta">→</span>
+      </p>
+      <p class="ajuda">Contadores da projeção: <strong>1 sessão caída (exemplo)</strong> · <strong>3 mensagens desviadas (exemplo)</strong> — lidos dos outros contextos, nunca decididos aqui.</p>
+    </section>
+
+    <!-- §4 · Sessão de agente -->
+    <section class="amostra-secao" data-fonte="design system §4 (objeto sessão de agente: linha de lista compacta; nome em --tinta 13px 600, ref em mono, chevron) e §5 do 073 (identidade nome · ref · projeto)">
+      <div class="amostra-cabecalho">
+        <h2>2 · Sessão de agente (o ref)</h2>
+        <p>A identidade é <strong>nome · ref · projeto</strong>; o <strong>ref</strong> é a referência curta da sessão — o campo que resolve e o único que expira.</p>
+      </div>
+      <div class="linha-lista">
+        <span class="tile tile-neutro">W3</span>
+        <span>
+          <span class="titulo">Worker03 <span class="ref">[ad66d6]</span> · maestro</span>
+          <span class="subtitulo">bloqueado — aguarda ruling do pedido D-014 (exemplo)</span>
+        </span>
+        <span class="chevron">›</span>
+        <span class="fonte">fonte: roster de exemplo do 073 (retrato de 26/10) — dado de fixture, não o ref vivo</span>
+      </div>
+    </section>
+
+    <!-- §4 · Estado do agente vivo -->
+    <section class="amostra-secao" data-fonte="design system §4 (objeto estado do agente vivo: ponto de status + texto) e §3 do design system (estado nunca é só cor)">
+      <div class="amostra-cabecalho">
+        <h2>3 · Estado do agente vivo</h2>
+        <p>Cinco estados, todos com texto além da cor.</p>
+      </div>
+      <ul class="menu-aux" style="list-style:none;padding:0;margin:0">
+        <li><span class="ponto ponto-sucesso"></span> trabalhando — <span class="ajuda">Worker01 <span class="ref">[9a1b27]</span> · maestro</span></li>
+        <li><span class="ponto ponto-alerta"></span> esperando — <span class="ajuda">Worker06 <span class="ref">[c85948]</span> · maestro</span></li>
+        <li><span class="ponto ponto-erro"></span> bloqueado — <span class="ajuda">Worker03 <span class="ref">[ad66d6]</span> · maestro</span></li>
+        <li><span class="ponto"></span> sem tarefa — <span class="ajuda">Worker04 <span class="ref">[4d000a]</span> · maestro</span></li>
+        <li><span class="ponto ponto-sem-sinal"></span> <span style="color:var(--texto-2);text-decoration:line-through">sem sinal</span> — <span class="ajuda">— (motivo: nenhuma sessão sem sinal neste retrato)</span></li>
+      </ul>
+    </section>
+
+    <!-- §4 · Veredito normalizado -->
+    <section class="amostra-secao" data-fonte="design system §4 (objeto veredito normalizado: chip; o original fica ao lado, em mono)">
+      <div class="amostra-cabecalho">
+        <h2>4 · Veredito normalizado (com o original ao lado)</h2>
+        <p>O canônico nunca substitui o original — os dois aparecem juntos.</p>
+      </div>
+      <table class="tabela">
+        <caption>Exemplos de normalização (valores de exemplo)</caption>
+        <thead>
+          <tr>
+            <th data-rotulo="veredito">Veredito</th>
+            <th data-rotulo="original">Original no arquivo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="veredito veredito-aprovado">aprovado</span></td><td class="mono">APROVADO</td></tr>
+          <tr><td><span class="veredito veredito-devolvido">devolvido</span></td><td class="mono">DEVOLVIDO</td></tr>
+          <tr><td><span class="veredito veredito-vermelho">vermelho provado</span></td><td class="mono">VERMELHO_PROVADO</td></tr>
+          <tr><td><span class="veredito veredito-em-curso">em curso</span></td><td class="mono">EM_CURSO</td></tr>
+          <tr><td><span class="veredito veredito-invalido">inválido</span></td><td class="mono">invalido</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- §4 · Coluna G0–G9 -->
+    <section class="amostra-secao" data-fonte="design system §4 (objeto coluna G0–G9: cabeçalho de categoria em caixa alta 10px + contador 12px 700; limite de idade em --texto-2)">
+      <div class="amostra-cabecalho">
+        <h2>5 · Coluna G0–G9 (gate)</h2>
+        <p>Cabeçalho de categoria com contador e limite de idade.</p>
+      </div>
+      <div class="grade">
+        <div class="cartao cartao-grande">
+          <span class="rotulo-categoria">Gate G0 <span class="ajuda">(exemplo)</span></span>
+          <p class="numero-grande">1</p>
+          <span class="fonte">limite de idade: 24 h (exemplo) · fonte: painel/chamados.py (GATES)</span>
+        </div>
+        <div class="cartao cartao-grande">
+          <span class="rotulo-categoria">Gate G3 <span class="ajuda">(exemplo)</span></span>
+          <p class="numero-grande">1</p>
+          <span class="fonte">limite de idade: 48 h (exemplo) · fonte: painel/chamados.py (GATES)</span>
+        </div>
+        <div class="cartao cartao-grande">
+          <span class="rotulo-categoria">Gate G7 <span class="ajuda">(exemplo)</span></span>
+          <p class="numero-grande">1</p>
+          <span class="fonte">limite de idade: 72 h (exemplo) · fonte: painel/chamados.py (GATES)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- §4 · Cartão de chamado em gate -->
+    <section class="amostra-secao" data-fonte="design system §4 (objeto cartão de chamado em gate: cartão de lista; tile com a sigla, categoria = frente, rodapé com idade e selo de evidência)">
+      <div class="amostra-cabecalho">
+        <h2>6 · Cartão de chamado em gate</h2>
+        <p>O estado do portão é derivado dos arquivos — a tela nunca promove.</p>
+      </div>
+      <div class="cartao">
+        <div class="cartao-lista">
+          <span class="tile">G3</span>
+          <div class="cartao-lista-corpo">
+            <span class="rotulo-categoria">frente: painel</span>
+            <p class="cartao-titulo">072 <span class="ajuda">— peça parada no portão (exemplo)</span></p>
+            <p class="cartao-subtitulo">
+              <span class="veredito veredito-devolvido">devolvido</span>
+              <span class="mono">DEVOLVIDO</span> · dono: Worker01 <span class="ref">[9a1b27]</span> · maestro
+            </p>
+          </div>
+        </div>
+        <div class="cartao-lista-rodape">
+          <span class="ajuda">idade: há 7 h (exemplo) · <span class="chip chip-erro">builder = crítico</span></span>
+          <span class="ajuda">selo de evidência: presente</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- §4 · Pedido de decisão -->
+    <section class="amostra-secao" data-fonte="design system §4 (objeto pedido de decisão: cartão de lista com CTA; prazo estourado = borda esquerda --erro)">
+      <div class="amostra-cabecalho">
+        <h2>7 · Pedido de decisão (fila)</h2>
+        <p>O CTA é laranja; a pergunta sem ruling nunca sai da fila.</p>
+      </div>
+      <div class="cartao" style="border-left:3px solid var(--erro)">
+        <span class="rotulo-categoria">pedido de decisão · D-014 <span class="ajuda">(exemplo)</span></span>
+        <p class="cartao-titulo">Devolver a peça do 073 ao dono ou aceitar com ressalva? (exemplo)</p>
+        <p class="cartao-subtitulo">pedido por Worker03 <span class="ref">[ad66d6]</span> · maestro · criado há 7 h (exemplo) · prazo estourado</p>
+        <p class="ajuda">o que destrava: <span class="chip chip-estado">chamado 073</span></p>
+        <div class="cartao-lista-rodape">
+          <span class="ajuda">recomendação de quem pediu: devolver ao dono com o achado anexado (exemplo)</span>
+          <a class="botao-primario" href="#/regencia/ruling" data-fonte="design system §4 (CTA do pedido de decisão) e ux-design 074 J1 passo 3 (o CTA Responder leva ao ruling)">Responder</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- §4 · Ruling -->
+    <section class="amostra-secao" data-fonte="design system §4 (objeto ruling: formulário em cartão + botão primário; opções em chips selecionáveis, autor humano com borda --borda)">
+      <div class="amostra-cabecalho">
+        <h2>8 · Ruling</h2>
+        <p>Opção escolhida, autor humano e destino: sem os dois últimos, a resposta é recusada.</p>
+      </div>
+      <div class="cartao">
+        <span class="rotulo-categoria">resposta ao pedido D-014 <span class="ajuda">(exemplo)</span></span>
+        <p class="ajuda">opções</p>
+        <p>
+          <button class="chip chip-ativo" data-acao="escolher-opcao" data-autoriza="humano" data-simulado="sim" data-efeito="a opção fica selecionada em --primaria">devolver ao dono (exemplo)</button>
+          <button class="chip" data-acao="escolher-opcao" data-autoriza="humano" data-simulado="sim" data-efeito="a opção fica selecionada em --primaria">aceitar com ressalva (exemplo)</button>
+        </p>
+        <p>
+          <label class="rotulo-categoria" for="autor-ruling" data-rotulo="autor humano">autor humano</label>
+          <input class="chip" id="autor-ruling" value="Ana Exemplo" readonly>
+          <span class="ajuda">— o autor tem de estar em <code>regencia.pessoas</code></span>
+        </p>
+        <p class="ajuda">destino: Worker03 <span class="ref">[ad66d6]</span> · maestro</p>
+        <p>
+          <button class="botao-primario" data-acao="registrar-ruling" data-autoriza="humano" data-simulado="sim" data-efeito="o pedido sai da fila e o contador da frase-chave atualiza">Registrar ruling</button>
+        </p>
+        <span class="fonte">fonte: ux-design 074 §5 (contrato dos botões de escrita: data-acao, data-autoriza, data-simulado, data-efeito)</span>
+      </div>
+    </section>
+
+    <!-- §4 · Portão do regente -->
+    <section class="amostra-secao" data-fonte="design system §4 (objeto portão do regente: item da fila com tile --primaria-clara; marcador no cartão do kanban em laranja)">
+      <div class="amostra-cabecalho">
+        <h2>9 · Portão do regente</h2>
+        <p>O que é do humano aparece como somente leitura, com o marcador — nunca como botão de aceite no cartão.</p>
+      </div>
+      <div class="linha-lista">
+        <span class="tile">G7</span>
+        <span>
+          <span class="titulo">073 · <span class="chip chip-erro" style="background:var(--primaria-clara);color:var(--primaria-escura)">portão do regente</span></span>
+          <span class="subtitulo">aguarda decisão do humano — item somente leitura da fila (exemplo)</span>
+        </span>
+        <span class="chevron">›</span>
+      </div>
+    </section>
+
+    <!-- §4 · Caixa de entrada / livro de mensagens -->
+    <section class="amostra-secao" data-fonte="design system §4 (objeto caixa de entrada / livro de mensagens: lista compacta com ponto de não lida; colisão de nome = chip --erro a 10 % 'endereçar por ref')">
+      <div class="amostra-cabecalho">
+        <h2>10 · Caixa de entrada / livro de mensagens</h2>
+        <p>Não lida em <code>--tinta</code> com ponto laranja; lida em <code>--texto-2</code>.</p>
+      </div>
+      <div class="cartao">
+        <div class="mensagem mensagem-nao-lida">
+          <span class="ponto" style="background:var(--primaria);margin-top:6px"></span>
+          <span>
+            <span class="assunto">Devolvi a peça do 073 com o achado anexado (exemplo)</span>
+            <span class="endereco">de Worker01 <span class="ref">[9a1b27]</span> · maestro para Worker03 <span class="ref">[ad66d6]</span> · maestro</span>
+          </span>
+        </div>
+        <div class="mensagem mensagem-lida">
+          <span style="width:8px"></span>
+          <span>
+            <span class="assunto">O teto do projeto foi ajustado (exemplo)</span>
+            <span class="endereco">de MAESTRO <span class="ref">[7c8d05]</span> · maestro para Gerente <span class="ref">[31ee4d]</span> · maestro</span>
+          </span>
+        </div>
+        <p class="ajuda">Linha colidida — <span class="chip chip-erro">endereçar por ref</span> o nome pretendido não resolve sozinho.</p>
+        <span class="fonte">fonte: mapa de contextos §7.1 (endereço ambíguo é recusado, nunca resolvido)</span>
+      </div>
+    </section>
+
+    <!-- §4 · Filtro por frente -->
+    <section class="amostra-secao" data-fonte="design system §4 (objeto filtro por frente/contexto: chip de filtro com contador; ativo laranja, inativo com borda)">
+      <div class="amostra-cabecalho">
+        <h2>11 · Filtro por frente / contexto</h2>
+        <p>Chip de filtro é botão de escrita — filtra é mudar a tela, não navegar (ux-design §5).</p>
+      </div>
+      <p>
+        <button class="chip chip-ativo" data-acao="filtrar-frente" data-autoriza="humano" data-simulado="sim" data-efeito="só os cartões da frente escolhida ficam visíveis">painel <span class="contador">2</span></button>
+        <button class="chip" data-acao="filtrar-frente" data-autoriza="humano" data-simulado="sim" data-efeito="só os cartões da frente escolhida ficam visíveis">administrativa <span class="contador">1</span></button>
+        <button class="chip" data-acao="filtrar-frente" data-autoriza="humano" data-simulado="sim" data-efeito="todos os cartões ficam visíveis">todas as frentes <span class="contador">3</span></button>
+      </p>
+    </section>
+
+    <!-- §4 · Consumo por agente / limite de orçamento -->
+    <section class="amostra-secao" data-fonte="design system §4 (objeto consumo por agente / limite de orçamento: número grande 22px 600 + barra; --grafico-2 até 80 %, --primaria até 100 %, --erro acima; etiqueta 'declarado'/'medido' em caixa alta 10px)">
+      <div class="amostra-cabecalho">
+        <h2>12 · Consumo por agente / limite de orçamento</h2>
+        <p>O número é medido; o teto é declarado — a etiqueta diz qual é qual.</p>
+      </div>
+      <div class="grade">
+        <div class="cartao cartao-grande">
+          <span class="rotulo-categoria">declarado · teto mensal <span class="ajuda">(exemplo)</span></span>
+          <p class="numero-grande">80.000.000</p>
+          <span class="fonte">fonte: painel/projetos/exemplo.json (custo_pastas) — dado de exemplo</span>
+        </div>
+        <div class="cartao cartao-grande">
+          <span class="rotulo-categoria">medido · consumo <span class="ajuda">(exemplo)</span></span>
+          <p class="numero-grande">61.400.000</p>
+          <div class="barra" role="img" aria-label="77 % do teto"><span style="width:77%"></span></div>
+          <span class="fonte">77 % do teto · fonte: painel/custo.py (medição) — dado de exemplo</span>
+        </div>
+        <div class="cartao cartao-grande">
+          <span class="rotulo-categoria">medido · teto novo (exemplo)</span>
+          <p class="numero-grande">60.000.000</p>
+          <div class="barra barra-estourada" role="img" aria-label="102 % do teto"><span style="width:100%"></span></div>
+          <span class="fonte">102 % do teto novo — a barra passa a --erro</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- §4 · Período -->
+    <section class="amostra-secao" data-fonte="design system §4 (objeto período: segmento, igual à referência) e §5 do 073 (segmento ativo = fundo --tinta)">
+      <div class="amostra-cabecalho">
+        <h2>13 · Período (hoje · semana · mês)</h2>
+        <p>O segmento é botão de escrita pela definição mecânica (ux-design §5).</p>
+      </div>
+      <div class="segmento" role="group" aria-label="período">
+        <button aria-pressed="true" data-acao="escolher-periodo" data-autoriza="humano" data-simulado="sim" data-efeito="o consumo exibido passa a ser o do período escolhido">hoje</button>
+        <button aria-pressed="false" data-acao="escolher-periodo" data-autoriza="humano" data-simulado="sim" data-efeito="o consumo exibido passa a ser o do período escolhido">semana</button>
+        <button aria-pressed="false" data-acao="escolher-periodo" data-autoriza="humano" data-simulado="sim" data-efeito="o consumo exibido passa a ser o do período escolhido">mês</button>
+      </div>
+    </section>
+
+    <!-- §4 · "—" com motivo -->
+    <section class="amostra-secao" data-fonte="design system §4 (objeto '—' com motivo, regra F8 do 066: célula vazia é informação declarada, nunca valor padrão)">
+      <div class="amostra-cabecalho">
+        <h2>14 · "—" com motivo</h2>
+        <p>Vazio é informação.</p>
+      </div>
+      <p class="vazio">— nenhuma tarefa aberta: nenhum <code>start</code> sem <code>stop</code> para Worker04 <span class="ref">[4d000a]</span> · maestro (exemplo)</p>
+    </section>
+
+    <!-- §4 · data-fonte -->
+    <section class="amostra-secao" data-fonte="design system §4 (objeto data-fonte: rodapé do cartão em --texto-2 12px mono; comando ou caminho que produziu o número)">
+      <div class="amostra-cabecalho">
+        <h2>15 · <code>data-fonte</code></h2>
+        <p>Todo número da tela diz de onde veio — o comando ou o caminho, em mono.</p>
+      </div>
+      <p class="fonte">data-fonte: ls .claude/agents — a leitura dos perfis de agente (exemplo)</p>
+      <p class="fonte">data-fonte: painel/projetos/exemplo.json — repos[0].nome = maestro (exemplo)</p>
+    </section>
+
+    <!-- §4 · Navegação (a barra do topo desta página é a demonstração) -->
+    <section class="amostra-secao" data-fonte="design system §4 (objeto navegação: barra inferior de 3 a 6 itens ou lateral em desktop; ativo em --sucesso)">
+      <div class="amostra-cabecalho">
+        <h2>16 · Navegação</h2>
+        <p>Lateral em desktop, barra inferior abaixo da quebra provisória de <strong>768 px</strong> (a constante comentada em <code>tokens.css</code>); o item ativo é <code>aria-current="page"</code> em <code>--sucesso</code>. A barra do topo desta página é o próprio componente: estreite a janela para vê-la virar barra inferior.</p>
+      </div>
+      <p class="ajuda">Seis itens como vistas sobre os cinco contextos do mapa: Regência · Chamados · Fila · Sessões · Administração · Mensageria.</p>
+    </section>
+
+    <!-- Primitivas de interação (ux-design §2.5) -->
+    <section class="amostra-secao" data-fonte="ux-design 074 §2.5 (anatomias da trilha de contexto e do aviso de simulação) e §5 (confirmação irreversível com data-perde/data-reverte)">
+      <div class="amostra-cabecalho">
+        <h2>Primitivas de interação</h2>
+        <p>Trilha de contexto, aviso de simulação, toast e confirmação irreversível — o que os fragmentos vão reusar.</p>
+      </div>
+
+      <h3 class="cartao-titulo">Trilha de contexto</h3>
+      <nav class="trilha" aria-label="Telas da Administração" data-rotulo="trilha de contexto"
+           data-fonte="ux-design 074 §2.5 (trilha de contexto: links para os fragmentos irmãos; é navegação, não botão de escrita)">
+        <a href="#/administracao/catalogo" aria-current="page" data-fonte="ENTRA 9 · catálogo de skills/ferramentas/modelos — specs/073-area-administrativa/confronto/confronto-decisao.md">catálogo</a>
+        <a href="#/administracao/politicas" data-fonte="ENTRA 5 · política declarativa (allow/deny/ask) — specs/073-area-administrativa/confronto/confronto-decisao.md">políticas</a>
+        <a href="#/administracao/orcamento" data-fonte="ENTRA 4 · limite de orçamento — specs/073-area-administrativa/confronto/confronto-decisao.md">orçamento</a>
+      </nav>
+
+      <h3 class="cartao-titulo" style="margin-top:var(--espaco-5)">Aviso de simulação</h3>
+      <p><button class="botao" data-acao="drenar-outbox" data-autoriza="sessão dona" data-simulado="sim" data-efeito="as mensagens não lidas da sessão ficam lidas e o contador zera">Drenar outbox</button></p>
+      <p class="aviso-simulacao" data-aviso="simulado" role="status">simulado — recarregar restaura as fixtures (exemplo)</p>
+
+      <h3 class="cartao-titulo" style="margin-top:var(--espaco-5)">Toast</h3>
+      <p class="toast" role="status">simulado — recarregar restaura as fixtures (exemplo)</p>
+
+      <h3 class="cartao-titulo" style="margin-top:var(--espaco-5)">Confirmação irreversível</h3>
+      <div class="confirmacao" id="confirmacao-derrubar-exemplo" role="alertdialog" aria-labelledby="confirma-titulo-exemplo">
+        <h4 class="cartao-titulo" id="confirma-titulo-exemplo">Derrubar Worker02 <span class="ref">[31f7bf]</span> · maestro? (exemplo)</h4>
+        <dl>
+          <dt data-rotulo="o que se perde">data-perde — o que se perde</dt>
+          <dd data-perde="o contexto vivo da sessão e o ref atual; mensagens endereçadas ao ref antigo não chegam">o contexto vivo da sessão e o ref atual; mensagens endereçadas ao ref antigo não chegam.</dd>
+          <dt data-rotulo="como reverter">data-reverte — como reverter</dt>
+          <dd data-reverte="subir a sessão de novo pelo lançador; a fila de decisões e o livro de mensagens são append-only e permanecem">subir a sessão de novo pelo lançador; a fila de decisões e o livro de mensagens são append-only e permanecem.</dd>
+        </dl>
+        <p>
+          <button class="botao-primario" data-acao="derrubar" data-alvo="Worker02 [31f7bf] · maestro" data-irreversivel="sim" data-confirma="confirmacao-derrubar-exemplo" data-autoriza="regente por delegação" data-simulado="sim" data-efeito="a linha da sessão passa a caída (sem sinal)">Confirmar</button>
+          <button class="botao" data-acao="cancelar-derrubar" data-autoriza="humano" data-simulado="sim" data-efeito="a confirmação fecha e nada muda">Cancelar</button>
+        </p>
+      </div>
+      <p class="ajuda">A linha <strong>Gerente <span class="ref">[31ee4d]</span> · maestro</strong> não carrega o botão Derrubar: o Gerente nunca é derrubável pela tela (B2-h) — ela mostra o aviso "portão do regente".</p>
+    </section>
+
+    <footer class="amostra-cabecalho" style="border-bottom:0;border-top:1px solid var(--borda);padding-top:var(--espaco-4)">
+      <p class="ajuda" data-referencia="true">
+        Amostra do design system v1 — ciclo 074, T01 (base da FR7). Tokens medidos em
+        <code>specs/073-area-administrativa/design-system.md</code> §1; objetos da §4; contrato dos
+        botões de escrita da <code>specs/074-prototipo-navegavel/ux-design.md</code> §5. Nenhum
+        dado pessoal real: as sessões são o roster de exemplo do 073 e o autor é "Ana Exemplo".
+      </p>
+    </footer>
+
+  </div>
+  </div>
+</div>
+
+</body>
+</html>

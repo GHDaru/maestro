@@ -1,0 +1,191 @@
+<link rel="icon" href="data:,">
+<div class="conteudo-interior" data-contexto="workflow-de-sessoes" data-tela="tarefa-aberta"
+     data-acoes="acoes/workflow-de-sessoes.js"
+     data-fonte="specs/074-prototipo-navegavel/ux-design.md §2.4 (papel semântico: tarefa aberta) · specs/073-area-administrativa/prototipo/workflow-03-tarefa-aberta.html (wireframe de origem — reproduzido como arquivo novo, sem movê-lo nem editá-lo: FR8)">
+
+  <p class="migalha" data-referencia="true">Maestro · #/workflow-de-sessoes/tarefa-aberta · ciclo 074</p>
+
+  <h1 class="titulo-pagina" data-rotulo="tarefa aberta"
+      data-fonte="método: docs/governance/glossary.md (Tarefa aberta, ciclo 073) · docs/governance/task-ledger.md (o livro de ponto)">tarefa aberta</h1>
+
+  <nav class="trilha" aria-label="trilha de contexto — telas irmãs do Workflow de sessões"
+       data-rotulo="trilha de contexto"
+       data-fonte="specs/074-prototipo-navegavel/ux-design.md §2.5 (trilha de contexto)">
+    <a href="#/workflow-de-sessoes/sessao-de-agente"
+       data-fonte="ux-design 074 §2.5 (trilha de contexto)">sessão de agente</a>
+    <a href="#/workflow-de-sessoes/estado-do-agente-vivo"
+       data-fonte="ux-design 074 §2.5 (trilha de contexto)">estado do agente vivo</a>
+    <a href="#/workflow-de-sessoes/tarefa-aberta" aria-current="page"
+       data-fonte="ux-design 074 §1 (item ativo com aria-current)">tarefa aberta</a>
+    <a href="#/workflow-de-sessoes/consumo-por-agente"
+       data-fonte="ux-design 074 §2.5 (trilha de contexto)">consumo por agente</a>
+  </nav>
+
+  <p class="ajuda"
+     data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §6.3 (contexto Workflow de sessões) · docs/governance/task-ledger.md">
+    <strong>Contexto delimitado:</strong> Workflow de sessões ·
+    <strong>ENTRA:</strong> tarefa aberta — quem recebe, o quê, de quem e desde quando ·
+    <strong>identidade de sessão:</strong> sempre <strong>nome · ref · projeto</strong> ·
+    o <strong>destinatário</strong> é uma <strong>sessão de agente</strong>, não um agente.
+  </p>
+
+  <h2>Resumo</h2>
+  <div class="grade"
+       data-fonte="método: prototipo/fixtures/tarefa.json (retrato de exemplo) · painel/server.py (read-model de tarefas abertas)">
+    <div class="cartao">
+      <span class="rotulo-categoria" data-rotulo="tarefa aberta">em curso</span>
+      <p class="numero-grande" data-exemplo="true" data-fonte="exemplo — nenhum dado real">3 (exemplo)</p>
+    </div>
+    <div class="cartao">
+      <span class="rotulo-categoria" data-rotulo="tarefa aberta">travada</span>
+      <p class="numero-grande" data-exemplo="true" data-fonte="exemplo — nenhum dado real">0 (exemplo)</p>
+      <p class="fonte" data-referencia="true">travada é o estado derivado da ausência de sinal (a regra está abaixo).</p>
+    </div>
+    <div class="cartao">
+      <span class="rotulo-categoria" data-rotulo="roteamento por nome/ref">entregue, sem DONE</span>
+      <p class="numero-grande" data-exemplo="true" data-fonte="exemplo — nenhum dado real">0 (exemplo)</p>
+      <p class="fonte" data-referencia="true">entregue sem DONE é a tarefa que o destinatário fechou sem declarar — a tela mostra, não julga.</p>
+    </div>
+  </div>
+
+  <h2>tarefas abertas</h2>
+  <table class="tabela"
+         data-fonte="método: prototipo/fixtures/tarefa.json (retrato de exemplo) · docs/governance/task-ledger.md (o livro de ponto: TASK/DONE) · painel/server.py">
+    <thead>
+      <tr>
+        <th data-rotulo="sessão de agente" data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §7 (o destinatário é a sessão, não o agente)">destinatário</th>
+        <th data-rotulo="tarefa aberta" data-fonte="docs/governance/task-ledger.md (o id da tarefa carrega o ciclo e o número da fatia)">tarefa aberta</th>
+        <th data-rotulo="roteamento por nome/ref" data-fonte="docs/governance/task-ledger.md (quem despachou)">despachada por</th>
+        <th data-rotulo="tarefa aberta" data-fonte="docs/governance/task-ledger.md — livro de ponto parado no ciclo 064: o carimbo de início não é mais gravado, então o valor vivo é «— (ledger parado no 064)»; a idade não é digitada">desde</th>
+        <th data-rotulo="tarefa aberta" data-fonte="docs/governance/task-ledger.md — o campo de tentativas parou no ciclo 064: o valor vivo é «— (ledger parado no 064)»">tentativas</th>
+        <th data-rotulo="consumo por agente" data-fonte="docs/governance/task-ledger.md — a coluna de tokens parou no ciclo 064: o valor vivo é «— (ledger parado no 064)»; do ciclo 065 em diante é projetado do transcript, como piso">tokens (piso)</th>
+        <th data-rotulo="tarefa aberta" data-fonte="método: painel/server.py (o estado da tarefa é derivado, não digitado)">estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">
+        <td>Worker01 [9a1b27] · maestro (exemplo)</td>
+        <td>074-T03 · attempt 1 (exemplo)</td>
+        <td>Gerente [31ee4d] · maestro (exemplo)</td>
+        <td>— <span class="fonte" data-referencia="true">ledger parado no 064 — ver a declaração abaixo</span></td>
+        <td>— <span class="fonte" data-referencia="true">ledger parado no 064</span></td>
+        <td>— <span class="fonte" data-referencia="true">ledger parado no 064; do 065 em diante, projetado do transcript (piso)</span></td>
+        <td>em curso (exemplo)</td>
+      </tr>
+      <tr data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">
+        <td>Worker02 [31f7bf] · maestro (exemplo)</td>
+        <td>074-T02 · attempt 1 (exemplo)</td>
+        <td>Gerente [31ee4d] · maestro (exemplo)</td>
+        <td>— <span class="fonte" data-referencia="true">ledger parado no 064</span></td>
+        <td>— <span class="fonte" data-referencia="true">ledger parado no 064</span></td>
+        <td>— <span class="fonte" data-referencia="true">ledger parado no 064; do 065 em diante, projetado do transcript (piso)</span></td>
+        <td>em curso (exemplo)</td>
+      </tr>
+      <tr data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">
+        <td>Worker05 [78d88f] · maestro (exemplo)</td>
+        <td>074-T06 · attempt 1 (exemplo)</td>
+        <td>Gerente [31ee4d] · maestro (exemplo)</td>
+        <td>— <span class="fonte" data-referencia="true">ledger parado no 064</span></td>
+        <td>— <span class="fonte" data-referencia="true">ledger parado no 064</span></td>
+        <td>— <span class="fonte" data-referencia="true">ledger parado no 064; do 065 em diante, projetado do transcript (piso)</span></td>
+        <td>em curso (exemplo)</td>
+      </tr>
+      <tr data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">
+        <td>Worker03 [ad66d6] · maestro (exemplo)</td>
+        <td>— <span class="fonte" data-referencia="true">motivo: aguarda ruling do pedido D-014 (exemplo)</span></td>
+        <td>Gerente [31ee4d] · maestro (exemplo)</td>
+        <td>— <span class="fonte" data-referencia="true">ledger parado no 064</span></td>
+        <td>— <span class="fonte" data-referencia="true">ledger parado no 064</span></td>
+        <td>— <span class="fonte" data-referencia="true">ledger parado no 064</span></td>
+        <td>travada (exemplo)</td>
+      </tr>
+      <tr data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">
+        <td>Worker04 [4d000a] · maestro (exemplo)</td>
+        <td>— <span class="fonte" data-referencia="true">motivo: nenhuma tarefa com <code>start</code> sem <code>stop</code> (exemplo)</span></td>
+        <td>Gerente [31ee4d] · maestro (exemplo)</td>
+        <td>— <span class="fonte" data-referencia="true">ledger parado no 064</span></td>
+        <td>— <span class="fonte" data-referencia="true">ledger parado no 064</span></td>
+        <td>— <span class="fonte" data-referencia="true">ledger parado no 064</span></td>
+        <td>— <span class="fonte" data-referencia="true">motivo: sem tarefa aberta</span></td>
+      </tr>
+      <tr data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">
+        <td>Worker06 [c85948] · maestro (exemplo)</td>
+        <td>— <span class="fonte" data-referencia="true">motivo: sem fatia de implementação neste retrato (exemplo)</span></td>
+        <td>Gerente [31ee4d] · maestro (exemplo)</td>
+        <td>— <span class="fonte" data-referencia="true">ledger parado no 064</span></td>
+        <td>— <span class="fonte" data-referencia="true">ledger parado no 064</span></td>
+        <td>— <span class="fonte" data-referencia="true">ledger parado no 064</span></td>
+        <td>— <span class="fonte" data-referencia="true">motivo: sem tarefa aberta</span></td>
+      </tr>
+      <tr data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">
+        <td>Gerente [31ee4d] · maestro (exemplo)</td>
+        <td>— <span class="fonte" data-referencia="true">motivo: integra e despacha, não executa fatia (exemplo)</span></td>
+        <td>MAESTRO [7c8d05] · maestro (exemplo)</td>
+        <td>— <span class="fonte" data-referencia="true">ledger parado no 064</span></td>
+        <td>— <span class="fonte" data-referencia="true">ledger parado no 064</span></td>
+        <td>— <span class="fonte" data-referencia="true">ledger parado no 064</span></td>
+        <td>— <span class="fonte" data-referencia="true">motivo: sem tarefa aberta</span></td>
+      </tr>
+      <tr data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">
+        <td>MAESTRO [7c8d05] · maestro (exemplo)</td>
+        <td>— <span class="fonte" data-referencia="true">motivo: o regente decide e julga, não executa fatia (exemplo)</span></td>
+        <td>— <span class="fonte" data-referencia="true">motivo: a regência não responde a despacho de fatia (exemplo)</span></td>
+        <td>— <span class="fonte" data-referencia="true">ledger parado no 064</span></td>
+        <td>— <span class="fonte" data-referencia="true">ledger parado no 064</span></td>
+        <td>— <span class="fonte" data-referencia="true">ledger parado no 064</span></td>
+        <td>— <span class="fonte" data-referencia="true">motivo: sem tarefa aberta</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>estado da tarefa — a regra de «travada»</h2>
+  <div class="cartao"
+       data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (decisão 4: o estado da tarefa é derivado) · docs/governance/task-ledger.md">
+    <p>O estado da tarefa é <strong>derivado</strong>, nunca digitado: <strong>em curso</strong> é a tarefa despachada e ainda viva; <strong>travada</strong> é a que não deu sinal de progresso na janela; <strong>entregue, sem DONE</strong> é a fechada sem declaração.</p>
+    <p><strong>Travada não é «demorada».</strong> O que trava não é o relógio — é a <strong>ausência de sinal</strong>: sem <code>start</code> novo, sem atividade e sem mensagem, a tarefa aparece travada e a sessão aparece bloqueada ou caída. Uma tarefa longa e ativa <em>não</em> é travada.</p>
+    <p class="fonte" data-referencia="true">a janela de sinal é a mesma do estado do agente vivo — as duas telas leem o mesmo read-model (painel/server.py).</p>
+  </div>
+
+  <h2>ação — cancelar e reatribuir</h2>
+  <div class="cartao"
+       data-fonte="ux-design 074 §5 (contrato dos botões de escrita) · specs/073-area-administrativa/prototipo/workflow-03-tarefa-aberta.html (as ações da tela)">
+    <p>
+      <button class="botao" data-acao="cancelar-tarefa" data-alvo="074-T03 · Worker01 [9a1b27] · maestro"
+              data-autoriza="regente por delegação" data-simulado="sim"
+              data-efeito="a tarefa sai da lista de abertas e o destinatário volta a «sem tarefa»"
+              data-irreversivel="sim" data-confirma="conf-cancelar-tarefa"
+              data-fonte="ux-design 074 §5 (confirmação irreversível com data-perde e data-reverte)">Cancelar…</button>
+      <button class="botao" data-acao="reatribuir" data-alvo="074-T03 · Worker01 [9a1b27] · maestro"
+              data-autoriza="regente por delegação" data-simulado="sim"
+              data-efeito="a tarefa passa a outro destinatário, com uma tentativa nova"
+              data-fonte="ux-design 074 §5 (contrato dos botões de escrita)">Reatribuir…</button>
+      <button class="botao" data-acao="abrir-transcript" data-alvo="Worker01 [9a1b27] · maestro"
+              data-autoriza="sessão dona" data-simulado="sim"
+              data-efeito="abre o transcript do destinatário (somente leitura — o transcript não se edita)"
+              data-fonte="plataforma: claude --resume (specs/073-area-administrativa/pesquisa/claude-code.md) — o transcript é somente leitura">Abrir transcript</button>
+    </p>
+    <p class="ajuda">Cancelar é <strong>risco alto</strong>: a tarefa pode ter trabalho feito e não commitado. É a única ação desta tela que pede confirmação; reatribuir e abrir transcript não têm perda declarada.</p>
+    <div class="confirmacao" id="conf-cancelar-tarefa" hidden
+         data-fonte="ux-design 074 §5 (confirmação irreversível com data-perde e data-reverte)">
+      <p><strong>Cancelar</strong> 074-T03 · Worker01 [9a1b27] · maestro (exemplo) — a tentativa em curso é abandonada.</p>
+      <p data-perde="a tentativa em curso; o trabalho não commitado no worktree do destinatário">o que se perde: a tentativa em curso — o trabalho não commitado no worktree fica por commitar.</p>
+      <p data-reverte="a tarefa se despacha de novo para o mesmo destinatário, com uma tentativa nova">como reverter: despachar a tarefa de novo para o mesmo destinatário.</p>
+      <p><button class="botao-primario" data-acao="cancelar-tarefa" data-alvo="074-T03 · Worker01 [9a1b27] · maestro"
+                 data-autoriza="regente por delegação" data-simulado="sim"
+                 data-efeito="a tarefa sai da lista de abertas e o destinatário volta a «sem tarefa»"
+                 data-irreversivel="sim" data-confirma="conf-cancelar-tarefa"
+                 data-fonte="ux-design 074 §5 (o clique seguinte executa o efeito e fecha)">Confirmar cancelar</button></p>
+    </div>
+  </div>
+
+  <h2>declarado — o livro de ponto está parado</h2>
+  <div class="cartao"
+       data-fonte="specs/073-area-administrativa/rodada-4/correcao-3.md (a ficha reconciliada: o livro de ponto parou no ciclo 064 — o valor vivo é «— (ledger parado no 064)» até a projeção do 065) · docs/governance/task-ledger.md">
+    <p>O <strong>livro de ponto</strong> (<code>tarefas.jsonl</code>) parou no ciclo 064: o carimbo de início, as tentativas e os tokens deixaram de ser gravados. Por isso o valor <strong>vivo</strong> dessas colunas é <strong>«— (ledger parado no 064)»</strong> — a tela <em>não digita</em> o número, ela declara a lacuna.</p>
+    <p>Do ciclo 065 em diante o token é <strong>projetado do transcript</strong> da sessão — e o valor projetado é sempre <strong>piso</strong>, nunca total (a soma só enxerga o que está no transcript). <span class="fonte" data-referencia="true">método: docs/governance/task-ledger.md e o «e os tokens» do ciclo; a mesma ressalva aparece na tela consumo por agente.</span></p>
+    <p class="fonte" data-referencia="true">o retrato de exemplo traz <code>inicio_em</code> nas tarefas em curso, mas ele <em>não</em> substitui o livro parado: enquanto a projeção não existe, desde/tentativas/tokens ficam em «—».</p>
+  </div>
+
+  <p class="fonte" data-referencia="true">Fitness function de UX (ciclo 066): vale F8 (todo «—» com motivo — as células desta tela declaram o motivo) e F9 (controle só-ícone com aria-label). Siglas (Princípio VIII): FR (functional requirement, requisito funcional) · UX (user experience) · DONE (a declaração de entrega do livro de ponto) · ENTRA (o que o contexto consome, do mapa de contextos).</p>
+
+</div>

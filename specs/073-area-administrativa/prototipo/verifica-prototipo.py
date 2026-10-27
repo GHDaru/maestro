@@ -7,11 +7,70 @@ FAILS when it finds:
      came from: platform + URL of the ficha, or a Maestro principle/ADR/ux-design);
   2. a label outside the glossary (allowlist extracted from
      docs/governance/glossary.md plus the 12 terms ratified in round 2);
-  3. a number without the "exemplo" mark (no invented values) — checked in
-     every text node, not only labels;
+  3. a number without the "exemplo" mark (no invented values);
   4. (ratification condition) a collision-prone term used unqualified: "fila"
      without its qualifier (decisões/outbox) and "portão" without its owner
      (chamado/regente) — the five name collisions the context map exposed.
+     The round-3 review proved NO real screen exercised this rule (it ran only
+     from check_label, so it saw labels alone, while the naked terms lived in
+     <p>, <td> and attribute values). It now runs on EVERY VISIBLE TEXT NODE
+     and on EVERY ATTRIBUTE VALUE. Two exemptions, both DECLARED, never
+     inferred:
+       (a) a text node or attribute inside a COLLISION-NAMING TABLE — a <table>
+           whose header declares data-rotulo="colisão de nomes" — names the
+           colliding terms on purpose (map §7, reproduced in mensageria-03) and
+           is skipped;
+       (b) an example-marked value (a data-exemplo ancestor, or "exemplo" in
+           the text), exactly as in rule 3.
+     Declared limit: the fence of (a) is the whole table — prose inside such a
+     table is exempt from rule 4, and the fresh review is what covers it.
+     Rule 4 does NOT exempt citation contexts (data-fonte/data-referencia): the
+     review found the naked terms precisely in citation prose, so exempting it
+     would leave the rule with nothing to accuse on the real screens.
+  5. (correction 1 of round 4) a SESSION mentioned without its ref — the
+     regent's decision 2: a session is addressed as `nome · ref · projeto`, so
+     every mention of a catalogue name (Gerente, WorkerNN, MAESTRO, Office,
+     Assistente) must be followed by a ref `[xxxxxx]`. Like rule 4, it runs on
+     every visible text node and every attribute value. ONE exemption, the one
+     the decision authorises: a COLLISION-NAMING TABLE (a <table> whose header
+     declares data-rotulo="colisão de nomes") — there the sessions are named on
+     purpose to expose the collision ("Office" in two refs). An example mark
+     does NOT exempt rule 5: the identity format is a presentation convention
+     and must hold in example rows too — that is what the screens must learn.
+     Declared limit: the fence is the whole table, as in rule 4.
+  6. (correction 2 of round 4) the ROSTER — one ref, one name, per screen. The
+     regent's decision 1: within a screen a ref `[xxxxxx]` is glued to a SINGLE
+     name, and every name of the roster carries the roster's ref. The example
+     roster is the real one of 2026-10-26, all `· 410_MAESTRO` (listed in ROSTER
+     below) — fixture data, it does NOT track the live session refs; another
+     project's sessions use their own refs and never a roster ref. Rule 6 closes
+     what rule 5 left open: rule 5 only asks that SOME ref follow the name, so a
+     ref swapped between two sessions passed it (the round-4 judges found the
+     swap). Like rules 4 and 5 it runs on every visible text node and every
+     attribute value, and it has the SAME single exemption — a COLLISION-NAMING
+     TABLE, where the collisions are named on purpose. Declared limit: the full
+     ADDRESS ambiguity (a name reaching several refs or several projects) is NOT
+     verified by script — declared in the README and in the map § 8.
+
+Markup contract (agreed with the screen authors — v2, after the first run over
+the real screens flagged citations as if they were metrics):
+  - `data-rotulo="<term>"`  marks a DOMAIN LABEL: the VALUE must be a glossary
+    term (validated here); the visible text is human phrasing and is not
+    re-checked. Any element carrying data-rotulo is treated as a label.
+  - `data-exemplo="true"`   marks an example VALUE (rule 3 satisfied).
+  - `data-rotulo="colisão de nomes"` on a HEADER CELL (`th`/`dt`) marks the
+    enclosing table as a COLLISION-NAMING TABLE: rule 4 does not run inside it.
+  - `data-fonte` / `data-referencia` mark a CITATION context: digits inside are
+    references (§7, ADR 0027, ciclo 073, file:line…), not metric values, so
+    rule 3 exempts them. Digit-bearing acronyms (A2A, F1, T16…) are exempt
+    everywhere. A session REF is `[xxxxxx]` (six hex digits, e.g. `[31ee4d]`):
+    its digits are a reference too, so rule 3 strips them like an acronym.
+  - a session is addressed as `nome · ref · projeto`, the ref right after the
+    name (`Gerente [31ee4d] · 410_MAESTRO`). Rule 5 enforces it.
+  - th/label/legend/h1/dt WITHOUT data-rotulo are label-checked by their text
+    (a glossary term inside, or stopwords only). h2+ are section prose; button
+    text is action phrasing — both are covered by rule 1/4 and the fresh
+    review, not by the glossary check.
 
 Usage: python verifica-prototipo.py   (from anywhere; paths are repo-relative)
 Exit 0 = every screen passes; exit 1 = findings, printed one per line.
@@ -27,10 +86,11 @@ PROTO = ROOT / "specs" / "073-area-administrativa" / "prototipo"
 GLOSSARY = ROOT / "docs" / "governance" / "glossary.md"
 
 INTERACTIVE = {"button", "a", "input", "select", "textarea"}
-LABEL_TAGS = {"button", "th", "label", "legend", "h1", "h2", "h3", "h4", "h5", "h6", "dt"}
+# h1 names the screen (domain); h2+ are section prose — not label-checked
+LABEL_TAGS = {"th", "label", "legend", "h1", "dt"}
 VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link",
         "meta", "param", "source", "track", "wbr"}
-RAW_TEXT = {"style", "script"}
+RAW_TEXT = {"style", "script", "head", "title"}
 
 # The 12 terms ratified by the regent (round 2) — also extracted from the
 # glossary once Worker01 lands them; kept here so the check is exact.
@@ -50,6 +110,9 @@ RATIFIED = [
 ]
 
 # Generic UI words a label may consist of without citing any glossary term.
+# The "moldura" (interface frame) vocabulary declared by the screen authors
+# (Worker04's interpretation 2) lives here; a NEW domain word is NOT added here
+# — it gets a data-rotulo or it flags.
 STOPWORDS = {
     "novo", "nova", "abrir", "fechar", "buscar", "salvar", "cancelar", "voltar",
     "exemplo", "exemplos", "sim", "não", "nao", "ok", "detalhes", "mais",
@@ -59,10 +122,34 @@ STOPWORDS = {
     "na", "aos", "às", "the", "of", "and", "new", "open", "close", "save",
     "cancel", "back", "details", "more", "name", "date", "state", "action",
     "filter", "sort", "example", "yes", "no", "none",
+    # interface frame ("moldura") words — declared, not domain
+    "tipo", "consultar", "filtrar", "regra", "objeto", "efeito", "onde", "vive",
+    "invariante", "verifica", "quem", "decide", "hoje", "aplicar", "moldura",
 }
 
 NUMBER = re.compile(r"\d")
 WORD = re.compile(r"[\wà-ú/=-]+")
+# digit-bearing acronyms are references, not metric values (A2A, F1, T16…)
+ACRONYM = re.compile(r"\b[A-Za-z]+\d+[A-Za-z]*\b")
+# rule 5: the catalogue names of sessions, and the ref that must follow the name
+SESSION = re.compile(r"\b(?:Gerente|Worker\d+|MAESTRO|Office|Assistente)\b")
+SESSION_REF = re.compile(r"\s*·?\s*\[[0-9a-fA-F]{6}\]")
+# a ref's digits are a reference, not a metric: rule 3 strips them
+SESSION_REF_TOKEN = re.compile(r"\[[0-9a-fA-F]{6}\]")
+# rule 6: the example roster of decision 1 (2026-10-26) — name -> ref, all
+# `· 410_MAESTRO`. FIXTURE data for the example screens; it does NOT track the
+# live session refs (which change on restart). A ref is glued to a single name
+# and every roster name carries the roster's ref.
+ROSTER = {
+    "Gerente": "31ee4d",
+    "Worker01": "9a1b27",
+    "Worker02": "31f7bf",
+    "Worker03": "ad66d6",
+    "Worker04": "4d000a",
+    "Worker05": "78d88f",
+    "Worker06": "c85948",
+    "MAESTRO": "7c8d05",
+}
 
 
 def glossary_terms():
@@ -87,7 +174,8 @@ class ScreenParser(HTMLParser):
     """Collects the findings of one screen.
 
     Keeps a stack of open elements so a number is accepted when ANY ancestor
-    carries the example mark (data-exemplo, or "exemplo" inside data-fonte).
+    carries the example mark (data-exemplo) or a citation context
+    (data-fonte / data-referencia).
     """
 
     def __init__(self, path, terms):
@@ -96,27 +184,77 @@ class ScreenParser(HTMLParser):
         self.terms = terms
         self.findings = []
         self.stack = []  # [tag, attrs-dict, label-text-so-far or None]
+        self.tables = []  # one bool per open <table>: collision-naming?
+        self.ref_names = {}  # rule 6: ref -> set of names glued to it
 
     def error(self, message):
         pass
 
     # -- tree bookkeeping --------------------------------------------------
 
+    def ancestor_attr(self, name):
+        return any(name in a for _, a, _ in self.stack)
+
     def inside_example(self):
-        return any("data-exemplo" in a or "exemplo" in a.get("data-fonte", "").lower()
-                   for _, a, _ in self.stack)
+        return self.ancestor_attr("data-exemplo")
+
+    def inside_citation(self):
+        return self.ancestor_attr("data-fonte") or self.ancestor_attr("data-referencia")
 
     def inside_raw(self):
         return any(t in RAW_TEXT for t, _, _ in self.stack)
+
+    def inside_label(self):
+        """True while a label element is open — its text is checked by
+        check_label, so rule 4 must not also run over the raw data node."""
+        return any(text is not None for _, _, text in self.stack)
+
+    def inside_collision_table(self):
+        """Rule 4 exemption (a): inside a table that declares a
+        data-rotulo="colisão de nomes" header, the colliding terms are named on
+        purpose (map §7 reproduced) — declared in the markup, not inferred."""
+        return any(self.tables)
+
+    def collision_exempt(self, attrs=None):
+        """Rule 4 exemptions. `attrs` is passed when we are looking at the
+        element's OWN attributes (its data-exemplo is not on the stack yet)."""
+        if self.inside_collision_table() or self.inside_example():
+            return True
+        return "data-exemplo" in (attrs or {})
+
+    def identity_exempt(self):
+        """Rule 5 exemption — ONLY the one decision 2 authorises: a
+        collision-naming table names the colliding sessions on purpose (map §7:
+        "Office" in two refs, "Gerente" in two projects). An example mark does
+        NOT exempt rule 5: the identity format is a presentation convention and
+        holds in example rows too. Declared, not inferred.
+        """
+        return self.inside_collision_table()
 
     def handle_starttag(self, tag, attrs):
         a = {k.lower(): (v or "") for k, v in attrs}
         if tag in INTERACTIVE and not a.get("data-fonte", "").strip():
             self.findings.append(
                 f"{self.path.name}: interactive <{tag}> without data-fonte")
+        if tag == "table":
+            self.tables.append(False)
+        if tag in ("th", "dt") and self.tables \
+                and "colisão de nomes" in a.get("data-rotulo", "").lower():
+            self.tables[-1] = True
+        # 4 (attribute pass). Attributes are read by whoever inspects the page:
+        # an aria-label, a tooltip or a citation can carry the naked term too.
+        if not self.collision_exempt(a):
+            for value in a.values():
+                self.check_collisions(value)
+        # 5 (attribute pass), same reason as rule 4: an aria-label or a tooltip
+        # can name a session too.
+        if not self.identity_exempt():
+            for value in a.values():
+                self.check_identity(value)
         if tag in VOID:
             return
-        self.stack.append([tag, a, "" if tag in LABEL_TAGS else None])
+        is_label = tag in LABEL_TAGS or "data-rotulo" in a
+        self.stack.append([tag, a, "" if is_label else None])
 
     def handle_endtag(self, tag):
         # pop up to the matching open tag (tolerates stray closers)
@@ -124,6 +262,8 @@ class ScreenParser(HTMLParser):
             if self.stack[i][0] == tag:
                 closed = self.stack[i:]
                 del self.stack[i:]
+                if any(e[0] == "table" for e in closed) and self.tables:
+                    self.tables.pop()
                 for _, attrs, text in closed:
                     if text is not None:
                         self.check_label(text.strip(), attrs)
@@ -132,11 +272,22 @@ class ScreenParser(HTMLParser):
     def handle_data(self, data):
         if not self.stack or self.inside_raw():
             return
-        # 3. numbers must be marked as example — in every text node
-        if NUMBER.search(data) and "exemplo" not in data.lower() \
-                and not self.inside_example():
+        # 3. numbers must be marked as example — in every text node, unless
+        #    it is a citation context or a digit-bearing acronym (A2A, F1…)
+        stripped = ACRONYM.sub("", data)
+        stripped = SESSION_REF_TOKEN.sub("", stripped)
+        if NUMBER.search(stripped) and "exemplo" not in data.lower() \
+                and not self.inside_example() and not self.inside_citation():
             self.findings.append(
                 f'{self.path.name}: number without the "exemplo" mark: "{data.strip()}"')
+        # 4 (visible-text pass). Not inside a label (check_label runs rule 4 for
+        # those, at the closing tag) and not exempt: the naked term in prose is
+        # where the review found the real violations.
+        if not self.inside_label() and not self.collision_exempt():
+            self.check_collisions(data)
+        # 5 (visible-text pass), same fence as rule 4
+        if not self.inside_label() and not self.identity_exempt():
+            self.check_identity(data)
         # feed the innermost open label collector
         for entry in reversed(self.stack):
             if entry[2] is not None:
@@ -146,25 +297,94 @@ class ScreenParser(HTMLParser):
     # -- the label rules ---------------------------------------------------
 
     def check_label(self, text, attrs):
+        rotulo = attrs.get("data-rotulo", "").strip().lower()
+        if rotulo:
+            # a declared domain label: the VALUE must be a glossary term
+            if not any(t.search(rotulo) for t in self.terms):
+                self.findings.append(
+                    f'{self.path.name}: data-rotulo outside the glossary: "{rotulo}"')
+        elif text:
+            low = text.lower()
+            # 2. label outside the glossary: no glossary term inside and at
+            #    least one word that is neither a stopword nor a number
+            if not any(t.search(low) for t in self.terms):
+                words = [w for w in WORD.findall(low)
+                         if w not in STOPWORDS and not w.isdigit()]
+                if words:
+                    self.findings.append(
+                        f'{self.path.name}: label outside the glossary: "{text}"')
         if not text:
             return
+        # 4. collision-prone terms must be qualified — same test as the visible
+        #    text and the attribute passes (check_collisions)
+        if not self.collision_exempt(attrs):
+            self.check_collisions(text)
+        # 5. a session named in a label carries its ref — same test as the
+        #    visible text and the attribute passes (check_identity)
+        if not self.identity_exempt():
+            self.check_identity(text)
+
+    def check_collisions(self, text):
+        """Rule 4: the colliding terms must be qualified wherever they surface.
+
+        The qualifier must be a WORD of its own (word-boundary, not a substring):
+        `painel/fila_outbox.py` names a file, it does not qualify the sentence
+        around it — without this, the naked "fila" inside an attribute that also
+        cites that path went unnoticed (R1b of the round-3 review). Same class of
+        false negative as RACI ⊂ "operacional", fixed the same way.
+        """
         low = text.lower()
-        # 2. label outside the glossary: no glossary term inside and at least
-        #    one word that is neither a stopword nor a number
-        if not any(t.search(low) for t in self.terms):
-            words = [w for w in WORD.findall(low)
-                     if w not in STOPWORDS and not w.isdigit()]
-            if words:
+        if re.search(r"\bfila\b", low) and not re.search(r"\bdecis\w*|\boutbox\b", low):
+            self.findings.append(
+                f'{self.path.name}: "fila" unqualified (decisões or outbox?): "{text.strip()}"')
+        if re.search(r"\bport[ãa]o\b", low) and not re.search(r"\bchamado\b|\bregente\b", low):
+            self.findings.append(
+                f'{self.path.name}: "portão" unqualified (chamado or regente?): "{text.strip()}"')
+
+
+    def check_identity(self, text):
+        """Rule 5: a session is addressed as `nome · ref · projeto`.
+
+        Every mention of a catalogue name has to carry its ref right after it.
+        The bare name is not an address — that is the failure the round-4 judges
+        named ("Gerente" alone, a ref column without the project, a ref that
+        changes when the session restarts). Each (name, ref) pair it does see is
+        handed to record_identity for rule 6.
+        """
+        for m in SESSION.finditer(text):
+            name = m.group(0)
+            ref_m = SESSION_REF.match(text, m.end())
+            if not ref_m:
                 self.findings.append(
-                    f'{self.path.name}: label outside the glossary: "{text}"')
-        # 4. collision-prone terms must be qualified
-        if re.search(r"\bfila\b", low) and "decis" not in low and "outbox" not in low:
+                    f'{self.path.name}: session "{name}" without a ref '
+                    f'[xxxxxx] (nome · ref · projeto): "{text.strip()}"')
+                continue
+            ref = re.search(r"[0-9a-fA-F]{6}", ref_m.group(0)).group(0).lower()
+            self.record_identity(name, ref, text)
+
+    def record_identity(self, name, ref, text):
+        """Rule 6, per mention: a ref is glued to a single name, and a roster
+        name carries the roster's ref. Runs wherever rule 5 runs (same fence)."""
+        self.ref_names.setdefault(ref, set()).add(name)
+        if name in ROSTER and ref != ROSTER[name]:
             self.findings.append(
-                f'{self.path.name}: "fila" unqualified (decisões or outbox?): "{text}"')
-        if re.search(r"\bport[ãa]o\b", low) and "chamado" not in low \
-                and "regente" not in low:
-            self.findings.append(
-                f'{self.path.name}: "portão" unqualified (chamado or regente?): "{text}"')
+                f'{self.path.name}: session "{name}" carries ref [{ref}], not '
+                f'the roster ref [{ROSTER[name]}] (nome · ref · projeto): '
+                f'"{text.strip()}"')
+
+    def finish(self):
+        """Rule 6, per screen: a ref `[xxxxxx]` belongs to ONE name.
+
+        The swap the round-4 judges found ("Worker05 [4d000a]") passes this only
+        if no other name wears [4d000a] on the same screen — so the pair of
+        checks (roster ref + unique ref) is what actually closes it.
+        """
+        for ref in sorted(self.ref_names):
+            names = self.ref_names[ref]
+            if len(names) > 1:
+                self.findings.append(
+                    f'{self.path.name}: ref [{ref}] is glued to more than one '
+                    f'name ({", ".join(sorted(names))}) — one ref, one name')
 
 
 def main():
@@ -178,6 +398,7 @@ def main():
     for path in screens:
         parser = ScreenParser(path, terms)
         parser.feed(path.read_text(encoding="utf-8"))
+        parser.finish()  # rule 6 is per SCREEN, after the whole file is read
         findings.extend(parser.findings)
     for f in findings:
         print("FINDING:", f)

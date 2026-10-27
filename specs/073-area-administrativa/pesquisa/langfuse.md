@@ -44,7 +44,7 @@ SDK (*Software Development Kit*).
 | cadastro de skills/ferramentas/modelos | parcial — gestão de *prompts* (versão/labels) e playground; sem registro de ferramentas | `langfuse.com/docs` (visto 24/10): prompt management |
 | chaves e segredos | sim — "API keys are project-scoped" | `langfuse.com/security` (visto 24/10) |
 | configuração por projeto | sim — "Every record is associated with a `projectId`" (projetos como escopo) | `langfuse.com/security` (visto 24/10) |
-| auditoria | sim — *audit logs* listados entre os controles | `langfuse.com/security` (visto 24/10) |
+| auditoria | parcial — *audit logs* **listados** entre os controles, sem página que descreva o mecanismo. Rebaixada de `sim` para `parcial` **na correção 2 da rodada 4 (26/10, juiz 2, P1)** — mesmo critério do *custo* | `langfuse.com/security` (visto 24/10) |
 
 ### GERENCIAMENTO
 
@@ -54,7 +54,7 @@ SDK (*Software Development Kit*).
 | tarefa aberta | — | `langfuse.com/docs` (visto 24/10) |
 | última atividade | parcial — *timeline view* de traces e sessões com carimbos de tempo | `langfuse.com/docs` (visto 24/10): "traces, a timeline view for debugging latency" |
 | consumo por agente/sessão/modelo | parcial — custo/uso por `userId` e métricas de sessão; quebra por modelo não consta da página | `langfuse.com/docs` (visto 24/10): "monitor costs and usage per user" |
-| custo | sim — "Quality, cost, and latency metrics" no dashboard | `langfuse.com/docs` (visto 24/10) |
+| custo | parcial — "Quality, cost, and latency metrics" é frase da **página de visão** (`/docs`); **nenhuma página que documente o painel de custo** foi aberta. Rebaixada de `sim` para `parcial` **na rodada 4 (26/10, juiz 2, P1)** | `langfuse.com/docs` (visto 24/10) |
 | filas e workers | — | `langfuse.com/docs` (visto 24/10) |
 | rastro/replay de sessão | parcial — *Sessions* rastreiam o workflow multi-passo e há *timeline view*; "no dedicated replay feature is documented here" | `langfuse.com/docs` (visto 24/10) |
 | alertas | sim — notificação por Slack, GitHub Actions ou Webhook quando a métrica cruza o limiar | `langfuse.com/docs` (visto 24/10) |
@@ -69,3 +69,7 @@ SDK (*Software Development Kit*).
 | roteamento por nome/ref | — | `langfuse.com/docs` (visto 24/10) |
 | livro de mensagens | — | `langfuse.com/docs` (visto 24/10) |
 | colisão de nomes | — | `langfuse.com/docs` (visto 24/10) |
+
+**Correção da rodada 4 (26/10, fatia do Worker06).** Fontes desta ficha: 3 URLs (produto `/docs`, `/security`, GitHub). A célula **custo** caiu de `sim` para `parcial`: só se apoiava numa frase da página de visão, não numa página que documente o mecanismo — é o caso que o juiz 2 (P1) nomeou ("custo por sessão apoiado em página de marketing"). As células `sim` de **RBAC, chaves e configuração por projeto** **permanecem**: apoiam-se em `langfuse.com/security`, página que descreve o controle.
+
+**Correção 2 da rodada 4 (26/10, fatia do Worker06).** A célula **auditoria** caiu de `sim` para `parcial`, na mesma rodada e pelo mesmo critério do *custo* (juiz 2, P1): o apoio era "*audit logs* **listados** entre os controles" (`langfuse.md:47`) — também uma lista de itens da página de segurança, não uma página que **descreva o mecanismo** de auditoria; é exatamente o tipo de apoio que `plataformas.md` (§ "Lacunas declaradas") diz que **não vira `sim`**. Restam `sim` em **RBAC, chaves e configuração por projeto** (mesma fonte `/security`, mas cada uma com o controle descrito na linha). A matriz acompanha (`plataformas.md`, linha de *auditoria*).

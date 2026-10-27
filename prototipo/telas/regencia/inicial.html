@@ -1,0 +1,76 @@
+<!--
+  Fragmento — tela inicial da Regência (ciclo 074, T03 · FR1, FR3, FR4; ux-design 074 §2.1).
+
+  Papel semântico: a FRASE-CHAVE do regente — em uma linha, o que espera o humano, com os
+  contadores vivos (fila de decisões, sessões caídas, mensagens desviadas) sem rolar. É
+  SÓ LEITURA: o painel nunca promove e nunca decide (066 §0); a escrita entra pelo ruling,
+  alcançado pela fila de decisões.
+
+  Reprodução: a vista Regência do painel de regência (072, `painel/index.html`), sobre os
+  tokens novos de `tokens.css`, com os mesmos dados de exemplo das fixtures
+  (`prototipo/fixtures/*.json`). Contadores são PROJEÇÃO dos outros contextos — lidos, não
+  decididos (mapa §2).
+
+  Contrato da casca: o elemento raiz declara `data-acoes="acoes/<contexto>.js"` — sem ele o
+  módulo do contexto não carrega (o efeito de `data-efeito` continua sendo exibido).
+
+  Marcação: todo número é (exemplo); toda identidade é `nome · ref · projeto`, do roster de
+  fixture datado de 26/10 (dados de fixture, não os refs vivos). Nenhum dado pessoal real.
+-->
+<div class="conteudo-interior" data-contexto="regencia" data-tela="inicial"
+     data-acoes="acoes/regencia.js">
+
+  <p class="migalha" data-referencia="true">Maestro · protótipo navegável · ciclo 074 · Regência · (exemplo)</p>
+  <h1 class="titulo-pagina" data-rotulo="frase-chave">Frase-chave do regente</h1>
+
+  <nav class="trilha" aria-label="Trilha de contexto da Regência" data-rotulo="trilha de contexto"
+       data-fonte="ux-design 074 §2.5 (anatomia da trilha de contexto; o padrão foi medido no 073, administracao-01-catalogo.html) e §1 (navegação secundária entre fragmentos irmãos do contexto)">
+    <a href="#/regencia/inicial" aria-current="page"
+       data-fonte="esta tela — telas/regencia/inicial.html">Frase-chave</a>
+    <a href="#/regencia/fila-de-decisoes"
+       data-fonte="fragmento irmão — telas/regencia/fila-de-decisoes.html">Fila de decisões</a>
+  </nav>
+
+  <section class="cartao cartao-grande"
+           data-fonte="briefing do regente §3 (decisão 2: a tela inicial é a frase-chave) e ux-design 074 §2.1; dados de exemplo de prototipo/fixtures/pedido-de-decisao.json">
+    <p class="frase-chave" data-exemplo="true">você tem
+      <span class="destaque">3 decisões esperando</span>,
+      <span class="idade">a mais velha há 7 h</span>
+      <span class="seta">→</span>
+      <a href="#/regencia/fila-de-decisoes"
+         data-fonte="a ação em laranja da frase-chave leva à fila de decisões (ux-design 074 §1 e J1 passo 2)">responder na fila de decisões</a></p>
+    <p class="ajuda">só leitura: o painel <strong>registra</strong> a decisão — nunca decide por você. A escrita entra pelo ruling, alcançado pela fila de decisões.</p>
+  </section>
+
+  <h2 class="cartao-titulo">Contadores vivos da Regência</h2>
+  <div class="grade">
+    <div class="cartao cartao-lista" data-exemplo="true"
+         data-fonte="contador lido das fixtures de prototipo/fixtures/pedido-de-decisao.json (três pedidos aguardando; o mais velho, D-014, criado às 11:00 — exemplo)">
+      <span class="tile">3</span>
+      <span class="cartao-lista-corpo">
+        <span class="rotulo-categoria">fila de decisões</span>
+        pedidos aguardando o regente
+      </span>
+    </div>
+    <div class="cartao cartao-lista" data-exemplo="true"
+         data-fonte="contador lido das fixtures de prototipo/fixtures/sessao.json (nenhuma sessão sem sinal no retrato — exemplo)">
+      <span class="tile tile-neutro">0</span>
+      <span class="cartao-lista-corpo">
+        <span class="rotulo-categoria">sessão de agente</span>
+        sessões caídas
+        <span class="ajuda">— nenhuma sessão sem sinal no retrato · vazio é informação, não erro (066 §3)</span>
+      </span>
+    </div>
+    <div class="cartao cartao-lista" data-exemplo="true"
+         data-fonte="contador lido das fixtures de prototipo/fixtures/mensagem.json (três mensagens sem lida_em — exemplo)">
+      <span class="tile tile-neutro">3</span>
+      <span class="cartao-lista-corpo">
+        <span class="rotulo-categoria">mensagem entre agentes</span>
+        mensagens desviadas (não lidas)
+      </span>
+    </div>
+  </div>
+
+  <p class="fonte" data-fonte="ux-design 074 §0 (simular não é autorizar) e FR4/FR6 (estado só em memória; recarregar restaura as fixtures)">Protótipo navegável — estado só em memória: recarregar restaura as fixtures, e todo efeito de clique é declaradamente simulado (exemplo).</p>
+
+</div>
