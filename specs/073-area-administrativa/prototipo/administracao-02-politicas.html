@@ -112,7 +112,7 @@ footer.rodape strong{color:var(--tinta)}
 </div>
 
 <h2>As regras</h2>
-<table data-fonte="docs/governance/principles.md — Princípio III; scripts/hooks/guard-immutables.py (deny dos imutáveis); specs/073-area-administrativa/rodada-4/correcao-2.md (decisão 4: coluna de escopo na tabela de regras e uma regra de modelo de exemplo); plataformas em specs/073-area-administrativa/pesquisa/agent-365.md e specs/073-area-administrativa/pesquisa/litellm.md (formato de política por objeto)">
+<table data-fonte="docs/governance/principles.md — Princípio III; scripts/hooks/guard-immutables.py (deny dos imutáveis); specs/073-area-administrativa/rodada-4/correcao-2.md (decisão 4: coluna de escopo na tabela de regras e uma regra de modelo de exemplo); specs/073-area-administrativa/rodada-4/correcao-3.md (D2: a chamada de ferramenta MCP entra como escopo da política, com regra de exemplo); plataformas em specs/073-area-administrativa/pesquisa/agent-365.md e specs/073-area-administrativa/pesquisa/litellm.md (formato de política por objeto)">
   <caption>Cada regra tem um <strong>escopo</strong> (a quem ela se aplica: agente, papel ou projeto), um objeto, um efeito
   e o estado em que ela está. O escopo é o primeiro passo da precedência — o mais específico decide <em>qual</em> regra se
   aplica. O que ainda não é executável aparece como <span class="vazio">—</span> com o motivo; nada é marcado "conferido"
@@ -165,6 +165,17 @@ footer.rodape strong{color:var(--tinta)}
       <td>declarado; <strong>executável no harness</strong> (<code>permissions.allow</code>) — motivo: o Maestro ainda não declara o bloco <code>permissions</code></td>
       <td>a política do projeto</td>
       <td><button type="button" data-fonte="método — specs/073-area-administrativa/rodada-4/correcao-2.md (decisão 4: a regra de modelo espelha a tabela do Modelo); plataforma — specs/073-area-administrativa/pesquisa/claude-code.md (availableModels / deniedModels)">abrir regra</button></td>
+    </tr>
+    <tr id="regra-ferramenta-mcp">
+      <td><span class="exemplo" data-exemplo="true">exemplo: ferramenta MCP sob a política</span></td>
+      <td><span class="exemplo" data-exemplo="true">exemplo: ferramenta MCP</span></td>
+      <td>qual agente pode chamar qual <strong>ferramenta MCP</strong> — ex.: <code>registrar_peca</code>:
+      <span class="efeito">ask</span> para Worker, <span class="efeito">allow</span> para o regente por delegação,
+      <span class="efeito">deny</span> para sessão de outro projeto</td>
+      <td><span class="efeito">ask</span> · <span class="efeito">allow</span> · <span class="efeito">deny</span> — um efeito por par (agente, ferramenta)</td>
+      <td data-referencia="true">decidido na rodada 4 (<code>correcao-3.md</code>, D2); o protocolo (<code>mensageria-04-protocolo.html</code>) aponta para esta linha — âncora estável: <code>#regra-ferramenta-mcp</code></td>
+      <td>a política do projeto (escopo novo: ferramenta MCP)</td>
+      <td><button type="button" data-fonte="método — specs/073-area-administrativa/rodada-4/correcao-3.md (D2: a chamada de ferramenta MCP é escopo da política allow/deny/ask por agente); plataforma — specs/073-area-administrativa/pesquisa/claude-code.md (permissões de ferramenta MCP por allow/ask/deny)">abrir regra</button></td>
     </tr>
   </tbody>
 </table>
@@ -240,7 +251,7 @@ footer.rodape strong{color:var(--tinta)}
 
 <h2>Precedência e padrão</h2>
 <div class="grade">
-  <div class="caixa" data-fonte="specs/073-area-administrativa/rodada-4/correcao-2.md (decisão 4: a precedência fica em dois passos e passa a ser decisão de projeto — o mais específico decide qual regra se aplica; entre regras do mesmo escopo, deny > ask > allow); specs/073-area-administrativa/rodada-4/correcao-1.md (P11: precedência e padrão default-deny)">
+  <div class="caixa" data-fonte="specs/073-area-administrativa/rodada-4/correcao-2.md (decisão 4: a precedência fica em dois passos e passa a ser decisão de projeto — o mais específico decide qual regra se aplica; entre regras do mesmo escopo, deny > ask > allow); specs/073-area-administrativa/rodada-4/correcao-3.md (D2 e a ressalva da rodada 3: há deny não sobrescritível — o guard de imutáveis); specs/073-area-administrativa/rodada-4/correcao-1.md (P11: precedência e padrão default-deny)">
     <span class="rotulo">Ordem de precedência</span>
     <p>A precedência tem <strong>dois passos</strong>. Primeiro, <strong>o mais específico decide qual regra se
     aplica</strong> — entre a regra do agente, a do papel e a do projeto, vence a de escopo mais estreito. Só então,
@@ -249,6 +260,10 @@ footer.rodape strong{color:var(--tinta)}
     <p>As duas leituras deixam de se contradizer e passam a ser <strong>decisão de projeto</strong> — não a leitura
     direta de uma plataforma. Do LiteLLM ("o mais restritivo vence") e do Kiro (teto de governança: a política encontra
     o perfil) vem o espírito; a regra é nossa e está escrita aqui.</p>
+    <p><strong>Exceção — há <code>deny</code> não sobrescritível:</strong> o passo "o mais específico decide qual regra
+    se aplica" <em>não</em> vale para as <strong>imutáveis do método</strong>. Ali o <code>deny</code> é o gancho
+    <code>scripts/hooks/guard-immutables.py</code>, que vive <strong>fora</strong> da política: nenhum
+    <span class="efeito">allow</span>, de nenhum escopo, o sobrepõe. É a primeira linha da tabela de regras.</p>
     <span class="fonte">fonte: método (<code>rodada-4/correcao-2.md</code>, decisão 4 — decisão de projeto; <code>rodada-4/correcao-1.md</code>) · plataformas: <code>specs/073-area-administrativa/pesquisa/litellm.md</code>, <code>specs/073-area-administrativa/pesquisa/kiro-crew.md</code></span>
   </div>
   <div class="caixa" data-fonte="docs/governance/principles.md (Princípio III: a autorização vive fora do modelo); docs/governance/glossary.md (RBAC) e specs/073-area-administrativa/rodada-4/correcao-1.md (padrão default-deny)">

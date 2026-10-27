@@ -131,7 +131,9 @@ footer.rodape strong{color:var(--tinta)}
   <caption>Formato da linha, por escopo. A unidade é <strong>tokens</strong> e <strong>dólar estimado</strong> (o preço
   sai da tabela do Modelo, no catálogo — <code>specs/073-area-administrativa/prototipo/administracao-01-catalogo.html</code>).
   Os valores marcados <span class="exemplo" data-exemplo="true">exemplo</span> ilustram o layout — não são dados do
-  repositório; o que é vivo aparece como <span class="vazio">—</span> com o motivo.</caption>
+  repositório; o que é vivo aparece como <span class="vazio">—</span> com o motivo. Na coluna "Efeito ao estourar",
+  <strong>avisar</strong> é o efeito de <strong>hoje</strong>; <strong>recusar</strong> e <strong>suspender</strong> vêm
+  marcados <span class="vazio">DEPOIS</span> — o corte continua para depois (D3).</caption>
   <thead>
     <tr><th>Projeto, agente ou modelo do catálogo de skills/ferramentas/modelos</th><th data-rotulo="limite de orçamento">Teto</th><th data-rotulo="limite de orçamento">Unidade</th><th data-rotulo="consumo por agente">Consumo</th><th data-rotulo="limite de orçamento">Restante</th><th data-rotulo="limite de orçamento">Limiar de alerta</th><th data-rotulo="limite de orçamento">Efeito ao estourar</th><th>Consultar</th></tr>
   </thead>
@@ -143,7 +145,7 @@ footer.rodape strong{color:var(--tinta)}
       <td><span class="vazio">—</span> motivo: leitura viva, o wireframe não a digita</td>
       <td><span class="vazio">—</span> motivo: derivado do teto e do consumo</td>
       <td><span class="exemplo" data-exemplo="true">exemplo: 80 % do teto</span></td>
-      <td>avisar · recusar · suspender</td>
+      <td><strong>avisar</strong> (hoje) · recusar <span class="vazio">DEPOIS</span> · suspender <span class="vazio">DEPOIS</span></td>
       <td><button type="button" data-fonte="método — docs/governance/operating-model.md (teto por projeto) e scripts/install-maestro.sh (.maestro/install-options.json); plataforma — specs/073-area-administrativa/pesquisa/openai-platform.md (limite por projeto)">abrir teto</button></td>
     </tr>
     <tr>
@@ -153,7 +155,7 @@ footer.rodape strong{color:var(--tinta)}
       <td><span class="vazio">—</span> motivo: leitura viva, o wireframe não a digita</td>
       <td><span class="vazio">—</span> motivo: derivado do teto e do consumo</td>
       <td><span class="exemplo" data-exemplo="true">exemplo: 70 % do teto</span></td>
-      <td>avisar · recusar</td>
+      <td><strong>avisar</strong> (hoje) · recusar <span class="vazio">DEPOIS</span></td>
       <td><button type="button" data-fonte="método — docs/governance/glossary.md (Custo por sessão) e docs/records/decisoes.jsonl; plataforma — specs/073-area-administrativa/pesquisa/litellm.md (max_budget por chave/time)">abrir teto</button></td>
     </tr>
     <tr>
@@ -163,16 +165,15 @@ footer.rodape strong{color:var(--tinta)}
       <td><span class="vazio">—</span> motivo: leitura viva, o wireframe não a digita</td>
       <td><span class="vazio">—</span> motivo: derivado do teto e do consumo</td>
       <td><span class="exemplo" data-exemplo="true">exemplo: 60 % do teto</span></td>
-      <td>recusar</td>
+      <td><strong>avisar</strong> (hoje) · recusar <span class="vazio">DEPOIS</span></td>
       <td><button type="button" data-fonte="plataforma — specs/073-area-administrativa/pesquisa/litellm.md e specs/073-area-administrativa/pesquisa/openai-platform.md (orçamento por modelo); método — a tabela de preços do Modelo, no catálogo da Administração">abrir teto</button></td>
     </tr>
   </tbody>
 </table>
-<p class="fonte" data-fonte="specs/073-area-administrativa/rodada-4/correcao-2.md (decisão 6: coluna de limiar de alerta e precedência dos tetos — o menor teto aplicável vence, no recorte mais estreito e no menor valor)">
+<p class="fonte" data-fonte="specs/073-area-administrativa/rodada-4/correcao-3.md (fatia das telas da Administração: precedência dos tetos = o menor teto aplicável, sem a glosa do recorte — correção de texto pedida na rodada 3) e specs/073-area-administrativa/rodada-4/correcao-2.md (decisão 6: coluna de limiar de alerta)">
   <strong>Precedência dos tetos:</strong> quando mais de um teto alcança a mesma chamada, vence <strong>o menor teto
-  aplicável</strong> — o recorte mais estreito (modelo antes de agente, agente antes de projeto) e, no empate de
-  escopo, o menor valor. É a mesma lógica da política: o mais específico decide qual regra se aplica, e a mais
-  restritiva decide dentro do mesmo escopo.</p>
+  aplicável</strong> — o menor valor entre os tetos que alcançam a chamada. Não há recorte por escopo nesta regra: é o
+  número menor que vale, e é esta a decisão (não a lógica da política, que é outra).</p>
 
 <div class="caixa" data-fonte="ux-design 066 §4 anti-regra 3 (não inventa número: fonte ausente vira "—" com motivo e caminho) e §3 (defasagem da fonte anunciada no cabeçalho)">
   <span class="rotulo">Controle</span>
@@ -215,11 +216,33 @@ footer.rodape strong{color:var(--tinta)}
     <p>Antes do teto há um <strong>limiar de alerta</strong>: ao cruzá-lo, o consumo <em>avisa</em> — não capa.
     Separar <em>o limite que corta</em> de <em>o alerta que só avisa</em> é a distinção que faltava na matriz.</p>
     <p class="vazio">valor do limiar — <span class="exemplo" data-exemplo="true">exemplo: 80 % do teto</span> (valor
-    ilustrativo, por escopo na tabela acima); o valor vivo vem de <code>docs/records/decisoes.jsonl</code> quando o teto
-    executável existir. O limiar é o gatilho do único efeito de hoje — <strong>avisar</strong> por mensagem endereçada
-    (decisão 2).</p>
-    <span class="fonte">fonte: <code>rodada-4/correcao-2.md</code> (decisões 2 e 6) · plataforma: <code>specs/073-area-administrativa/pesquisa/openai-platform.md</code></span>
+    ilustrativo, por escopo na tabela acima); o valor vivo vem de <code>docs/records/decisoes.jsonl</code>. O limiar é o
+    gatilho do único efeito de hoje — <strong>avisar</strong> por mensagem endereçada (decisão 2); quem compara o consumo
+    com o limiar e enfileira o aviso é a ingestão de consumo, desenhada logo abaixo (D3).</p>
+    <span class="fonte">fonte: <code>rodada-4/correcao-2.md</code> (decisões 2 e 6) · <code>rodada-4/correcao-3.md</code> (D3) · plataforma: <code>specs/073-area-administrativa/pesquisa/openai-platform.md</code></span>
   </div>
+</div>
+
+<h2>Quem emite o aviso</h2>
+<div class="caixa" data-fonte="specs/073-area-administrativa/rodada-4/correcao-3.md (D3: o emissor do aviso é a ingestão de consumo do painel — painel/custo.py, ao ingerir — que compara o consumo medido com o teto e o limiar e enfileira a mensagem na fila outbox) e docs/governance/operating-model.md (tempo fixo, escopo variável, com teto declarado)">
+  <span class="rotulo">O processo que avisa (desenhado)</span>
+  <p><strong>Quem emite:</strong> a <strong>ingestão de consumo do painel</strong> — o módulo <code>painel/custo.py</code>,
+  no momento em que <em>ingere</em> uma leitura. É o mesmo passo que já lê o livro de ponto; não há processo novo nem
+  relógio novo.</p>
+  <p><strong>O gatilho:</strong> ao ingerir, o módulo compara o <strong>consumo medido</strong> com o <strong>teto</strong>
+  e o <strong>limiar de alerta</strong> declarados aqui na Administração. Ao cruzar o limiar, <strong>enfileira uma
+  mensagem</strong> na fila outbox, endereçada à <strong>sessão dona</strong> (<code>nome · ref · projeto</code>) e ao
+  <strong>regente</strong> <code>MAESTRO [7c8d05] · 410_MAESTRO</code>. Quem entrega é a Mensageria; o painel só
+  enfileira.</p>
+  <p><strong>Idade do relógio:</strong> o aviso carrega a hora e a idade da leitura que o disparou — a mesma idade que o
+  cartão "Consumo corrente" desta tela exibe. Um aviso sem idade não diz se o número é de agora ou de ontem.</p>
+  <p><strong>Se a ingestão estiver parada:</strong> não há leitura, logo não há cruzamento — mas o aviso <strong>não se
+  perde</strong>. Ao voltar, a primeira leitura que cruzar o limiar emite o aviso, já marcado com a idade real: é o
+  <strong>"aviso atrasado, nunca perdido"</strong>. O estado <em>defasado</em> desta tela é o que denuncia a parada.</p>
+  <p class="vazio">O <strong>corte</strong> (recusar, suspender) <strong>continua DEPOIS</strong>, com gatilho: ele
+  precisa de um ponto de execução que barre o gasto, e este desenho não o cria — o emissor <em>avisa</em>, não
+  <em>corta</em>.</p>
+  <span class="fonte">fonte: <code>rodada-4/correcao-3.md</code> (D3) · <code>painel/custo.py</code> (ingestão de consumo) e <code>painel/fila_outbox.py</code> · <code>docs/governance/operating-model.md</code></span>
 </div>
 
 <h2>Histórico de mudanças (auditoria administrativa)</h2>
