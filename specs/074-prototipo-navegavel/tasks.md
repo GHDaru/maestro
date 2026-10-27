@@ -51,6 +51,29 @@
     `app.js` **carrega as oito fixtures sem erro** (console limpo;
     `python -m json.tool prototipo/fixtures/<arquivo>` → OK em cada uma das oito).
 
+`[[TASK id=074-T02b kind=implement attempt=1 cycle=074]]`
+
+- [x] T02b — Worker02 (ordem da regente, 27/10 — decisão 1 do briefing §3): `prototipo/` movido
+  para a **raiz** do repositório (artefato do produto, não só do ciclo) — `git mv` da pasta
+  inteira, `.claude/launch.json` (`--directory` da entrada `prototipo-074`), caminhos do
+  `verifica-navegacao.py` (o importlib do 073 **não se move**), `boundary.json` (`prototipo/` em
+  `toolkit.owns` — desvio declarado e aceito: move e classificação andam juntos). Os documentos
+  do ciclo já citavam o caminho da raiz; nada a mudar neles.
+  - DoD: equivalência pós-move — `python prototipo/verifica-navegacao.py` com os MESMOS achados
+    (nenhum novo, nenhum sumido); corpus boa → exit 0, ruim → exit 1; `ls prototipo/index.html
+    prototipo/tokens.css prototipo/app.js prototipo/fixtures` resolve; verificador do 073 →
+    11 telas, 0 achados.
+
+`[[TASK id=074-T02c kind=fix attempt=1 cycle=074]]`
+
+- [ ] T02c — Worker02 (achado da regente no browser, 27/10): o `aria-current="page"` do menu
+  segue o **contexto**, não a tela — ao trocar de tela dentro do mesmo contexto
+  (`#/administracao/catalogo` → `#/administracao/orcamento`), o destaque não pode voltar para
+  "Regência".
+  - DoD: caso no corpus de mutação/verificador OU teste em `app.js`: para toda rota
+    `#/<contexto>/<tela>`, o item do menu com `aria-current="page"` é o do `<contexto>` — o caso
+    falha no app.js atual e passa após a correção.
+
 ## Fixtures e glossário — em paralelo desde o gate (FR5, S-e)
 
 `[[TASK id=074-T07 kind=implement attempt=1 cycle=074]]`
@@ -120,7 +143,7 @@
 
 `[[TASK id=074-T05 kind=implement attempt=1 cycle=074]]`
 
-- [ ] T05 — Worker04: fragmentos da Administração — `telas/administracao/catalogo.html`,
+- [x] T05 — Worker04: fragmentos da Administração — `telas/administracao/catalogo.html`,
   `politicas.html`, `orcamento.html` (reproduzem os wireframes do 073, arquivos novos). Com
   `acoes/administracao.js`: "Propor regra" (ask) — toast "simulado" + link "ver na fila"; a
   proposta **vira pedido de decisão** (propor não executa); "Ajustar teto" — a barra recalcula
@@ -135,7 +158,7 @@
 
 `[[TASK id=074-T06 kind=implement attempt=1 cycle=074]]`
 
-- [ ] T06 — Worker05: fragmentos do Workflow de sessões —
+- [x] T06 — Worker05: fragmentos do Workflow de sessões —
   `telas/workflow-de-sessoes/sessao-de-agente.html`, `estado-do-agente-vivo.html`,
   `tarefa-aberta.html`, `consumo-por-agente.html` (reproduzem os wireframes do 073, arquivos
   novos). Com `acoes/workflow-de-sessoes.js`: "Reiniciar" (irreversível: o ref muda; aviso "o
