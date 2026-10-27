@@ -1,0 +1,166 @@
+<link rel="icon" href="data:,">
+<div class="conteudo-interior" data-contexto="workflow-de-sessoes" data-tela="estado-do-agente-vivo"
+     data-acoes="acoes/workflow-de-sessoes.js"
+     data-fonte="specs/074-prototipo-navegavel/ux-design.md §2.4 (papel semântico: estado do agente vivo) · specs/073-area-administrativa/prototipo/workflow-02-estado-do-agente-vivo.html (wireframe de origem — reproduzido como arquivo novo, sem movê-lo nem editá-lo: FR8)">
+
+  <p class="migalha" data-referencia="true">Maestro · #/workflow-de-sessoes/estado-do-agente-vivo · ciclo 074</p>
+
+  <h1 class="titulo-pagina" data-rotulo="estado do agente vivo"
+      data-fonte="método: docs/governance/glossary.md (Estado do agente vivo, ciclo 073)">estado do agente vivo</h1>
+
+  <nav class="trilha" aria-label="trilha de contexto — telas irmãs do Workflow de sessões"
+       data-rotulo="trilha de contexto"
+       data-fonte="specs/074-prototipo-navegavel/ux-design.md §2.5 (trilha de contexto)">
+    <a href="#/workflow-de-sessoes/sessao-de-agente"
+       data-fonte="ux-design 074 §2.5 (trilha de contexto)">sessão de agente</a>
+    <a href="#/workflow-de-sessoes/estado-do-agente-vivo" aria-current="page"
+       data-fonte="ux-design 074 §1 (item ativo com aria-current)">estado do agente vivo</a>
+    <a href="#/workflow-de-sessoes/tarefa-aberta"
+       data-fonte="ux-design 074 §2.5 (trilha de contexto)">tarefa aberta</a>
+    <a href="#/workflow-de-sessoes/consumo-por-agente"
+       data-fonte="ux-design 074 §2.5 (trilha de contexto)">consumo por agente</a>
+  </nav>
+
+  <p class="ajuda"
+     data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §6.3 (contexto Workflow de sessões) · painel/server.py (read-model de estado)">
+    <strong>Contexto delimitado:</strong> Workflow de sessões ·
+    <strong>ENTRA:</strong> estado do agente vivo — o que cada <strong>sessão de agente</strong> está
+    fazendo <em>agora</em> ·
+    <strong>identidade de sessão:</strong> sempre <strong>nome · ref · projeto</strong> ·
+    o estado nunca se lê só pela cor (o <strong>ponto</strong> de estado vem sempre com o nome do estado escrito).
+  </p>
+
+  <h2>Resumo</h2>
+  <div class="grade"
+       data-fonte="método: prototipo/fixtures/sessao.json (retrato de exemplo) · painel/server.py (o estado é derivado da tarefa aberta e da sessão)">
+    <div class="cartao">
+      <span class="rotulo-categoria" data-rotulo="estado do agente vivo">trabalhando</span>
+      <p class="numero-grande" data-exemplo="true" data-fonte="exemplo — nenhum dado real">3 (exemplo)</p>
+    </div>
+    <div class="cartao">
+      <span class="rotulo-categoria" data-rotulo="estado do agente vivo">esperando</span>
+      <p class="numero-grande" data-exemplo="true" data-fonte="exemplo — nenhum dado real">3 (exemplo)</p>
+    </div>
+    <div class="cartao">
+      <span class="rotulo-categoria" data-rotulo="tarefa aberta">sem tarefa</span>
+      <p class="numero-grande" data-exemplo="true" data-fonte="exemplo — nenhum dado real">1 (exemplo)</p>
+    </div>
+    <div class="cartao">
+      <span class="rotulo-categoria" data-rotulo="pedido de decisão">bloqueado</span>
+      <p class="numero-grande" data-exemplo="true" data-fonte="exemplo — nenhum dado real">1 (exemplo)</p>
+    </div>
+    <div class="cartao">
+      <span class="rotulo-categoria" data-rotulo="sessão de agente">caída</span>
+      <p class="numero-grande" data-exemplo="true" data-fonte="exemplo — nenhum dado real">0 (exemplo)</p>
+      <p class="fonte" data-referencia="true">estado que a detecção de processo acrescenta — nenhuma sessão deste retrato está nele.</p>
+    </div>
+  </div>
+
+  <h2>por sessão</h2>
+  <table class="tabela"
+         data-fonte="método: prototipo/fixtures/sessao.json e prototipo/fixtures/tarefa.json (retrato de exemplo) · painel/server.py (read-model de estado do agente vivo)">
+    <thead>
+      <tr>
+        <th data-rotulo="sessão de agente" data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §7 (identidade: nome · ref · projeto)">identidade</th>
+        <th data-rotulo="estado do agente vivo" data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §6.3">estado</th>
+        <th data-rotulo="tarefa aberta" data-fonte="método: prototipo/fixtures/tarefa.json (o que a sessão executa agora)">tarefa aberta</th>
+        <th data-rotulo="catálogo de skills/ferramentas/modelos" data-fonte="método: prototipo/fixtures/catalogo.json (o modelo e o preço por sessão)">modelo</th>
+        <th data-rotulo="consumo por agente" data-fonte="método: painel/custo.py (o consumo é piso, não total — ver a tela consumo por agente)">consumo (piso)</th>
+        <th data-rotulo="sessão de agente" data-fonte="método: painel/server.py (última atividade lida do transcript da sessão)">última atividade</th>
+        <th data-rotulo="sessão de agente" data-fonte="ux-design 074 §2.4 (a ação da linha leva à tela que escreve)">ação</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">
+        <td><span class="ponto ponto-sucesso" aria-hidden="true"></span> Worker01 [9a1b27] · maestro (exemplo)</td>
+        <td>trabalhando (exemplo)</td>
+        <td>074-T03 · attempt 1 (exemplo)</td>
+        <td>deepseek-v4.1-flash (exemplo)</td>
+        <td>1,2 M (piso) (exemplo)</td>
+        <td>há 2 h (exemplo)</td>
+        <td><a href="#/workflow-de-sessoes/sessao-de-agente" data-fonte="ux-design 074 §2.4 (ação da linha)">agir na sessão</a></td>
+      </tr>
+      <tr data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">
+        <td><span class="ponto ponto-sucesso" aria-hidden="true"></span> Worker02 [31f7bf] · maestro (exemplo)</td>
+        <td>trabalhando (exemplo)</td>
+        <td>074-T02 · attempt 1 (exemplo)</td>
+        <td>deepseek-v4.1-flash (exemplo)</td>
+        <td>2,4 M (piso) (exemplo)</td>
+        <td>há 3 h (exemplo)</td>
+        <td><a href="#/workflow-de-sessoes/sessao-de-agente" data-fonte="ux-design 074 §2.4 (ação da linha)">agir na sessão</a></td>
+      </tr>
+      <tr data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">
+        <td><span class="ponto ponto-erro" aria-hidden="true"></span> Worker03 [ad66d6] · maestro (exemplo)</td>
+        <td>bloqueado (exemplo)</td>
+        <td>— <span class="fonte" data-referencia="true">motivo: aguarda ruling do pedido D-014 (exemplo)</span></td>
+        <td>deepseek-v4.1-flash (exemplo)</td>
+        <td>0,9 M (piso) (exemplo)</td>
+        <td>há 1 h (exemplo)</td>
+        <td><a href="#/workflow-de-sessoes/sessao-de-agente" data-fonte="ux-design 074 §2.4 (ação da linha)">agir na sessão</a></td>
+      </tr>
+      <tr data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">
+        <td><span class="ponto ponto-sem-sinal" aria-hidden="true"></span> Worker04 [4d000a] · maestro (exemplo)</td>
+        <td>sem tarefa (exemplo)</td>
+        <td>— <span class="fonte" data-referencia="true">motivo: nenhuma tarefa com <code>start</code> sem <code>stop</code> (exemplo)</span></td>
+        <td>deepseek-v4.1-flash (exemplo)</td>
+        <td>0,2 M (piso) (exemplo)</td>
+        <td>há 20 min (exemplo)</td>
+        <td><a href="#/workflow-de-sessoes/sessao-de-agente" data-fonte="ux-design 074 §2.4 (ação da linha)">agir na sessão</a></td>
+      </tr>
+      <tr data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">
+        <td><span class="ponto ponto-sucesso" aria-hidden="true"></span> Worker05 [78d88f] · maestro (exemplo)</td>
+        <td>trabalhando (exemplo)</td>
+        <td>074-T06 · attempt 1 (exemplo)</td>
+        <td>deepseek-v4.1-flash (exemplo)</td>
+        <td>1,8 M (piso) (exemplo)</td>
+        <td>há 12 min (exemplo)</td>
+        <td><a href="#/workflow-de-sessoes/sessao-de-agente" data-fonte="ux-design 074 §2.4 (ação da linha)">agir na sessão</a></td>
+      </tr>
+      <tr data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">
+        <td><span class="ponto ponto-alerta" aria-hidden="true"></span> Worker06 [c85948] · maestro (exemplo)</td>
+        <td>esperando (exemplo)</td>
+        <td>— <span class="fonte" data-referencia="true">motivo: sem fatia de implementação neste retrato (exemplo)</span></td>
+        <td>deepseek-v4.1-flash (exemplo)</td>
+        <td>0,4 M (piso) (exemplo)</td>
+        <td>há 5 h (exemplo)</td>
+        <td><a href="#/workflow-de-sessoes/sessao-de-agente" data-fonte="ux-design 074 §2.4 (ação da linha)">agir na sessão</a></td>
+      </tr>
+      <tr data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">
+        <td><span class="ponto ponto-alerta" aria-hidden="true"></span> Gerente [31ee4d] · maestro (exemplo)</td>
+        <td>esperando (exemplo)</td>
+        <td>— <span class="fonte" data-referencia="true">motivo: integra e despacha, não executa fatia (exemplo)</span></td>
+        <td>deepseek-v4.1-flash (exemplo)</td>
+        <td>3,1 M (piso) (exemplo)</td>
+        <td>há 3 min (exemplo)</td>
+        <td><a href="#/workflow-de-sessoes/sessao-de-agente" data-fonte="ux-design 074 §2.4 (ação da linha)">agir na sessão</a></td>
+      </tr>
+      <tr data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">
+        <td><span class="ponto ponto-alerta" aria-hidden="true"></span> MAESTRO [7c8d05] · maestro (exemplo)</td>
+        <td>esperando (exemplo)</td>
+        <td>— <span class="fonte" data-referencia="true">motivo: o regente decide e julga, não executa fatia (exemplo)</span></td>
+        <td>deepseek-v4.1-flash (exemplo)</td>
+        <td>5,6 M (piso) (exemplo)</td>
+        <td>há 4 h (exemplo)</td>
+        <td><a href="#/workflow-de-sessoes/sessao-de-agente" data-fonte="ux-design 074 §2.4 (ação da linha)">agir na sessão</a></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>alerta — sessão parada</h2>
+  <div class="cartao"
+       data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (decisão 4: o estado é derivado; o que a tela não sabe, ela declara) · painel/server.py">
+    <p>O <strong>estado do agente vivo</strong> é <strong>derivado</strong>, não digitado: sai da tarefa aberta, da última atividade e da detecção de processo. Quando uma sessão para sem <code>stop</code>, ela entra em <strong>caída</strong> — <em>sem sinal</em>, não «esperando»: esperando é quem pode ser acordado; caída é quem não responde.</p>
+    <p class="ajuda">O que a tela <strong>não</strong> sabe, ela declara em vez de inventar: sem sinal do processo, a linha mostra <strong>caída</strong> e diz que o estado veio da detecção — nunca finge que a sessão está viva. <span class="fonte" data-referencia="true">specs/074-prototipo-navegavel/ux-design.md §7 (estados: caída não se confunde com esperando)</span></p>
+  </div>
+
+  <h2>o que entra — a lacuna</h2>
+  <div class="cartao"
+       data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §6.3 (ENTRA do contexto Workflow de sessões: estado do agente vivo)">
+    <p><strong>Entra:</strong> o estado derivado de cada sessão, a tarefa aberta, o modelo e o consumo (piso), e a última atividade.</p>
+    <p><strong>Não entra:</strong> o custo em dinheiro (vive em <em>consumo por agente</em>), o texto das mensagens (vive na <em>mensageria</em>) e a decisão pendente por inteiro (vive na <em>Regência</em>, como <strong>pedido de decisão</strong>). Esta tela <strong>aponta</strong> para eles; não os repete.</p>
+    <p class="fonte" data-referencia="true">a lacuna declarada: o retrato do estado não é linha do tempo — «última atividade» é a mais recente, não o histórico (specs/073-area-administrativa/confronto/mapa-de-contextos.md §6.3).</p>
+  </div>
+
+  <p class="fonte" data-referencia="true">Fitness function de UX (ciclo 066): vale F8 (todo «—» com motivo) e F9 (controle só-ícone com aria-label); o estado nunca se lê só pela cor. Siglas (Princípio VIII): FR (functional requirement, requisito funcional) · UX (user experience) · ENTRA (o que o contexto consome, do mapa de contextos).</p>
+
+</div>

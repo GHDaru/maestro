@@ -1,0 +1,428 @@
+<link rel="icon" href="data:,">
+<div class="conteudo-interior" data-contexto="workflow-de-sessoes" data-tela="sessao-de-agente"
+     data-acoes="acoes/workflow-de-sessoes.js"
+     data-fonte="specs/074-prototipo-navegavel/ux-design.md §2.4 (papel semântico da tela do Workflow de sessões) e §5 (contrato dos botões de escrita); specs/073-area-administrativa/prototipo/workflow-01-sessao-de-agente.html (wireframe de origem — reproduzido aqui como arquivo novo, sem movê-lo nem editá-lo: FR8)">
+
+  <p class="migalha" data-referencia="true">Maestro · #/workflow-de-sessoes/sessao-de-agente · ciclo 074</p>
+
+  <h1 class="titulo-pagina" data-rotulo="sessão de agente"
+      data-fonte="método: docs/governance/glossary.md (Sessão de agente, ciclo 073) · specs/073-area-administrativa/confronto/confronto-decisao.md (ENTRA 1)">sessão de agente</h1>
+
+  <nav class="trilha" aria-label="trilha de contexto — telas irmãs do Workflow de sessões"
+       data-rotulo="trilha de contexto"
+       data-fonte="specs/074-prototipo-navegavel/ux-design.md §2.5 (trilha de contexto: lista horizontal de links para os fragmentos irmãos) e §1 (garante o ≤ 3 cliques)">
+    <a href="#/workflow-de-sessoes/sessao-de-agente" aria-current="page"
+       data-fonte="ux-design 074 §1 (item ativo com aria-current)">sessão de agente</a>
+    <a href="#/workflow-de-sessoes/estado-do-agente-vivo"
+       data-fonte="ux-design 074 §2.5 (trilha de contexto)">estado do agente vivo</a>
+    <a href="#/workflow-de-sessoes/tarefa-aberta"
+       data-fonte="ux-design 074 §2.5 (trilha de contexto)">tarefa aberta</a>
+    <a href="#/workflow-de-sessoes/consumo-por-agente"
+       data-fonte="ux-design 074 §2.5 (trilha de contexto)">consumo por agente</a>
+  </nav>
+
+  <p class="ajuda"
+     data-fonte="specs/073-area-administrativa/confronto/mapa-de-contextos.md §6.3 (contexto Workflow de sessões) e §7 (colisão «sessão» × «agente»); specs/073-area-administrativa/rodada-4/correcao-1.md (decisões 2 e 5)">
+    <strong>Contexto delimitado:</strong> Workflow de sessões ·
+    <strong>ENTRA:</strong> sessão de agente — <strong>subir</strong>, <strong>reiniciar</strong> e
+    <strong>derrubar</strong> ·
+    <strong>identidade de sessão:</strong> sempre <strong>nome · ref · projeto</strong> (o ref é o
+    endereço que <code>ListAgents</code> exibe; <strong>o ref muda ao reiniciar</strong>) ·
+    <strong>quem autoriza toda ação de escrita:</strong> o humano (gate), o regente por delegação, ou a
+    sessão dona — nunca a tela.
+  </p>
+
+  <h2>Resumo</h2>
+  <div class="grade"
+       data-fonte="método: prototipo/fixtures/sessao.json (retrato de exemplo) e painel/server.py (read-model de sessões); specs/073-area-administrativa/rodada-4/correcao-1.md (o derrubar é o desenhado adiante)">
+    <div class="cartao">
+      <span class="rotulo-categoria" data-rotulo="sessão de agente">sessões vivas</span>
+      <p class="numero-grande" data-exemplo="true"
+         data-fonte="exemplo — nenhum dado real; o número vivo vem de prototipo/fixtures/sessao.json">8 (exemplo)</p>
+    </div>
+    <div class="cartao">
+      <span class="rotulo-categoria" data-rotulo="sessão de agente">subir</span>
+      <p class="ajuda">existe hoje — <span class="fonte" data-referencia="true">método: <code>scripts/multi-session.py</code> (o lançador abre a sessão)</span></p>
+    </div>
+    <div class="cartao">
+      <span class="rotulo-categoria" data-rotulo="ref de sessão">reiniciar</span>
+      <p class="ajuda">existe — <span class="fonte" data-referencia="true">plataforma: <code>claude --resume</code> (specs/073-area-administrativa/pesquisa/claude-code.md)</span>; <strong>o ref muda</strong>.</p>
+    </div>
+    <div class="cartao">
+      <span class="rotulo-categoria" data-rotulo="portão do regente">derrubar</span>
+      <p class="ajuda">irreversível, atrás de confirmação: <strong>o que se perde</strong> e <strong>como reverter</strong> aparecem antes de decidir (desenhado adiante).</p>
+    </div>
+  </div>
+
+  <h2>sessões</h2>
+  <p class="ajuda"
+     data-fonte="specs/074-prototipo-navegavel/ux-design.md §2.4 (design system consumido: sessão de agente como linha de lista compacta) e §3 J3 (o crítico anda a lista)">
+    Uma linha por <strong>sessão</strong>, com a identidade completa <strong>nome · ref · projeto</strong>.
+    Os valores marcados <em>exemplo</em> ilustram o layout — não são dados do repositório; <strong>o ref muda ao reiniciar</strong>.
+  </p>
+
+  <div class="linha-lista"
+       data-fonte="método: prototipo/fixtures/sessao.json · painel/server.py (read-model); specs/073-area-administrativa/pesquisa/claude-code.md (roteamento por nome/ref)">
+    <span class="ponto ponto-alerta" aria-hidden="true"></span>
+    <div class="cartao-lista-corpo">
+      <p class="titulo" data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">Worker01 [9a1b27] · maestro (exemplo)</p>
+      <p class="subtitulo"><span data-exemplo="true" data-fonte="exemplo — nenhum dado real">trabalhando · última atividade há 2 h (exemplo)</span></p>
+      <p>
+        <button class="botao" data-acao="reiniciar" data-alvo="Worker01 [9a1b27] · maestro"
+                data-autoriza="regente por delegação" data-simulado="sim"
+                data-efeito="o ref da sessão muda e o aviso «o ref muda ao reiniciar» aparece"
+                data-irreversivel="sim" data-confirma="conf-reiniciar-worker01"
+                data-fonte="ux-design 074 §5 (contrato dos botões) e §3 J3 passo 2 (reiniciar é irreversível: o ref atual se perde)">Reiniciar…</button>
+        <button class="botao" data-acao="derrubar" data-alvo="Worker01 [9a1b27] · maestro"
+                data-autoriza="humano" data-simulado="sim"
+                data-efeito="a linha passa a caída (sem sinal) e o contexto vivo da sessão se perde"
+                data-irreversivel="sim" data-confirma="conf-derrubar-worker01"
+                data-fonte="ux-design 074 §5 (B-UX1: data-alvo obrigatório) e §3 J3 passo 4 (derrubar marca a linha caída)">Derrubar…</button>
+      </p>
+      <div class="confirmacao" id="conf-reiniciar-worker01" hidden
+           data-fonte="ux-design 074 §5 (confirmação irreversível com data-perde e data-reverte)">
+        <p><strong>Reiniciar</strong> Worker01 [9a1b27] · maestro — a mesma sessão volta com um ref novo.</p>
+        <p data-perde="o ref atual da sessão; mensagens endereçadas ao ref antigo não chegam">o que se perde: o ref atual — o endereço velho deixa de resolver.</p>
+        <p data-reverte="o contexto vivo só volta por claude --resume, com o ref novo">como reverter: <code>claude --resume</code> retoma a conversa; o ref novo se relê do <code>ListAgents</code>.</p>
+        <p><button class="botao-primario" data-acao="reiniciar" data-alvo="Worker01 [9a1b27] · maestro"
+                   data-autoriza="regente por delegação" data-simulado="sim"
+                   data-efeito="o ref da sessão muda e o aviso «o ref muda ao reiniciar» aparece"
+                   data-irreversivel="sim" data-confirma="conf-reiniciar-worker01"
+                   data-fonte="ux-design 074 §5 (o clique seguinte executa o efeito e fecha)">Confirmar reiniciar</button></p>
+      </div>
+      <div class="confirmacao" id="conf-derrubar-worker01" hidden
+           data-fonte="ux-design 074 §5 (confirmação irreversível com data-perde e data-reverte)">
+        <p><strong>Derrubar</strong> Worker01 [9a1b27] · maestro — risco alto: pode haver trabalho não commitado no worktree.</p>
+        <p data-perde="o contexto vivo da sessão e o ref atual; mensagens endereçadas ao ref antigo não chegam">o que se perde: o contexto vivo e o ref atual da sessão.</p>
+        <p data-reverte="subir a sessão de novo pelo lançador; os arquivos já commitados e o transcript permanecem">como reverter: subir a sessão de novo pelo lançador (<code>scripts/multi-session.py</code>).</p>
+        <p><button class="botao-primario" data-acao="derrubar" data-alvo="Worker01 [9a1b27] · maestro"
+                   data-autoriza="humano" data-simulado="sim"
+                   data-efeito="a linha passa a caída (sem sinal) e o contexto vivo da sessão se perde"
+                   data-irreversivel="sim" data-confirma="conf-derrubar-worker01"
+                   data-fonte="ux-design 074 §5 (o clique seguinte executa o efeito e fecha)">Confirmar derrubar</button></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="linha-lista"
+       data-fonte="método: prototipo/fixtures/sessao.json · painel/server.py (read-model)">
+    <span class="ponto ponto-sucesso" aria-hidden="true"></span>
+    <div class="cartao-lista-corpo">
+      <p class="titulo" data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">Worker02 [31f7bf] · maestro (exemplo)</p>
+      <p class="subtitulo"><span data-exemplo="true" data-fonte="exemplo — nenhum dado real">trabalhando · última atividade há 3 h (exemplo)</span></p>
+      <p>
+        <button class="botao" data-acao="reiniciar" data-alvo="Worker02 [31f7bf] · maestro"
+                data-autoriza="regente por delegação" data-simulado="sim"
+                data-efeito="o ref da sessão muda e o aviso «o ref muda ao reiniciar» aparece"
+                data-irreversivel="sim" data-confirma="conf-reiniciar-worker02"
+                data-fonte="ux-design 074 §5 (contrato dos botões) e §3 J3 passo 2">Reiniciar…</button>
+        <button class="botao" data-acao="derrubar" data-alvo="Worker02 [31f7bf] · maestro"
+                data-autoriza="humano" data-simulado="sim"
+                data-efeito="a linha passa a caída (sem sinal) e o contexto vivo da sessão se perde"
+                data-irreversivel="sim" data-confirma="conf-derrubar-worker02"
+                data-fonte="ux-design 074 §5 (B-UX1) e §3 J3 passo 4 (derrubar em Worker02 [31f7bf] · maestro deixa a linha caída)">Derrubar…</button>
+      </p>
+      <div class="confirmacao" id="conf-reiniciar-worker02" hidden
+           data-fonte="ux-design 074 §5 (confirmação irreversível com data-perde e data-reverte)">
+        <p><strong>Reiniciar</strong> Worker02 [31f7bf] · maestro — a mesma sessão volta com um ref novo.</p>
+        <p data-perde="o ref atual da sessão; mensagens endereçadas ao ref antigo não chegam">o que se perde: o ref atual — o endereço velho deixa de resolver.</p>
+        <p data-reverte="o contexto vivo só volta por claude --resume, com o ref novo">como reverter: <code>claude --resume</code> retoma a conversa; o ref novo se relê do <code>ListAgents</code>.</p>
+        <p><button class="botao-primario" data-acao="reiniciar" data-alvo="Worker02 [31f7bf] · maestro"
+                   data-autoriza="regente por delegação" data-simulado="sim"
+                   data-efeito="o ref da sessão muda e o aviso «o ref muda ao reiniciar» aparece"
+                   data-irreversivel="sim" data-confirma="conf-reiniciar-worker02"
+                   data-fonte="ux-design 074 §5 (o clique seguinte executa o efeito e fecha)">Confirmar reiniciar</button></p>
+      </div>
+      <div class="confirmacao" id="conf-derrubar-worker02" hidden
+           data-fonte="ux-design 074 §5 (confirmação irreversível com data-perde e data-reverte)">
+        <p><strong>Derrubar</strong> Worker02 [31f7bf] · maestro — risco alto: pode haver trabalho não commitado no worktree.</p>
+        <p data-perde="o contexto vivo da sessão e o ref atual; mensagens endereçadas ao ref antigo não chegam">o que se perde: o contexto vivo e o ref atual da sessão.</p>
+        <p data-reverte="subir a sessão de novo pelo lançador; os arquivos já commitados e o transcript permanecem">como reverter: subir a sessão de novo pelo lançador (<code>scripts/multi-session.py</code>).</p>
+        <p><button class="botao-primario" data-acao="derrubar" data-alvo="Worker02 [31f7bf] · maestro"
+                   data-autoriza="humano" data-simulado="sim"
+                   data-efeito="a linha passa a caída (sem sinal) e o contexto vivo da sessão se perde"
+                   data-irreversivel="sim" data-confirma="conf-derrubar-worker02"
+                   data-fonte="ux-design 074 §5 (o clique seguinte executa o efeito e fecha)">Confirmar derrubar</button></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="linha-lista"
+       data-fonte="método: prototipo/fixtures/sessao.json (motivo do estado) · painel/server.py (read-model)">
+    <span class="ponto ponto-erro" aria-hidden="true"></span>
+    <div class="cartao-lista-corpo">
+      <p class="titulo" data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">Worker03 [ad66d6] · maestro (exemplo)</p>
+      <p class="subtitulo"><span data-exemplo="true" data-fonte="exemplo — nenhum dado real">bloqueado · aguarda ruling do pedido D-014 (exemplo)</span></p>
+      <p>
+        <button class="botao" data-acao="reiniciar" data-alvo="Worker03 [ad66d6] · maestro"
+                data-autoriza="regente por delegação" data-simulado="sim"
+                data-efeito="o ref da sessão muda e o aviso «o ref muda ao reiniciar» aparece"
+                data-irreversivel="sim" data-confirma="conf-reiniciar-worker03"
+                data-fonte="ux-design 074 §5 (contrato dos botões) e §3 J3 passo 2 (reiniciar em Worker03 [ad66d6] · maestro)">Reiniciar…</button>
+        <button class="botao" data-acao="derrubar" data-alvo="Worker03 [ad66d6] · maestro"
+                data-autoriza="humano" data-simulado="sim"
+                data-efeito="a linha passa a caída (sem sinal) e o contexto vivo da sessão se perde"
+                data-irreversivel="sim" data-confirma="conf-derrubar-worker03"
+                data-fonte="ux-design 074 §5 (B-UX1: data-alvo obrigatório)">Derrubar…</button>
+      </p>
+      <div class="confirmacao" id="conf-reiniciar-worker03" hidden
+           data-fonte="ux-design 074 §5 (confirmação irreversível com data-perde e data-reverte)">
+        <p><strong>Reiniciar</strong> Worker03 [ad66d6] · maestro — a mesma sessão volta com um ref novo.</p>
+        <p data-perde="o ref atual da sessão; mensagens endereçadas ao ref antigo não chegam">o que se perde: o ref atual — o endereço velho deixa de resolver.</p>
+        <p data-reverte="o contexto vivo só volta por claude --resume, com o ref novo">como reverter: <code>claude --resume</code> retoma a conversa; o ref novo se relê do <code>ListAgents</code>.</p>
+        <p><button class="botao-primario" data-acao="reiniciar" data-alvo="Worker03 [ad66d6] · maestro"
+                   data-autoriza="regente por delegação" data-simulado="sim"
+                   data-efeito="o ref da sessão muda e o aviso «o ref muda ao reiniciar» aparece"
+                   data-irreversivel="sim" data-confirma="conf-reiniciar-worker03"
+                   data-fonte="ux-design 074 §5 (o clique seguinte executa o efeito e fecha)">Confirmar reiniciar</button></p>
+      </div>
+      <div class="confirmacao" id="conf-derrubar-worker03" hidden
+           data-fonte="ux-design 074 §5 (confirmação irreversível com data-perde e data-reverte)">
+        <p><strong>Derrubar</strong> Worker03 [ad66d6] · maestro — risco alto: a sessão está bloqueada, à espera de um ruling.</p>
+        <p data-perde="o contexto vivo da sessão e o ref atual; o pedido de decisão que ela espera continua aberto">o que se perde: o contexto vivo e o ref atual; o pedido de decisão dela continua na fila de decisões.</p>
+        <p data-reverte="subir a sessão de novo pelo lançador; os arquivos já commitados e o transcript permanecem">como reverter: subir a sessão de novo pelo lançador (<code>scripts/multi-session.py</code>).</p>
+        <p><button class="botao-primario" data-acao="derrubar" data-alvo="Worker03 [ad66d6] · maestro"
+                   data-autoriza="humano" data-simulado="sim"
+                   data-efeito="a linha passa a caída (sem sinal) e o contexto vivo da sessão se perde"
+                   data-irreversivel="sim" data-confirma="conf-derrubar-worker03"
+                   data-fonte="ux-design 074 §5 (o clique seguinte executa o efeito e fecha)">Confirmar derrubar</button></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="linha-lista"
+       data-fonte="método: prototipo/fixtures/sessao.json (motivo do estado) · painel/server.py (read-model)">
+    <span class="ponto ponto-sem-sinal" aria-hidden="true"></span>
+    <div class="cartao-lista-corpo">
+      <p class="titulo" data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">Worker04 [4d000a] · maestro (exemplo)</p>
+      <p class="subtitulo"><span data-exemplo="true" data-fonte="exemplo — nenhum dado real">sem tarefa · nenhuma tarefa com start sem stop (exemplo)</span></p>
+      <p>
+        <button class="botao" data-acao="reiniciar" data-alvo="Worker04 [4d000a] · maestro"
+                data-autoriza="regente por delegação" data-simulado="sim"
+                data-efeito="o ref da sessão muda e o aviso «o ref muda ao reiniciar» aparece"
+                data-irreversivel="sim" data-confirma="conf-reiniciar-worker04"
+                data-fonte="ux-design 074 §5 (contrato dos botões)">Reiniciar…</button>
+        <button class="botao" data-acao="derrubar" data-alvo="Worker04 [4d000a] · maestro"
+                data-autoriza="humano" data-simulado="sim"
+                data-efeito="a linha passa a caída (sem sinal) e o contexto vivo da sessão se perde"
+                data-irreversivel="sim" data-confirma="conf-derrubar-worker04"
+                data-fonte="ux-design 074 §5 (B-UX1: data-alvo obrigatório)">Derrubar…</button>
+      </p>
+      <div class="confirmacao" id="conf-reiniciar-worker04" hidden
+           data-fonte="ux-design 074 §5 (confirmação irreversível com data-perde e data-reverte)">
+        <p><strong>Reiniciar</strong> Worker04 [4d000a] · maestro — a mesma sessão volta com um ref novo.</p>
+        <p data-perde="o ref atual da sessão; mensagens endereçadas ao ref antigo não chegam">o que se perde: o ref atual — o endereço velho deixa de resolver.</p>
+        <p data-reverte="o contexto vivo só volta por claude --resume, com o ref novo">como reverter: <code>claude --resume</code> retoma a conversa; o ref novo se relê do <code>ListAgents</code>.</p>
+        <p><button class="botao-primario" data-acao="reiniciar" data-alvo="Worker04 [4d000a] · maestro"
+                   data-autoriza="regente por delegação" data-simulado="sim"
+                   data-efeito="o ref da sessão muda e o aviso «o ref muda ao reiniciar» aparece"
+                   data-irreversivel="sim" data-confirma="conf-reiniciar-worker04"
+                   data-fonte="ux-design 074 §5 (o clique seguinte executa o efeito e fecha)">Confirmar reiniciar</button></p>
+      </div>
+      <div class="confirmacao" id="conf-derrubar-worker04" hidden
+           data-fonte="ux-design 074 §5 (confirmação irreversível com data-perde e data-reverte)">
+        <p><strong>Derrubar</strong> Worker04 [4d000a] · maestro — risco alto: pode haver trabalho não commitado no worktree.</p>
+        <p data-perde="o contexto vivo da sessão e o ref atual; mensagens endereçadas ao ref antigo não chegam">o que se perde: o contexto vivo e o ref atual da sessão.</p>
+        <p data-reverte="subir a sessão de novo pelo lançador; os arquivos já commitados e o transcript permanecem">como reverter: subir a sessão de novo pelo lançador (<code>scripts/multi-session.py</code>).</p>
+        <p><button class="botao-primario" data-acao="derrubar" data-alvo="Worker04 [4d000a] · maestro"
+                   data-autoriza="humano" data-simulado="sim"
+                   data-efeito="a linha passa a caída (sem sinal) e o contexto vivo da sessão se perde"
+                   data-irreversivel="sim" data-confirma="conf-derrubar-worker04"
+                   data-fonte="ux-design 074 §5 (o clique seguinte executa o efeito e fecha)">Confirmar derrubar</button></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="linha-lista"
+       data-fonte="método: prototipo/fixtures/sessao.json · painel/server.py (read-model)">
+    <span class="ponto ponto-sucesso" aria-hidden="true"></span>
+    <div class="cartao-lista-corpo">
+      <p class="titulo" data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">Worker05 [78d88f] · maestro (exemplo)</p>
+      <p class="subtitulo"><span data-exemplo="true" data-fonte="exemplo — nenhum dado real">trabalhando · última atividade há 12 min (exemplo)</span></p>
+      <p>
+        <button class="botao" data-acao="reiniciar" data-alvo="Worker05 [78d88f] · maestro"
+                data-autoriza="regente por delegação" data-simulado="sim"
+                data-efeito="o ref da sessão muda e o aviso «o ref muda ao reiniciar» aparece"
+                data-irreversivel="sim" data-confirma="conf-reiniciar-worker05"
+                data-fonte="ux-design 074 §5 (contrato dos botões)">Reiniciar…</button>
+        <button class="botao" data-acao="derrubar" data-alvo="Worker05 [78d88f] · maestro"
+                data-autoriza="humano" data-simulado="sim"
+                data-efeito="a linha passa a caída (sem sinal) e o contexto vivo da sessão se perde"
+                data-irreversivel="sim" data-confirma="conf-derrubar-worker05"
+                data-fonte="ux-design 074 §5 (B-UX1: data-alvo obrigatório)">Derrubar…</button>
+      </p>
+      <div class="confirmacao" id="conf-reiniciar-worker05" hidden
+           data-fonte="ux-design 074 §5 (confirmação irreversível com data-perde e data-reverte)">
+        <p><strong>Reiniciar</strong> Worker05 [78d88f] · maestro — a mesma sessão volta com um ref novo.</p>
+        <p data-perde="o ref atual da sessão; mensagens endereçadas ao ref antigo não chegam">o que se perde: o ref atual — o endereço velho deixa de resolver.</p>
+        <p data-reverte="o contexto vivo só volta por claude --resume, com o ref novo">como reverter: <code>claude --resume</code> retoma a conversa; o ref novo se relê do <code>ListAgents</code>.</p>
+        <p><button class="botao-primario" data-acao="reiniciar" data-alvo="Worker05 [78d88f] · maestro"
+                   data-autoriza="regente por delegação" data-simulado="sim"
+                   data-efeito="o ref da sessão muda e o aviso «o ref muda ao reiniciar» aparece"
+                   data-irreversivel="sim" data-confirma="conf-reiniciar-worker05"
+                   data-fonte="ux-design 074 §5 (o clique seguinte executa o efeito e fecha)">Confirmar reiniciar</button></p>
+      </div>
+      <div class="confirmacao" id="conf-derrubar-worker05" hidden
+           data-fonte="ux-design 074 §5 (confirmação irreversível com data-perde e data-reverte)">
+        <p><strong>Derrubar</strong> Worker05 [78d88f] · maestro — risco alto: pode haver trabalho não commitado no worktree.</p>
+        <p data-perde="o contexto vivo da sessão e o ref atual; mensagens endereçadas ao ref antigo não chegam">o que se perde: o contexto vivo e o ref atual da sessão.</p>
+        <p data-reverte="subir a sessão de novo pelo lançador; os arquivos já commitados e o transcript permanecem">como reverter: subir a sessão de novo pelo lançador (<code>scripts/multi-session.py</code>).</p>
+        <p><button class="botao-primario" data-acao="derrubar" data-alvo="Worker05 [78d88f] · maestro"
+                   data-autoriza="humano" data-simulado="sim"
+                   data-efeito="a linha passa a caída (sem sinal) e o contexto vivo da sessão se perde"
+                   data-irreversivel="sim" data-confirma="conf-derrubar-worker05"
+                   data-fonte="ux-design 074 §5 (o clique seguinte executa o efeito e fecha)">Confirmar derrubar</button></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="linha-lista"
+       data-fonte="método: prototipo/fixtures/sessao.json · painel/server.py (read-model)">
+    <span class="ponto ponto-alerta" aria-hidden="true"></span>
+    <div class="cartao-lista-corpo">
+      <p class="titulo" data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">Worker06 [c85948] · maestro (exemplo)</p>
+      <p class="subtitulo"><span data-exemplo="true" data-fonte="exemplo — nenhum dado real">esperando · última atividade há 5 h (exemplo)</span></p>
+      <p>
+        <button class="botao" data-acao="reiniciar" data-alvo="Worker06 [c85948] · maestro"
+                data-autoriza="regente por delegação" data-simulado="sim"
+                data-efeito="o ref da sessão muda e o aviso «o ref muda ao reiniciar» aparece"
+                data-irreversivel="sim" data-confirma="conf-reiniciar-worker06"
+                data-fonte="ux-design 074 §5 (contrato dos botões)">Reiniciar…</button>
+        <button class="botao" data-acao="derrubar" data-alvo="Worker06 [c85948] · maestro"
+                data-autoriza="humano" data-simulado="sim"
+                data-efeito="a linha passa a caída (sem sinal) e o contexto vivo da sessão se perde"
+                data-irreversivel="sim" data-confirma="conf-derrubar-worker06"
+                data-fonte="ux-design 074 §5 (B-UX1: data-alvo obrigatório)">Derrubar…</button>
+      </p>
+      <div class="confirmacao" id="conf-reiniciar-worker06" hidden
+           data-fonte="ux-design 074 §5 (confirmação irreversível com data-perde e data-reverte)">
+        <p><strong>Reiniciar</strong> Worker06 [c85948] · maestro — a mesma sessão volta com um ref novo.</p>
+        <p data-perde="o ref atual da sessão; mensagens endereçadas ao ref antigo não chegam">o que se perde: o ref atual — o endereço velho deixa de resolver.</p>
+        <p data-reverte="o contexto vivo só volta por claude --resume, com o ref novo">como reverter: <code>claude --resume</code> retoma a conversa; o ref novo se relê do <code>ListAgents</code>.</p>
+        <p><button class="botao-primario" data-acao="reiniciar" data-alvo="Worker06 [c85948] · maestro"
+                   data-autoriza="regente por delegação" data-simulado="sim"
+                   data-efeito="o ref da sessão muda e o aviso «o ref muda ao reiniciar» aparece"
+                   data-irreversivel="sim" data-confirma="conf-reiniciar-worker06"
+                   data-fonte="ux-design 074 §5 (o clique seguinte executa o efeito e fecha)">Confirmar reiniciar</button></p>
+      </div>
+      <div class="confirmacao" id="conf-derrubar-worker06" hidden
+           data-fonte="ux-design 074 §5 (confirmação irreversível com data-perde e data-reverte)">
+        <p><strong>Derrubar</strong> Worker06 [c85948] · maestro — risco alto: pode haver trabalho não commitado no worktree.</p>
+        <p data-perde="o contexto vivo da sessão e o ref atual; mensagens endereçadas ao ref antigo não chegam">o que se perde: o contexto vivo e o ref atual da sessão.</p>
+        <p data-reverte="subir a sessão de novo pelo lançador; os arquivos já commitados e o transcript permanecem">como reverter: subir a sessão de novo pelo lançador (<code>scripts/multi-session.py</code>).</p>
+        <p><button class="botao-primario" data-acao="derrubar" data-alvo="Worker06 [c85948] · maestro"
+                   data-autoriza="humano" data-simulado="sim"
+                   data-efeito="a linha passa a caída (sem sinal) e o contexto vivo da sessão se perde"
+                   data-irreversivel="sim" data-confirma="conf-derrubar-worker06"
+                   data-fonte="ux-design 074 §5 (o clique seguinte executa o efeito e fecha)">Confirmar derrubar</button></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="linha-lista"
+       data-fonte="specs/074-prototipo-navegavel/ux-design.md §5 (B2-h: o Gerente [31ee4d] · maestro nunca é derrubável) e §7 (sem permissão: o portão do regente é somente leitura)">
+    <span class="ponto ponto-alerta" aria-hidden="true"></span>
+    <div class="cartao-lista-corpo">
+      <p class="titulo" data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">Gerente [31ee4d] · maestro (exemplo)</p>
+      <p class="subtitulo"><span data-exemplo="true" data-fonte="exemplo — nenhum dado real">esperando · última atividade há 3 min (exemplo)</span></p>
+      <p>
+        <button class="botao" data-acao="reiniciar" data-alvo="Gerente [31ee4d] · maestro"
+                data-autoriza="regente por delegação" data-simulado="sim"
+                data-efeito="o ref da sessão muda e o aviso «o ref muda ao reiniciar» aparece"
+                data-irreversivel="sim" data-confirma="conf-reiniciar-gerente"
+                data-fonte="ux-design 074 §5 (contrato dos botões)">Reiniciar…</button>
+        <span class="chip chip-estado" data-fonte="ux-design 074 §5 (B2-h: sem botão Derrubar para o Gerente [31ee4d] · maestro) e §7 (portão do regente)">sem Derrubar — portão do regente (exemplo)</span>
+      </p>
+      <p class="fonte" data-referencia="true">O Gerente [31ee4d] · maestro não carrega o botão Derrubar: derrubar a condução é ação do humano, fora do painel (a linha mostra o aviso «portão do regente»; B2-h do ux-design 074 §5).</p>
+      <div class="confirmacao" id="conf-reiniciar-gerente" hidden
+           data-fonte="ux-design 074 §5 (confirmação irreversível com data-perde e data-reverte)">
+        <p><strong>Reiniciar</strong> Gerente [31ee4d] · maestro — a mesma sessão volta com um ref novo.</p>
+        <p data-perde="o ref atual da sessão; mensagens endereçadas ao ref antigo não chegam">o que se perde: o ref atual — o endereço velho deixa de resolver.</p>
+        <p data-reverte="o contexto vivo só volta por claude --resume, com o ref novo">como reverter: <code>claude --resume</code> retoma a conversa; o ref novo se relê do <code>ListAgents</code>.</p>
+        <p><button class="botao-primario" data-acao="reiniciar" data-alvo="Gerente [31ee4d] · maestro"
+                   data-autoriza="regente por delegação" data-simulado="sim"
+                   data-efeito="o ref da sessão muda e o aviso «o ref muda ao reiniciar» aparece"
+                   data-irreversivel="sim" data-confirma="conf-reiniciar-gerente"
+                   data-fonte="ux-design 074 §5 (o clique seguinte executa o efeito e fecha)">Confirmar reiniciar</button></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="linha-lista"
+       data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (decisão 5: a sessão regente não é derrubável pela tela) · ux-design 074 §7 (portão do regente)">
+    <span class="ponto ponto-alerta" aria-hidden="true"></span>
+    <div class="cartao-lista-corpo">
+      <p class="titulo" data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref · projeto»">MAESTRO [7c8d05] · maestro (exemplo)</p>
+      <p class="subtitulo"><span data-exemplo="true" data-fonte="exemplo — nenhum dado real">esperando · última atividade há 4 h (exemplo)</span></p>
+      <p>
+        <button class="botao" data-acao="reiniciar" data-alvo="MAESTRO [7c8d05] · maestro"
+                data-autoriza="regente por delegação" data-simulado="sim"
+                data-efeito="o ref da sessão muda e o aviso «o ref muda ao reiniciar» aparece"
+                data-irreversivel="sim" data-confirma="conf-reiniciar-maestro"
+                data-fonte="ux-design 074 §5 (contrato dos botões)">Reiniciar…</button>
+        <span class="chip chip-estado" data-fonte="specs/073-area-administrativa/rodada-4/correcao-1.md (decisão 5: a sessão regente é protegida — sem Derrubar)">sem Derrubar — sessão regente (exemplo)</span>
+      </p>
+      <p class="fonte" data-referencia="true">A sessão regente não é derrubável por esta tela: derrubar a regência interrompe a condução inteira; se for o caso, é decisão humana fora do painel (decisão 5 da correção 1 do 073).</p>
+      <div class="confirmacao" id="conf-reiniciar-maestro" hidden
+           data-fonte="ux-design 074 §5 (confirmação irreversível com data-perde e data-reverte)">
+        <p><strong>Reiniciar</strong> MAESTRO [7c8d05] · maestro — a mesma sessão volta com um ref novo.</p>
+        <p data-perde="o ref atual da sessão; mensagens endereçadas ao ref antigo não chegam">o que se perde: o ref atual — o endereço velho deixa de resolver.</p>
+        <p data-reverte="o contexto vivo só volta por claude --resume, com o ref novo">como reverter: <code>claude --resume</code> retoma a conversa; o ref novo se relê do <code>ListAgents</code>.</p>
+        <p><button class="botao-primario" data-acao="reiniciar" data-alvo="MAESTRO [7c8d05] · maestro"
+                   data-autoriza="regente por delegação" data-simulado="sim"
+                   data-efeito="o ref da sessão muda e o aviso «o ref muda ao reiniciar» aparece"
+                   data-irreversivel="sim" data-confirma="conf-reiniciar-maestro"
+                   data-fonte="ux-design 074 §5 (o clique seguinte executa o efeito e fecha)">Confirmar reiniciar</button></p>
+      </div>
+    </div>
+  </div>
+
+  <h2>subir — o que o lançador recebe</h2>
+  <p>Subir cria uma <strong>sessão de agente</strong>; o <strong>agente</strong> (o par perfil ↔ executável) é o que a Administração registra. <span class="fonte" data-referencia="true">colisão «sessão» × «agente»: specs/073-area-administrativa/confronto/mapa-de-contextos.md §7</span></p>
+  <div class="cartao"
+       data-fonte="método: scripts/multi-session.py:33 (lista NAMES) · :41-46 (um worktree por Worker, .claude/worktrees/<nome>, branch w/<nome>) · :91-92 (--gerente-model / --worker-model)">
+    <p>
+      <label for="subir-nome" data-rotulo="sessão de agente" data-fonte="método: scripts/multi-session.py:33 (a lista NAMES do lançador)">nome</label>
+      <input id="subir-nome" name="nome" type="text" data-fonte="método: scripts/multi-session.py:33 (a lista NAMES do lançador)">
+    </p>
+    <p>
+      <label for="subir-modelo" data-rotulo="catálogo de skills/ferramentas/modelos" data-fonte="método: scripts/multi-session.py:91-92 · docs/governance/glossary.md (Catálogo de skills/ferramentas/modelos, ciclo 073 — modelos por sessão)">modelo</label>
+      <input id="subir-modelo" name="modelo" type="text" data-fonte="método: scripts/multi-session.py:91-92 (o modelo vai por sessão; o catálogo diz qual é o preço)">
+    </p>
+    <p>
+      <label for="subir-perfil" data-rotulo="agente" data-fonte="método: specs/073-area-administrativa/confronto/mapa-de-contextos.md §7 (colisão «sessão» × «agente»: o agente é o par perfil ↔ executável, registrado pela Administração)">perfil de agente</label>
+      <input id="subir-perfil" name="perfil" type="text" data-fonte="método: a Administração registra o agente (perfil ↔ executável); o lançador só passa o modelo (scripts/multi-session.py:13)">
+    </p>
+    <p>
+      <label for="subir-worktree" data-rotulo="sessão de agente" data-fonte="método: scripts/multi-session.py:41-46 (worktree por Worker, .claude/worktrees/<nome>)">worktree</label>
+      <input id="subir-worktree" name="worktree" type="text" data-fonte="método: scripts/multi-session.py:43 (caminho do worktree derivado do nome)">
+    </p>
+    <p>
+      <button class="botao-primario" data-acao="subir" data-autoriza="humano" data-simulado="sim"
+              data-efeito="a sessão nova aparece na lista com um ref novo"
+              data-fonte="ux-design 074 §2.4 (botão primário «Subir») e §5 (contrato dos botões); método: scripts/multi-session.py (subir)">Subir</button>
+      <span class="fonte" data-referencia="true">quem autoriza: o humano (gate) ou o regente por delegação; a sessão dona sobe apenas a própria sessão.</span>
+    </p>
+  </div>
+
+  <h2>reiniciar — o ref muda ao reiniciar</h2>
+  <div class="cartao"
+       data-fonte="plataforma: claude --resume (specs/073-area-administrativa/pesquisa/claude-code.md) · specs/066-painel-de-regencia/insumo-hindiana.md:16 (refs que mudam a cada reinício causaram o caso de 13/10 e o de 16/10)">
+    <p><strong>Reiniciar</strong> é o «subir» de uma sessão <em>já viva</em>: a mesma sessão volta com um <strong>ref novo</strong>, e o ref antigo deixa de resolver. Quem guardou o endereço velho fala com ninguém — por isso o endereço se relê do <code>ListAgents</code> antes de usar.</p>
+    <p class="exemplo"><span data-exemplo="true" data-fonte="exemplo — nenhum dado real; formato «nome · ref»: o ref logo depois do nome, e o antigo deixa de resolver">Worker05 [78d88f] → [a1b2c3] (exemplo)</span></p>
+    <p class="fonte" data-referencia="true">aviso: «o ref muda ao reiniciar» — prototipo/fixtures/sessao.json (campo aviso_ref). O protótipo simula o reiniciar em memória: recarregar restaura as fixtures.</p>
+  </div>
+
+  <h2>derrubar — a confirmação (o que se perde, como reverter)</h2>
+  <p>Derrubar é <strong>risco alto</strong>: a sessão pode estar no meio de uma tarefa aberta e ter trabalho não commitado no worktree. A ação só existe atrás de uma confirmação que mostra, antes de decidir:</p>
+  <ul data-fonte="specs/073-area-administrativa/rodada-4/correcao-2.md (decisão 3: distingue claude stop de claude rm) · correcao-1.md (decisão 5) · principles.md (Princípio III) · ux-design 074 §5 (B-UX1)">
+    <li><strong>tarefa aberta</strong>: qual tarefa a sessão está executando agora — <span data-exemplo="true" data-fonte="exemplo — nenhum dado real">074-T4, attempt 1 (exemplo)</span> — e há quanto tempo;</li>
+    <li><strong>worktree</strong>: onde o trabalho vive — <span data-exemplo="true" data-fonte="exemplo — nenhum dado real">.claude/worktrees/worker05 (exemplo)</span> — e o que há nele por commitar;</li>
+    <li><strong>o que fica salvo — e o que não volta</strong>: depende do comando, e a confirmação diz qual. <strong><code>claude stop</code></strong> (alias <code>claude kill</code>) <em>para</em> a sessão: a conversa fica salva em disco e reata por <strong><code>claude attach</code></strong>, ou reinicia por <strong><code>claude respawn</code></strong> («a session that has a saved conversation resumes it»). <strong><code>claude rm</code></strong> <em>tira a sessão da lista</em> — com o worktree que o Claude criou para ela, «quando for seguro apagar»: o que ele tira é a <strong>linha e o worktree</strong>, <strong>não a conversa</strong>, que «fica na sua máquina e continua disponível por <code>claude --resume</code>». O risco do <code>rm</code> está no <strong>worktree</strong> (trabalho não commitado), não no contexto. Nos dois casos sobrevivem os arquivos já commitados e o transcript. <span class="fonte" data-referencia="true">plataforma — aspas da doc em <code>specs/073-area-administrativa/pesquisa/claude-code.md:59</code>: <code>claude stop</code> («Stop a session. Also accepts <code>claude kill</code>») × <code>claude rm</code> («Remove a session from the list, along with a worktree Claude created for it when that's safe to delete»; «The conversation transcript stays on your local machine and remains available through <code>claude --resume</code>»); retomada em <code>:61</code>. Ficha corrigida pelo Worker06 [c85948] · maestro</span></li>
+    <li><strong>como religar</strong> (quando foi <code>stop</code>): o caminho de volta, declarado no próprio aviso — <span class="fonte" data-referencia="true">plataforma: <code>claude attach &lt;id|name&gt;</code> reata ao terminal (por nome só enquanto o processo roda) e <code>claude --resume</code> (<code>claude -r</code>) retoma a conversa — <code>specs/073-area-administrativa/pesquisa/claude-code.md:61</code>; <code>git -C &lt;worktree&gt; status</code> mostra o que ficou (scripts/multi-session.py:46)</span> — com o <strong>ref novo</strong>.</li>
+    <li><strong>o caminho da decisão</strong>: a confirmação <em>não executa</em> o derrubar no produto — ela abre um <strong>pedido de decisão</strong> à <strong>Regência</strong>, e é o <strong>humano</strong> que fecha com um <strong>Ruling</strong>. <span class="fonte" data-referencia="true">specs/073-area-administrativa/confronto/mapa-de-contextos.md §4 (relação 5: Workflow de sessões → Regência — «derrubar» e o ask viram pedido de decisão)</span></li>
+  </ul>
+
+  <p class="fonte" data-referencia="true">Fitness functions de UX (ciclo 066): vale F8 (todo «—» com motivo) e F9 (nenhum controle só-ícone sem aria-label); nenhum número é inventado — todo valor ilustrativo vem marcado «exemplo». Siglas (Princípio VIII): FR (functional requirement, requisito funcional) · UX (user experience) · MCP (Model Context Protocol) · ADR (Architecture Decision Record).</p>
+
+</div>
