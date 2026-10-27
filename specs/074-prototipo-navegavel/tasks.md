@@ -176,7 +176,7 @@
   **15 ENTRA + 3 telas da regência** alcançado com o efeito simulado declarado (lista de
   conferência: tabela §4); **nota ≥ 9 por jornada**; **regra das duas rodadas**. `[[DONE 074]]`
   com cópia à sessão regente **viva** (MAESTRO — ref corrente conferido no `ListAgents` da
-  hora; hoje `[5f2fba]`; o `[7c8d05]` é ref de fixture do roster, nunca destino de DONE) e
+  hora; hoje `[5d2fba]`; o `[7c8d05]` é ref de fixture do roster, nunca destino de DONE) e
   fallback commitado em `specs/074-prototipo-navegavel/done-*.md`.
 
 ### Critérios declarados ao crítico que anda (S4/S7 do gate de spec — não verificáveis por máquina)

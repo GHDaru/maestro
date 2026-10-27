@@ -120,7 +120,7 @@
     alcançados com o efeito simulado; nota ≥ 9 por jornada; regra das duas rodadas; "abre
     offline" e "recarregar restaura" julgados por ele — S4/S7), `[[DONE 074]]` com cópia à
     sessão regente **viva** (MAESTRO — ref corrente conferido no `ListAgents` da hora; hoje
-    `[5f2fba]`; o `[7c8d05]` é ref de fixture do roster, nunca destino de DONE) e fallback
+    `[5d2fba]`; o `[7c8d05]` é ref de fixture do roster, nunca destino de DONE) e fallback
     `done-*.md`.
 
 ## FR8 — restrição dura: o verificador do 073 nunca fica vermelho
