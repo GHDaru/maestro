@@ -11,8 +11,8 @@
 > `exemplo` — **nenhum valor é inventado**. As medições datadas (25/10 e 26/10) estão declaradas
 > abaixo: **hoje o verificador fecha verde**.
 
-- **Ciclo**: 073 (área administrativa) · **Rodada**: 3 (wireframes) · **correções 1 e 2 da rodada 4**
-  (26/10) · **Fonte de verdade**: `confronto/confronto-decisao.md` (§ "ENTRA — 13", que esta página
+- **Ciclo**: 073 (área administrativa) · **Rodada**: 3 (wireframes) · **correções 1, 2 e 3 da rodada 4**
+  (26–27/10) · **Fonte de verdade**: `confronto/confronto-decisao.md` (§ "ENTRA — 13", que esta página
   passa a ler como **16** depois das decisões 4 e 5)
 - **Juízes (rodada 4)**: **controle** · **administração e gerenciamento de agentes** ·
   **intercomunicabilidade** — o bar dá nota **0 a 10 por peça** e só passa com os **três** em 9 ou mais.
@@ -30,6 +30,13 @@
   nome** dentro de cada tela (decisão 1); a ambiguidade de **endereço** continua **não verificada por
   script** (declarado abaixo); e a **citação de ficha passa a ser revalidada no mesmo commit que muda
   a ficha** (decisão 8, ver "Convenções").
+- **Rodada 4 — correção 3 (27/10)**: a terceira leitura dos juízes deu **barra atingida no juiz 3**
+  (16 peças em 9) e **não atingida nos juízes 1 e 2** (13 e 12 peças em 9) — o laço parou
+  (`specs/073-area-administrativa/rodada-4/parada-do-laco.md`) e o **Darú reabriu**, com os três juízes
+  de novo. Três decisões fixas mexem nesta página: **D1** — a matriz marca **por célula** (*corta*/*avisa*),
+  não por coluna; **D2** — "ferramenta MCP" é **escopo da política**; **D3** — o **emissor do aviso** de
+  teto está **desenhado**. O `ENTRA` **4 · limite de orçamento** passa a ser lido como **"declarar teto
+  + avisar, com emissor desenhado"**. Detalhe na seção "Correção 3", abaixo.
 - **Siglas** (Princípio VIII, expandidas na 1ª ocorrência): **ADR** (*Architecture Decision Record*),
   **A2A** (*Agent-to-Agent*), **MCP** (*Model Context Protocol*).
 
@@ -43,7 +50,7 @@
 | `mensageria-04-protocolo.html` | 22 · **protocolo de intercomunicação** · 21 · **mensagem entre agentes** | Mensageria | INTERCOMUNICAÇÃO | Intercomunicabilidade | **neste ramo** |
 | `administracao-01-catalogo.html` | 9 · **catálogo de skills/ferramentas/modelos** · **cadastro de agentes** | Administração | ADMINISTRAÇÃO | Administração/Gerenciamento | **neste ramo** (`5ce4a5f`, Worker04) |
 | `administracao-02-politicas.html` | 5 · **política declarativa (allow/deny/ask)** | Administração | CONTROLE | Controle · Administração/Gerenciamento | **neste ramo** (`5ce4a5f`, Worker04) |
-| `administracao-03-orcamento.html` | 4 · **limite de orçamento** | Administração | CONTROLE | Controle | **neste ramo** (`5ce4a5f`, Worker04) |
+| `administracao-03-orcamento.html` | 4 · **limite de orçamento** — *declarar teto + avisar, com emissor desenhado* (correção 3) | Administração | CONTROLE | Controle | **neste ramo** (`5ce4a5f`, Worker04) |
 | `workflow-01-sessao-de-agente.html` | 1 · **sessão de agente** (subir/derrubar) | Workflow de sessões | CONTROLE | Controle · Administração/Gerenciamento | **neste ramo** (`365f59d`, Worker05) |
 | `workflow-02-estado-do-agente-vivo.html` | 13 · **estado do agente vivo** | Workflow de sessões | GERENCIAMENTO | Administração/Gerenciamento · Controle | **neste ramo** (`365f59d`, Worker05) |
 | `workflow-03-tarefa-aberta.html` | 14 · **tarefa aberta** | Workflow de sessões | GERENCIAMENTO | Administração/Gerenciamento | **neste ramo** (`365f59d`, Worker05) |
@@ -83,6 +90,42 @@ punha no grupo **CONTROLE**, e esta página declarava as duas leituras sem escol
 sessões apenas **mede e exibe o consumo contra o teto**. O mapa (§ 2, § 6.3 e § 6.5) é corrigido por
 Worker02 nesta rodada; aqui, a coluna "Grupo da matriz" passa a ser lida como **grupo de
 funcionalidade** (CONTROLE), nunca como contexto dono.
+
+## Correção 3 (27/10) — as três decisões do Darú
+
+A terceira leitura fechou o juiz 3 em **16/16 peças em 9** e manteve os juízes 1 e 2 abaixo da barra
+(13 e 12 de 16) — `specs/073-area-administrativa/rodada-4/parada-do-laco.md`. Pela regra combinada, o
+laço parava aí; o Darú decidiu **reabrir** uma correção 3, e as três decisões abaixo são fixas
+(`specs/073-area-administrativa/rodada-4/correcao-3.md`). **Nada da Mensageria regride**: a cerca
+`data-rotulo="colisão de nomes"` (decisão 7 da correção 2) e a regra 6 do verificador continuam como estão.
+
+**D1 — a matriz marca por célula, não por coluna.** A linha **limites de orçamento e de taxa** da
+matriz de plataformas **fica uma só** (a tabela fixa de 26 é mantida) e a **nota de coluna** "corta ×
+avisa" (`specs/073-area-administrativa/pesquisa/plataformas.md:93-98`) vira **marca por célula**: cada
+célula `sim`/`parcial` dessa linha ganha **`corta`** ou **`avisa`**, com a **fonte da ficha** ao lado.
+Célula sem fonte para a distinção fica **`avisa?` com o motivo** — nunca um palpite. Quem escreve as
+marcas é a Worker06; o confronto passa a **citar a marca**. Nesta página, "matriz" é outra coisa: a
+coluna "Grupo da matriz" da tabela de telas é lida como **grupo de funcionalidade** (CONTROLE), nunca
+como contexto dono.
+
+**D2 — "ferramenta MCP" é escopo da política, não tela nova.** Quem pode chamar qual ferramenta **MCP**
+é **escopo da política `allow`/`deny`/`ask` por agente** (`ENTRA` 5): a tela de políticas ganha a regra
+de exemplo com escopo `ferramenta MCP` (`registrar_peca`: `ask` para Worker, `allow` para o regente por
+delegação, `deny` para sessão de outro projeto) e a frase do `deny` **não sobrescritível** (o *guard* de
+imutáveis) — Worker04; cada ferramenta de `mensageria-04-protocolo.html` **aponta para essa regra** —
+Worker03; e o mapa § 6.5 lista a **política declarativa** como `ENTRA` da Administração — Worker02.
+Termo novo no glossário: **ferramenta MCP como escopo de política**.
+
+**D3 — o emissor do aviso de teto está desenhado.** O `ENTRA` **4** passa a ser lido como **"declarar
+teto + avisar, com emissor desenhado"**. O emissor é a **ingestão de consumo do painel**
+(`painel/custo.py`): compara o consumo medido com o **teto** e o **limiar** declarados na Administração
+e, ao cruzar o limiar, **enfileira uma mensagem** na **fila (outbox)** endereçada à **sessão dona** e ao
+**regente**, em **`nome · ref · projeto`**, com `data-fonte` apontando o módulo. A tela de orçamento
+ganha a seção **"Quem emite o aviso"** (processo, gatilho, idade do relógio e o que acontece se a
+ingestão estiver parada — *aviso atrasado, nunca perdido*) — Worker04; `workflow-04-consumo-por-agente.html`
+e `mensageria-02-livro-de-mensagens.html` mostram uma **linha de exemplo** do aviso — Worker05 e Worker03.
+O **corte** (recusar, suspender) continua **`DEPOIS`**. Termo novo no glossário: **emissor do aviso**
+(*warning emitter*).
 
 ## Identidade de sessão: `nome · ref · projeto`
 
@@ -280,8 +323,9 @@ erradas, o **contrato** é que não estava declarado.
 **Remedido em 26/10, no topo `6a32e24`,** antes da correção 1 (mesmo script v3): **11 telas · 0
 achados** — o verde atravessou a renomeação da Administração e a troca da base de citação. Depois da
 correção 1 a regente fechou **11 telas · 0 achados com as cinco regras** (`specs/073-area-administrativa/done-073-correcao-1.md`).
-A próxima medição — a **terceira leitura da regente**, depois da correção 2 — é a primeira com as
-**seis** regras.
+A **correção 2** fechou em **11 telas · 0 achados com as seis regras** (`4e421a4`; a regra 6 pousou em
+`2cd7d44`), e a **terceira leitura** dos juízes foi medida sobre esse topo (27/10). A próxima medição é a
+do fechamento da **correção 3** — **seis** regras, sem regra nova.
 
 ## Convenções
 
@@ -332,5 +376,7 @@ telas desta pasta ↔ `specs/073-area-administrativa/prototipo/verifica-prototip
 `specs/073-area-administrativa/rodada-4/juiz-1..3-*.md` (os três pareceres frescos da 1ª rodada, barra não atingida) ↔
 `specs/073-area-administrativa/rodada-4/correcao-1.md` (as seis decisões da regente e as fatias) ↔
 `specs/073-area-administrativa/rodada-4/juiz-1..3-*-rodada-2.md` e
-`specs/073-area-administrativa/rodada-4/correcao-2.md` (a segunda rodada de juízes e a correção 2) ↔ esta
-página.
+`specs/073-area-administrativa/rodada-4/correcao-2.md` (a segunda rodada de juízes e a correção 2) ↔
+`specs/073-area-administrativa/rodada-4/juiz-1..3-*-rodada-3.md` e
+`specs/073-area-administrativa/rodada-4/parada-do-laco.md` (a terceira leitura e a parada do laço) ↔
+`specs/073-area-administrativa/rodada-4/correcao-3.md` (a correção 3 decidida pelo Darú) ↔ esta página.
