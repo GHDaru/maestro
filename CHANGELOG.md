@@ -10,6 +10,19 @@ Todas as mudanças notáveis do **Maestro** são registradas aqui. Formato basea
 ## [Unreleased]
 
 ### Adicionado
+- **Plano do protótipo navegável** (ciclo 074): `plan.md` com Constitution Check I–VIII (um
+  desvio justificado: "abre offline" e "recarregar restaura" são critérios declarados do
+  crítico que anda, S4/S7), declaração dos cinco artefatos (`data-model=yes`, `ux-design=yes`,
+  research/contracts/checklist `no` com motivo), ordem FR7-first (tokens+amostra antes das
+  telas) e a FR8 como restrição dura (o verificador do 073 nunca fica vermelho);
+  `tasks.md` com 14 fatias por dono (T01/T02 base, T03–T07 fragmentos+fixtures em paralelo,
+  T08–T10 ações/verificador/jornada, T11 condicional ao fechamento do julgamento do 073,
+  T13/T14 fechamento) e as caudas `TAIL:*`; `data-model.md` fixando o contrato das oito
+  fixtures (um JSON por agregado do mapa, roster de exemplo do 073 como fixture, projeto
+  `maestro`, Ana Exemplo, efeitos só em memória). No mesmo commit, os ajustes do gate de UX
+  (`gate-ux.md`, 27/10): B-UX1 (contrato `data-irreversivel`/`data-confirma`/`data-alvo` no
+  §5), B-UX2 (J2 passo 3 como expansão na própria tela) e secundários no `ux-design.md`, e os
+  dois toques na `spec.md` (contagem única de 15 fragmentos na FR3; ENTRA expandida).
 - **Correção 2 da rodada 4 — as telas, o README e a matriz** (ciclo 073, `073-C2-W01`–`W06`,
   fechamento do Gerente): as decisões fixas da regente (`rodada-4/correcao-2.md`) aplicadas por
   dono. **Roster único de exemplo** (decisão 1) em todas as telas — refs de 26/10 como fixture,

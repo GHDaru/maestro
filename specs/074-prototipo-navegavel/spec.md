@@ -13,10 +13,11 @@
   tem tela, carrega o **ramo de interface**: papel semântico antes do componente
   (`ux-design.md`, agente ux-semantics) → gate de UX → jornada viva.
 - **Siglas** (Princípio VIII, expandidas na 1ª ocorrência): DoD (*Definition of Done*), ADR
-  (*Architecture Decision Record*), DDD (*Domain-Driven Design*), FR (*functional
-  requirement*, requisito funcional), NFR (*non-functional requirement*, requisito não
-  funcional), JSON (*JavaScript Object Notation*), HTML (*HyperText Markup Language*),
-  CDN (*Content Delivery Network*), UX (*user experience*).
+  (*Architecture Decision Record*), DDD (*Domain-Driven Design*), ENTRA (as funcionalidades
+  que **entram** — veredicto do confronto do 073), FR (*functional requirement*, requisito
+  funcional), NFR (*non-functional requirement*, requisito não funcional), JSON
+  (*JavaScript Object Notation*), HTML (*HyperText Markup Language*), CDN (*Content
+  Delivery Network*), UX (*user experience*).
 
 ## Contexto e intenção
 
@@ -62,9 +63,9 @@ viva do 072 (capturas por script versionado + heurística datada).
   toda tela diz em que contexto está (atributo `data-contexto`, um dos cinco valores
   acima).
 - **FR3 — Todas as telas dos cinco contextos** (decisões 1 e 2, ajuste B1): o protótipo
-  entrega **14 fragmentos** — 3 reproduzidas do 072 (kanban por gate — contexto
-  **Chamados e Gates** —, fila de decisões, ruling) + 4 da Mensageria + 3 da Administração
-  + 4 do Workflow de sessões —, todos preservando o
+  entrega **15 fragmentos** — a tela inicial (frase-chave) + 3 reproduzidas do 072 (kanban
+  por gate — contexto **Chamados e Gates** —, fila de decisões, ruling) + 4 da Mensageria +
+  3 da Administração + 4 do Workflow de sessões —, todos preservando o
   contrato de marcação do 073 (`data-fonte`, `data-rotulo`, `data-exemplo`,
   `data-referencia`) e a **regra 5** de identidade de sessão `nome · ref · projeto` em
   todo texto visível e atributo. As telas da Regência são reproduzidas a partir do
